@@ -1,0 +1,95 @@
+<p-fluid>
+        <div class=" card flex">
+          
+        <form [formGroup]="demandForm">
+            <div class="card grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="firstname2">Requision ID</label>
+                    <input pInputText id="firstname2" formControlName="requisitionId" type="text" />
+                </div>
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="lastname2">P-code</label>
+                    <p-select [options]="PCode" formControlName="pCode" optionLabel="name" optionValue="name" placeholder="Select PCode"
+                        [filter]="true" filterBy="name" class="w-full md:w-56" />
+                </div>
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="lastname2">State</label>
+                    <p-select [options]="states" formControlName="state" optionLabel="label" optionValue="label" placeholder="Select State"
+                        [filter]="true" filterBy="label" class="w-full md:w-56" />
+                </div>
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="lastname2">Planed deployment date</label>
+                    <input pInputText id="firstname2" formControlName="plannedDate" type="text" />
+
+                    <!-- <p-datepicker appendTo="body" formControlName="plannedDate" placeholder="Select Date" class="w-full" /> -->
+                </div>
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="lastname2">Actual deployment date</label>
+                    <input pInputText id="firstname2" formControlName="actualDate" type="text" />
+
+                    <!-- <p-datepicker appendTo="body" formControlName="actualDate" placeholder="Select Date" class="w-full" /> -->
+                </div>
+                <div class="flex flex-wrap gap-4 w-full">
+                    <label for="lastname2">Duration date</label>
+                    <input pInputText id="firstname2" formControlName="durationDate" type="text" />
+
+                    <!-- <p-datepicker appendTo="body" formControlName="durationDate" placeholder="Select Date" class="w-full" /> -->
+                </div>
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="lastname2">Requested By</label>
+                    <input pInputText formControlName="requestedBy" type="text" class="w-full" />
+                </div>
+                
+
+                
+            </div>
+            <div class="">
+                <p-table [value]="spvArrayList" [(selection)]="selectedApprovalList" dataKey="id" [tableStyle]="{ 'min-width': '50rem' }"
+                [paginator]="true" [rowsPerPageOptions]="[5, 10, 20]" stripedRows [rows]="10" [rowHover]="true"
+                 [showGridlines]="true" [showCurrentPageReport]="true"
+                  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                 [paginator]="true"
+                responsiveLayout="scroll">
+                    <ng-template #header>
+                        <tr>
+                            <th style="width: 4rem"><p-tableHeaderCheckbox /></th>
+                            <th>S.No</th>
+                            <th>SPN Description</th>
+                            <th>Experience</th>
+                            <th>Quantity</th>
+                            <th style="text-align: center;">State Head Approval</th>
+                            <th style="text-align: center;">Construction Head  Approval</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template #body let-product let-rowIndex="rowIndex">
+                        <tr >
+                            <td>
+                                <p-tableCheckbox [value]="product" />
+                            </td>
+                            <td>{{ rowIndex + 1 }}</td>
+                            <td>{{ product.spnDesc }}</td>
+                            <td>{{ product.exp }}</td>
+                            <td style="text-align: center;">
+                                <input type="text" pInputText value="{{product.qty}}" [(ngModel)]="product.qty">
+                            </td>
+                            <td style="text-align: center;">
+                                <p-button icon="pi pi-check" [rounded]="true" class="w-full" />
+                            
+                            </td>
+                            <td style="text-align: center;">
+                                <p-button icon="pi pi-check" [rounded]="true" class="w-full" />
+                            
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template #emptymessage>
+                        <tr>
+                            <td colspan="100%" style="text-align:center">No Record Found!!</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+                   
+            </div>
+        </form>
+        </div>
+    </p-fluid>

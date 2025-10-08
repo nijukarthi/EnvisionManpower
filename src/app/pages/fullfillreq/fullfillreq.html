@@ -1,0 +1,125 @@
+<p-fluid>
+        <div class=" card flex">
+          
+        <form [formGroup]="demandForm">
+            <div class="card grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="firstname2">Requision ID</label>
+                    <input pInputText id="firstname2" formControlName="requisitionId" type="text" />
+                </div>
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="lastname2">P-code</label>
+                    <p-select appendTo="body" [options]="PCode" formControlName="pCode" optionLabel="name" optionValue="name" placeholder="Select PCode"
+                        [filter]="true" filterBy="name" class="w-full md:w-56" />
+                </div>
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="lastname2">State</label>
+                    <p-select appendTo="body" [options]="states" formControlName="state" optionLabel="label" optionValue="label" placeholder="Select State"
+                        [filter]="true" filterBy="label" class="w-full md:w-56" />
+                </div>
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="lastname2">Planed deployment date</label>
+                    <input pInputText id="firstname2" formControlName="plannedDate" type="text" />
+
+                    <!-- <p-datepicker appendTo="body" formControlName="plannedDate" placeholder="Select Date" class="w-full" /> -->
+                </div>
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="lastname2">Actual deployment date</label>
+                    <input pInputText id="firstname2" formControlName="actualDate" type="text" />
+
+                    <!-- <p-datepicker appendTo="body" formControlName="actualDate" placeholder="Select Date" class="w-full" /> -->
+                </div>
+                <div class="flex flex-wrap gap-4 w-full">
+                    <label for="lastname2">Duration date</label>
+                    <input pInputText id="firstname2" formControlName="durationDate" type="text" />
+
+                    <!-- <p-datepicker appendTo="body" formControlName="durationDate" placeholder="Select Date" class="w-full" /> -->
+                </div>
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="lastname2">Requested By</label>
+                    <input pInputText formControlName="requestedBy" type="text" class="w-full" />
+                </div>
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="lastname2">Role</label>
+                    <input pInputText formControlName="role" type="text" class="w-full" />
+                </div>
+                 <div class="flex flex-wrap gap-2 w-full">
+                    <label for="lastname2">Manpower Service Manager Assignment</label>
+                    <input pInputText formControlName="assignment" type="text" class="w-full" />
+                </div>
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="lastname2">Consultancy Name</label>
+                    <p-select appendTo="body" [options]="consultancyList" formControlName="consultancyName" optionLabel="label" optionValue="label" placeholder="Select Consultancy"
+                        [filter]="true" filterBy="label" class="w-full md:w-56" />
+                </div>
+                 <div class="flex flex-wrap gap-2 w-full">
+                    <label for="lastname2">TEMP Emlopyee ID</label>
+                    <input pInputText formControlName="tempEmpId" type="text" class="w-full" />
+                    
+                </div>
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="lastname2">Candidate Name</label>
+                    <input pInputText formControlName="candidateName" type="text" class="w-full" />
+                </div>
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="lastname2">Designation Applied</label>
+                    <input pInputText formControlName="designation" type="text" class="w-full" />
+                </div>
+                 <div class="flex flex-wrap gap-2 w-full">
+                    <label for="lastname2">Final Interview</label>
+                    <p-datepicker appendTo="body" formControlName="finalInterview" placeholder="Select Date" class="w-full" /> 
+                </div>
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="lastname2">Interviwer</label>
+                    <input pInputText formControlName="interviwer" type="text" class="w-full" />
+                </div>
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="lastname2">Comments</label>
+                    <textarea rows="2"cols="30" formControlName="comments" pTextarea [autoResize]="true"></textarea>
+                </div>
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="lastname2">Status by Resource Manager </label>
+                    <p-select appendTo="body" [options]="statusList" formControlName="statusResource" optionLabel="label" optionValue="label" placeholder="Select Consultancy"
+                        [filter]="true" filterBy="label" class="w-full md:w-56" />
+                </div>
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="lastname2">Candidate Acceptance </label>
+                    <p-select appendTo="body" [options]="acceptanceList" formControlName="candidateAcceptance" optionLabel="label" optionValue="label" placeholder="Select Consultancy"
+                        [filter]="true" filterBy="label" class="w-full md:w-56" />
+                </div>
+                 <div class="flex flex-wrap gap-2 w-full">
+                    <label for="lastname2">(if Y) Joining Date </label>
+                    <p-datepicker appendTo="body" formControlName="joiningDate" placeholder="Select Date" class="w-full" /> 
+                </div>
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="lastname2">PR No</label>
+                    <input pInputText formControlName="PRNo" type="text" class="w-full" />
+                </div>
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="lastname2">PR Date </label>
+                    <p-datepicker appendTo="body" formControlName="PRDate" placeholder="Select Date" class="w-full" /> 
+                </div>
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="lastname2">PO Date </label>
+                    <p-datepicker appendTo="body" formControlName="PODate" placeholder="Select Date" class="w-full" /> 
+                </div>
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="lastname2">PO Number</label>
+                    <input pInputText formControlName="PONumber" type="text" class="w-full" />
+                </div>
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="lastname2">Resource Manager Approval on Joining </label>
+                    <p-datepicker appendTo="body" formControlName="resourceJoining" placeholder="Select Date" class="w-full" /> 
+                </div>
+
+                
+            </div>
+             <div class="flex justify-center items-center gap-4 mt-6">
+                        <button pButton label="Submit" class="p-button-outlined" icon="pi pi-save"
+                            ></button>
+                        <button pButton label="Reset" class="p-button-outlined" icon="pi pi-times"
+                            severity="danger"></button>
+                    </div>
+        </form>
+        </div>
+    </p-fluid>

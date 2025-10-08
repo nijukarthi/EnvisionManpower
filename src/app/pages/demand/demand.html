@@ -1,0 +1,115 @@
+<p-fluid>
+        <div class=" card flex">
+          <!--   <div class="card flex flex-col gap-6 w-full">
+                <div class="font-semibold text-xl">DEMAND REQUEST</div>
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="firstname2">Requision ID</label>
+                        <input pInputText id="firstname2" type="text" />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="lastname2">P-code</label>
+                       <p-select [options]="PCode" [(ngModel)]="selectedPCode" optionLabel="name" placeholder="Select PCode" [filter]="true" filterBy="name"  class="w-full md:w-56" />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="lastname2">State</label>
+                       <p-select [options]="states" [(ngModel)]="selectedState" optionLabel="label" placeholder="Select State" [filter]="true" filterBy="label"  class="w-full md:w-56" />
+                    </div>
+                    
+                </div>
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="lastname2">Planed deployment date</label>
+                        <p-datepicker appendTo="body" placeholder="Select Date" />
+                    </div>
+                     <div class="flex flex-wrap gap-2 w-full">
+                        <label for="lastname2">Duration</label>
+                        <p-datepicker appendTo="body" placeholder="Select Date" />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="lastname2">Requested By</label>
+                        <input pInputText id="firstname2" type="text" value="ADMIN" [disabled]="true"/>
+                    </div>
+                </div>
+
+                
+
+                
+            </div> -->
+        <form [formGroup]="demandForm">
+            <div class="card grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="firstname2">Requision ID</label>
+                    <input pInputText id="firstname2" formControlName="requisitionId" type="text" />
+                </div>
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="lastname2">P-code</label>
+                    <p-select [options]="PCode" formControlName="pCode" optionLabel="name" placeholder="Select PCode"
+                        [filter]="true" filterBy="name" class="w-full md:w-56" />
+                </div>
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="lastname2">State</label>
+                    <p-select [options]="states" formControlName="state" optionLabel="label" placeholder="Select State"
+                        [filter]="true" filterBy="label" class="w-full md:w-56" />
+                </div>
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="lastname2">Planed deployment date</label>
+                    <p-datepicker appendTo="body" formControlName="plannedDate" placeholder="Select Date" class="w-full" />
+                </div>
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="lastname2">Actual deployment date</label>
+                    <p-datepicker appendTo="body" formControlName="actualDate" placeholder="Select Date" class="w-full" />
+                </div>
+                <div class="flex flex-wrap gap-4 w-full">
+                    <label for="lastname2">Duration date</label>
+                    <p-datepicker appendTo="body" formControlName="durationDate" placeholder="Select Date" class="w-full" />
+                </div>
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="lastname2">Requested By</label>
+                    <input pInputText formControlName="requestedBy" type="text" class="w-full" />
+                </div>
+                <div class="flex flex-wrap gap-2 w-full">
+                    <label for="lastname2">Add SPN</label>
+                    <p-button icon="pi pi-plus" [rounded]="true" class="w-full" (onClick)="addSpnRow()" />
+                </div>
+
+                
+            </div>
+            <div class="">
+                <div formArrayName="spnArray">
+                    <div *ngFor="let spv of spnArray.controls; let i = index" [formGroupName]="i"
+                        class="card flex flex-wrap md:flex-wrap items-end gap-4 p-4 mb-3">
+            
+                        
+            
+                        <!-- SPN Description -->
+                        <div class="flex-1 min-w-[250px]">
+                            <label>SPN Description</label>
+                            <p-select [options]="spnDesc" formControlName="SPNDesc" optionLabel="name"
+                                placeholder="Select Description" [filter]="true" filterBy="name" class="w-full" />
+                        </div>
+            
+                        <!-- Experience -->
+                        <div class="flex-1 min-w-[180px]">
+                            <label>Experience</label>
+                            <p-select [options]="exp" formControlName="experience" optionLabel="label"
+                                placeholder="Select Experience" [filter]="true" class="w-full" />
+                        </div>
+            
+                        <!-- Quantity -->
+                        <div class="flex-none min-w-[120px]">
+                            <label>Quantity</label>
+                            <input pInputText formControlName="quantity" type="number" min="1" class="w-full" />
+                        </div>
+            
+                        <!-- Delete -->
+                        <div class="flex-none">
+                            <p-button icon="pi pi-trash" severity="danger" [rounded]="true" (onClick)="deleteSpnRow(i)" />
+                        </div>
+                    </div>
+                </div>
+            
+            </div>
+        </form>
+        </div>
+    </p-fluid>
