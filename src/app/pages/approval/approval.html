@@ -1,84 +1,63 @@
 <p-fluid>
-        <div class=" card flex">
-          
-        <form [formGroup]="demandForm">
-            <div class="card grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="flex flex-wrap gap-2 w-full">
-                    <label for="firstname2">Requision ID</label>
-                    <input pInputText id="firstname2" formControlName="requisitionId" type="text" />
-                </div>
-                <div class="flex flex-wrap gap-2 w-full">
-                    <label for="lastname2">P-code</label>
-                    <p-select [options]="PCode" formControlName="pCode" optionLabel="name" optionValue="name" placeholder="Select PCode"
-                        [filter]="true" filterBy="name" class="w-full md:w-56" />
-                </div>
-                <div class="flex flex-wrap gap-2 w-full">
-                    <label for="lastname2">State</label>
-                    <p-select [options]="states" formControlName="state" optionLabel="label" optionValue="label" placeholder="Select State"
-                        [filter]="true" filterBy="label" class="w-full md:w-56" />
-                </div>
-                <div class="flex flex-wrap gap-2 w-full">
-                    <label for="lastname2">Planed deployment date</label>
-                    <input pInputText id="firstname2" formControlName="plannedDate" type="text" />
-
-                    <!-- <p-datepicker appendTo="body" formControlName="plannedDate" placeholder="Select Date" class="w-full" /> -->
-                </div>
-                <div class="flex flex-wrap gap-2 w-full">
-                    <label for="lastname2">Actual deployment date</label>
-                    <input pInputText id="firstname2" formControlName="actualDate" type="text" />
-
-                    <!-- <p-datepicker appendTo="body" formControlName="actualDate" placeholder="Select Date" class="w-full" /> -->
-                </div>
-                <div class="flex flex-wrap gap-4 w-full">
-                    <label for="lastname2">Duration date</label>
-                    <input pInputText id="firstname2" formControlName="durationDate" type="text" />
-
-                    <!-- <p-datepicker appendTo="body" formControlName="durationDate" placeholder="Select Date" class="w-full" /> -->
-                </div>
-                <div class="flex flex-wrap gap-2 w-full">
-                    <label for="lastname2">Requested By</label>
-                    <input pInputText formControlName="requestedBy" type="text" class="w-full" />
-                </div>
-                
-
-                
-            </div>
+        <div class=" card">
+        
             <div class="">
-                <p-table [value]="spvArrayList" [(selection)]="selectedApprovalList" dataKey="id" [tableStyle]="{ 'min-width': '50rem' }"
-                [paginator]="true" [rowsPerPageOptions]="[5, 10, 20]" stripedRows [rows]="10" [rowHover]="true"
-                 [showGridlines]="true" [showCurrentPageReport]="true"
-                  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-                 [paginator]="true"
-                responsiveLayout="scroll">
+                <p-table [value]="spvArrayList" #dt [(selection)]="selectedApprovalList" dataKey="id"
+                    [tableStyle]="{ 'min-width': '50rem' }" [paginator]="true" [rowsPerPageOptions]="[5, 10, 20]" stripedRows
+                    [rows]="10" [rowHover]="true" [showGridlines]="true" [showCurrentPageReport]="true"
+                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [paginator]="true"
+                    responsiveLayout="scroll" [globalFilterFields]="['spn','spnDesc','exp','qty']">
                     <ng-template #header>
                         <tr>
                             <th style="width: 4rem"><p-tableHeaderCheckbox /></th>
+                            <th>View</th>
                             <th>S.No</th>
+                            <th>SPN</th>
                             <th>SPN Description</th>
                             <th>Experience</th>
                             <th>Quantity</th>
-                            <th style="text-align: center;">State Head Approval</th>
-                            <th style="text-align: center;">Construction Head  Approval</th>
+                            <th style="text-align: center;">State_Head_Approval</th>
+                            <th style="text-align: center;">Department_Head_Approval</th>
+                        </tr>
+                        <tr>
+                            <td colspan="3"></td>
+                            <td>
+                            <input #spn type="text"(input)="dt.filter(spn.value, 'spn', 'contains')" placeholder="search..." style="width: 9rem;margin:5px" pInputText />
+                            </td>
+                            <td>
+                            <input #spnDesc type="text"(input)="dt.filter(spnDesc.value, 'spnDesc', 'contains')" placeholder="search..." style="width: 9rem;margin:5px" pInputText />
+                            </td>
+                            <td>
+                            <input #exp type="text"(input)="dt.filter(exp.value, 'exp', 'contains')" placeholder="search..." style="width: 9rem;margin:5px" pInputText />
+                            </td>
+                            <td>
+                            <input #qty type="text"(input)="dt.filter(qty.value, 'qty', 'contains')" placeholder="search..." style="width: 9rem;margin:5px" pInputText />
+                            </td>
+                            <td colspan="100%"></td>
                         </tr>
                     </ng-template>
                     <ng-template #body let-product let-rowIndex="rowIndex">
-                        <tr >
+                        <tr>
                             <td>
                                 <p-tableCheckbox [value]="product" />
                             </td>
+                            <td><p-button icon="pi pi-eye" [rounded]="true" class="w-full" severity="warn" (click)="showDetailPopup(product)"/></td>
                             <td>{{ rowIndex + 1 }}</td>
+                            <td>{{ product.spn }}</td>
                             <td>{{ product.spnDesc }}</td>
                             <td>{{ product.exp }}</td>
                             <td style="text-align: center;">
                                 <input type="text" pInputText value="{{product.qty}}" [(ngModel)]="product.qty">
                             </td>
                             <td style="text-align: center;">
-                                <p-button icon="pi pi-check" [rounded]="true" class="w-full" />
-                            
+                                <p-button icon="pi pi-check" [rounded]="true" class="w-full mr-2" />
+                                <p-button icon="pi pi-times" [rounded]="true" class="w-full" severity="danger" />
+        
                             </td>
                             <td style="text-align: center;">
-                                <p-button icon="pi pi-check" [rounded]="true" class="w-full" />
-                            
+                                <p-button icon="pi pi-check" [rounded]="true" class="w-full  mr-2" />
+                                <p-button icon="pi pi-times" [rounded]="true" class="w-full" severity="danger" />
+        
                             </td>
                         </tr>
                     </ng-template>
@@ -88,8 +67,65 @@
                         </tr>
                     </ng-template>
                 </p-table>
-                   
+        
             </div>
-        </form>
+        </div>
+       
+    </p-fluid>
+
+    <p-dialog header="" [resizable]="true" [draggable]="false" [modal]="true" [maximizable]="true"
+    appendTo="body" [(visible)]="viewDetail" [style]="{ width: '99vw' }" [contentStyle]="{ height: '500px' }">
+    <p-fluid>
+        <div class=" card flex">
+            <form [formGroup]="demandForm">
+                <div class="card grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="firstname2">Requision ID</label>
+                        <input pInputText id="firstname2" formControlName="requisitionId" type="text" />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="lastname2">P-code</label>
+                        <p-select [options]="PCode" formControlName="pCode" optionLabel="name" optionValue="name"
+                            placeholder="Select PCode" [filter]="true" filterBy="name" class="w-full md:w-56" />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="lastname2">State</label>
+                        <p-select [options]="states" formControlName="state" optionLabel="label" optionValue="label"
+                            placeholder="Select State" [filter]="true" filterBy="label" class="w-full md:w-56" />
+                    </div>
+                     <div class="flex flex-wrap gap-2 w-full">
+                        <label for="lastname2"> Department</label>
+                        <p-select [options]="departmentList" formControlName="department" optionLabel="label" optionValue="label"
+                            placeholder="Select Department" [filter]="true" filterBy="label" class="w-full md:w-56" />
+                    </div>
+                     <div class="flex flex-wrap gap-2 w-full">
+                        <label for="lastname2">Category</label>
+                        <p-select [options]="categoryList" formControlName="category" optionLabel="label" optionValue="label"
+                            placeholder="Select Category" [filter]="true" filterBy="label" class="w-full md:w-56" />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="lastname2">Planed deployment date</label>
+                        <input pInputText id="firstname2" formControlName="plannedDate" type="text" />
+    
+                        <!-- <p-datepicker appendTo="body" formControlName="plannedDate" placeholder="Select Date" class="w-full" /> -->
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="lastname2">Actual deployment date</label>
+                        <input pInputText id="firstname2" formControlName="actualDate" type="text" />
+    
+                        <!-- <p-datepicker appendTo="body" formControlName="actualDate" placeholder="Select Date" class="w-full" /> -->
+                    </div>
+                   
+                    <div class="flex flex-wrap gap-2 w-full">
+                        <label for="lastname2">Requested By</label>
+                        <input pInputText formControlName="requestedBy" type="text" class="w-full" />
+                    </div>
+    
+    
+    
+                </div>
+    
+            </form>
         </div>
     </p-fluid>
+</p-dialog>

@@ -1,7 +1,111 @@
 <p-fluid>
-        <div class=" card flex">
+        <div class="card">
+
+             <div class="">
+                <p-table [value]="spvArrayList"  #dt
+                    [tableStyle]="{ 'min-width': '50rem' }" [paginator]="true" [rowsPerPageOptions]="[5, 10, 20]" stripedRows
+                    [rows]="10" [rowHover]="true" [showGridlines]="true" [showCurrentPageReport]="true"
+                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [paginator]="true"
+                    responsiveLayout="scroll" [globalFilterFields]="['reqId','reqBy','pcode','state','spn','spnDesc','exp','qty','planDate','planrelease',]">
+                <ng-template #caption>
+                     <div class="flex justify-end">
+                    
+                    <span class="p-input-icon-left mb-2">
+                        <p-button label="Submit" icon="pi pi-save" severity="success" />
+                    </span>
+                </div>
+                </ng-template>
+                    <ng-template #header>
+                        <tr>
+                            <th>S.No</th>
+                            <th>Requision_ID</th>
+                            <th>Requision_By</th>
+                            <th>P_code</th>
+                            <th>State</th>
+                            <th>SPN</th>
+                            <th>SPN_Description</th>
+                            <th>Quantity</th>
+                            <th>Planed deployment date</th>
+                            <th>Planed release date</th>
+                            <th>Role</th>
+                            <th>Manpower_Service_Manager Assignment</th>
+                            <th>Consultancy_Name</th>
+                            
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                            <input #reqId type="text"(input)="dt.filter(reqId.value, 'reqId', 'contains')" placeholder="search..." style="width: 9rem;margin:5px" pInputText />
+                            </td>
+                            <td>
+                            <input #reqBy type="text"(input)="dt.filter(reqBy.value, 'reqBy', 'contains')" placeholder="search..." style="width: 9rem;margin:5px" pInputText />
+                            </td>
+                            
+                            <td>
+                            <input #pcode type="text"(input)="dt.filter(pcode.value, 'pcode', 'contains')" placeholder="search..." style="width: 9rem;margin:5px" pInputText />
+                            </td>
+                            <td>
+                            <input #state type="text"(input)="dt.filter(state.value, 'state', 'contains')" placeholder="search..." style="width: 9rem;margin:5px" pInputText />
+                            </td>
+                            <td>
+                            <input #spn type="text"(input)="dt.filter(spn.value, 'spn', 'contains')" placeholder="search..." style="width: 9rem;margin:5px" pInputText />
+                            </td>
+                            <td>
+                            <input #spnDesc type="text"(input)="dt.filter(spnDesc.value, 'spnDesc', 'contains')" placeholder="search..." style="width: 9rem;margin:5px" pInputText />
+                            </td>
+                            
+                            <td>
+                            <input #qty type="text"(input)="dt.filter(qty.value, 'qty', 'contains')" placeholder="search..." style="width: 9rem;margin:5px" pInputText />
+                            </td>
+                            <td>
+                            <input #planDate type="text"(input)="dt.filter(planDate.value, 'planDate', 'contains')" placeholder="search..." style="width: 9rem;margin:5px" pInputText />
+                            </td>
+                            <td>
+                            <input #planrelease type="text"(input)="dt.filter(planrelease.value, 'planrelease', 'contains')" placeholder="search..." style="width: 9rem;margin:5px" pInputText />
+                            </td>
+                            
+                            <td colspan="100%"></td>
+                        </tr>
+                    </ng-template>
+                    <ng-template #body let-product let-rowIndex="rowIndex">
+                        <tr>
+                            
+                            <td>{{ rowIndex + 1 }}</td>
+                            <td>{{ product.reqId }}</td>
+                            <td>{{ product.reqBy }}</td>
+                            <td>{{ product.pcode }}</td>
+                            <td>{{ product.state }}</td>
+                            <td>{{ product.spn }}</td>
+                            <td>{{ product.spnDesc }}</td>
+                            <td>{{ product.qty }}</td>
+                            <td>{{ product.planDate }}</td>
+                            <td>{{ product.planrelease }}</td>
+                            <td>
+                                <p-select [options]="roleList" appendTo="body" optionLabel="name" optionValue="name"
+                            placeholder="Select Role" [filter]="true" filterBy="name" class="w-full md:w-56" />
+                            </td>
+                            <td>
+                                <p-select [options]="manpowerList" appendTo="body" optionLabel="name" optionValue="name"
+                            placeholder="Select Manpower" [filter]="true" filterBy="name" class="w-full md:w-56" />
+                            </td>
+                            <td>
+                                <p-select [options]="consultancyList" appendTo="body" optionLabel="label" optionValue="label"
+                            placeholder="Select Consultancy" [filter]="true" filterBy="label" class="w-full md:w-56" />
+                            </td>
+                            
+                        </tr>
+                    </ng-template>
+                    <ng-template #emptymessage>
+                        <tr>
+                            <td colspan="100%" style="text-align:center">No Record Found!!</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+        
+            </div>
           
-        <form [formGroup]="demandForm">
+        </div>
+        <form [formGroup]="demandForm" *ngIf="false">
             <div class="card grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div class="flex flex-wrap gap-2 w-full">
                     <label for="firstname2">Requision ID</label>
@@ -121,5 +225,4 @@
                             severity="danger"></button>
                     </div>
         </form>
-        </div>
     </p-fluid>

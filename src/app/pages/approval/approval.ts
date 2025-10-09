@@ -129,7 +129,23 @@ export class Approval {
     qty:8
   }
  ];
- selectedApprovalList:any = []
+ selectedApprovalList:any = [];
+ viewDetail:boolean = false;
+  departmentList:any = [
+  {label:'O&M',id:1},
+    {label:'BESS',id:2},
+    {label:'Projects',id:3},
+    {label:'QEHS',id:4},
+
+ ]
+
+ categoryList: any[] = [
+  { label: 'Maintenance', id: 101 }, { label: 'Operations', id: 102 },
+  { label: 'Battery Testing', id: 101 }, { label: 'BMS', id: 102 },
+  { label: 'Fixed Cost Manpower Services', id: 101 }, { label: 'Cost Plus Manpower Services', id: 102 },
+  { label: 'Quality', id: 101 }, { label: 'Safety', id: 102 },
+ ];
+
   constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
@@ -138,10 +154,12 @@ export class Approval {
       pCode: [{ value: 'PCODE 1', disabled: true }, Validators.required],
       state: [{ value: 'Karnataka', disabled: true }, Validators.required],
       plannedDate: [{ value: '10-10-2025', disabled: true },],
+      department: [{ value: 'Projects', disabled: true },],
+      category: [{ value: 'Fixed Cost Manpower Services', disabled: true },],
       actualDate: [{ value: '09-10-2025', disabled: true },],
       durationDate: [{ value: '12-10-2025', disabled: true },],
       requestedBy: [{ value: 'ADMIN', disabled: true }],
-      spvArray: this.fb.array([])  // FormArray for dynamic rows
+     // spvArray: this.fb.array([])  // FormArray for dynamic rows
     });
   }
 
@@ -165,5 +183,9 @@ export class Approval {
 
   onSubmit(): void {
     console.log(this.demandForm.value);
+  }
+
+  showDetailPopup(val:any){
+    this.viewDetail = true;
   }
 }

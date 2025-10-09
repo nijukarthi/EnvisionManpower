@@ -116,17 +116,30 @@ export class Fullfillreq {
  spvArrayList:any = [
   {
     id:1,
+    reqId:'MPT001',
+    reqBy:'Admin',
+    pcode:'PCODE 1',
+    state:'Karnataka',
     spn:'SPN 1',
     spnDesc:'Project Admin Executive',
     exp:'3-5 Years',
-    qty:2
+    qty:2,
+    planDate:'10-10-2025',
+    planrelease:'10-10-2025',
+   
   },
   {
     id:2,
+    reqId:'MPT002',
+    reqBy:'Admin',
+    pcode:'PCODE 2',
+    state:'Tamil Nadu',
     spn:'SPN 2',
     spnDesc:'Projects Civil Manager',
     exp:'5-8 Years',
-    qty:8
+    qty:8,
+     planDate:'10-10-2025',
+    planrelease:'10-10-2025',
   }
  ];
  consultancyList:any = [
@@ -148,6 +161,9 @@ export class Fullfillreq {
   {label:'Yes',id:1},
   {label:'No',id:2},
  ];
+
+ roleList:any = [];
+ manpowerList:any = [];
 
   constructor(private fb: FormBuilder) {}
 

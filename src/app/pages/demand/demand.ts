@@ -16,6 +16,7 @@ export class Demand {
     {name:'PCODE 1',id:1},
     {name:'PCODE 2',id:2},
     {name:'PCODE 3',id:3},
+    {name:'PCODE 4',id:4},
   ]
 
   states = [
@@ -53,9 +54,9 @@ export class Demand {
   demandForm!: FormGroup;
 
   spn:any = [
-    {name:'SPN 1',id:1},
-    {name:'SPN 2',id:2},
-    {name:'SPN 3',id:3},
+    {label:'SPN 1',id:1},
+    {label:'SPN 2',id:2},
+    {label:'SPN 3',id:3},
   ]
 
   
@@ -88,42 +89,60 @@ export class Demand {
 ];
 
   exp:any = [
-   { label: '0 Years', value: '0' },
-  { label: '3-5 Years', value: '3-5' },
-  { label: '5-8 Years', value: '5-8' },
-  { label: '3-5 Years', value: '3-5' },
-  { label: '5-8 Years', value: '5-8' },
-  { label: '8-10 Years', value: '8-10' },
-  { label: '3-5 Years', value: '3-5' },
-  { label: '5-8 Years', value: '5-8' },
-  { label: '8-10 Years', value: '8-10' },
-  { label: '3-5 Years', value: '3-5' },
-  { label: '5-8 Years', value: '5-8' },
-  { label: '8-10 Years', value: '8-10' },
-  { label: '3-5 Years', value: '3-5' },
-  { label: '5-8 Years', value: '5-8' },
-  { label: '8-10 Years', value: '8-10' },
-  { label: '3-5 Years', value: '3-5' },
-  { label: '5-8 Years', value: '5-8' },
-  { label: '8-10 Years', value: '8-10' },
-  { label: '3-5 Years', value: '3-5' },
-  { label: '5-8 Years', value: '5-8' },
-  { label: '8-10 Years', value: '8-10' },
-  { label: '6-8 Years', value: '6-8' },
-  { label: '8-10 Years', value: '8-10' },
-  { label: '3-5 Years', value: '3-5' },
-  { label: '5-8 Years', value: '5-8' }
+   { label: '0 Years', value: '0 Years' },
+  { label: '3-5 Years', value: '3-5 Years' },
+  { label: '5-8 Years', value: '5-8 Years' },
+  { label: '3-5 Years', value: '3-5 Years' },
+  { label: '5-8 Years', value: '5-8 Years' },
+  { label: '8-10 Years', value: '8-10 Years' },
+  { label: '3-5 Years', value: '3-5 Years' },
+  { label: '5-8 Years', value: '5-8 Years' },
+  { label: '8-10 Years', value: '8-10 Years' },
+  { label: '3-5 Years', value: '3-5 Years' },
+  { label: '5-8 Years', value: '5-8 Years' },
+  { label: '8-10 Years', value: '8-10 Years' },
+  { label: '3-5 Years', value: '3-5 Years' },
+  { label: '5-8 Years', value: '5-8 Years' },
+  { label: '8-10 Years', value: '8-10 Years' },
+  { label: '3-5 Years', value: '3-5 Years' },
+  { label: '5-8 Years', value: '5-8 Years' },
+  { label: '8-10 Years', value: '8-10 Years' },
+  { label: '3-5 Years', value: '3-5 Years' },
+  { label: '5-8 Years', value: '5-8 Years' },
+  { label: '8-10 Years', value: '8-10 Years' },
+  { label: '6-8 Years', value: '6-8 Years' },
+  { label: '8-10 Years', value: '8-10 Years' },
+  { label: '3-5 Years', value: '3-5 Years' },
+  { label: '5-8 Years', value: '5-8 Years' }
  ]
+
+ departmentList:any = [
+  {label:'O&M',id:1},
+    {label:'BESS',id:2},
+    {label:'Projects',id:3},
+    {label:'QEHS',id:4},
+
+ ]
+
+ categoryList: any[] = [];
+ private categoriesByDept: Record<number, any[]> = {
+    1: [ { label: 'Maintenance', id: 101 }, { label: 'Operations', id: 102 } ],
+    2: [ { label: 'Battery Testing', id: 201 }, { label: 'BMS', id: 202 } ],
+    3: [ { label: 'Fixed Cost Manpower Services', id: 301 }, { label: 'Cost Plus Manpower Services', id: 302 } ],
+    4: [ { label: 'Quality', id: 401 }, { label: 'Safety', id: 402 } ]
+  };
   constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
     this.demandForm = this.fb.group({
-      requisitionId: [''],
+     // requisitionId: [''],
       pCode: [null, Validators.required],
       state: [null, Validators.required],
-      plannedDate: [null],
+      department: [null, Validators.required],
+      category: [null, Validators.required],
+      /* plannedDate: [null],
       actualDate: [null],
-      durationDate: [null],
+      durationDate: [null], */
       requestedBy: [{ value: 'ADMIN', disabled: true }],
       spnArray: this.fb.array([])  // FormArray for dynamic rows
     });
@@ -133,11 +152,72 @@ export class Demand {
     return this.demandForm.get('spnArray') as FormArray;
   }
 
+  pcodeStateList:{[key:string]:string} = {
+    "PCODE 1":"Karnataka",
+    "PCODE 2":"Tamil Nadu",
+    "PCODE 3":"Kerala"
+  }
+
+  spnDescList:{[key:string]:string} = {
+    "SPN 1":"Fresher Hiring",
+    "SPN 2":"Project Admin Executive",
+    "SPN 3":"Projects QEHS Engineer",
+  }
+
+  spnListforDesc:{[key:string]:string} = {
+    "Fresher Hiring":"SPN 1",
+    "Project Admin Executive":"SPN 2",
+    "Projects QEHS Engineer":"SPN 3",
+  }
+
+   spnExperienceList:{[key:string]:string} = {
+    "SPN 1":"0 Years",
+    "SPN 2":"3-5 Years",
+    "SPN 3":"5-8 Years",
+  }
+
+  spnListforExp:{[key:string]:string} = {
+    "Fresher Hiring":"0 Years",
+    "Project Admin Executive":"3-5 Years",
+    "Projects QEHS Engineer":"5-8 Years",
+  }
+
+  selectPCode(val:any){
+    var pcode = val.value.name;
+    var state = this.pcodeStateList[pcode];
+    console.log(state);
+    if(state){
+      this.demandForm.get('state')?.patchValue(state);
+      this.demandForm.get('state')?.disable();
+    }else{
+      this.demandForm.get('state')?.patchValue('');
+      this.demandForm.get('state')?.enable();
+    }
+    
+    
+  }
+
+   onDepartmentChange(val: any) {
+    var id = val.value.id;
+    if (id && this.categoriesByDept[id]) {
+      this.categoryList = this.categoriesByDept[id];
+    } else {
+      this.categoryList = [];
+    }
+    // reset selected category whenever department changes
+    //this.selectedCategoryId = undefined;
+  }
+
+
+
   addSpnRow(): void {
     const spvGroup = this.fb.group({
+      SPN: ['', Validators.required],
       SPNDesc: ['', Validators.required],
       experience: ['', Validators.required],
-      quantity: [null, [Validators.required, Validators.min(1)]]
+      quantity: [null, [Validators.required, Validators.min(1)]],
+      plannedDate: ['', Validators.required],
+      actualDate: ['', Validators.required],
     });
     this.spnArray.push(spvGroup);
   }
@@ -145,6 +225,36 @@ export class Demand {
   deleteSpnRow(index: number): void {
     this.spnArray.removeAt(index);
   }
+
+  changeSPN(val:any,i:any){
+    const selectedSPN = val.value; // the selected SPN label
+    const spnInfo = this.spn.find((x:any) => x.label === selectedSPN);
+
+    if (spnInfo) {
+      this.spnArray.at(i).patchValue({
+        SPNDesc: this.spnDescList[spnInfo.label],
+        experience: this.spnExperienceList[spnInfo.label],
+      });
+    } else {
+      this.spnArray.at(i).patchValue({ SPNDesc: '' });
+    }
+  }
+
+  changeSPNDesc(val:any,i:any){
+    const selectedSPN = val.value; // the selected SPN label
+    const spnInfo = this.spnDesc.find((x:any) => x.name === selectedSPN);
+
+    if (spnInfo) {
+      this.spnArray.at(i).patchValue({
+        SPN: this.spnListforDesc[spnInfo.name],
+        experience: this.spnListforExp[spnInfo.name],
+      });
+    } else {
+      this.spnArray.at(i).patchValue({ SPN: '' });
+    }
+  }
+    
+  
 
   onSubmit(): void {
     console.log(this.demandForm.value);
