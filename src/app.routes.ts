@@ -9,11 +9,16 @@ import { Demand } from '@/pages/demand/demand';
 import { Approval } from '@/pages/approval/approval';
 import { Fullfillreq } from '@/pages/fullfillreq/fullfillreq';
 import { InterviewManagement } from '@/pages/interview-management/interview-management';
+import { Register } from '@/pages/auth/register';
 
 export const appRoutes: Routes = [
     {
         path:'',
         component:Login
+    },
+    {
+        path: 'register',
+        component: Register
     },
     {
         path: 'Dashboard',

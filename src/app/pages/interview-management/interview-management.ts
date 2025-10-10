@@ -153,7 +153,7 @@ selectedPCode:any = "";
 
   ngOnInit(): void {
     this.demandForm = this.fb.group({
-      generateId: [{ value: '' }],
+      generateId: [''],
       consultancyName: [''],
       candidateName: [''],
       designation: [''],
