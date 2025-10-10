@@ -124,7 +124,7 @@ export class Demand {
 
  ]
 
- categoryList: any[] = [];
+ categoryList: any[] = [ { label: 'Fixed Cost Manpower Services', id: 301 }, { label: 'Cost Plus Manpower Services', id: 302 } ];
  private categoriesByDept: Record<number, any[]> = {
     1: [ { label: 'Maintenance', id: 101 }, { label: 'Operations', id: 102 } ],
     2: [ { label: 'Battery Testing', id: 201 }, { label: 'BMS', id: 202 } ],
