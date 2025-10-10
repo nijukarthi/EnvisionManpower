@@ -87,6 +87,44 @@ export class AppMenu {
                         routerLink: ['/Dashboard/interviewManagement']
                     },
                     {
+                        label: 'Masters',
+                        icon: 'pi pi-database',
+                        items: [
+                            {
+                                label: 'Consultancy',
+                                icon: 'pi pi-server',
+                            },
+                            {
+                                label: 'SPN',
+                                icon: 'pi pi-warehouse',
+                            },
+                            {
+                                label: 'Project',
+                                icon: 'pi pi-inbox'
+                            },
+                            {
+                                label: 'User Group',
+                                icon: 'pi pi-users'
+                            },
+                            {
+                                label: 'Category',
+                                icon: 'pi pi-table'
+                            },
+                            {
+                                label: 'Department',
+                                icon: 'pi pi-sitemap'
+                            },
+                            {
+                                label: 'Users',
+                                icon: 'pi pi-user'
+                            },
+                            {
+                                label: 'Guest Users',
+                                icon: "pi pi-address-book"
+                            }
+                        ]
+                    },
+                    {
                         label: 'Logout',
                         icon: 'pi pi-sign-out',
                         routerLink: ['/']
@@ -94,51 +132,8 @@ export class AppMenu {
 
                 ]
             },
-           /*  {
-                label: 'Hierarchy',
-                items: [
-                    {
-                        label: 'Submenu 1',
-                        icon: 'pi pi-fw pi-bookmark',
-                        items: [
-                            {
-                                label: 'Submenu 1.1',
-                                icon: 'pi pi-fw pi-bookmark',
-                                items: [
-                                    { label: 'Submenu 1.1.1', icon: 'pi pi-fw pi-bookmark' },
-                                    { label: 'Submenu 1.1.2', icon: 'pi pi-fw pi-bookmark' },
-                                    { label: 'Submenu 1.1.3', icon: 'pi pi-fw pi-bookmark' }
-                                ]
-                            },
-                            {
-                                label: 'Submenu 1.2',
-                                icon: 'pi pi-fw pi-bookmark',
-                                items: [{ label: 'Submenu 1.2.1', icon: 'pi pi-fw pi-bookmark' }]
-                            }
-                        ]
-                    },
-                    {
-                        label: 'Submenu 2',
-                        icon: 'pi pi-fw pi-bookmark',
-                        items: [
-                            {
-                                label: 'Submenu 2.1',
-                                icon: 'pi pi-fw pi-bookmark',
-                                items: [
-                                    { label: 'Submenu 2.1.1', icon: 'pi pi-fw pi-bookmark' },
-                                    { label: 'Submenu 2.1.2', icon: 'pi pi-fw pi-bookmark' }
-                                ]
-                            },
-                            {
-                                label: 'Submenu 2.2',
-                                icon: 'pi pi-fw pi-bookmark',
-                                items: [{ label: 'Submenu 2.2.1', icon: 'pi pi-fw pi-bookmark' }]
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
+        
+        /*    {
                 label: 'Get Started',
                 items: [
                     {

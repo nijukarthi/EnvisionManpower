@@ -8,11 +8,12 @@ import { PasswordModule } from 'primeng/password';
 import { RippleModule } from 'primeng/ripple';
 import { TabsModule } from 'primeng/tabs';
 import { InputNumberModule } from "primeng/inputnumber";
+import { InputOtpModule } from "primeng/inputotp";
 
 @Component({
     selector: 'app-login',
     standalone: true,
-    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, TabsModule, InputNumberModule],
+    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, TabsModule, InputNumberModule, InputOtpModule],
     template: `
         <div class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-screen overflow-hidden">
             <div class="flex flex-col items-center justify-center">
@@ -35,7 +36,7 @@ import { InputNumberModule } from "primeng/inputnumber";
                                         <label for="email" class="text-surface-900 dark:text-surface-0 text-lg">Email</label>
                                         <input pInputText type="email" id="email" placeholder="Email Address" class="md:w-100" />
 
-                                        <p-button label="Sign in" styleClass="w-full mt-2" routerLink="/Dashboard/demand" />
+                                        <p-button routerLink="/register" label="Sign in" styleClass="w-full mt-2" />
                                     </div>
                                 </p-tabpanel>
                                 <p-tabpanel value="1">
@@ -43,7 +44,7 @@ import { InputNumberModule } from "primeng/inputnumber";
                                         <label for="contact" class="text-surface-900 dark:text-surface-0 text-lg">Mobile Number</label>
                                         <p-inputnumber inputId="contact" [useGrouping]="false" [maxlength]="10" placeholder="Enter Mobile Number" class="md:w-100" />
 
-                                        <p-button label="Sign in" styleClass="mt-2 w-full" />
+                                        <p-button routerLink="/register" label="Sign in" styleClass="mt-2 w-full" />
                                     </div>
                                 </p-tabpanel>
                             </p-tabpanels>
@@ -55,9 +56,4 @@ import { InputNumberModule } from "primeng/inputnumber";
     `
 })
 export class Login {
-    email: string = '';
-
-    password: string = '';
-
-    checked: boolean = false;
 }
