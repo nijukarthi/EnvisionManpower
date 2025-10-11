@@ -52,12 +52,12 @@ export class AppMenu {
                     {
                         label: 'Demand Request',
                         icon: 'pi pi-calendar',
-                        routerLink: ['/Dashboard/demand']
+                        routerLink: ['/home/demand']
                     },
                     {
                         label: 'Demand Approval',
                         icon: 'pi pi-ticket',
-                         routerLink: ['/Dashboard/approval']
+                         routerLink: ['/home/approval']
                        /*  items: [
                             {
                                 label: 'Login',
@@ -79,12 +79,12 @@ export class AppMenu {
                     {
                         label: 'Full Fill Request',
                         icon: 'pi pi-address-book',
-                        routerLink: ['/Dashboard/fullFill']
+                        routerLink: ['/home/fullFill']
                     },
                     {
                         label: 'Interview Management',
                         icon: 'pi pi-eject',
-                        routerLink: ['/Dashboard/interviewManagement']
+                        routerLink: ['/home/interviewManagement']
                     },
                     {
                         label: 'Masters',
@@ -93,10 +93,12 @@ export class AppMenu {
                             {
                                 label: 'Consultancy',
                                 icon: 'pi pi-server',
+                                routerLink: ['/home/consultancies']
                             },
                             {
                                 label: 'SPN',
                                 icon: 'pi pi-warehouse',
+                                routerLink: ['/home/spn']
                             },
                             {
                                 label: 'Project',
@@ -108,11 +110,13 @@ export class AppMenu {
                             },
                             {
                                 label: 'Category',
-                                icon: 'pi pi-table'
+                                icon: 'pi pi-table',
+                                routerLink: ['/home/categories']
                             },
                             {
                                 label: 'Department',
-                                icon: 'pi pi-sitemap'
+                                icon: 'pi pi-sitemap',
+                                routerLink: ['/home/departments']
                             },
                             {
                                 label: 'Users',

@@ -54,12 +54,12 @@
                 </div>
                 <div class="flex flex-wrap gap-2 w-full">
                     <label for="lastname2">Department</label>
-                    <p-select [options]="departmentList" formControlName="department" optionLabel="label" optionvalue="label" placeholder="Select PCode"
+                    <p-select [options]="departmentList" formControlName="department" optionLabel="label" optionvalue="label" placeholder="Select Department"
                         [filter]="true" filterBy="name" class="w-full md:w-56" />
                 </div>
                 <div class="flex flex-wrap gap-2 w-full">
                     <label for="lastname2">Category</label>
-                    <p-select [options]="categoryList" formControlName="category" optionLabel="label" optionvalue="label" placeholder="Select PCode"
+                    <p-select [options]="categoryList" formControlName="category" optionLabel="label" optionvalue="label" placeholder="Select Category"
                         [filter]="true" filterBy="name" class="w-full md:w-56" (onChange)="selectPCode($event)"/>
                 </div>
                 <!-- <div class="flex flex-wrap gap-2 w-full">

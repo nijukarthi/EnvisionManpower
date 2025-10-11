@@ -18,7 +18,7 @@ import { RouterModule } from "@angular/router";
                     <div class="grid grid-cols-1 gap-1">
                         <label for="v-code" class="text-lg">Verification code</label>
                         <p-inputotp id="v-code" [length]="6" [mask]="true" [integerOnly]="true" size="large" style="--p-inputotp-gap: 1.5rem;" />
-                        <p-button label="Verify" styleClass="w-full mt-2" routerLink="/Dashboard/demand" />
+                        <p-button label="Verify" styleClass="w-full mt-2" routerLink="/home/demand" />
                         <p-button label="Resend Code" variant="outlined" severity="secondary" styleClass="w-full mt-2" />
                         <h6 class="font-light">Didn't get the code?</h6>
                         <ul class="list-disc list-inside leading-relaxed -mt-3">
