@@ -1,19 +1,18 @@
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-import { ButtonModule } from 'primeng/button';
-import { CheckboxModule } from 'primeng/checkbox';
-import { InputTextModule } from 'primeng/inputtext';
+import { Component, inject } from '@angular/core';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
 import { PasswordModule } from 'primeng/password';
 import { RippleModule } from 'primeng/ripple';
 import { TabsModule } from 'primeng/tabs';
 import { InputNumberModule } from "primeng/inputnumber";
 import { InputOtpModule } from "primeng/inputotp";
+import { Shared } from '@/service/shared';
+import { Auth } from '@/service/auth/auth';
 
 @Component({
     selector: 'app-login',
     standalone: true,
-    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, TabsModule, InputNumberModule, InputOtpModule],
+    imports: [Shared, ReactiveFormsModule, PasswordModule, FormsModule, RouterModule, RippleModule, TabsModule, InputNumberModule, InputOtpModule],
     template: `
         <div class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-screen overflow-hidden">
             <div class="flex flex-col items-center justify-center">
@@ -32,12 +31,18 @@ import { InputOtpModule } from "primeng/inputotp";
                             </p-tablist>
                             <p-tabpanels>
                                 <p-tabpanel value="0">
-                                    <div class="grid grid-cols-1 gap-1">
-                                        <label for="email" class="text-surface-900 dark:text-surface-0 text-lg">Email</label>
-                                        <input pInputText type="email" id="email" placeholder="Email Address" class="md:w-100" />
+                                    <form [formGroup]="loginUserForm" (ngSubmit)="onSubmitUsers()">
+                                        <div class="grid grid-cols-1 gap-1">
+                                            <div class="grid col-span-1">
+                                                <label for="email" class="text-surface-900 dark:text-surface-0 text-lg">Email</label>
+                                                <input pInputText type="email" formControlName="email" id="email" placeholder="Email Address" class="md:w-100" />
+                                            </div>
 
-                                        <p-button routerLink="/register" label="Sign in" styleClass="w-full mt-2" />
-                                    </div>
+                                            <button type="submit" pButton class="mt-3">
+                                                <span pButtonLabel>Sign in</span>
+                                            </button>
+                                        </div>
+                                    </form>
                                 </p-tabpanel>
                                 <p-tabpanel value="1">
                                     <div class="grid grid-cols-1 gap-1">
@@ -56,4 +61,61 @@ import { InputOtpModule } from "primeng/inputotp";
     `
 })
 export class Login {
+    private fb = inject(FormBuilder);
+    private authService = inject(Auth);
+    private router = inject(Router);
+
+    enteredLoginUserEmail = '';
+    otpTimeLeft = '';
+
+    loginUserResponse: any;
+
+    loginUserForm = this.fb.group({
+        email: ['']
+    })
+
+    otpTimer(expireByString: string){
+        const expireBy = new Date(expireByString).getTime();
+        console.log("expireBy:", expireBy);
+
+        const interval = setInterval(() => {
+            const currentTime = Date.now();
+
+            const diffMs = expireBy - currentTime;
+
+            if (diffMs <= 0) {
+                clearInterval(interval);
+                this.otpTimeLeft = '00:00';
+                return;
+            }
+
+            const totalSeconds = Math.floor(diffMs / 1000);
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+
+            this.otpTimeLeft = `${this.pad(minutes)}:${this.pad(seconds)}`;
+        }, 1000)
+    }
+
+    pad(num: number): string{
+        return num < 10 ? '0' + num : '' + num;
+    }
+
+    onSubmitUsers(){
+        console.log(this.loginUserForm.value);
+        this.enteredLoginUserEmail = this.loginUserForm.get('email')?.value ?? '';
+        this.authService.loginUsers(this.loginUserForm.value).subscribe({
+            next: val => {
+                console.log(val);
+                this.loginUserResponse = val;
+                this.otpTimer(this.loginUserResponse.expireBy);
+                this.router.navigate(['/register'], {
+                    state: {otpTimeLeft: this.otpTimeLeft}
+                });
+            },
+            error: err => {
+                console.log(err);
+            }
+        })
+    }
 }

@@ -13,6 +13,8 @@ import { ConsultancyTable } from '@/pages/consultancy/consultancy-table/consulta
 import { SpnTable } from '@/pages/spn/spn-table/spn-table';
 import { DepartmentTable } from '@/pages/department/department-table/department-table';
 import { CategoryTable } from '@/pages/category/category-table/category-table';
+import { UsergroupTable } from '@/pages/usergroup/usergroup-table/usergroup-table';
+import { authGuard } from '@/guards/auth-guard';
 
 export const appRoutes: Routes = [
     {
@@ -27,17 +29,26 @@ export const appRoutes: Routes = [
         path: 'home',
         component: AppLayout,
         children: [
-            { path: 'demand', component: Demand },
-            { path: 'approval', component: Approval },
-            { path: 'fullFill', component: Fullfillreq },
-            { path: 'interviewManagement', component: InterviewManagement },
-            { path: 'consultancies', component: ConsultancyTable },
-            { path: 'departments', component: DepartmentTable },
-            { path: 'spn', component: SpnTable },
-            { path: 'categories', component: CategoryTable },
-            { path: 'uikit', loadChildren: () => import('./app/pages/uikit/uikit.routes') },
-            { path: 'documentation', component: Documentation },
-            { path: 'pages', loadChildren: () => import('./app/pages/pages.routes') }
+            { 
+                path: 'demand', 
+                component: Demand, 
+                canActivate: [authGuard]
+            },
+            { 
+                path: 'approval', 
+                component: Approval,
+                canActivate: [authGuard]
+            },
+            { path: 'fullFill', component: Fullfillreq, canActivate: [authGuard]},
+            { path: 'interviewManagement', component: InterviewManagement, canActivate: [authGuard]},
+            { path: 'consultancies', component: ConsultancyTable, canActivate: [authGuard] },
+            { path: 'departments', component: DepartmentTable, canActivate: [authGuard] },
+            { path: 'spn', component: SpnTable, canActivate: [authGuard] },
+            { path: 'categories', component: CategoryTable, canActivate: [authGuard] },
+            { path: 'usergroup', component:  UsergroupTable, canActivate: [authGuard] },
+            { path: 'uikit', canActivate: [authGuard], loadChildren: () => import('./app/pages/uikit/uikit.routes') },
+            { path: 'documentation', component: Documentation, canActivate: [authGuard] },
+            { path: 'pages', canActivate: [authGuard], loadChildren: () => import('./app/pages/pages.routes') }
         ]
     },
     { path: 'landing', component: Landing },

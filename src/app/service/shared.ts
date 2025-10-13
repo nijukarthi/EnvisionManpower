@@ -37,6 +37,8 @@ import {RouterModule} from '@angular/router';
 import { OrganizationChartModule } from 'primeng/organizationchart';
 import { ChartModule } from 'primeng/chart';
 import { SelectButtonModule } from 'primeng/selectbutton';
+import { RippleModule } from 'primeng/ripple';
+
 @NgModule({
   declarations: [],
   imports: [
@@ -78,7 +80,8 @@ import { SelectButtonModule } from 'primeng/selectbutton';
     RouterModule,
     OrganizationChartModule,
     ChartModule,
-    SelectButtonModule
+    SelectButtonModule,
+    RippleModule
   ],
   providers:[
     MessageService,

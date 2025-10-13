@@ -106,7 +106,8 @@ export class AppMenu {
                             },
                             {
                                 label: 'User Group',
-                                icon: 'pi pi-users'
+                                icon: 'pi pi-users',
+                                routerLink: ['/home/usergroup']
                             },
                             {
                                 label: 'Category',
