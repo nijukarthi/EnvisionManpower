@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { PasswordModule } from 'primeng/password';
@@ -60,7 +60,7 @@ import { Auth } from '@/service/auth/auth';
         </div>
     `
 })
-export class Login {
+export class Login implements OnInit {
     private fb = inject(FormBuilder);
     private authService = inject(Auth);
     private router = inject(Router);
@@ -73,6 +73,10 @@ export class Login {
     loginUserForm = this.fb.group({
         email: ['']
     })
+
+    ngOnInit(): void {
+        sessionStorage.clear();
+    }
 
     otpTimer(expireByString: string){
         const expireBy = new Date(expireByString).getTime();
