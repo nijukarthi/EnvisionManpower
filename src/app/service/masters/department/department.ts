@@ -16,4 +16,16 @@ export class Department {
   createNewDepartment(departmentForm: any){
     return this.http.post(`${this.baseUrl}/api/master/department/create`, departmentForm);
   }
+
+  fetchViewDepartment(departmentId: number){
+    return this.http.get(`${this.baseUrl}/api/master/department/view?departmentId=${departmentId}`);
+  }
+
+  updateDepartment(updateDepartmentForm: any){
+    return this.http.put(`${this.baseUrl}/api/master/department/update`, updateDepartmentForm);
+  }
+
+  deleteDepartment(departmentId: number){
+    return this.http.delete(`${this.baseUrl}/api/master/department/delete?departmentId=${departmentId}`);
+  }
 }
