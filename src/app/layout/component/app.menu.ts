@@ -107,7 +107,7 @@ export class AppMenu {
                             {
                                 label: 'User Group',
                                 icon: 'pi pi-users',
-                                routerLink: ['/home/usergroup']
+                                routerLink: ['/home/usergroups']
                             },
                             {
                                 label: 'Category',
@@ -120,8 +120,17 @@ export class AppMenu {
                                 routerLink: ['/home/departments']
                             },
                             {
+                                label: 'Envision Roles',
+                                icon: 'pi pi-book',
+                            },
+                            {
+                                label: 'Cluster',
+                                icon: 'pi pi-shop'
+                            },
+                            {
                                 label: 'Users',
-                                icon: 'pi pi-user'
+                                icon: 'pi pi-user',
+                                routerLink: ['/home/users']
                             },
                             {
                                 label: 'Guest Users',

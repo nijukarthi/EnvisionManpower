@@ -15,6 +15,7 @@ import { DepartmentTable } from '@/pages/department/department-table/department-
 import { CategoryTable } from '@/pages/category/category-table/category-table';
 import { UsergroupTable } from '@/pages/usergroup/usergroup-table/usergroup-table';
 import { authGuard } from '@/guards/auth-guard';
+import { CompanyUsers } from '@/pages/companyUsers/company-users/company-users';
 
 export const appRoutes: Routes = [
     {
@@ -45,7 +46,8 @@ export const appRoutes: Routes = [
             { path: 'departments', component: DepartmentTable, canActivate: [authGuard] },
             { path: 'spn', component: SpnTable, canActivate: [authGuard] },
             { path: 'categories', component: CategoryTable, canActivate: [authGuard] },
-            { path: 'usergroup', component:  UsergroupTable, canActivate: [authGuard] },
+            { path: 'usergroups', component:  UsergroupTable, canActivate: [authGuard] },
+            { path: 'users', component: CompanyUsers, canActivate: [authGuard] },
             { path: 'uikit', canActivate: [authGuard], loadChildren: () => import('./app/pages/uikit/uikit.routes') },
             { path: 'documentation', component: Documentation, canActivate: [authGuard] },
             { path: 'pages', canActivate: [authGuard], loadChildren: () => import('./app/pages/pages.routes') }
