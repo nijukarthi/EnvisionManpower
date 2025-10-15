@@ -28,8 +28,8 @@
     </p-table>
 </div>
 
-<p-dialog [header]="clusterId ? 'Edit Cluster' : 'Add New Cluster'" [modal]="true" [(visible)]="openCluster" [style]="{width: '50rem'}"
-    (onHide)="onDialogClose()">
+<p-dialog [header]="clusterId ? 'Edit Cluster' : 'Add New Cluster'" [modal]="true" [(visible)]="openCluster" 
+    [style]="{width: '50rem'}" (onHide)="onDialogClose()">
     <form [formGroup]="clusterForm" (ngSubmit)="onSubmit()">
         <div class="grid grid-cols-2 gap-2">
             <div class="grid col-span-1 gap-1">
