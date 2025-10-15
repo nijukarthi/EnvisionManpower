@@ -16,6 +16,8 @@ import { CategoryTable } from '@/pages/category/category-table/category-table';
 import { UsergroupTable } from '@/pages/usergroup/usergroup-table/usergroup-table';
 import { authGuard } from '@/guards/auth-guard';
 import { CompanyUsers } from '@/pages/companyUsers/company-users/company-users';
+import { Cluster } from '@/pages/cluster/cluster/cluster';
+import { ResourceManagerAssign } from '@/pages/ResourceManagerAssign/resource-manager-assign/resource-manager-assign';
 
 export const appRoutes: Routes = [
     {
@@ -48,6 +50,8 @@ export const appRoutes: Routes = [
             { path: 'categories', component: CategoryTable, canActivate: [authGuard] },
             { path: 'usergroups', component:  UsergroupTable, canActivate: [authGuard] },
             { path: 'users', component: CompanyUsers, canActivate: [authGuard] },
+            { path: 'clusters', component: Cluster, canActivate: [authGuard] },
+            { path: 'manager', component: ResourceManagerAssign, canActivate: [authGuard] },
             { path: 'uikit', canActivate: [authGuard], loadChildren: () => import('./app/pages/uikit/uikit.routes') },
             { path: 'documentation', component: Documentation, canActivate: [authGuard] },
             { path: 'pages', canActivate: [authGuard], loadChildren: () => import('./app/pages/pages.routes') }

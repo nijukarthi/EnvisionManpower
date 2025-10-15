@@ -12,4 +12,8 @@ export class CompanyUsersService {
   fetchActiveCompanyUsers(offSet: number, pageSize: number){
     return this.http.get(`${this.baseUrl}/api/user/active/companyuser?offSet=${offSet}&pageSize=${pageSize}`);
   }
+
+  fetchAllClusterHeads(){
+    return this.http.get(`${this.baseUrl}/api/user/clusterheads`);
+  }
 }
