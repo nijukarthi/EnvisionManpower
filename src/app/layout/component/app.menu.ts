@@ -77,6 +77,11 @@ export class AppMenu {
                         ] */
                     },
                     {
+                        label: 'Resource Manager Assign',
+                        icon: 'pi pi-address-book',
+                        routerLink: ['/home/manager']
+                    },
+                    {
                         label: 'Full Fill Request',
                         icon: 'pi pi-address-book',
                         routerLink: ['/home/fullFill']
@@ -125,7 +130,8 @@ export class AppMenu {
                             },
                             {
                                 label: 'Cluster',
-                                icon: 'pi pi-shop'
+                                icon: 'pi pi-shop',
+                                routerLink: ['/home/clusters']
                             },
                             {
                                 label: 'Users',
