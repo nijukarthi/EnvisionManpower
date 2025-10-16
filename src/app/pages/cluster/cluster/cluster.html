@@ -42,13 +42,13 @@
             </div>
             <div class="grid col-span-1 gap-1" formGroupName="clusterHead">
                 <label for="cluster-head">Cluster Head</label>
-                <p-select [options]="userList" formControlName="userId" id="cluster-head" optionLabel="email" optionValue="userId"
-                    [filter]="true" filterBy="email" [showClear]="true" placeholder="Select Cluster Head" appendTo="body" />
+                <p-select [options]="userList" formControlName="userId" id="cluster-head" optionLabel="userName" optionValue="userId"
+                    [filter]="true" filterBy="userName" [showClear]="true" placeholder="Select Cluster Head" appendTo="body" />
             </div>
         </div>
         <div class="flex justify-end mt-4">
             <button pButton pRipple type="submit">
-                <span pButtonLabel>Save</span>
+                <span pButtonLabel>{{actionName}}</span>
             </button>
         </div>
     </form>

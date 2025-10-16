@@ -3,7 +3,7 @@
         <h5>Projects</h5>
         <p-button label="Add Project" icon="pi pi-plus" (click)="addProject()" />
     </div>
-    <p-table [value]="projectList$ | async" showGridlines [rowHover]="true" [paginator]="true"
+    <p-table [value]="projectList" showGridlines [rowHover]="true" [paginator]="true"
         [rows]="10" [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
         <ng-template #header>
@@ -43,25 +43,25 @@
             </div>
             <div class="grid col-span-1 gap-1" formGroupName="cluster">
                 <label for="project-code">Cluster</label>
-                <p-select [options]="clusterList$ | async" formControlName="clusterId" id="cluster" optionLabel="clusterName" 
+                <p-select [options]="clusterList" formControlName="clusterId" id="cluster" optionLabel="clusterName" 
                     optionValue="clusterId" [filter]="true" filterBy="clusterName" [showClear]="true" 
                     placeholder="Select Cluster" appendTo="body" />
             </div>
             <div class="grid col-span-1 gap-1" formGroupName="siteIncharge">
                 <label for="site-incharge">Site Incharge</label>
-                <p-select [options]="siteInchargeList$ | async" formControlName="userId" id="site-incharge" 
+                <p-select formControlName="userId" id="site-incharge" 
                     optionLabel="userName" optionValue="userId" [filter]="true" filterBy="userName" [showClear]="true" 
                     placeholder="Select Site Incharge" appendTo="body" />
             </div>
             <div class="grid col-span-1 gap-1" formGroupName="clusterHead">
                 <label for="cluster-head">Cluster Head</label>
-                <p-select [options]="clusterHeadList$ | async" formControlName="userId" id="cluster-head" 
-                    optionLabel="email" optionValue="userId" [filter]="true" filterBy="email" [showClear]="true"
+                <p-select [options]="clusterHeadList" formControlName="userId" id="cluster-head" 
+                    optionLabel="userName" optionValue="userId" [filter]="true" filterBy="userName" [showClear]="true"
                     placeholder="Select Cluster Head" appendTo="body" />
             </div>
             <div class="grid col-span-1 gap-1" formGroupName="departmentHead">
                 <label for="department-head">Department Head</label>
-                <p-select [options]="departmentList$ | async" formControlName="userId" id="department-head" 
+                <p-select formControlName="userId" id="department-head" 
                     optionLabel="departmentName" optionValue="departmentId" [filter]="true" filterBy="departmentName" 
                     [showClear]="true" placeholder="Select Department Head" appendTo="body" />
             </div>

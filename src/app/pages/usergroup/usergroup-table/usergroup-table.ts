@@ -29,7 +29,7 @@ export class UsergroupTable implements OnInit {
 
   usergroupForm:any;
 
-      constructor(private messageService: MessageService, private apiService: Apiservice, private fb: FormBuilder,private route:Router,private confirmationService:ConfirmationService) { }
+  constructor(private messageService: MessageService, private apiService: Apiservice, private fb: FormBuilder,private route:Router,private confirmationService:ConfirmationService) { }
   
 
   ngOnInit(): void {

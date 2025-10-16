@@ -1,6 +1,5 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Shared } from "@/service/shared";
-import { Category } from '@/service/masters/category/category';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -21,11 +20,11 @@ export class CategoryTable implements OnInit {
   private router = inject(Router);
   private confirmationService = inject(ConfirmationService);
   private messageService = inject(MessageService); */
-  categoryList:any;
-  categoryForm:any;
-  actionName:any = "Save";
+  categoryList: any;
+  categoryForm: any;
+  actionName: any = "Save";
 
-   constructor(private messageService: MessageService, private apiService: Apiservice, private fb: FormBuilder,private route:Router,private confirmationService:ConfirmationService) { }
+  constructor(private messageService: MessageService, private apiService: Apiservice, private fb: FormBuilder,private route:Router,private confirmationService:ConfirmationService) { }
   
 
   ngOnInit(): void {
@@ -33,7 +32,7 @@ export class CategoryTable implements OnInit {
      categoryId: [''],
      categoryName: ['',Validators.required]
    })
-   this.fetchViewCategory('');
+   this.fetchViewCategory();
     //this.categoryList = this.apiService.fetchActiveCategory('');
   }
 
@@ -46,12 +45,11 @@ export class CategoryTable implements OnInit {
     }
   }
 
-  fetchViewCategory(categoryId: any){
-    
+  fetchViewCategory(){
     this.apiService.fetchActiveCategory('').subscribe({
       next: val =>{
         console.log(val);
-        this.categoryList = val.data
+        this.categoryList = val?.data
         this.categoryForm.patchValue(val);
       },
       error: err => {
@@ -81,37 +79,32 @@ export class CategoryTable implements OnInit {
       console.log(this.categoryForm.value);
       if (!this.categoryId) {  
         if(this.categoryForm.valid){
-          var name = this.categoryForm.get('categoryName').value
+          let name = this.categoryForm.get('categoryName').value
           let data = {
             categoryName:name
           }
           this.apiService.createNewCategory(data).subscribe({
-          next: val => {
-            console.log(val);
-            this.messageService.add({
-          severity: 'success',
-          summary: 'Success',
-          detail: 'Category Added Successfully'
-        })
-            this.openNewCategoryPopup = false;
-            this.categoryForm.reset();
-            this.fetchViewCategory('');
-           /*  this.route.navigate(['/home']).then(success => {
-              if(success){
-                this.route.navigate(['/home/categories']);
-              }
-            }) */
-          },
-          error: err => {
-            console.log(err);
-          }
-        })
-        }else{
+            next: val => {
+              console.log(val);
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Success',
+                detail: 'Category Added Successfully'
+              })
+              this.openNewCategoryPopup = false;
+              this.categoryForm.reset();
+              this.fetchViewCategory();
+            },
+            error: err => {
+              console.log(err);
+            }
+          })
+        } else{
           this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'Please Enter Category'
-        })
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Please Enter Category'
+          })
         }
         
       } else{
@@ -121,32 +114,27 @@ export class CategoryTable implements OnInit {
         });
 
         let data = {
-            "categoryId": this.categoryForm.get('categoryId').value,
-            "categoryName":this.categoryForm.get('categoryName').value
-          }
+          "categoryId": this.categoryForm.get('categoryId').value,
+          "categoryName":this.categoryForm.get('categoryName').value
+        }
 
         this.apiService.updateCategory(data).subscribe({
           next: val => {
             console.log(val);
-             this.messageService.add({
-          severity: 'success',
-          summary: 'Success',
-          detail: 'Category Updated Successfully'
-        })
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: 'Category Updated Successfully'
+            })
             this.openNewCategoryPopup = false;
             this.categoryForm.reset();
-            this.fetchViewCategory('');
-            /* this.route.navigate(['/home']).then(success => {
-              if(success){
-                this.route.navigate(['/home/categories']);
-              }
-            }) */
+            this.fetchViewCategory();
           },
           error: err =>{
             console.log(err);
           }
         })
-        }else{
+        } else{
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
@@ -183,14 +171,8 @@ export class CategoryTable implements OnInit {
           this.apiService.deleteCategory(data).subscribe({
             next: val => {
               console.log(val);
-              this.fetchViewCategory('');
-             /*  setTimeout(() => {
-                this.route.navigate(['/home']).then(success => {
-                  if(success){
-                    this.route.navigate(['/home/categories']);
-                  }
-                })
-              }, 1000); */
+              this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Category Deleted Successfully'});
+              this.fetchViewCategory();
             },
             error: err => {
               console.log(err);
@@ -199,7 +181,6 @@ export class CategoryTable implements OnInit {
         } catch (error) {
           console.log(error);
         }
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Category Deleted Successfully'});
       }
     })
   }

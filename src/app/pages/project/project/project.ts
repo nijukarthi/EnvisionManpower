@@ -1,6 +1,5 @@
-import { ClusterService } from '@/service/masters/cluster/cluster';
+import { Apiservice } from '@/service/apiservice/apiservice';
 import { CompanyUsersService } from '@/service/masters/companyUsers/company-users';
-import { Department } from '@/service/masters/department/department';
 import { ProjectService } from '@/service/masters/project/project';
 import { Shared } from '@/service/shared';
 import { Component, inject, OnInit } from '@angular/core';
@@ -26,18 +25,16 @@ export class Project implements OnInit {
 
   private projectService = inject(ProjectService);
   private fb = inject(FormBuilder);
-  private clusterService = inject(ClusterService);
   private companyUserService = inject(CompanyUsersService);
-  private departmentService = inject(Department);
   private router = inject(Router);
-  private messageService = inject(MessageService);
-  private confirmationService = inject(ConfirmationService);
 
-  projectList$!: Observable<any>;
-  clusterList$!: Observable<any>;
-  clusterHeadList$!: Observable<any>;
-  departmentList$!: Observable<any>;
-  siteInchargeList$!: Observable<any>;
+  constructor(private apiService: Apiservice, private messageService: MessageService, private confirmationService: ConfirmationService){}
+
+  projectList: any;
+  clusterList: any[] = [];
+  clusterHeadList: any[] = [];
+  departmentList: any;
+  siteInchargeList: any;
 
   projectForm = this.fb.group({
     projectId: [0],
@@ -57,7 +54,13 @@ export class Project implements OnInit {
   })
 
   ngOnInit(): void {
-    this.projectList$ = this.projectService.fetchActiveProjects(this.offSet, this.pageSize);
+    this.fetchActiveProjects();
+
+    this.projectForm.get('cluster.clusterId')?.valueChanges.subscribe(clusterId => {
+      if (clusterId) {
+        this.fetchClusterHeadByCluster(clusterId);
+      }
+    })
   }
 
   getMenuItems(project: any){
@@ -75,29 +78,65 @@ export class Project implements OnInit {
     ]
   }
 
+  fetchActiveProjects(){
+    try {
+      let data = {
+        offSet: 0,
+        pageSize: 10
+      }
+      this.apiService.fetchActiveProjects(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.projectList = val?.data.data;
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   fetchAllCluster(){
-    this.clusterList$ = this.clusterService.getActiveClusters();
+    try {
+      this.apiService.getActiveClusters('').subscribe({
+        next: val => {
+          console.log(val);
+          this.clusterList = val.data;
+        },
+        error: err => {
+          console.log(err);
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+     
   }
 
-  fetchAllClusterHead(){
-    this.clusterHeadList$ = this.companyUserService.fetchAllClusterHeads();
-  }
-
-  fetchAllDepartmentHead(){
-    this.departmentList$ = this.departmentService.fetchActiveDepartments();
-  }
-
-  fetchSiteIncharge(){
-    this.siteInchargeList$ = this.companyUserService.fetchActiveCompanyUsers(this.offSet, this.pageSize);
+  fetchClusterHeadByCluster(clusterId: number){
+    console.log('checking');
+    try {
+      const data = {
+        clusterId: clusterId
+      }
+      console.log(data);
+      this.apiService.fetchClusterHeadByCluster(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.clusterHeadList = val.data;
+        },
+        error: err =>{
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   addProject(){
     try {
       this.openProject = true;
       this.fetchAllCluster();
-      this.fetchAllClusterHead();
-      this.fetchAllDepartmentHead();
-      this.fetchSiteIncharge();
     } catch (error) {
       console.log(error);
     }
