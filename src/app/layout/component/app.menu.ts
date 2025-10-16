@@ -128,7 +128,7 @@ export class AppMenu {
                             {
                                 label: 'Envision Roles',
                                 icon: 'pi pi-book',
-                                routerLink: ['/home/roles']
+                                routerLink: ['/home/envisionRoles']
                             },
                             {
                                 label: 'Cluster',

@@ -3,7 +3,7 @@
         <h5>Company Users</h5>
         <p-button label="Add Users" icon="pi pi-plus" (click)="addUser()" />
     </div>
-    <p-table [value]="companyUserList$ | async" showGridlines [rowHover]="true" 
+    <p-table [value]="companyUserList" showGridlines [rowHover]="true" 
         [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
         <ng-template #header>

@@ -3,7 +3,7 @@
         <h5>Clusters</h5>
         <p-button label="Add Cluster" icon="pi pi-plus" (click)="addCluster()" />
     </div>
-    <p-table [value]="clusterList$ | async" showGridlines [rowHover]="true">
+    <p-table [value]="clusterList" showGridlines [rowHover]="true">
         <ng-template #header>
             <tr>
                 <th>SI No</th>

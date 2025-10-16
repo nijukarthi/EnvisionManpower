@@ -13,7 +13,7 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 export class CompanyUsers implements OnInit {
   openCompanyUser = false;
 
-  companyUserList$!: Observable<any>;
+  companyUserList:any;
 
   private usersService = inject(CompanyUsersService);
   private fb = inject(FormBuilder);
@@ -31,7 +31,7 @@ export class CompanyUsers implements OnInit {
   });
 
   ngOnInit(): void {
-      this.companyUserList$ = this.usersService.fetchActiveCompanyUsers(this.offSet, this.pageSize);
+      /* this.companyUserList = this.usersService.fetchActiveCompanyUsers(this.offSet, this.pageSize); */
   }
 
   getMenuItems(user: any){

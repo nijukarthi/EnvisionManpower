@@ -1,11 +1,12 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Shared } from "@/service/shared";
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Department } from '@/service/masters/department/department';
 import { Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Observable } from 'rxjs';
+import { Apiservice } from '@/service/apiservice/apiservice';
 
 @Component({
   selector: 'app-department-table',
@@ -14,40 +15,49 @@ import { Observable } from 'rxjs';
   styleUrl: './department-table.scss'
 })
 export class DepartmentTable implements OnInit {
-  openNewDepartment = false;
+  openNewDepartmentPopup = false;
 
-  departmentId: number | null = null;
+  departmentId: any;
 
-  private fb = inject(FormBuilder);
-  private departmentService = inject(Department);
+ /* private departmentService = inject(Department);
   private router = inject(Router);
   private confirmationService = inject(ConfirmationService);
-  private messageService = inject(MessageService);
+  private messageService = inject(MessageService); */
 
-  departmentList$!: Observable<any>;
+  departmentList: any;
 
-  departmentForm = this.fb.group({
-    departmentId: [0],
-    departmentName: ['']
-  })
+  departmentForm :any;
+  actionName:any = "Save";
+
+    constructor(private messageService: MessageService, private apiService: Apiservice, private fb: FormBuilder,private route:Router,private confirmationService:ConfirmationService) { }
+  
 
   ngOnInit(): void {
-    this.departmentList$ = this.departmentService.fetchActiveDepartments();
+    this.departmentForm = this.fb.group({
+    departmentId: [],
+    departmentName: ['',Validators.required]
+  })
+    this.fetchViewDepartment('');
   }
 
   addDepartment(){
     try {
-      this.openNewDepartment = true;
+      this.openNewDepartmentPopup = true;
+      this.actionName = "Save";
     } catch (error) {
       console.log(error);
     }
   }
 
-  fetchViewDepartment(departmentId: number){
-    this.departmentService.fetchViewDepartment(departmentId).subscribe({
+  fetchViewDepartment(departmentId: any){
+    let data = {
+      departmentId:departmentId ? "" : ""
+    }
+    this.apiService.fetchActiveDepartments(data).subscribe({
       next: val => {
         console.log(val);
-        this.departmentForm.patchValue(val);
+        this.departmentList = val.data
+        
       },
       error: err => {
         console.log(err);
@@ -55,12 +65,17 @@ export class DepartmentTable implements OnInit {
     })
   }
 
-  editDepartment(departmentId: number){
+  editDepartment(department: any){
     try {
-      this.departmentId = departmentId;
-      this.openNewDepartment = true;
+      this.departmentId = department;
+      this.openNewDepartmentPopup = true;
+      this.actionName = "Update";
+
       if (this.departmentId) {     
-        this.fetchViewDepartment(this.departmentId);
+        this.departmentForm.patchValue({
+          departmentId:this.departmentId.departmentId,
+          departmentName:this.departmentId.departmentName});
+         
       }
     } catch (error) {
       console.log(error);
@@ -70,38 +85,78 @@ export class DepartmentTable implements OnInit {
   onSubmit(){
     console.log(this.departmentForm.value);
     if (!this.departmentId) {
-      this.departmentService.createNewDepartment(this.departmentForm.value).subscribe({
+      if(this.departmentForm.valid){
+        var name = this.departmentForm.get('departmentName').value
+      let data = {
+        departmentName:name
+      }
+      this.apiService.createNewDepartment(data).subscribe({
         next: val => {
           console.log(val);
-          this.router.navigate(['/home']).then(success => {
+           this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: 'Department Added Successfully'
+        })
+          this.openNewDepartmentPopup = false;
+          this.departmentForm.reset();
+          this.fetchViewDepartment('');
+          /* this.route.navigate(['/home']).then(success => {
             if (success) {
-              this.router.navigate(['/home/departments']);
+              this.route.navigate(['/home/departments']);
             }
-          })
+          }) */
         },
         error: err => {
           console.log(err);
         }
       })
+      }else{
+ this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Please Enter Department'
+        })
+      }
+      
     } else {
-      this.departmentForm.patchValue({
-        departmentId: this.departmentId
+      if(this.departmentForm.valid){
+         this.departmentForm.patchValue({
+        departmentId: this.departmentId.departmentId
       });
       console.log(this.departmentForm.value);
 
-      this.departmentService.updateDepartment(this.departmentForm.value).subscribe({
-        next: val => {
-          console.log(val);
-          this.router.navigate(['/home']).then(success => {
-            if (success) {
-              this.router.navigate(['/home/departments']);
+       let data = {
+            "departmentId": this.departmentForm.get('departmentId').value,
+            "departmentName":this.departmentForm.get('departmentName').value
+          }
+          this.apiService.updateDepartment(data)
+          .subscribe({
+            next:(res)=>{
+              this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: 'Department Updated Successfully'
+        })
+          this.openNewDepartmentPopup = false;
+          this.departmentForm.reset();
+          this.fetchViewDepartment('');
+            },error:(error)=>{
+               this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed To Update Please Try Again'
+        })
             }
-          });
-        },
-        error: err => {
-          console.log(err);
-        }
-      })
+          })
+      }else{
+ this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Please Enter Department'
+        })
+      }
+     
     }
   }
 
@@ -127,24 +182,28 @@ export class DepartmentTable implements OnInit {
         severity: 'danger',
       },
       accept: () =>{
-        this.departmentService.deleteDepartment(departmentId).subscribe({
+        let data = {
+          departmentId:departmentId
+        }
+        this.apiService.deleteDepartment(data).subscribe({
           next: val => {
             console.log(val);
-            setTimeout(() => {
-              this.router.navigate(['/home']).then(success => {
+            this.fetchViewDepartment('');
+            /* setTimeout(() => {
+              this.route.navigate(['/home']).then(success => {
                 if (success) {
-                  this.router.navigate(['/home/departments']);
+                  this.route.navigate(['/home/departments']);
                 }
               })
-            }, 1000);
+            }, 1000); */
           },
           error: err => {
             console.log(err);
           }
         })
         this.messageService.add({
-          severity: 'info',
-          summary: 'Confirmed',
+          severity: 'success',
+          summary: 'Success',
           detail: 'Record deleted'
         })
       },

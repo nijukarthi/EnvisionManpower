@@ -1,58 +1,57 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { Shared } from "@/service/shared";
-import { Category } from '@/service/masters/category/category';
+import { Apiservice } from '@/service/apiservice/apiservice';
+import { Shared } from '@/service/shared';
+import { Component } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { Observable } from 'rxjs';
-import { Apiservice } from '@/service/apiservice/apiservice';
 
 @Component({
-  selector: 'app-category-table',
+  selector: 'app-envisionroles',
   imports: [Shared, ReactiveFormsModule],
-  templateUrl: './category-table.html',
-  styleUrl: './category-table.scss'
+  templateUrl: './envisionroles.html',
+  styleUrl: './envisionroles.scss'
 })
-export class CategoryTable implements OnInit {
-  openNewCategoryPopup = false;
-  categoryId: any;
+export class Envisionroles {
+
+  openNewRoleyPopup = false;
+  roleId: any;
   /* private apiService = inject(Category);
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private confirmationService = inject(ConfirmationService);
   private messageService = inject(MessageService); */
-  categoryList:any;
-  categoryForm:any;
+  roleList:any;
+  roleForm:any;
   actionName:any = "Save";
 
    constructor(private messageService: MessageService, private apiService: Apiservice, private fb: FormBuilder,private route:Router,private confirmationService:ConfirmationService) { }
   
 
   ngOnInit(): void {
-    this.categoryForm = this.fb.group({
-     categoryId: [''],
-     categoryName: ['',Validators.required]
+    this.roleForm = this.fb.group({
+     roleId: [''],
+     roleName: ['',Validators.required]
    })
-   this.fetchViewCategory('');
-    //this.categoryList = this.apiService.fetchActiveCategory('');
+   this.fetchViewRole('');
+    //this.roleList = this.apiService.fetchActiveCategory('');
   }
 
-  addCategory(){
+  addRoles(){
     try {
-      this.openNewCategoryPopup = true;
+      this.openNewRoleyPopup = true;
       this.actionName = "Save";
     } catch (error) {
       console.log(error);
     }
   }
 
-  fetchViewCategory(categoryId: any){
+  fetchViewRole(categoryId: any){
     
-    this.apiService.fetchActiveCategory('').subscribe({
+    this.apiService.fetchActiveEnvRole('').subscribe({
       next: val =>{
         console.log(val);
-        this.categoryList = val.data
-        this.categoryForm.patchValue(val);
+        this.roleList = val.data
+        //this.roleForm.patchValue(val);
       },
       error: err => {
         console.log(err);
@@ -60,15 +59,15 @@ export class CategoryTable implements OnInit {
     })
   }
 
-  editCategory(categoryId: number){
+  editRole(roleId: number){
     try {
-      this.categoryId = categoryId;
-      this.openNewCategoryPopup = true;
+      this.roleId = roleId;
+      this.openNewRoleyPopup = true;
       this.actionName = "Update";
-       if (this.categoryId) {     
-        this.categoryForm.patchValue({
-          categoryId:this.categoryId.categoryId,
-          categoryName:this.categoryId.categoryName});
+       if (this.roleId) {     
+        this.roleForm.patchValue({
+          roleId:this.roleId.roleId,
+          roleName:this.roleId.roleName});
          
       }
     } catch (error) {
@@ -78,24 +77,24 @@ export class CategoryTable implements OnInit {
 
   onSubmit(){
     try {
-      console.log(this.categoryForm.value);
-      if (!this.categoryId) {  
-        if(this.categoryForm.valid){
-          var name = this.categoryForm.get('categoryName').value
+      console.log(this.roleForm.value);
+      if (!this.roleId) {  
+        if(this.roleForm.valid){
+          var name = this.roleForm.get('roleName').value
           let data = {
-            categoryName:name
+            roleName:name
           }
-          this.apiService.createNewCategory(data).subscribe({
+          this.apiService.createNewEnvRole(data).subscribe({
           next: val => {
             console.log(val);
             this.messageService.add({
           severity: 'success',
           summary: 'Success',
-          detail: 'Category Added Successfully'
+          detail: 'Role Added Successfully'
         })
-            this.openNewCategoryPopup = false;
-            this.categoryForm.reset();
-            this.fetchViewCategory('');
+            this.openNewRoleyPopup = false;
+            this.roleForm.reset();
+            this.fetchViewRole('');
            /*  this.route.navigate(['/home']).then(success => {
               if(success){
                 this.route.navigate(['/home/categories']);
@@ -110,32 +109,32 @@ export class CategoryTable implements OnInit {
           this.messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: 'Please Enter Category'
+          detail: 'Please Enter Role'
         })
         }
         
       } else{
-        if(this.categoryForm.valid){
-           this.categoryForm.patchValue({
-          categoryId: this.categoryId.categoryId
+        if(this.roleForm.valid){
+           this.roleForm.patchValue({
+          roleId: this.roleId.id
         });
 
         let data = {
-            "categoryId": this.categoryForm.get('categoryId').value,
-            "categoryName":this.categoryForm.get('categoryName').value
+            "id": this.roleForm.get('roleId').value,
+            "roleName":this.roleForm.get('roleName').value
           }
 
-        this.apiService.updateCategory(data).subscribe({
+        this.apiService.updateEnvRole(data).subscribe({
           next: val => {
             console.log(val);
              this.messageService.add({
           severity: 'success',
           summary: 'Success',
-          detail: 'Category Updated Successfully'
+          detail: 'Role Updated Successfully'
         })
-            this.openNewCategoryPopup = false;
-            this.categoryForm.reset();
-            this.fetchViewCategory('');
+            this.openNewRoleyPopup = false;
+            this.roleForm.reset();
+            this.fetchViewRole('');
             /* this.route.navigate(['/home']).then(success => {
               if(success){
                 this.route.navigate(['/home/categories']);
@@ -150,7 +149,7 @@ export class CategoryTable implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
-            detail: 'Please Enter Category'
+            detail: 'Please Enter Role'
           })
         }
        
@@ -160,10 +159,10 @@ export class CategoryTable implements OnInit {
     }
   }
 
-  deleteCategory(categoryId: number, categoryName: string){
+  deleteRole(roleId: number, roleName: string){
     this.confirmationService.confirm({
       message: 'Do you want to delete this record?',
-      header: `Delete ${categoryName}`,
+      header: `Delete ${roleName}`,
       icon: 'pi pi-info-circle',
       rejectLabel: 'Cancel',
       rejectButtonProps: {
@@ -178,12 +177,12 @@ export class CategoryTable implements OnInit {
       accept: () => {
         try {
           let data = {
-            categoryId:categoryId
+            id:roleId
           }
-          this.apiService.deleteCategory(data).subscribe({
+          this.apiService.deleteEnvRole(data).subscribe({
             next: val => {
               console.log(val);
-              this.fetchViewCategory('');
+              this.fetchViewRole('');
              /*  setTimeout(() => {
                 this.route.navigate(['/home']).then(success => {
                   if(success){
@@ -199,13 +198,14 @@ export class CategoryTable implements OnInit {
         } catch (error) {
           console.log(error);
         }
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Category Deleted Successfully'});
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Role Deleted Successfully'});
       }
     })
   }
 
   onDialogClose(){
-    this.categoryId = null;
-    this.categoryForm.reset();
+    this.roleId = null;
+    this.roleForm.reset();
   }
+
 }
