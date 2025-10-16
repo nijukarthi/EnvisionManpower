@@ -18,11 +18,13 @@ import { authGuard } from '@/guards/auth-guard';
 import { CompanyUsers } from '@/pages/companyUsers/company-users/company-users';
 import { Cluster } from '@/pages/cluster/cluster/cluster';
 import { ResourceManagerAssign } from '@/pages/ResourceManagerAssign/resource-manager-assign/resource-manager-assign';
+import { Loginpage } from '@/pages/loginpage/loginpage';
+import { Envisionroles } from '@/pages/envisionroles/envisionroles';
 
 export const appRoutes: Routes = [
     {
         path:'',
-        component:Login
+        component:Loginpage
     },
     {
         path: 'register',
@@ -52,6 +54,7 @@ export const appRoutes: Routes = [
             { path: 'users', component: CompanyUsers, canActivate: [authGuard] },
             { path: 'clusters', component: Cluster, canActivate: [authGuard] },
             { path: 'manager', component: ResourceManagerAssign, canActivate: [authGuard] },
+            { path: 'envisionRoles', component: Envisionroles, canActivate: [authGuard] },
             { path: 'uikit', canActivate: [authGuard], loadChildren: () => import('./app/pages/uikit/uikit.routes') },
             { path: 'documentation', component: Documentation, canActivate: [authGuard] },
             { path: 'pages', canActivate: [authGuard], loadChildren: () => import('./app/pages/pages.routes') }

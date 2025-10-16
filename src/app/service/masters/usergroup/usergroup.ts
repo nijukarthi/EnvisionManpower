@@ -28,4 +28,6 @@ export class Usergroup {
   deleteUserGroup(userGroupId: number){
     return this.http.delete(`${this.baseUrl}/api/master/usergroup/delete?userGroupId=${userGroupId}`);
   }
+
+  
 }

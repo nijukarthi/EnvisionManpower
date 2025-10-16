@@ -2,36 +2,43 @@ import { Component, inject, OnInit } from '@angular/core';
 import { Shared } from "@/service/shared";
 import { Usergroup } from '@/service/masters/usergroup/usergroup';
 import { Observable } from 'rxjs';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { Apiservice } from '@/service/apiservice/apiservice';
 
 @Component({
   selector: 'app-usergroup-table',
-  imports: [Shared],
+  imports: [Shared, ReactiveFormsModule, ConfirmDialogModule],
   templateUrl: './usergroup-table.html',
   styleUrl: './usergroup-table.scss'
 })
 export class UsergroupTable implements OnInit {
   openUsergroup = false;
 
-  userGroupId: number | null = null;
+  userGroupId: any;
 
-  private userGroupService = inject(Usergroup);
+  /* private userGroupService = inject(Usergroup);
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private messageService = inject(MessageService);
-  private confirmationService = inject(ConfirmationService);
+  private confirmationService = inject(ConfirmationService); */
 
-  usergroupList$!: Observable<any>;
+  usergroupList: any;
 
-  usergroupForm = this.fb.group({
+  usergroupForm:any;
+
+      constructor(private messageService: MessageService, private apiService: Apiservice, private fb: FormBuilder,private route:Router,private confirmationService:ConfirmationService) { }
+  
+
+  ngOnInit(): void {
+    this.usergroupForm = this.fb.group({
     userGroupId: [0],
     userGroupName: ['']
   })
-
-  ngOnInit(): void {
-    this.usergroupList$ = this.userGroupService.fetchActiveUsergroup();
+  this.fetchViewUserGroup('');
+    //this.usergroupList = this.apiService.fetchActiveUsergroup('');
   }
 
   getMenuItems(usergroup: any){
@@ -39,7 +46,8 @@ export class UsergroupTable implements OnInit {
       {
         label: 'Edit',
         icon: 'pi pi-pencil',
-        command: () => this.editUserGroup(usergroup.userGroupId)
+        command: () => this.editUserGroup(usergroup.userGroupId),
+        disabled:usergroup.userGroupId == 1
       },
       // {
       //   label: 'Delete',
@@ -57,12 +65,13 @@ export class UsergroupTable implements OnInit {
     }
   }
 
-  fetchViewUserGroup(userGroupId: number){
+  fetchViewUserGroup(userGroupId: any){
     try {
-      this.userGroupService.fetchViewUsergroup(userGroupId).subscribe({
+      this.apiService.fetchActiveUsergroup(userGroupId).subscribe({
         next: val => {
+          this.usergroupList = val.data;
           console.log(val);
-          this.usergroupForm.patchValue(val);
+          //this.usergroupForm.patchValue(val);
         },
         error: err => {
           console.log(err);
@@ -87,14 +96,14 @@ export class UsergroupTable implements OnInit {
     try {
       console.log(this.usergroupForm.value);
       if (!this.userGroupId) {
-        this.userGroupService.createNewUsergroup(this.usergroupForm.value).subscribe({
+        this.apiService.createNewUsergroup(this.usergroupForm.value).subscribe({
           next: val => {
             console.log(val);
             this.messageService.add({severity: 'success', summary: 'Success', detail: 'User Group Created Successfully'});
             setTimeout(() => {
-              this.router.navigate(['/home']).then(success => {
+              this.route.navigate(['/home']).then(success => {
                 if (success) {
-                  this.router.navigate(['/home/usergroups']);
+                  this.route.navigate(['/home/usergroups']);
                 }
               })
             }, 2000);
@@ -108,14 +117,14 @@ export class UsergroupTable implements OnInit {
           userGroupId: this.userGroupId
         })
 
-        this.userGroupService.updateUserGroup(this.usergroupForm.value).subscribe({
+        this.apiService.updateUserGroup(this.usergroupForm.value).subscribe({
           next: val => {
             console.log(val);
             this.messageService.add({severity: 'success', summary: 'Success', detail: 'User Group Updated Successfully'});
             setTimeout(() => {       
-              this.router.navigate(['/home']).then(success => {
+              this.route.navigate(['/home']).then(success => {
                 if (success) {
-                  this.router.navigate(['/home/usergroups']);
+                  this.route.navigate(['/home/usergroups']);
                 }
               })
             }, 2000);
@@ -147,14 +156,14 @@ export class UsergroupTable implements OnInit {
       },
       accept: () => {
         try {
-          this.userGroupService.deleteUserGroup(usergroup.userGroupId).subscribe({
+          this.apiService.deleteUserGroup(usergroup.userGroupId).subscribe({
             next: val => {
               console.log(val);
               this.messageService.add({severity: 'info', summary: 'Confirmed', detail: 'Record deleted'});
               setTimeout(() => {       
-                this.router.navigate(['/home']).then(success => {
+                this.route.navigate(['/home']).then(success => {
                   if (success) {
-                    this.router.navigate(['/home/usergroups']);
+                    this.route.navigate(['/home/usergroups']);
                   }
                 })
               }, 2000);

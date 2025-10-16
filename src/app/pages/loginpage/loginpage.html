@@ -1,0 +1,93 @@
+<p-toast />
+<div *ngIf="loginScreen"
+    class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-screen overflow-hidden">
+    <div class="flex flex-col items-center justify-center">
+        <div
+            style="border-radius: 56px; padding: 0.3rem; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%)">
+            <div class="w-full bg-surface-0 dark:bg-surface-900 py-20 px-8 sm:px-20" style="border-radius: 53px">
+                <div class="text-center mb-5">
+                    <img src="assets/images/envision-group-vector-logo.png" alt="Logo" height="10" width="150"
+                        class="shrink-0 mx-auto">
+                    <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">ENVISION MANPOWER TOOL
+                    </div>
+                    <span class="text-muted-color font-medium">Sign in to continue</span>
+                </div>
+
+                <p-tabs value="0" styleClass="w-full">
+                    <p-tablist class="flex justify-between w-full">
+                        <p-tab class="flex-1 text-center text-lg leading-relaxed" value="0">Company User</p-tab>
+                        <p-tab class="flex-1 text-center text-lg leading-relaxed" value="1">Guest User</p-tab>
+                    </p-tablist>
+                    <p-tabpanels>
+                        <form [formGroup]="loginUserForm">
+                            <p-tabpanel value="0">
+                                <div class="grid grid-cols-1 gap-1">
+                                    <div class="grid col-span-1">
+                                        <label for="email"
+                                            class="text-surface-900 dark:text-surface-0 text-lg">Email</label>
+                                        <input pInputText type="email" formControlName="email" id="email"
+                                            placeholder="Email Address" class="md:w-100" />
+                                    </div>
+
+                                    <button type="submit" pButton class="mt-3" (click)="onSubmitUsers('email')">
+                                        <span pButtonLabel>Sign in</span>
+                                    </button>
+                                </div>
+                            </p-tabpanel>
+                            <p-tabpanel value="1">
+                                <div class="grid grid-cols-1 gap-1">
+                                    <label for="contact" class="text-surface-900 dark:text-surface-0 text-lg">Mobile
+                                        Number</label>
+                                    <input
+                                    type="text"
+                                    formControlName="guestMobileNumber"
+                                    maxlength="10"
+                                    inputmode="numeric"
+                                    pattern="[0-9]*"
+                                    placeholder="Enter Mobile Number"
+                                    class="p-inputtext p-component md:w-100"
+                                    oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,10)" />
+
+                                    <button type="submit" pButton class="mt-3" (click)="onSubmitUsers('guest')">
+                                        <span pButtonLabel>Sign in</span>
+                                    </button>
+                                </div>
+                            </p-tabpanel>
+                        </form>
+
+                    </p-tabpanels>
+                </p-tabs>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="registerScreen">
+        <div class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-screen overflow-hidden">
+            <div class="grid grid-cols-1">
+                <div class="bg-surface-0 dark:bg-surface-900 p-12 rounded-3xl">
+                    <h5 class="font-medium">Confirm you are you</h5>
+                    <p>We sent an email with a verification code to abc&#64;gmail.com</p>
+                    <p>Enter it below to confirm your email.</p>
+                    <form [formGroup]="userOtpForm" >
+                        <div class="grid grid-cols-1 gap-1">
+                            <div class="col-span-1 grid">
+                                <label for="v-code" class="text-lg">Verification code</label>
+                                <p-inputotp id="v-code" formControlName="otp" [length]="6" [mask]="true" [integerOnly]="true" size="large" style="--p-inputotp-gap: 1.5rem;" />
+                            </div>
+
+                            <button type="submit" pButton (click)="verifyOtp()">
+                                <span pButtonLabel>Verify</span>
+                            </button>
+                            <p-button label="Resend Code" variant="outlined" severity="secondary" styleClass="w-full mt-2" />
+                            <h6 class="font-light">Didn't get the code?</h6>
+                            <ul class="list-disc list-inside leading-relaxed -mt-3">
+                                <li>Codes can take up to 5 minutes to arrive.</li>
+                                <li>Check your spam folder.</li>
+                            </ul>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>

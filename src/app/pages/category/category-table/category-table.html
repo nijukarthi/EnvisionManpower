@@ -1,9 +1,10 @@
+<p-toast></p-toast>
 <div class="card">
     <div class="flex items-center justify-between">
         <h5>Categories</h5>
         <p-button label="Add Category" icon="pi pi-plus" (click)="addCategory()" />
     </div>
-    <p-table [value]="categoryList$ | async" showGridlines [rowHover]="true">
+    <p-table [value]="categoryList" showGridlines [rowHover]="true">
         <ng-template #header>
             <tr>
                 <th>SI No</th>
@@ -15,8 +16,8 @@
             <tr>
                 <td>{{ i + 1 }}</td>
                 <td>{{ category.categoryName }}</td>
-                <td class="flex justify-end gap-3">
-                    <p-button icon="pi pi-pencil" [rounded]="true" [outlined]="true" (click)="editCategory(category.categoryId)" />
+                <td class="flex justify-start gap-3">
+                    <p-button icon="pi pi-pencil" [rounded]="true" [outlined]="true" (click)="editCategory(category)" />
                     <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" (click)="deleteCategory(category.categoryId, category.categoryName)" />
                 </td>
             </tr>
@@ -25,7 +26,7 @@
 </div>
 
 <p-dialog [header]="categoryId ? 'Edit Category': 'Add New Category'" [modal]="true" 
-    [(visible)]="openNewCategory" [style]="{width: '30rem'}" (onHide)="onDialogClose()">
+    [(visible)]="openNewCategoryPopup" [style]="{width: '30rem'}" (onHide)="onDialogClose()">
     <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
         <div class="grid grid-cols-1 gap-1">
             <div class="grid col-span-1 gap-1">
@@ -33,9 +34,9 @@
                 <input type="text" pInputText formControlName="categoryName" id="category-name" />
             </div>
         </div>
-        <div class="flex justify-end mt-4">
-            <button pButton pRipple type="submit">
-                <span pButtonLabel>Save</span>
+        <div class="flex justify-start mt-4 w-full">
+            <button pButton pRipple type="submit" class="w-full">
+                <span pButtonLabel>{{actionName}}</span>
             </button>
         </div>
     </form>

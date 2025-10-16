@@ -3,7 +3,7 @@
         <h5>Departments</h5>
         <p-button label="Add Department" icon="pi pi-plus" (click)="addDepartment()" />
     </div>
-    <p-table [value]="departmentList$ | async" showGridlines [rowHover]="true">
+    <p-table [value]="departmentList" showGridlines [rowHover]="true">
         <ng-template #header>
             <tr>
                 <th>SI No</th>
@@ -15,8 +15,8 @@
             <tr>
                 <td>{{ i + 1 }}</td>
                 <td>{{ department.departmentName }}</td>
-                <td class="flex justify-end gap-3">
-                    <p-button icon="pi pi-pencil" [rounded]="true" [outlined]="true" (click)="editDepartment(department.departmentId)" />
+                <td class="flex justify-start gap-3">
+                    <p-button icon="pi pi-pencil" [rounded]="true" [outlined]="true" (click)="editDepartment(department)" />
                     <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" (click)="deleteDepartment($event, department.departmentId, department.departmentName)" />
                 </td>
             </tr>
@@ -25,7 +25,7 @@
 </div>
 
 <p-dialog [header]="departmentId ? 'Edit Department' : 'Add New Department'" [modal]="true"
-    [(visible)]="openNewDepartment" [style]="{width: '30rem'}" (onHide)="onDialogClose()">
+    [(visible)]="openNewDepartmentPopup" [style]="{width: '30rem'}" (onHide)="onDialogClose()">
     <form [formGroup]="departmentForm" (ngSubmit)="onSubmit()">
         <div class="grid grid-cols-1 gap-1">
             <div class="col-span-1 grid gap-1">
@@ -33,9 +33,9 @@
                 <input type="text" pInputText formControlName="departmentName" id="department-name" />
             </div>
         </div>
-        <div class="flex justify-end mt-4">
-            <button pButton pRipple type="submit">
-                <span pButtonLabel>Save</span>
+        <div class="flex justify-start mt-4 w-full">
+            <button pButton pRipple type="submit" class="w-full">
+                <span pButtonLabel>{{actionName}}</span>
             </button>
         </div>
     </form>

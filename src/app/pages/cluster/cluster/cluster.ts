@@ -1,8 +1,8 @@
-import { ClusterService } from '@/service/masters/cluster/cluster';
+import { Apiservice } from '@/service/apiservice/apiservice';
 import { CompanyUsersService } from '@/service/masters/companyUsers/company-users';
 import { Shared } from '@/service/shared';
 import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Observable } from 'rxjs';
@@ -15,31 +15,32 @@ import { Observable } from 'rxjs';
 })
 export class Cluster implements OnInit{
   openCluster = false;
-
-  clusterId: number | null = null;
-
-  clusterService = inject(ClusterService);
+  clusterId: any;
+/*   apiService = inject(apiService);
   fb = inject(FormBuilder);
-  cusService = inject(CompanyUsersService);
+  apiService = inject(CompanyUsersService);
   router = inject(Router);
   messageService = inject(MessageService);
-  private confirmationService = inject(ConfirmationService);
-
-  clusterList$!: Observable<any>;
-
+  private confirmationService = inject(ConfirmationService); */
+  clusterList:any;
   userList: any[] = [];
+  clusterForm:any;
 
-  clusterForm = this.fb.group({
-    clusterId: [0],
-    clusterName: [''],
-    clusterCode: [''],
-    clusterHead: this.fb.group({
-      userId: [0]
-    })
-  })
+    constructor(private messageService: MessageService, private apiService: Apiservice, private fb: FormBuilder,private route:Router,private confirmationService:ConfirmationService) { }
+  
 
   ngOnInit(): void {
-    this.clusterList$ = this.clusterService.getActiveClusters();
+     this.clusterForm = this.fb.group({
+    clusterId: [0],
+    clusterName: ['',Validators.required],
+    clusterCode: ['',Validators.required],
+    clusterHead: this.fb.group({
+      userId: [3]
+    })
+  })
+   this.fetchViewCluster('');
+
+    //this.clusterList$ = this.apiService.getActiveClusters();
   }
 
   getMenuItems(cluster: any){
@@ -58,7 +59,7 @@ export class Cluster implements OnInit{
   }
 
   fetchUserList(){
-    this.cusService.fetchAllClusterHeads().subscribe({
+    this.apiService.getActiveClusters('').subscribe({
       next: (val: any) => {
         console.log(val);
         this.userList = val;
@@ -78,17 +79,18 @@ export class Cluster implements OnInit{
     }
   }
 
-  fetchViewCluster(clusterId: number){
+  fetchViewCluster(clusterId: any){
     try {
-      this.clusterService.fetchViewCluster(clusterId).subscribe({
+      this.apiService.getActiveClusters(clusterId).subscribe({
         next: (val: any) => {
           console.log(val);
-          this.clusterForm.patchValue({
+          this.clusterList = val.data
+         /*  this.clusterForm.patchValue({
             ...val,
             clusterHead: {
               userId: Number(val.clusterHead.userId)
             }
-          });
+          }); */
         },
         error: err => {
           console.log(err);
@@ -113,37 +115,66 @@ export class Cluster implements OnInit{
     try {
       console.log(this.clusterForm.value);
       if (!this.clusterId) {
-        this.clusterService.createNewCluster(this.clusterForm.value).subscribe({
+        if(this.clusterForm.valid){
+           let data = {
+          "clusterName": "Tamilnadu",
+          "clusterCode": "TN",
+          "clusterHead": {
+            "userId": 3  //userId From User Master that Who hasl cluster head user group
+          } 
+        }
+        this.apiService.createNewCluster(data).subscribe({
           next: val => {
             console.log(val);
+            this.openCluster = false;
+            this.clusterForm.reset();
             this.messageService.add({severity: 'success', summary: 'Success', detail: 'Cluster Created Successfully'});
-            setTimeout(() => {  
-              this.router.navigate(['/home']).then(success => {
+           /*  setTimeout(() => {  
+              this.route.navigate(['/home']).then(success => {
                 if(success){
-                  this.router.navigate(['/home/clusters']);
+                  this.route.navigate(['/home/clusters']);
                 }
               })
-            }, 2000);
+            }, 2000); */
           },
           error: err => {
-            console.log(err);
+             this.messageService.add({severity: 'error', summary: 'Error', detail: err.error.detail});
+
           }
         })
+        }else{
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Fill All Details'
+          })
+        }
+       
       } else {
         this.clusterForm.patchValue({
           clusterId: this.clusterId
         })
-        this.clusterService.updateCluster(this.clusterForm.value).subscribe({
+        let data = {
+          "clusterId":  this.clusterForm.get('clusterId').value,
+          "clusterName": this.clusterForm.get('clusterName').value,
+          "clusterCode": this.clusterForm.get('clusterCode').value,
+          "clusterHead": {
+            "userId": this.clusterForm.get('userId').value
+          }
+        }
+        this.apiService.updateCluster(data).subscribe({
           next: val => {
             console.log(val);
+            this.openCluster = false;
+            this.clusterForm.reset();
             this.messageService.add({severity: 'success', summary: 'Success', detail: 'Cluster Updated Successfully'});
-            setTimeout(() => {  
-              this.router.navigate(['/home']).then(success => {
+            /* setTimeout(() => {  
+              this.route.navigate(['/home']).then(success => {
                 if(success){
-                  this.router.navigate(['/home/clusters']);
+                  this.route.navigate(['/home/clusters']);
                 }
               })
-            }, 2000);
+            }, 2000); */
           },
           error: err => {
             console.log(err);
@@ -171,17 +202,21 @@ export class Cluster implements OnInit{
         severity: 'danger'
       },
       accept: () => {
-        this.clusterService.deleteCluster(cluster.clusterId).subscribe({
+        let data = {
+          clusterId:cluster.clusterId
+        }
+        this.apiService.deleteCluster(data).subscribe({
           next: val => {
               console.log(val);
               this.messageService.add({severity: 'info', summary: 'Confirmed', detail: 'Record deleted'});
-              setTimeout(() => {
-                this.router.navigate(['/home']).then(success => {
+              this.fetchViewCluster('');
+              /* setTimeout(() => {
+                this.route.navigate(['/home']).then(success => {
                   if (success) {
-                    this.router.navigate(['/home/clusters']);
+                    this.route.navigate(['/home/clusters']);
                   }
                 })
-              }, 2000);
+              }, 2000); */
             },
             error: err => {
               console.log(err);
