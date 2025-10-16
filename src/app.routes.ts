@@ -20,6 +20,7 @@ import { Cluster } from '@/pages/cluster/cluster/cluster';
 import { ResourceManagerAssign } from '@/pages/ResourceManagerAssign/resource-manager-assign/resource-manager-assign';
 import { Loginpage } from '@/pages/loginpage/loginpage';
 import { Envisionroles } from '@/pages/envisionroles/envisionroles';
+import { Project } from '@/pages/project/project/project';
 
 export const appRoutes: Routes = [
     {
@@ -54,6 +55,7 @@ export const appRoutes: Routes = [
             { path: 'users', component: CompanyUsers, canActivate: [authGuard] },
             { path: 'clusters', component: Cluster, canActivate: [authGuard] },
             { path: 'manager', component: ResourceManagerAssign, canActivate: [authGuard] },
+            { path: 'projects', component: Project, canActivate: [authGuard]},
             { path: 'envisionRoles', component: Envisionroles, canActivate: [authGuard] },
             { path: 'uikit', canActivate: [authGuard], loadChildren: () => import('./app/pages/uikit/uikit.routes') },
             { path: 'documentation', component: Documentation, canActivate: [authGuard] },

@@ -3,7 +3,7 @@
         <h5>SPNs</h5>
         <p-button label="Add SPN" icon="pi pi-plus" (click)="addSpn()" />
     </div>
-    <p-table [value]="spnList$ | async" showGridlines [rowHover]="true">
+    <p-table [value]="spnList" showGridlines [rowHover]="true">
         <ng-template #header>
             <tr>
                 <th>SI. No</th>
@@ -49,7 +49,7 @@
         </div>
         <div class="flex justify-end mt-4">
             <button pButton pRipple type="submit">
-                <span pButtonLabel>Save</span>
+                <span pButtonLabel>{{ actionName }}</span>
             </button>
         </div>
     </form>

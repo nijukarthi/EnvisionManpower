@@ -57,13 +57,13 @@ export class Apiservice {
     return this.postMethod('master/usergroup/delete',params);
   }
 
-   createNewCategory(params: any): Observable<any> {
+  createNewCategory(params: any): Observable<any> {
     return this.postMethod('master/category/create',params);
   }
   updateCategory(params: any): Observable<any> {
     return this.postMethod('master/category/update',params);
   }
-   fetchActiveCategory(params: any): Observable<any> {
+  fetchActiveCategory(params: any): Observable<any> {
     return this.postMethod('master/category',params);
   }
   deleteCategory(params: any): Observable<any> {
@@ -83,20 +83,45 @@ export class Apiservice {
     return this.postMethod('master/env-role/delete',params);
   }
 
-   createNewCluster(params: any): Observable<any> {
+  createNewCluster(params: any): Observable<any> {
     return this.postMethod('master/cluster/create',params);
   }
   updateCluster(params: any): Observable<any> {
     return this.postMethod('master/cluster/update',params);
   }
-   getActiveClusters(params: any): Observable<any> {
+  getActiveClusters(params: any): Observable<any> {
     return this.postMethod('master/cluster',params);
   }
   deleteCluster(params: any): Observable<any> {
     return this.postMethod('master/cluster/delete',params);
   }
 
-  
+  findUserGroup(params: any){
+    return this.postMethod('user/findby/usergroup', params);
+  }
 
+  fetchClusterHeadByCluster(params: any): Observable<any>{
+    return this.postMethod('master/cluster/head', params);
+  }
+
+  fetchActiveSpns(params: any): Observable<any>{
+    return this.postMethod('master/spn', params);
+  }
+
+  createNewSpn(params: any){
+    return this.postMethod('master/spn/create', params);
+  }
+
+  updateSpn(params: any){
+    return this.postMethod('master/spn/update', params);
+  }
+
+  deleteSpn(params: any){
+    return this.postMethod('master/spn/delete', params);
+  }
+
+  fetchActiveProjects(params: any): Observable<any>{
+    return this.postMethod('master/project', params);
+  }
 
 }
