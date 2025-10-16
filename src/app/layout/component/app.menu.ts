@@ -107,7 +107,8 @@ export class AppMenu {
                             },
                             {
                                 label: 'Project',
-                                icon: 'pi pi-inbox'
+                                icon: 'pi pi-inbox',
+                                routerLink: ['/home/projects']
                             },
                             {
                                 label: 'User Group',
