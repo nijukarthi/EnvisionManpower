@@ -85,7 +85,8 @@ export class DepartmentTable implements OnInit {
   onSubmit(){
     console.log(this.departmentForm.value);
     if (!this.departmentId) {
-      var name = this.departmentForm.get('departmentName').value
+      if(this.departmentForm.valid){
+        var name = this.departmentForm.get('departmentName').value
       let data = {
         departmentName:name
       }
@@ -110,8 +111,17 @@ export class DepartmentTable implements OnInit {
           console.log(err);
         }
       })
+      }else{
+ this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Please Enter Department'
+        })
+      }
+      
     } else {
-      this.departmentForm.patchValue({
+      if(this.departmentForm.valid){
+         this.departmentForm.patchValue({
         departmentId: this.departmentId.departmentId
       });
       console.log(this.departmentForm.value);
@@ -139,6 +149,14 @@ export class DepartmentTable implements OnInit {
         })
             }
           })
+      }else{
+ this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Please Enter Department'
+        })
+      }
+     
     }
   }
 
