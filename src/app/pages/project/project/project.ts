@@ -1,12 +1,9 @@
+import { UserGroups } from '@/models/usergroups/usergroups.enum';
 import { Apiservice } from '@/service/apiservice/apiservice';
-import { CompanyUsersService } from '@/service/masters/companyUsers/company-users';
-import { ProjectService } from '@/service/masters/project/project';
 import { Shared } from '@/service/shared';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-project',
@@ -16,25 +13,27 @@ import { Observable } from 'rxjs';
 })
 export class Project implements OnInit {
   openProject = false;
+  loading = false;
 
   projectId: number | null = null;
+
+  UserGroups = UserGroups;
 
   first = 0;
   offSet = 0;
   pageSize = 10;
 
-  private projectService = inject(ProjectService);
+  actionName = '';
+
   private fb = inject(FormBuilder);
-  private companyUserService = inject(CompanyUsersService);
-  private router = inject(Router);
 
   constructor(private apiService: Apiservice, private messageService: MessageService, private confirmationService: ConfirmationService){}
 
   projectList: any;
   clusterList: any[] = [];
-  clusterHeadList: any[] = [];
-  departmentList: any;
+  clusterHeadList: any;
   siteInchargeList: any;
+  departmentHeadList: any;
 
   projectForm = this.fb.group({
     projectId: [0],
@@ -55,12 +54,6 @@ export class Project implements OnInit {
 
   ngOnInit(): void {
     this.fetchActiveProjects();
-
-    this.projectForm.get('cluster.clusterId')?.valueChanges.subscribe(clusterId => {
-      if (clusterId) {
-        this.fetchClusterHeadByCluster(clusterId);
-      }
-    })
   }
 
   getMenuItems(project: any){
@@ -68,7 +61,7 @@ export class Project implements OnInit {
       {
         label: 'Edit',
         icon: 'pi pi-pencil',
-        command: () => this.editProject(project.projectId)
+        command: () => this.editProject(project)
       },
       {
         label: 'Delete',
@@ -113,6 +106,7 @@ export class Project implements OnInit {
   }
 
   fetchClusterHeadByCluster(clusterId: number){
+    console.log(clusterId);
     console.log('checking');
     try {
       const data = {
@@ -122,10 +116,38 @@ export class Project implements OnInit {
       this.apiService.fetchClusterHeadByCluster(data).subscribe({
         next: val => {
           console.log(val);
-          this.clusterHeadList = val.data;
+          this.clusterHeadList = val.data ? [val.data] : [];
         },
-        error: err =>{
+        error: err => {
           console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  findUserGroup(userGroupId: number, type: 'siteIncharge' | 'departmentHead'){
+    try {
+      this.loading = true;
+
+      const data = {
+        userGroupId: userGroupId
+      }
+      console.log(data);
+      this.apiService.findUserGroup(data).subscribe({
+        next: val => {
+          console.log(val);
+          if (type === 'siteIncharge') {
+            this.siteInchargeList = val.data;
+          } else if (type === 'departmentHead') {
+            this.departmentHeadList = val.data;
+          }
+          this.loading = false;
+        },
+        error: err => {
+          console.log(err);
+          this.loading = false;
         }
       })
     } catch (error) {
@@ -136,33 +158,38 @@ export class Project implements OnInit {
   addProject(){
     try {
       this.openProject = true;
+      this.actionName = 'Save';
       this.fetchAllCluster();
     } catch (error) {
       console.log(error);
     }
   }
 
-  fetchViewProject(projectId: number){
+  editProject(project: any){
     try {
-      this.projectService.fetchViewProject(projectId).subscribe({
-        next: val => {
-          console.log(val);
-          this.projectForm.patchValue(val);
+      this.projectId = project.projectId;
+      this.openProject = true;
+      this.actionName = 'Update';
+      this.fetchAllCluster();
+      this.fetchClusterHeadByCluster(project.cluster.clusterId);
+      this.findUserGroup(UserGroups.SITEINCHARGE, 'siteIncharge');
+      this.findUserGroup(UserGroups.DEPARTMENTHEAD, 'departmentHead');
+      this.projectForm.patchValue({
+        projectId: project.projectId,
+        projectCode: project.projectCode,
+        cluster: {
+          clusterId: project.cluster.clusterId
         },
-        error: err =>{
-          console.log(err);
+        siteIncharge: {
+          userId: project.siteIncharge.userId
+        },
+        clusterHead: {
+          userId: project.clusterHead.userId
+        },
+        departmentHead: {
+          userId: project.departmentHead.userId
         }
       })
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  editProject(projectId: number){
-    try {
-      this.projectId = projectId;
-      this.openProject = true;
-      this.fetchViewProject(this.projectId);
     } catch (error) {
       console.log(error);
     }
@@ -172,46 +199,70 @@ export class Project implements OnInit {
     try {
       console.log(this.projectForm.value);
       if (!this.projectId) {
-        this.projectService.createNewProject(this.projectForm.value).subscribe({
-          next: val => {
-            console.log(val);
-            this.messageService.add({severity: 'success', summary: 'Success', detail: 'Project Created Successfully'});
-            setTimeout(() => {    
-              this.router.navigate(['/home']).then(success => {
-                if (success) {
-                  this.router.navigate(['/home/projects']);
-                }
-              })
-            }, 2000);
-          },
-          error: err => {
-            console.log(err);
+        if (this.projectForm.valid) {
+          const data = {
+            projectCode: this.projectForm.get('projectCode')?.value,
+            cluster: {
+              clusterId: this.projectForm.get('cluster.clusterId')?.value
+            },
+            siteIncharge: {
+              userId: this.projectForm.get('siteIncharge.userId')?.value
+            },
+            clusterHead: {
+              userId: this.projectForm.get('clusterHead.userId')?.value
+            },
+            departmentHead: {
+              userId: this.projectForm.get('departmentHead.userId')?.value
+            }
           }
-        })
+          this.apiService.createNewProject(data).subscribe({
+            next: val => {
+              console.log(val);
+              this.messageService.add({severity: 'success', summary: 'Success', detail: 'Project Created Successfully'});
+              this.openProject = false;
+              this.projectForm.reset();
+              this.fetchActiveProjects();
+            },
+            error: err => {
+              console.log(err);
+            }
+          })
+        }
       } else {
-        this.projectForm.patchValue({
-          projectId: this.projectId
-        })
-
-        this.projectService.updateProject(this.projectForm.value).subscribe({
-          next: val => {
-            console.log(val);
-            this.messageService.add({severity: 'success', summary: 'Success', detail: 'Project Updated Successfully'});
-            setTimeout(() => {    
-              this.router.navigate(['/home']).then(success => {
-                if (success) {
-                  this.router.navigate(['/home/projects']);
-                }
-              })
-            }, 2000);
-          },
-          error: err => {
-            console.log(err);
+        if (this.projectForm.valid) {
+          const data = {
+            projectId: this.projectForm.get('projectId')?.value,
+            projectCode: this.projectForm.get('projectCode')?.value,
+            cluster: {
+              clusterId: this.projectForm.get('cluster.clusterId')?.value
+            },
+            siteIncharge: {
+              userId: this.projectForm.get('siteIncharge.userId')?.value
+            },
+            clusterHead: {
+              userId: this.projectForm.get('clusterHead.userId')?.value
+            },
+            departmentHead: {
+              userId: this.projectForm.get('departmentHead.userId')?.value
+            }
           }
-        })
+          this.apiService.updateProject(data).subscribe({
+            next: val => {
+              console.log(val);
+              this.messageService.add({severity: 'success', summary: 'Success', detail: 'Project Updated Successfully'});
+              this.openProject = false;
+              this.projectForm.reset();
+              this.fetchActiveProjects();
+            },
+            error: err => {
+              console.log(err);
+            }
+          })
+        }
       }
     } catch (error) {
       console.log(error);
+      this.messageService.add({severity: 'error', summary: 'Error', detail: 'Please Try again'});
     }
   }
 
@@ -232,17 +283,14 @@ export class Project implements OnInit {
       },
       accept: () => {
         try {
-          this.projectService.deleteProject(project.projectId).subscribe({
+          const data = {
+            projectId: project.projectId
+          }
+          this.apiService.deleteProject(data).subscribe({
             next: val => {
               console.log(val);
-              this.messageService.add({severity: 'info', summary: 'Confirmed', detail: 'Record Deleted'});
-              setTimeout(() => {    
-                this.router.navigate(['/home']).then(success => {
-                  if (success) {
-                    this.router.navigate(['/home/projects']);
-                  }
-                })
-              }, 2000);
+              this.messageService.add({severity: 'success', summary: 'Success', detail: 'Product Deleted Successfully'});
+              this.fetchActiveProjects();
             },
             error: err => {
               console.log(err);

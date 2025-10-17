@@ -96,7 +96,7 @@ export class Apiservice {
     return this.postMethod('master/cluster/delete',params);
   }
 
-  findUserGroup(params: any){
+  findUserGroup(params: any): Observable<any>{
     return this.postMethod('user/findby/usergroup', params);
   }
 
@@ -122,6 +122,22 @@ export class Apiservice {
 
   fetchActiveProjects(params: any): Observable<any>{
     return this.postMethod('master/project', params);
+  }
+
+  createNewProject(params: any){
+    return this.postMethod('master/project/create', params);
+  }
+
+  updateProject(params: any){
+    return this.postMethod('master/project/update', params);
+  }
+
+  deleteProject(params: any){
+    return this.postMethod('master/project/delete', params)
+  }
+
+  fetchActiveCompanyUsers(params: any): Observable<any>{
+    return this.postMethod('user/active/companyuser', params);
   }
 
 }
