@@ -43,8 +43,28 @@
             </div>
             <div class="grid col-span-1 gap-1">
                 <label for="user-group">User Group</label>
-                <p-select id="user-group" />
+                <p-select [options]="userGroupList" formControlName="userGroupId" id="user-group" 
+                  optionLabel="userGroupName" optionValue="userGroupId" [filter]="true" filterBy="userGroupName" 
+                  (onChange)="selectedUserGroup($event.value)" placeholder="Select User Group" [showClear]="true" appendTo="body" />
             </div>
+            @if (showDepartments) {
+                <div formArrayName="userDepartments">
+                    @for (item of userDepartments.controls; track $index; let i = $index) {
+                        <div class="grid col-span-1 gap-1" [formGroupName]="i">
+                            <label for="department">Department</label>
+                            <p-multiselect [options]="departmentList" formControlName="departmentId" id="department" 
+                               optionLabel="departmentName" optionValue="departmentId" display="chip" 
+                               [filter]="true" [maxSelectedLabels]="3" filterBy="departmentName" [showClear]="true" 
+                               (onChange)="selectDepartments($event.value)" placeholder="Select Departments" appendTo="body" />
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+        <div class="flex justify-end mt-4">
+            <button pButton pRipple type="submit">
+                <span pButtonLabel>{{actionName}}</span>
+            </button>
         </div>
     </form>
 </p-dialog>
