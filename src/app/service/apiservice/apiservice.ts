@@ -152,4 +152,8 @@ export class Apiservice {
     return this.postMethod('user/active/companyuser', params);
   }
 
+  createCompanyUsers(params: any): Observable<any>{
+    return this.postMethod('user/account/create', params);
+  }
+
 }
