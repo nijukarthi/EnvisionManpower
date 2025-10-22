@@ -120,6 +120,10 @@ export class Apiservice {
     return this.postMethod('master/spn/delete', params);
   }
 
+  fetchSpnInfo(params: any): Observable<any>{
+    return this.postMethod('master/spninfo', params);
+  }
+
   fetchActiveProjects(params: any): Observable<any>{
     return this.postMethod('master/project', params);
   }
@@ -134,6 +138,14 @@ export class Apiservice {
 
   deleteProject(params: any){
     return this.postMethod('master/project/delete', params)
+  }
+
+  fetchProjectCodes(params: any): Observable<any>{
+    return this.postMethod('master/projectcode', params);
+  }
+
+  viewProject(params: any): Observable<any>{
+    return this.postMethod('master/project/view', params);
   }
 
   fetchActiveCompanyUsers(params: any): Observable<any>{

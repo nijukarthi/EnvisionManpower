@@ -12,6 +12,7 @@
                 <th>Project Code</th>
                 <th>Cluster Name</th>
                 <th>Cluster Head</th>
+                <th>Department</th>
                 <th>Department Head</th>
                 <th>Site Incharge</th>
                 <th>Actions</th>
@@ -23,6 +24,7 @@
                 <td>{{ project.projectCode }}</td>
                 <td>{{ project.cluster.clusterName }}</td>
                 <td>{{ project.clusterHead.userName }}</td>
+                <td>{{ project.department.departmentName }}</td>
                 <td>{{ project.departmentHead.userName }}</td>
                 <td>{{ project.siteIncharge.userName }}</td>
                 <td>
@@ -67,6 +69,12 @@
                 <p-select [options]="clusterHeadList" formControlName="userId" id="cluster-head" 
                     optionLabel="userName" optionValue="userId" [filter]="true" filterBy="userName" [showClear]="true"
                     placeholder="Select Cluster Head" appendTo="body" />
+            </div>
+            <div class="grid col-span-1 gap-1" formGroupName="department">
+                <label for="department">Department</label>
+                <p-select [options]="departmentList" formControlName="departmentId" id="department"
+                    optionLabel="departmentName" optionValue="departmentId" [filter]="true" filterBy="departmentName" 
+                    [showClear]="true" placeholder="Select Department" appendTo="body" />
             </div>
             <div class="grid col-span-1 gap-1" formGroupName="departmentHead">
                 <label for="department-head">Department Head</label>

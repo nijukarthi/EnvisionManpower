@@ -33,6 +33,7 @@ export class Project implements OnInit {
   clusterList: any[] = [];
   clusterHeadList: any;
   siteInchargeList: any;
+  departmentList: any;
   departmentHeadList: any;
 
   projectForm = this.fb.group({
@@ -47,6 +48,9 @@ export class Project implements OnInit {
     clusterHead: this.fb.group({
       userId: [0]
     }),
+    department: this.fb.group({
+      departmentId: [0]
+    }),
     departmentHead: this.fb.group({
       userId: [0]
     })
@@ -54,6 +58,7 @@ export class Project implements OnInit {
 
   ngOnInit(): void {
     this.fetchActiveProjects();
+    this.fetchActiveDepartments();
   }
 
   getMenuItems(project: any){
@@ -127,6 +132,18 @@ export class Project implements OnInit {
     }
   }
 
+  fetchActiveDepartments(){
+    this.apiService.fetchActiveDepartments('').subscribe({
+      next: val => {
+        console.log(val);
+        this.departmentList = val.data;
+      },
+      error: err => {
+        console.log(err);
+      }
+    })
+  }
+
   findUserGroup(userGroupId: number, type: 'siteIncharge' | 'departmentHead'){
     try {
       this.loading = true;
@@ -139,9 +156,9 @@ export class Project implements OnInit {
         next: val => {
           console.log(val);
           if (type === 'siteIncharge') {
-            this.siteInchargeList = val.data;
+            this.siteInchargeList = val?.data;
           } else if (type === 'departmentHead') {
-            this.departmentHeadList = val.data;
+            this.departmentHeadList = val?.data;
           }
           this.loading = false;
         },
