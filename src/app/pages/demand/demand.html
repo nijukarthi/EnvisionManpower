@@ -107,7 +107,7 @@
                     showGridlines [rowHover]="true" [scrollable]="true" scrollHeight="400px" [tableStyle]="{'min-width': '90rem'}">
                     <ng-template #header>
                         <tr>
-                            <th>SI No</th>
+                            <th>Sl_No</th>
                             <th>SPN</th>
                             <th>SPN Description</th>
                             <th>Experience</th>
@@ -142,7 +142,7 @@
                                 <p-datepicker formControlName="plannedDeploymentDate" placeholder="Select Date" appendTo="body" />
                             </td>
                             <td>
-                                <p-button icon="pi pi-trash" severity="danger" [rounded]="true" (onClick)="deleteSpnRow(rowIndex)" />
+                                <p-button *ngIf="demandDetails.length > 1" icon="pi pi-trash" severity="danger" [rounded]="true" (onClick)="deleteSpnRow(rowIndex)" />
                             </td>
                         </tr>
                     </ng-template>

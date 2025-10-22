@@ -33,7 +33,7 @@ export class CompanyUsers implements OnInit {
   offSet = 0;
   pageSize = 10;
 
-  actionName = '';
+  actionName = 'Add';
 
   companyUserForm = this.fb.group({
     userId: [0],
@@ -156,7 +156,7 @@ export class CompanyUsers implements OnInit {
   addUser(){
     try {
       this.openCompanyUser = true;
-      this.actionName = 'Save';
+      this.actionName = 'Add';
       this.fetchActiveUserGroups();
       this.fetchActiveDepartments();
     } catch (error) {
@@ -165,6 +165,25 @@ export class CompanyUsers implements OnInit {
   }
 
   onSubmit(){
-    console.log(this.companyUserForm.value);
+  try{
+    if(this.actionName == "Add"){
+      let data = this.companyUserForm.value;
+      this.apiService.createCompanyUsers(data)
+      .subscribe({
+        next:(res)=>{
+          this.openCompanyUser = false;
+          this.companyUserForm.reset();
+          this.fetchActiveCompanyUsers();
+        },error:error=>{
+
+        }
+      })
+    }else if(this.actionName == "Update"){
+
+    }
+
+  }catch(e){
+
+  }
   }
 }

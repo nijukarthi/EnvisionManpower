@@ -28,6 +28,7 @@ export class UsergroupTable implements OnInit {
   usergroupList: any;
 
   usergroupForm:any;
+  actionName:any = "Save";
 
   constructor(private messageService: MessageService, private apiService: Apiservice, private fb: FormBuilder,private route:Router,private confirmationService:ConfirmationService) { }
   
@@ -46,7 +47,7 @@ export class UsergroupTable implements OnInit {
       {
         label: 'Edit',
         icon: 'pi pi-pencil',
-        command: () => this.editUserGroup(usergroup.userGroupId),
+        command: () => this.editUserGroup(usergroup),
         disabled:usergroup.userGroupId == 1
       },
       // {
@@ -82,10 +83,14 @@ export class UsergroupTable implements OnInit {
     }
   }
 
-  editUserGroup(usergroupId: number){
+  editUserGroup(usergroupId: any){
     try {
       this.userGroupId = usergroupId;
       this.openUsergroup = true;
+      this.usergroupForm.patchValue({
+        userGroupName:this.userGroupId.userGroupName
+      })
+      this.actionName = "Update";
       this.fetchViewUserGroup(this.userGroupId);
     } catch (error) {
       console.log(error);
@@ -95,8 +100,8 @@ export class UsergroupTable implements OnInit {
   onSubmit(){
     try {
       console.log(this.usergroupForm.value);
-      if (!this.userGroupId) {
-        this.apiService.createNewUsergroup(this.usergroupForm.value).subscribe({
+      if(this.actionName == "Save"){
+           this.apiService.createNewUsergroup(this.usergroupForm.value).subscribe({
           next: val => {
             console.log(val);
             this.messageService.add({severity: 'success', summary: 'Success', detail: 'User Group Created Successfully'});
@@ -112,27 +117,39 @@ export class UsergroupTable implements OnInit {
             console.log(err);
           }
         })
-      } else {
+      }else if(this.actionName == "Update"){
         this.usergroupForm.patchValue({
           userGroupId: this.userGroupId
         })
+        let data = {
+          "userGroupId": this.usergroupForm.value.userGroupId.userGroupId,
+          "userGroupName":this.usergroupForm.get('userGroupName').value
+        }
 
-        this.apiService.updateUserGroup(this.usergroupForm.value).subscribe({
+        this.apiService.updateUserGroup(data).subscribe({
           next: val => {
             console.log(val);
+            this.openUsergroup = false;
+            this.usergroupForm.reset();
+            this.fetchViewUserGroup('');
             this.messageService.add({severity: 'success', summary: 'Success', detail: 'User Group Updated Successfully'});
-            setTimeout(() => {       
+           /*  setTimeout(() => {       
               this.route.navigate(['/home']).then(success => {
                 if (success) {
                   this.route.navigate(['/home/usergroups']);
                 }
               })
-            }, 2000);
+            }, 2000); */
           },
           error: err => {
             console.log(err);
           }
         })
+      }
+      if (!this.userGroupId) {
+     
+      } else {
+        
       }
     } catch (error) {
       console.log(error);
