@@ -21,6 +21,8 @@ import { ResourceManagerAssign } from '@/pages/ResourceManagerAssign/resource-ma
 import { Loginpage } from '@/pages/loginpage/loginpage';
 import { Envisionroles } from '@/pages/envisionroles/envisionroles';
 import { Project } from '@/pages/project/project/project';
+import { AddEmployee } from '@/pages/add-employee/add-employee';
+import { ExistingEmployee } from '@/pages/existing-employee/existing-employee';
 
 export const appRoutes: Routes = [
     {
@@ -59,6 +61,8 @@ export const appRoutes: Routes = [
             { path: 'envisionRoles', component: Envisionroles, canActivate: [authGuard] },
             { path: 'uikit', canActivate: [authGuard], loadChildren: () => import('./app/pages/uikit/uikit.routes') },
             { path: 'documentation', component: Documentation, canActivate: [authGuard] },
+            { path: 'addEmployee', component: AddEmployee, canActivate: [authGuard] },
+            { path: 'existingEmployee', component: ExistingEmployee, canActivate: [authGuard] },
             { path: 'pages', canActivate: [authGuard], loadChildren: () => import('./app/pages/pages.routes') }
         ]
     },

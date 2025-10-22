@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Shared } from '@/service/shared';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Apiservice } from '@/service/apiservice/apiservice';
+import { UserGroups } from '@/models/usergroups/usergroups.enum';
 
 @Component({
   selector: 'app-demand',
@@ -8,16 +10,26 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
   templateUrl: './demand.html',
   styleUrl: './demand.scss'
 })
-export class Demand {
+export class Demand implements OnInit {
 
-  selectedPCode:any = "";
+  selectedPCodes:any = "";
 
-  PCode:any = [
-    {name:'PCODE 1',id:1},
-    {name:'PCODE 2',id:2},
-    {name:'PCODE 3',id:3},
-    {name:'PCODE 4',id:4},
-  ]
+  departmentList:any;
+  PCodeList: any;
+  clusterList: any;
+  categoryList: any;
+  clusterHeadList: any;
+  siteInchargeList: any;
+  departmentHeadList: any;
+  spnInfoList: any;
+
+  loading = false;
+
+  private fb = inject(FormBuilder);
+
+  userGroups = UserGroups;
+
+  requestedBy = sessionStorage.getItem('userName');
 
   states = [
     { label: "Andhra Pradesh", value: "Andhra Pradesh" },
@@ -51,7 +63,6 @@ export class Demand {
     { label: "Delhi", value: "Delhi" }
   ];
   selectedState:any = "";
-  demandForm!: FormGroup;
 
   spn:any = [
     {label:'SPN 1',id:1},
@@ -116,40 +127,239 @@ export class Demand {
   { label: '5-8 Years', value: '5-8 Years' }
  ]
 
- departmentList:any = [
-  {label:'O&M',id:1},
-    {label:'BESS',id:2},
-    {label:'Projects',id:3},
-    {label:'QEHS',id:4},
+//  departmentList:any = [
+//   {label:'O&M',id:1},
+//     {label:'BESS',id:2},
+//     {label:'Projects',id:3},
+//     {label:'QEHS',id:4},
 
- ]
+//  ]
 
- categoryList: any[] = [ { label: 'Fixed Cost Manpower Services', id: 301 }, { label: 'Cost Plus Manpower Services', id: 302 } ];
+//  categoryList: any[] = [ { label: 'Fixed Cost Manpower Services', id: 301 }, { label: 'Cost Plus Manpower Services', id: 302 } ];
  private categoriesByDept: Record<number, any[]> = {
     1: [ { label: 'Maintenance', id: 101 }, { label: 'Operations', id: 102 } ],
     2: [ { label: 'Battery Testing', id: 201 }, { label: 'BMS', id: 202 } ],
     3: [ { label: 'Fixed Cost Manpower Services', id: 301 }, { label: 'Cost Plus Manpower Services', id: 302 } ],
     4: [ { label: 'Quality', id: 401 }, { label: 'Safety', id: 402 } ]
   };
-  constructor(private fb: FormBuilder) {}
+  constructor(private apiService: Apiservice) {}
 
-  ngOnInit(): void {
-    this.demandForm = this.fb.group({
-     // requisitionId: [''],
-      pCode: [null, Validators.required],
-      state: [null, Validators.required],
-      department: [null, Validators.required],
-      category: [null, Validators.required],
-      /* plannedDate: [null],
-      actualDate: [null],
-      durationDate: [null], */
-      requestedBy: [{ value: 'ADMIN', disabled: true }],
-      spnArray: this.fb.array([])  // FormArray for dynamic rows
+  demandForm = this.fb.group({
+    projectId: [null, Validators.required],
+    cluster: this.fb.group({
+      clusterId: [{ value: 0, disabled: true }]
+    }),
+    clusterHead: this.fb.group({
+      userId: [{ value: 0, disabled: true }]
+    }),
+    siteIncharge: this.fb.group({
+      userId: [{ value: 0, disabled: true }]
+    }),
+    departmentHead: this.fb.group({
+      userId: [{ value: 0, disabled: true }]
+    }),
+    category: this.fb.group({
+      categoryId: [0]
+    }),
+    department: this.fb.group({
+      departmentId: [{ value: 0, disabled: true }]
+    }),
+    demandDetails: this.fb.array([this.createDemandDetails()]),
+  });
+
+  createDemandDetails() {
+    return this.fb.group({
+      spn: ['', Validators.required],
+      spnDescription: ['', Validators.required],
+      experience: ['', Validators.required],
+      quantity: [null, [Validators.required, Validators.min(1)]],
+      plannedReleaseDate: ['', Validators.required],
+      plannedDeploymentDate: ['', Validators.required],
     });
   }
 
-  get spnArray(): FormArray {
-    return this.demandForm.get('spnArray') as FormArray;
+  ngOnInit(): void {
+    this.fetchActiveDepartments();
+    this.fetchPCodes();
+    this.fetchActiveClusters();
+    this.fetchActiveCategory();
+    this.findUserGroup(UserGroups.SITEINCHARGE, 'siteIncharge');
+    this.findUserGroup(UserGroups.DEPARTMENTHEAD, 'departmentHead');
+    this.fetchSpnInfo();
+  }
+
+  get demandDetails(): FormArray {
+    return this.demandForm.get('demandDetails') as FormArray;
+  }
+
+  selectedPCode(projectId: number){
+    try {   
+      console.log(projectId);
+  
+      const data = {
+        projectId: projectId
+      }
+  
+      this.apiService.viewProject(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.fetchClusterHeadByCluster(val.data.cluster.clusterId);
+          this.demandForm.patchValue({
+            cluster: {
+              clusterId: val.data.cluster.clusterId
+            },
+            clusterHead: {
+              userId: val.data.clusterHead.userId
+            },
+            department: {
+              departmentId: val.data.department.departmentId
+            },
+            siteIncharge: {
+              userId: val.data.siteIncharge.userId
+            },
+            departmentHead: {
+              userId: val.data.departmentHead.userId
+            }
+          });      
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  fetchPCodes(){
+    try {   
+      this.apiService.fetchProjectCodes('').subscribe({
+        next: val => {
+          console.log(val);
+          this.PCodeList = val.data;
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  fetchActiveDepartments(){
+    try {    
+      this.apiService.fetchActiveDepartments('').subscribe({
+        next: val => {
+          console.log(val);
+          this.departmentList = val.data;
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  fetchActiveClusters(){
+    try {   
+      this.apiService.getActiveClusters('').subscribe({
+        next: val => {
+          console.log(val);
+          this.clusterList = val.data;
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  fetchClusterHeadByCluster(clusterId: number){
+    console.log(clusterId);
+    try {
+      const data = {
+        clusterId: clusterId
+      }
+      console.log(data);
+      this.apiService.fetchClusterHeadByCluster(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.clusterHeadList = val.data ? [val.data] : [];
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  findUserGroup(userGroupId: number, type: 'siteIncharge' | 'departmentHead'){
+    try {
+      this.loading = true;
+
+      const data = {
+        userGroupId: userGroupId
+      }
+      console.log(data);
+      this.apiService.findUserGroup(data).subscribe({
+        next: val => {
+          console.log(val);
+          if (type === 'siteIncharge') {
+            this.siteInchargeList = val?.data;
+            console.log("siteInchargeList:", this.siteInchargeList);
+          } else if (type === 'departmentHead') {
+            this.departmentHeadList = val?.data;
+            console.log("departmentHeadList", this.departmentHeadList);
+          }
+          this.loading = false;
+        },
+        error: err => {
+          console.log(err);
+          this.loading = false;
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  fetchActiveCategory(){
+    try { 
+      this.apiService.fetchActiveCategory('').subscribe({
+        next: val => {
+          console.log(val);
+          this.categoryList = val.data;
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  fetchSpnInfo(){
+    try {
+      this.apiService.fetchSpnInfo('').subscribe({
+        next: val => {
+          console.log("Spn Info", val);
+          this.spnInfoList = val.data;
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   pcodeStateList:{[key:string]:string} = {
@@ -187,10 +397,10 @@ export class Demand {
     var state = this.pcodeStateList[pcode];
     console.log(state);
     if(state){
-      this.demandForm.get('state')?.patchValue(state);
+      // this.demandForm.get('state')?.patchValue(state);
       this.demandForm.get('state')?.disable();
     }else{
-      this.demandForm.get('state')?.patchValue('');
+      // this.demandForm.get('state')?.patchValue('');
       this.demandForm.get('state')?.enable();
     }
     
@@ -211,19 +421,19 @@ export class Demand {
 
 
   addSpnRow(): void {
-    const spvGroup = this.fb.group({
-      SPN: ['', Validators.required],
-      SPNDesc: ['', Validators.required],
+    const spnGroup = this.fb.group({
+      spn: ['', Validators.required],
+      spnDescription: ['', Validators.required],
       experience: ['', Validators.required],
       quantity: [null, [Validators.required, Validators.min(1)]],
-      plannedDate: ['', Validators.required],
-      actualDate: ['', Validators.required],
+      plannedReleaseDate: ['', Validators.required],
+      plannedDeploymentDate: ['', Validators.required],
     });
-    this.spnArray.push(spvGroup);
+    this.demandDetails.push(spnGroup);
   }
 
   deleteSpnRow(index: number): void {
-    this.spnArray.removeAt(index);
+    this.demandDetails.removeAt(index);
   }
 
   changeSPN(val:any,i:any){
@@ -231,12 +441,12 @@ export class Demand {
     const spnInfo = this.spn.find((x:any) => x.label === selectedSPN);
 
     if (spnInfo) {
-      this.spnArray.at(i).patchValue({
+      this.demandDetails.at(i).patchValue({
         SPNDesc: this.spnDescList[spnInfo.label],
         experience: this.spnExperienceList[spnInfo.label],
       });
     } else {
-      this.spnArray.at(i).patchValue({ SPNDesc: '' });
+      this.demandDetails.at(i).patchValue({ SPNDesc: '' });
     }
   }
 
@@ -245,12 +455,12 @@ export class Demand {
     const spnInfo = this.spnDesc.find((x:any) => x.name === selectedSPN);
 
     if (spnInfo) {
-      this.spnArray.at(i).patchValue({
+      this.demandDetails.at(i).patchValue({
         SPN: this.spnListforDesc[spnInfo.name],
         experience: this.spnListforExp[spnInfo.name],
       });
     } else {
-      this.spnArray.at(i).patchValue({ SPN: '' });
+      this.demandDetails.at(i).patchValue({ SPN: '' });
     }
   }
     

@@ -101,6 +101,22 @@ export class AppMenu {
                                 routerLink: ['/home/consultancies']
                             },
                             {
+                                label: 'Add Employee',
+                                icon: 'pi pi-plus',
+                                items:[
+                                    {
+                                        label: 'New Candidate',
+                                        icon: 'pi pi-file-plus',
+                                        routerLink: ['/home/addEmployee']
+                                    },
+                                    {
+                                        label: 'Existing Candidate',
+                                        icon: 'pi pi-folder-plus',
+                                        routerLink: ['/home/existingEmployee']
+                                    }
+                                ]
+                            },
+                            {
                                 label: 'SPN',
                                 icon: 'pi pi-warehouse',
                                 routerLink: ['/home/spn']

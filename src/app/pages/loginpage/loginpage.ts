@@ -170,6 +170,7 @@ export class Loginpage {
         this.apiService.fetchUserProfile('').subscribe({
             next: val => {
                 console.log(val);
+                sessionStorage.setItem("userName", val.data.userName);
                 this.route.navigate(['/home/demand']);
             },
             error: err => {

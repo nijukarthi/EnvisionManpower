@@ -1,7 +1,7 @@
 <p-fluid>
-        <div class=" card flex">
-          <!--   <div class="card flex flex-col gap-6 w-full">
-                <div class="font-semibold text-xl">DEMAND REQUEST</div>
+        <div class="card">
+            <p class="font-semibold text-xl">Demand Request</p>
+            <!-- <div class="card flex flex-col gap-6 w-full">
                 <div class="flex flex-col md:flex-row gap-6">
                     <div class="flex flex-wrap gap-2 w-full">
                         <label for="firstname2">Requision ID</label>
@@ -37,30 +37,44 @@
                 
             </div> -->
         <form [formGroup]="demandForm">
-            <div class="card grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- <div class="flex flex-wrap gap-2 w-full">
-                    <label for="firstname2">Requision ID</label>
-                    <input pInputText id="firstname2" formControlName="requisitionId" type="text" />
-                </div> -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div class="flex flex-wrap gap-2 w-full">
-                    <label for="lastname2">P-code</label>
-                    <p-select [options]="PCode" formControlName="pCode" optionLabel="name" placeholder="Select PCode"
-                        [filter]="true" filterBy="name" class="w-full md:w-56" (onChange)="selectPCode($event)"/>
+                    <label for="p-code">Project Code</label>
+                    <p-select [options]="PCodeList" formControlName="projectId" id="p-code" optionLabel="projectCode" optionValue="projectId" placeholder="Select PCode"
+                        [filter]="true" filterBy="projectCode" [showClear]="true" class="w-full md:w-56" (onChange)="selectedPCode($event.value)"/>
+                </div>
+                <div class="flex flex-wrap gap-2 w-full" formGroupName="cluster">
+                    <label for="cluster">Cluster</label>
+                    <p-select [options]="clusterList" formControlName="clusterId" id="cluster" optionLabel="clusterName" 
+                        optionValue="clusterId"  placeholder="Select Cluster" [filter]="true" filterBy="clusterName" 
+                        [showClear]="true" class="w-full md:w-56" />
+                </div>
+                <div class="flex flex-wrap gap-2 w-full" formGroupName="clusterHead">
+                    <label for="cluster-head">Cluster Head</label>
+                    <p-select [options]="clusterHeadList" formControlName="userId" id="cluster-head" optionLabel="userName" 
+                        optionValue="userId" placeholder="Select Cluster Head" [filter]="true" filterBy="userName"
+                        [showClear]="true" class="w-full md:w-56" />
+                </div>
+                <div class="flex flex-wrap gap-2 w-full" formGroupName="siteIncharge">
+                    <label for="site-incharge">Site Incharge</label>
+                    <p-select [options]="siteInchargeList" formControlName="userId" id="site-incharge" optionLabel="userName" optionValue="userId" 
+                        placeholder="Select Site Incharge" [filter]="true" filterBy="userName" [showClear]="true" class="w-full md:w-56" />
+                </div>
+                <div class="flex flex-wrap gap-2 w-full" formGroupName="department">
+                    <label for="department">Department</label>
+                    <p-select [options]="departmentList" formControlName="departmentId" id="department" optionLabel="departmentName" optionValue="departmentId" 
+                        placeholder="Select Department" [filter]="true" filterBy="departmentName" [showClear]="true" class="w-full md:w-56" />
+                </div>
+                <div class="flex flex-wrap gap-2 w-full" formGroupName="departmentHead">
+                    <label for="department-head">Department Head</label>
+                    <p-select [options]="departmentHeadList" formControlName="userId" id="department-head" optionLabel="userName" optionValue="userId" 
+                        placeholder="Select Department Head" [filter]="true" filterBy="userName" [showClear]="true" class="w-full md:w-56"  />
                 </div>
                 <div class="flex flex-wrap gap-2 w-full">
-                    <label for="lastname2">State</label>
-                    <p-select [options]="states" formControlName="state" optionLabel="label" optionValue="label"  placeholder="Select State"
-                        [filter]="true" filterBy="label" class="w-full md:w-56" />
-                </div>
-                <div class="flex flex-wrap gap-2 w-full">
-                    <label for="lastname2">Department</label>
-                    <p-select [options]="departmentList" formControlName="department" optionLabel="label" optionvalue="label" placeholder="Select Department"
-                        [filter]="true" filterBy="name" class="w-full md:w-56" />
-                </div>
-                <div class="flex flex-wrap gap-2 w-full">
-                    <label for="lastname2">Category</label>
-                    <p-select [options]="categoryList" formControlName="category" optionLabel="label" optionvalue="label" placeholder="Select Category"
-                        [filter]="true" filterBy="name" class="w-full md:w-56" (onChange)="selectPCode($event)"/>
+                    <label for="category">Category</label>
+                    <p-select [options]="categoryList" id="category" optionLabel="categoryName" optionvalue="categoryId" 
+                        placeholder="Select Category" [filter]="true" filterBy="categoryName" class="w-full md:w-56" 
+                        (onChange)="selectPCode($event)"/>
                 </div>
                 <!-- <div class="flex flex-wrap gap-2 w-full">
                     <label for="lastname2">Planed deployment date</label>
@@ -76,73 +90,113 @@
                 </div> -->
                 <div class="flex flex-wrap gap-2 w-full">
                     <label for="lastname2">Requested By</label>
-                    <input pInputText formControlName="requestedBy" type="text" class="w-full" />
+                    <input pInputText type="text" [value]="requestedBy" [disabled]="true" class="w-full" />
                 </div>
                 <div class="flex flex-wrap gap-2 w-full">
-                    <label for="lastname2">Add SPN</label>
+                    <label for="lastname2">Add Demand</label>
                     <p-button icon="pi pi-plus" [rounded]="true" class="w-full" (onClick)="addSpnRow()" />
                 </div>
 
                 
             </div>
-            <div class="">
-                <div formArrayName="spnArray">
-                    <div *ngFor="let spv of spnArray.controls; let i = index" [formGroupName]="i"
+            <div class="mt-4">
+                <div class="flex items-center justify-between mb-1">
+                    <p class="font-semibold text-xl">Demand Details</p>
+                </div>
+                <p-table [value]="demandDetails.controls" formArrayName="demandDetails" 
+                    showGridlines [rowHover]="true" [scrollable]="true" scrollHeight="400px" [tableStyle]="{'min-width': '90rem'}">
+                    <ng-template #header>
+                        <tr>
+                            <th>SI No</th>
+                            <th>SPN</th>
+                            <th>SPN Description</th>
+                            <th>Experience</th>
+                            <th>Quantity</th>
+                            <th>Planned Deployment Date</th>
+                            <th>Planned Release Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template #body let-row let-rowIndex="rowIndex">
+                        <tr [formGroupName]="rowIndex">
+                            <td>{{ rowIndex + 1 }}</td>
+                            <td>
+                                <p-select [options]="spnInfoList" formControlName="spn" optionLabel="spnCode" optionValue="spnId" 
+                                    [filter]="true" filterBy="spnCode" [showClear]="true" placeholder="Select SPN Code" appendTo="body" />
+                            </td>
+                            <td>
+                                <p-select [options]="spnInfoList" formControlName="spnDescription" optionLabel="spnDescription" 
+                                    optionValue="spnId" [filter]="true" filterBy="spnDescription" [showClear]="true" 
+                                    placeholder="Select SPN Description" appendTo="body" />
+                            </td>
+                            <td>
+                                <input type="text" pInputText formControlName="experience" />
+                            </td>
+                            <td>
+                                <input type="text" pInputText formControlName="quantity" />
+                            </td>
+                            <td>
+                                <p-datepicker formControlName="plannedReleaseDate" placeholder="Select Date" appendTo="body" />
+                            </td>
+                            <td>
+                                <p-datepicker formControlName="plannedDeploymentDate" placeholder="Select Date" appendTo="body" />
+                            </td>
+                            <td>
+                                <p-button icon="pi pi-trash" severity="danger" [rounded]="true" (onClick)="deleteSpnRow(rowIndex)" />
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+                <!-- <div>
+                    <div
                         class="card flex flex-wrap md:flex-wrap items-end gap-4 p-4 mb-3">
             
                          <div class="flex-1 min-w-[250px]">
                             <label>SPN</label>
-                            <p-select [options]="spn" formControlName="SPN" optionLabel="label" optionValue="label"
-                                placeholder="Select SPN" [filter]="true" filterBy="label" class="w-full" (onChange)="changeSPN($event,i)"/>
+                            <p-select [options]="spn" optionLabel="label" optionValue="label"
+                                placeholder="Select SPN" [filter]="true" filterBy="label" class="w-full"/>
                         </div>
             
-                        <!-- SPN Description -->
                         <div class="flex-1 min-w-[250px]">
                             <label>SPN Description</label>
-                            <p-select [options]="spnDesc" formControlName="SPNDesc" optionLabel="name" optionValue="name"
-                                placeholder="Select Description" [filter]="true" filterBy="name" class="w-full" (onChange)="changeSPNDesc($event,i)"/>
+                            <p-select [options]="spnDesc" optionLabel="name" optionValue="name"
+                                placeholder="Select Description" [filter]="true" filterBy="name" class="w-full" />
                         </div>
             
-                        <!-- Experience -->
                         <div class="flex-1 min-w-[120px]">
                             <label>Experience</label>
-                            <p-select [options]="exp" formControlName="experience" optionLabel="label" optionValue="label"
+                            <p-select [options]="exp" optionLabel="label" optionValue="label"
                                 placeholder="Select Experience" [filter]="true" class="w-full" />
                         </div>
             
-                        <!-- Quantity -->
                         <div class="flex-none min-w-[250px]">
                             <label>Quantity</label>
-                            <input pInputText formControlName="quantity" type="number" min="1" class="w-full" />
+                            <input pInputText type="number" min="1" class="w-full" />
                         </div>
 
                          <div class="flex-none min-w-[250px]">
                             <label>Planned deployment date</label>
-                            <p-datepicker appendTo="body" formControlName="plannedDate" placeholder="Select Date" class="w-full" />
+                            <p-datepicker appendTo="body" placeholder="Select Date" class="w-full" />
                         </div>
 
                          <div class="flex-none min-w-[200px]">
                             <label>Planned Release date</label>
-                            <p-datepicker appendTo="body" formControlName="actualDate" placeholder="Select Date" class="w-full" />
+                            <p-datepicker appendTo="body" placeholder="Select Date" class="w-full" />
                         </div>
 
                         
-            
-                        <!-- Delete -->
                         <div class="flex-none">
-                            <p-button icon="pi pi-trash" severity="danger" [rounded]="true" (onClick)="deleteSpnRow(i)" />
+                            <p-button icon="pi pi-trash" severity="danger" [rounded]="true" />
                         </div>
                     </div>
 
-                </div>
+                </div> -->
                 <div class="flex justify-center items-center gap-4 mt-6">
-                        <button pButton label="Submit" class="p-button-outlined" icon="pi pi-save"
-                            ></button>
-                        <button pButton label="Reset" class="p-button-outlined" icon="pi pi-times"
-                            severity="danger"></button>
-                    </div>
-
-            
+                    <button pButton label="Submit" class="p-button-outlined" icon="pi pi-save"
+                        ></button>
+                    <button pButton label="Reset" class="p-button-outlined" icon="pi pi-times"
+                        severity="danger"></button>
+                </div>
             </div>
         </form>
         </div>
