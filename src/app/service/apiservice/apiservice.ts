@@ -156,4 +156,28 @@ export class Apiservice {
     return this.postMethod('user/account/create', params);
   }
 
+  createRequesition(params: any){
+    return this.postMethod('requesition/create', params);
+  }
+
+  fetchDemandRequest(params: any): Observable<any>{
+    return this.postMethod('requesition/demand/assigned', params);
+  }
+
+  approveDemandByClusterHead(params: any){
+    return this.postMethod('requesition/demand/approve/statehead', params);
+  }
+
+  approveDemandByDepartmentHead(params: any){
+    return this.postMethod('requesition/demand/approve/departmenthead', params);
+  }
+
+  fetchDemandResourceManager(params: any): Observable<any>{
+    return this.postMethod('requesition/demand/resourcemanager', params);
+  }
+
+  editDemandQuantity(params: any){
+    return this.postMethod('requesition/edit/demand/quantity', params);
+  }
+
 }

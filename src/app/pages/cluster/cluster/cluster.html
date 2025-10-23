@@ -18,7 +18,7 @@
                 <td>{{ i+1 }}</td>
                 <td>{{ cluster.clusterName }}</td>
                 <td>{{ cluster.clusterCode }}</td>
-                <td>{{ cluster.clusterHead.email }}</td>
+                <td>{{ cluster.clusterHead.userName }}</td>
                 <td>
                     <p-menu #menu [model]="getMenuItems(cluster)" [popup]="true" appendTo="body" />
                     <p-button (click)="menu.toggle($event)" icon="pi pi-ellipsis-v" [rounded]="true" variant="text" />

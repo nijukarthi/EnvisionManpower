@@ -203,6 +203,9 @@ export class Project implements OnInit {
         clusterHead: {
           userId: project.clusterHead.userId
         },
+        department: {
+          departmentId: project.department.departmentId
+        },
         departmentHead: {
           userId: project.departmentHead.userId
         }
@@ -227,6 +230,9 @@ export class Project implements OnInit {
             },
             clusterHead: {
               userId: this.projectForm.get('clusterHead.userId')?.value
+            },
+            department: {
+              departmentId: this.projectForm.get('department.departmentId')?.value
             },
             departmentHead: {
               userId: this.projectForm.get('departmentHead.userId')?.value
@@ -258,6 +264,9 @@ export class Project implements OnInit {
             },
             clusterHead: {
               userId: this.projectForm.get('clusterHead.userId')?.value
+            },
+            department: {
+              departmentId: this.projectForm.get('department.departmentId')?.value
             },
             departmentHead: {
               userId: this.projectForm.get('departmentHead.userId')?.value
