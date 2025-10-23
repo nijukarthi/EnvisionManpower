@@ -1,5 +1,7 @@
+import { UserGroups } from '@/models/usergroups/usergroups.enum';
+import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
@@ -8,8 +10,11 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
   templateUrl: './resource-manager-assign.html',
   styleUrl: './resource-manager-assign.scss'
 })
-export class ResourceManagerAssign {
+export class ResourceManagerAssign implements OnInit {
   selectedPCode:any = "";
+
+  resourceManagerDemandList: any;
+  resourceManagerList: any;
 
   PCode:any = [
     {name:'PCODE 1',id:1},
@@ -148,7 +153,7 @@ export class ResourceManagerAssign {
   { label: 'Quality', id: 101 }, { label: 'Safety', id: 102 },
  ];
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private apiService: Apiservice) {}
 
   ngOnInit(): void {
     this.demandForm = this.fb.group({
@@ -163,11 +168,47 @@ export class ResourceManagerAssign {
       requestedBy: [{ value: 'ADMIN', disabled: true }],
      // spvArray: this.fb.array([])  // FormArray for dynamic rows
     });
+
+    this.fetchDemandResourceManager();
+    this.fetchResourceManagerList();
   }
 
   get spvArray(): FormArray {
     return this.demandForm.get('spvArray') as FormArray;
   }
+
+  fetchDemandResourceManager(){
+    this.apiService.fetchDemandResourceManager('').subscribe({
+      next: val => {
+        console.log(val);
+        this.resourceManagerDemandList = val.data;
+      },
+      error: err => {
+        console.log(err);
+      }
+    })
+  }
+
+  fetchResourceManagerList(){
+    try {   
+      const data = {
+        userGroupId: UserGroups.RESOURCEMANAGER
+      };
+  
+      this.apiService.findUserGroup(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.resourceManagerList = val.data;
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
 
   addSpvRow(): void {
     const spvGroup = this.fb.group({

@@ -1,74 +1,98 @@
 <p-fluid>
-        <div class=" card">
-        
-            <div class="">
-                <p-table [value]="spvArrayList" #dt [(selection)]="selectedApprovalList" dataKey="id"
-                    [tableStyle]="{ 'min-width': '50rem' }" [paginator]="true" [rowsPerPageOptions]="[5, 10, 20]" stripedRows
-                    [rows]="10" [rowHover]="true" [showGridlines]="true" [showCurrentPageReport]="true"
-                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [paginator]="true"
-                    responsiveLayout="scroll" [globalFilterFields]="['spn','spnDesc','exp','qty']">
-                    <ng-template #header>
-                        <tr>
-                            <th style="width: 4rem"><p-tableHeaderCheckbox /></th>
-                            <th>View</th>
-                            <th>S.No</th>
-                            <th>SPN</th>
-                            <th>SPN Description</th>
-                            <th>Experience</th>
-                            <th>Quantity</th>
-                            <th style="text-align: center;">State_Head_Approval</th>
-                            <th style="text-align: center;">Department_Head_Approval</th>
-                        </tr>
-                        <tr>
-                            <td colspan="3"></td>
-                            <td>
-                            <input #spn type="text"(input)="dt.filter(spn.value, 'spn', 'contains')" placeholder="search..." style="width: 9rem;margin:5px" pInputText />
-                            </td>
-                            <td>
-                            <input #spnDesc type="text"(input)="dt.filter(spnDesc.value, 'spnDesc', 'contains')" placeholder="search..." style="width: 9rem;margin:5px" pInputText />
-                            </td>
-                            <td>
-                            <input #exp type="text"(input)="dt.filter(exp.value, 'exp', 'contains')" placeholder="search..." style="width: 9rem;margin:5px" pInputText />
-                            </td>
-                            <td>
-                            <input #qty type="text"(input)="dt.filter(qty.value, 'qty', 'contains')" placeholder="search..." style="width: 9rem;margin:5px" pInputText />
-                            </td>
-                            <td colspan="100%"></td>
-                        </tr>
-                    </ng-template>
-                    <ng-template #body let-product let-rowIndex="rowIndex">
-                        <tr>
-                            <td>
-                                <p-tableCheckbox [value]="product" />
-                            </td>
-                            <td><p-button icon="pi pi-eye" [rounded]="true" class="w-full" severity="warn" (click)="showDetailPopup(product)"/></td>
-                            <td>{{ rowIndex + 1 }}</td>
-                            <td>{{ product.spn }}</td>
-                            <td>{{ product.spnDesc }}</td>
-                            <td>{{ product.exp }}</td>
-                            <td style="text-align: center;">
-                                <input type="text" pInputText value="{{product.qty}}" [(ngModel)]="product.qty">
-                            </td>
-                            <td style="text-align: center;">
-                                <p-button icon="pi pi-check" [rounded]="true" class="w-full mr-2" />
-                                <p-button icon="pi pi-times" [rounded]="true" class="w-full" severity="danger" />
-        
-                            </td>
-                            <td style="text-align: center;">
-                                <p-button icon="pi pi-check" [rounded]="true" class="w-full  mr-2" />
-                                <p-button icon="pi pi-times" [rounded]="true" class="w-full" severity="danger" />
-        
-                            </td>
-                        </tr>
-                    </ng-template>
-                    <ng-template #emptymessage>
-                        <tr>
-                            <td colspan="100%" style="text-align:center">No Record Found!!</td>
-                        </tr>
-                    </ng-template>
-                </p-table>
-        
+        <div class="card">
+            <div class="flex items-center justify-between">
+                <h5>Demand Approval</h5>
             </div>
+            <p-table [value]="demandProcessingList" #dt [(selection)]="selectedApprovalList" dataKey="id"
+                [tableStyle]="{ 'min-width': '110rem' }" [paginator]="true" [rowsPerPageOptions]="[10, 20, 30]" stripedRows
+                [rows]="10" [rowHover]="true" [showGridlines]="true" [showCurrentPageReport]="true"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [paginator]="true"
+                responsiveLayout="scroll" [globalFilterFields]="['spn','spnDesc','exp','qty']">
+                <ng-template #header>
+                    <tr>
+                        <th style="width: 4rem"><p-tableHeaderCheckbox /></th>
+                        <th>View</th>
+                        <th>S.No</th>
+                        <th>Demand Code</th>
+                        <th>SPN</th>
+                        <th>SPN Description</th>
+                        <th>Experience</th>
+                        <th>Quantity</th>
+                        <th>Planned Deployment Date</th>
+                        <th>Planned Release Date</th>
+                        <th style="text-align: center;">Cluster Head Approval</th>
+                        <th style="text-align: center;">Department Head Approval</th> 
+                    </tr>
+                    <tr>
+                        <td colspan="3"></td>
+                        <td>
+                        <input #spn type="text"(input)="dt.filter(spn.value, 'spn', 'contains')" placeholder="search..." style="width: 9rem;margin:5px" pInputText />
+                        </td>
+                        <td>
+                        <input #spnDesc type="text"(input)="dt.filter(spnDesc.value, 'spnDesc', 'contains')" placeholder="search..." style="width: 9rem;margin:5px" pInputText />
+                        </td>
+                        <td>
+                        <input #exp type="text"(input)="dt.filter(exp.value, 'exp', 'contains')" placeholder="search..." style="width: 9rem;margin:5px" pInputText />
+                        </td>
+                        <td>
+                        <input #qty type="text"(input)="dt.filter(qty.value, 'qty', 'contains')" placeholder="search..." style="width: 9rem;margin:5px" pInputText />
+                        </td>
+                        <td colspan="100%"></td>
+                    </tr>
+                </ng-template>
+                <ng-template #body let-demand let-rowIndex="rowIndex">
+                    <tr>
+                        <td>
+                            <p-tableCheckbox [value]="demand" />
+                        </td>
+                        <td><p-button icon="pi pi-eye" [rounded]="true" class="w-full" severity="warn" (click)="showDetailPopup(demand)"/></td>
+                        <td>{{ rowIndex + 1 }}</td>
+                        <td>{{ demand.demandCode }}</td>
+                        <td>{{ demand.spn.spnCode }}</td>
+                        <td>{{ demand.spn.spnDescription }}</td>
+                        <td>{{ demand.spn.experience }}</td>
+                        <td style="text-align: center;">
+                            <input type="text" pInputText [value]="demand.quantity" [(ngModel)]="demand.quantity" 
+                                (blur)="demandQtyChange(demand.demandId, demand.quantity)" />
+                        </td>
+                        <td>{{ demand.plannedDeploymentDate }}</td>
+                        <td>{{ demand.plannedReleaseDate }}</td>
+                        <td style="text-align: center;">
+                            @if (demand.stateHeadApproval.approvalStatus === APPROVALSTATUS.ACCEPTED) {
+                                <p-button icon="pi pi-check" [rounded]="true" [disabled]="true" />
+                            }
+                            @else if (demand.stateHeadApproval.approvalStatus === APPROVALSTATUS.REJECTED){
+                                <p-button icon="pi pi-times" [rounded]="true" [disabled]="true" severity="danger" />
+                            } 
+                            @else if (demand.stateHeadApproval.approvalStatus === APPROVALSTATUS.PENDING) {
+                                <p-button icon="pi pi-check" [rounded]="true" class="w-full mr-2" 
+                                  [disabled]="loggedUserGroupId === USERGROUPS.DEPARTMENTHEAD"  (onClick)="clusterHeadApproval(demand.demandId, 'Accepted')" />
+                                <p-button icon="pi pi-times" [rounded]="true" class="w-full" severity="danger" 
+                                  [disabled]="loggedUserGroupId === USERGROUPS.DEPARTMENTHEAD"  (onClick)="clusterHeadApproval(demand.demandId, 'Rejected')" />
+                            }
+                        </td>
+                        <td style="text-align: center;">
+                            @if (demand.departmentHeadApproval.approvalStatus === APPROVALSTATUS.ACCEPTED) {
+                                <p-button icon="pi pi-check" [rounded]="true" [disabled]="true" />
+                            }
+                            @else if(demand.departmentHeadApproval.approvalStatus === APPROVALSTATUS.REJECTED){
+                                <p-button icon="pi pi-times" [rounded]="true" [disabled]="true" severity="danger" />
+                            }
+                            @if (demand.departmentHeadApproval.approvalStatus === APPROVALSTATUS.PENDING) {
+                                <p-button icon="pi pi-check" [rounded]="true" class="w-full mr-2" 
+                                   [disabled]="loggedUserGroupId === USERGROUPS.CLUSTERHEAD" (onClick)="departmentHeadApproval(demand.demandId, 'Accepted')" />
+                                <p-button icon="pi pi-times" [rounded]="true" class="w-full" severity="danger" 
+                                   [disabled]="loggedUserGroupId === USERGROUPS.CLUSTERHEAD" (onClick)="departmentHeadApproval(demand.demandId, 'Rejected')" />
+                            }
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template #emptymessage>
+                    <tr>
+                        <td colspan="100%" style="text-align:center">No Record Found!!</td>
+                    </tr>
+                </ng-template>
+            </p-table>  
         </div>
        
     </p-fluid>
@@ -129,3 +153,5 @@
         </div>
     </p-fluid>
 </p-dialog>
+
+<p-toast />

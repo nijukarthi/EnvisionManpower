@@ -1,3 +1,4 @@
+import { UserGroups } from '@/models/usergroups/usergroups.enum';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
 import { Component } from '@angular/core';
@@ -25,6 +26,8 @@ export class Loginpage {
   loginScreen:boolean = true;
   registerScreen:boolean = false;
   userOtpForm:any;
+
+  UserGroups = UserGroups;
 
   constructor(private messageService: MessageService, private apiService: Apiservice, private fb: FormBuilder,private route:Router) { }
 
@@ -171,7 +174,12 @@ export class Loginpage {
             next: val => {
                 console.log(val);
                 sessionStorage.setItem("userName", val.data.userName);
-                this.route.navigate(['/home/demand']);
+                sessionStorage.setItem('userGroupId', val.data.userGroupId);
+                if (val.data.userGroupId === UserGroups.CLUSTERHEAD || val.data.userGroupId === UserGroups.DEPARTMENTHEAD) {
+                    this.route.navigate(['/home/approval']);
+                } else {
+                    this.route.navigate(['/home/demand']);
+                }
             },
             error: err => {
                 console.log(err);

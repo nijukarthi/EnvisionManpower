@@ -1,42 +1,7 @@
 <p-fluid>
-        <div class="card">
-            <p class="font-semibold text-xl">Demand Request</p>
-            <!-- <div class="card flex flex-col gap-6 w-full">
-                <div class="flex flex-col md:flex-row gap-6">
-                    <div class="flex flex-wrap gap-2 w-full">
-                        <label for="firstname2">Requision ID</label>
-                        <input pInputText id="firstname2" type="text" />
-                    </div>
-                    <div class="flex flex-wrap gap-2 w-full">
-                        <label for="lastname2">P-code</label>
-                       <p-select [options]="PCode" [(ngModel)]="selectedPCode" optionLabel="name" placeholder="Select PCode" [filter]="true" filterBy="name"  class="w-full md:w-56" />
-                    </div>
-                    <div class="flex flex-wrap gap-2 w-full">
-                        <label for="lastname2">State</label>
-                       <p-select [options]="states" [(ngModel)]="selectedState" optionLabel="label" placeholder="Select State" [filter]="true" filterBy="label"  class="w-full md:w-56" />
-                    </div>
-                    
-                </div>
-                <div class="flex flex-col md:flex-row gap-6">
-                    <div class="flex flex-wrap gap-2 w-full">
-                        <label for="lastname2">Planed deployment date</label>
-                        <p-datepicker appendTo="body" placeholder="Select Date" />
-                    </div>
-                     <div class="flex flex-wrap gap-2 w-full">
-                        <label for="lastname2">Duration</label>
-                        <p-datepicker appendTo="body" placeholder="Select Date" />
-                    </div>
-                    <div class="flex flex-wrap gap-2 w-full">
-                        <label for="lastname2">Requested By</label>
-                        <input pInputText id="firstname2" type="text" value="ADMIN" [disabled]="true"/>
-                    </div>
-                </div>
-
-                
-
-                
-            </div> -->
-        <form [formGroup]="demandForm">
+    <div class="card">
+        <p class="font-semibold text-xl">Demand Request</p>
+        <form [formGroup]="demandForm" (ngSubmit)="onSubmit()">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div class="flex flex-wrap gap-2 w-full">
                     <label for="p-code">Project Code</label>
@@ -70,24 +35,11 @@
                     <p-select [options]="departmentHeadList" formControlName="userId" id="department-head" optionLabel="userName" optionValue="userId" 
                         placeholder="Select Department Head" [filter]="true" filterBy="userName" [showClear]="true" class="w-full md:w-56"  />
                 </div>
-                <div class="flex flex-wrap gap-2 w-full">
+                <div class="flex flex-wrap gap-2 w-full" formGroupName="category">
                     <label for="category">Category</label>
-                    <p-select [options]="categoryList" id="category" optionLabel="categoryName" optionvalue="categoryId" 
-                        placeholder="Select Category" [filter]="true" filterBy="categoryName" class="w-full md:w-56" 
-                        (onChange)="selectPCode($event)"/>
+                    <p-select [options]="categoryList" formControlName="categoryId" id="category" optionLabel="categoryName" optionValue="categoryId" 
+                        placeholder="Select Category" [filter]="true" filterBy="categoryName" class="w-full md:w-56" />
                 </div>
-                <!-- <div class="flex flex-wrap gap-2 w-full">
-                    <label for="lastname2">Planed deployment date</label>
-                    <p-datepicker appendTo="body" formControlName="plannedDate" placeholder="Select Date" class="w-full" />
-                </div>
-                <div class="flex flex-wrap gap-2 w-full">
-                    <label for="lastname2">Actual deployment date</label>
-                    <p-datepicker appendTo="body" formControlName="actualDate" placeholder="Select Date" class="w-full" />
-                </div>
-                <div class="flex flex-wrap gap-4 w-full">
-                    <label for="lastname2">Duration date</label>
-                    <p-datepicker appendTo="body" formControlName="durationDate" placeholder="Select Date" class="w-full" />
-                </div> -->
                 <div class="flex flex-wrap gap-2 w-full">
                     <label for="lastname2">Requested By</label>
                     <input pInputText type="text" [value]="requestedBy" [disabled]="true" class="w-full" />
@@ -114,26 +66,31 @@
                             <th>Quantity</th>
                             <th>Planned Deployment Date</th>
                             <th>Planned Release Date</th>
-                            <th>Actions</th>
+                            @if (demandDetails.length > 1) {
+                                <th>Actions</th>
+                            }
                         </tr>
                     </ng-template>
                     <ng-template #body let-row let-rowIndex="rowIndex">
                         <tr [formGroupName]="rowIndex">
                             <td>{{ rowIndex + 1 }}</td>
-                            <td>
-                                <p-select [options]="spnInfoList" formControlName="spn" optionLabel="spnCode" optionValue="spnId" 
-                                    [filter]="true" filterBy="spnCode" [showClear]="true" placeholder="Select SPN Code" appendTo="body" />
+                            <td formGroupName="spn">
+                                <p-select [options]="spnInfoList" formControlName="spnId" optionLabel="spnCode" optionValue="spnId" 
+                                    [filter]="true" filterBy="spnCode" [showClear]="true" 
+                                    placeholder="Select SPN Code" appendTo="body" (onChange)="selectedSpnCode($event.value, rowIndex)" />
                             </td>
                             <td>
                                 <p-select [options]="spnInfoList" formControlName="spnDescription" optionLabel="spnDescription" 
                                     optionValue="spnId" [filter]="true" filterBy="spnDescription" [showClear]="true" 
-                                    placeholder="Select SPN Description" appendTo="body" />
+                                    placeholder="Select SPN Description" appendTo="body" (onChange)="selectedSpnDescription($event.value, rowIndex)" />
                             </td>
                             <td>
-                                <input type="text" pInputText formControlName="experience" />
+                                <p-select [options]="spnInfoList" formControlName="experience" optionLabel="experience" 
+                                optionValue="spnId" [filter]="true" filterBy="experience" [showClear]="true"
+                                placeholder="Select Experience" appendTo="body" />
                             </td>
                             <td>
-                                <input type="text" pInputText formControlName="quantity" />
+                                <input pInputText type="number" min="1" formControlName="quantity" />
                             </td>
                             <td>
                                 <p-datepicker formControlName="plannedReleaseDate" placeholder="Select Date" appendTo="body" />
@@ -141,63 +98,22 @@
                             <td>
                                 <p-datepicker formControlName="plannedDeploymentDate" placeholder="Select Date" appendTo="body" />
                             </td>
-                            <td>
-                                <p-button *ngIf="demandDetails.length > 1" icon="pi pi-trash" severity="danger" [rounded]="true" (onClick)="deleteSpnRow(rowIndex)" />
-                            </td>
+                            @if (demandDetails.length > 1) {
+                                <td>
+                                    <p-button icon="pi pi-trash" severity="danger" [rounded]="true" (onClick)="deleteSpnRow(rowIndex)" />
+                                </td>
+                            }
                         </tr>
                     </ng-template>
                 </p-table>
-                <!-- <div>
-                    <div
-                        class="card flex flex-wrap md:flex-wrap items-end gap-4 p-4 mb-3">
-            
-                         <div class="flex-1 min-w-[250px]">
-                            <label>SPN</label>
-                            <p-select [options]="spn" optionLabel="label" optionValue="label"
-                                placeholder="Select SPN" [filter]="true" filterBy="label" class="w-full"/>
-                        </div>
-            
-                        <div class="flex-1 min-w-[250px]">
-                            <label>SPN Description</label>
-                            <p-select [options]="spnDesc" optionLabel="name" optionValue="name"
-                                placeholder="Select Description" [filter]="true" filterBy="name" class="w-full" />
-                        </div>
-            
-                        <div class="flex-1 min-w-[120px]">
-                            <label>Experience</label>
-                            <p-select [options]="exp" optionLabel="label" optionValue="label"
-                                placeholder="Select Experience" [filter]="true" class="w-full" />
-                        </div>
-            
-                        <div class="flex-none min-w-[250px]">
-                            <label>Quantity</label>
-                            <input pInputText type="number" min="1" class="w-full" />
-                        </div>
 
-                         <div class="flex-none min-w-[250px]">
-                            <label>Planned deployment date</label>
-                            <p-datepicker appendTo="body" placeholder="Select Date" class="w-full" />
-                        </div>
-
-                         <div class="flex-none min-w-[200px]">
-                            <label>Planned Release date</label>
-                            <p-datepicker appendTo="body" placeholder="Select Date" class="w-full" />
-                        </div>
-
-                        
-                        <div class="flex-none">
-                            <p-button icon="pi pi-trash" severity="danger" [rounded]="true" />
-                        </div>
-                    </div>
-
-                </div> -->
                 <div class="flex justify-center items-center gap-4 mt-6">
-                    <button pButton label="Submit" class="p-button-outlined" icon="pi pi-save"
-                        ></button>
-                    <button pButton label="Reset" class="p-button-outlined" icon="pi pi-times"
-                        severity="danger"></button>
+                    <button pButton pRipple type="submit" label="Submit" class="p-button-outlined" icon="pi pi-save"></button>
+                    <button pButton pRipple label="Reset" class="p-button-outlined" icon="pi pi-times" severity="danger" (click)="demandForm.reset()"></button>
                 </div>
             </div>
         </form>
-        </div>
-    </p-fluid>
+    </div>
+</p-fluid>
+
+<p-toast />
