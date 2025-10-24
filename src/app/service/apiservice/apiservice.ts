@@ -180,4 +180,16 @@ export class Apiservice {
     return this.postMethod('requesition/edit/demand/quantity', params);
   }
 
+  assignResourceManager(params: any){
+    return this.postMethod('requesition/demand/resourcemanager/assign', params);
+  }
+
+  fetchDemandFullFill(params: any): Observable<any>{
+    return this.postMethod('requesition/demand/fullfill', params);
+  }
+
+  assignEnvisionRoles(params: any){
+    return this.postMethod('requesition/demand/envisionrole/assign', params);
+  }
+
 }

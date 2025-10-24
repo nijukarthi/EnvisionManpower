@@ -57,7 +57,7 @@ export class AppMenu {
                     {
                         label: 'Demand Approval',
                         icon: 'pi pi-ticket',
-                         routerLink: ['/home/approval']
+                        routerLink: ['/home/approval']
                        /*  items: [
                             {
                                 label: 'Login',
@@ -92,30 +92,73 @@ export class AppMenu {
                         routerLink: ['/home/interviewManagement']
                     },
                     {
-                        label: 'Masters',
-                        icon: 'pi pi-database',
+                        label: 'Resource Pool',
+                        icon: 'pi pi-server', 
                         items: [
                             {
                                 label: 'Consultancy',
-                                icon: 'pi pi-server',
+                                icon: 'pi pi-briefcase',
                                 routerLink: ['/home/consultancies']
                             },
                             {
-                                label: 'Add Employee',
-                                icon: 'pi pi-plus',
+                                label: 'Candidate',
+                                icon: 'pi pi pi-user',
                                 items:[
                                     {
                                         label: 'New Candidate',
                                         icon: 'pi pi-file-plus',
-                                        routerLink: ['/home/addEmployee']
+                                        items: [
+                                            {
+                                                label: 'Fixed Cost',
+                                                icon: 'pi pi-wallet',
+                                                routerLink: ['/home/candidate/new/fixed-cost']
+                                            },
+                                            {
+                                                label: 'Cost Plus',
+                                                icon: 'pi pi-receipt',
+                                                routerLink: ['/home/candidate/new/cost-plus']
+                                            }
+                                        ]
                                     },
                                     {
                                         label: 'Existing Candidate',
                                         icon: 'pi pi-folder-plus',
-                                        routerLink: ['/home/existingEmployee']
+                                        items: [
+                                            {
+                                                label: 'Fixed Cost',
+                                                icon: 'pi pi-wallet',
+                                                routerLink: ['/home/candidate/existing/fixed-cost']
+                                            },
+                                            {
+                                                label: 'Cost Plus',
+                                                icon: 'pi pi-receipt'
+                                            }
+                                        ]
                                     }
                                 ]
-                            },
+                            }
+                        ]
+                    },
+                    {
+                        label: 'Masters',
+                        icon: 'pi pi-database',
+                        items: [
+                            // {
+                            //     label: 'Add Employee',
+                            //     icon: 'pi pi-plus',
+                            //     items:[
+                            //         {
+                            //             label: 'New Candidate',
+                            //             icon: 'pi pi-file-plus',
+                            //             routerLink: ['/home/addEmployee']
+                            //         },
+                            //         {
+                            //             label: 'Existing Candidate',
+                            //             icon: 'pi pi-folder-plus',
+                            //             routerLink: ['/home/existingEmployee']
+                            //         }
+                            //     ]
+                            // },
                             {
                                 label: 'SPN',
                                 icon: 'pi pi-warehouse',

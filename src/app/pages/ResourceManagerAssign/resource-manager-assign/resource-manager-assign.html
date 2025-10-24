@@ -4,7 +4,7 @@
             [tableStyle]="{ 'min-width': '120rem' }" [paginator]="true" [rowsPerPageOptions]="[10, 20, 30]"
             stripedRows [rows]="10" [rowHover]="true" [showGridlines]="true" [showCurrentPageReport]="true"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [paginator]="true"
-            responsiveLayout="scroll" [globalFilterFields]="['spn','spnDesc','exp','qty']">
+            responsiveLayout="scroll" [globalFilterFields]="['spn.spnCode','spn.spnDescription','spn.experience','quantity']">
             <ng-template #header>
                 <tr>
                     <th style="width: 4rem"><p-tableHeaderCheckbox /></th>
@@ -22,21 +22,21 @@
                     <th>Resource Manager</th>
                 </tr>
                 <tr>
-                    <td colspan="3"></td>
+                    <td colspan="4"></td>
                     <td>
-                        <input #spn type="text" (input)="dt.filter(spn.value, 'spn', 'contains')"
+                        <input #spn type="text" (input)="dt.filter(spn.value, 'spn.spnCode', 'contains')"
                             placeholder="search..." style="width: 9rem;margin:5px" pInputText />
                     </td>
                     <td>
-                        <input #spnDesc type="text" (input)="dt.filter(spnDesc.value, 'spnDesc', 'contains')"
+                        <input #spnDesc type="text" (input)="dt.filter(spnDesc.value, 'spn.spnDescription', 'contains')"
                             placeholder="search..." style="width: 9rem;margin:5px" pInputText />
                     </td>
                     <td>
-                        <input #exp type="text" (input)="dt.filter(exp.value, 'exp', 'contains')"
+                        <input #exp type="text" (input)="dt.filter(exp.value, 'spn.experience', 'contains')"
                             placeholder="search..." style="width: 9rem;margin:5px" pInputText />
                     </td>
                     <td>
-                        <input #qty type="text" (input)="dt.filter(qty.value, 'qty', 'contains')"
+                        <input #qty type="text" (input)="dt.filter(qty.value, 'quantity', 'contains')"
                             placeholder="search..." style="width: 9rem;margin:5px" pInputText />
                     </td>
                     <td colspan="100%"></td>
@@ -70,7 +70,8 @@
                     </td>
                     <td>
                         <p-select [options]="resourceManagerList" appendTo="body" optionLabel="userName" optionValue="userId" 
-                            placeholder="Select Resource Manager" [filter]="true" filterBy="userName" [showClear]="true" class="w-full md:w-56" />
+                            placeholder="Select Resource Manager" [filter]="true" filterBy="userName" 
+                            [showClear]="true" class="w-full md:w-56" (onChange)="selectedResourceManager(demand.demandId, $event.value)" />
                     </td>
                 </tr>
             </ng-template>
@@ -140,3 +141,5 @@
         </div>
     </p-fluid>
 </p-dialog>
+
+<p-toast />

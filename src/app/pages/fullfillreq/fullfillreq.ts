@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Shared } from '../../service/shared';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Apiservice } from '@/service/apiservice/apiservice';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-fullfillreq',
@@ -8,8 +10,14 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   templateUrl: './fullfillreq.html',
   styleUrl: './fullfillreq.scss'
 })
-export class Fullfillreq {
+export class Fullfillreq implements OnInit {
  selectedPCode:any = "";
+
+ offSet = 0;
+ pageSize = 10;
+
+ demandFullfillList: any;
+ envisionRoleList: any;
 
   PCode:any = [
     {name:'PCODE 1',id:1},
@@ -113,35 +121,7 @@ export class Fullfillreq {
   { label: '3-5 Years', value: '3-5' },
   { label: '5-8 Years', value: '5-8' }
  ]
- spvArrayList:any = [
-  {
-    id:1,
-    reqId:'MPT001',
-    reqBy:'Admin',
-    pcode:'PCODE 1',
-    state:'Karnataka',
-    spn:'SPN 1',
-    spnDesc:'Project Admin Executive',
-    exp:'3-5 Years',
-    qty:2,
-    planDate:'10-10-2025',
-    planrelease:'10-10-2025',
-   
-  },
-  {
-    id:2,
-    reqId:'MPT002',
-    reqBy:'Admin',
-    pcode:'PCODE 2',
-    state:'Tamil Nadu',
-    spn:'SPN 2',
-    spnDesc:'Projects Civil Manager',
-    exp:'5-8 Years',
-    qty:8,
-     planDate:'10-10-2025',
-    planrelease:'10-10-2025',
-  }
- ];
+ 
  consultancyList:any = [
   {label:'List 1',id:1},
   {label:'List 2',id:2},
@@ -165,7 +145,7 @@ export class Fullfillreq {
  roleList:any = [];
  manpowerList:any = [];
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private apiService: Apiservice, private messageService: MessageService) {}
 
   ngOnInit(): void {
     this.demandForm = this.fb.group({
@@ -197,6 +177,73 @@ export class Fullfillreq {
       
         
     });
+
+    this.fetchDemandFullFillment();
+    this.fetchEnvisionRoles();
+  }
+
+  fetchDemandFullFillment(){
+    try {    
+      const data = {
+        offSet: this.offSet,
+        pageSize: this.pageSize
+      }
+  
+      this.apiService.fetchDemandFullFill(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.demandFullfillList = val.data.data;
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  fetchEnvisionRoles(){
+    try {  
+      this.apiService.fetchActiveEnvRole('').subscribe({
+        next: val => {
+          console.log(val);
+          this.envisionRoleList = val.data;
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  assignEnvisionRoles(demandId: number, event: any){
+    try {  
+      console.log(demandId, event);
+  
+      const data = {
+        demandId: demandId,
+        envisionRoleId: event
+      }
+  
+      this.apiService.assignEnvisionRoles(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.messageService.add({severity: 'success', summary: 'Success', detail: 'Role Assigned Successfully'});
+        },
+        error: err => {
+          console.log(err);
+
+          if (err.status === 400) {
+            this.messageService.add({severity: 'error', summary: 'Error', detail: 'Authenticated Resource Manager can only asssign role'});
+          }
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
   }
 
 }

@@ -7,7 +7,7 @@
                 [tableStyle]="{ 'min-width': '110rem' }" [paginator]="true" [rowsPerPageOptions]="[10, 20, 30]" stripedRows
                 [rows]="10" [rowHover]="true" [showGridlines]="true" [showCurrentPageReport]="true"
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [paginator]="true"
-                responsiveLayout="scroll" [globalFilterFields]="['spn','spnDesc','exp','qty']">
+                responsiveLayout="scroll" [globalFilterFields]="['spn.spnCode','spn.spnDescription','spn.experience','quantity']" (onPage)="pageChange($event)">
                 <ng-template #header>
                     <tr>
                         <th style="width: 4rem"><p-tableHeaderCheckbox /></th>
@@ -24,18 +24,18 @@
                         <th style="text-align: center;">Department Head Approval</th> 
                     </tr>
                     <tr>
-                        <td colspan="3"></td>
+                        <td colspan="4"></td>
                         <td>
-                        <input #spn type="text"(input)="dt.filter(spn.value, 'spn', 'contains')" placeholder="search..." style="width: 9rem;margin:5px" pInputText />
+                            <input #spn type="text"(input)="dt.filter(spn.value, 'spn.spnCode', 'contains')" placeholder="search..." style="width: 9rem;margin:5px" pInputText />
                         </td>
                         <td>
-                        <input #spnDesc type="text"(input)="dt.filter(spnDesc.value, 'spnDesc', 'contains')" placeholder="search..." style="width: 9rem;margin:5px" pInputText />
+                        <input #spnDesc type="text"(input)="dt.filter(spnDesc.value, 'spn.spnDescription', 'contains')" placeholder="search..." style="width: 9rem;margin:5px" pInputText />
                         </td>
                         <td>
-                        <input #exp type="text"(input)="dt.filter(exp.value, 'exp', 'contains')" placeholder="search..." style="width: 9rem;margin:5px" pInputText />
+                        <input #exp type="text"(input)="dt.filter(exp.value, 'spn.experience', 'contains')" placeholder="search..." style="width: 9rem;margin:5px" pInputText />
                         </td>
                         <td>
-                        <input #qty type="text"(input)="dt.filter(qty.value, 'qty', 'contains')" placeholder="search..." style="width: 9rem;margin:5px" pInputText />
+                        <input #qty type="text"(input)="dt.filter(qty.value, 'quantity', 'contains')" placeholder="search..." style="width: 9rem;margin:5px" pInputText />
                         </td>
                         <td colspan="100%"></td>
                     </tr>

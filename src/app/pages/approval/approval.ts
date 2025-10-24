@@ -185,6 +185,13 @@ export class Approval implements OnInit {
     return this.demandForm.get('spvArray') as FormArray;
   }
 
+  pageChange(event: any){
+    console.log(event);
+    this.offSet = event.first;
+    this.pageSize = event.rows;
+    this.fetchDemandRequest();
+  }
+
   fetchDemandRequest(){
     try {
       const data = {
@@ -196,7 +203,7 @@ export class Approval implements OnInit {
       this.apiService.fetchDemandRequest(data).subscribe({
         next: val => {
           console.log(val);
-          this.demandProcessingList = val.data.data;
+          this.demandProcessingList = val?.data?.data;
         },
         error: err => {
           console.log(err);

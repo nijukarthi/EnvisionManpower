@@ -23,6 +23,9 @@ import { Envisionroles } from '@/pages/envisionroles/envisionroles';
 import { Project } from '@/pages/project/project/project';
 import { AddEmployee } from '@/pages/add-employee/add-employee';
 import { ExistingEmployee } from '@/pages/existing-employee/existing-employee';
+import { NewCandidateFixedCost } from '@/pages/new-candidate-fixed-cost/new-candidate-fixed-cost';
+import { ExistingCandidateFixedCost } from '@/pages/existing-candidate-fixed-cost/existing-candidate-fixed-cost';
+import { NewCandidateCostPlus } from '@/pages/new-candidate-cost-plus/new-candidate-cost-plus';
 
 export const appRoutes: Routes = [
     {
@@ -63,6 +66,9 @@ export const appRoutes: Routes = [
             { path: 'documentation', component: Documentation, canActivate: [authGuard] },
             { path: 'addEmployee', component: AddEmployee, canActivate: [authGuard] },
             { path: 'existingEmployee', component: ExistingEmployee, canActivate: [authGuard] },
+            { path: 'candidate/new/fixed-cost', component: NewCandidateFixedCost, canActivate: [authGuard] },
+            { path: 'candidate/new/cost-plus', component: NewCandidateCostPlus, canActivate: [authGuard] },
+            { path: 'candidate/existing/fixed-cost',component: ExistingCandidateFixedCost, canActivate: [authGuard] },
             { path: 'pages', canActivate: [authGuard], loadChildren: () => import('./app/pages/pages.routes') }
         ]
     },
