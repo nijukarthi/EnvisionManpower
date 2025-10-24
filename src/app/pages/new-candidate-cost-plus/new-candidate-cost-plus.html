@@ -1,0 +1,178 @@
+<div class="card">
+    <div class="flex items-center justify-between">
+        <h5>Cost Plus Candidates</h5>
+        <p-button label="Add Candidate" icon="pi pi-plus" (onClick)="addCandidate()" />
+    </div>
+    <p-table [value]="costPlusList" showGridlines [rowHover]="true" [tableStyle]="{'min-width': '250rem'}">
+        <ng-template #header>
+            <tr>
+                <th>SI No</th>
+                <th>Requisition Code</th>
+                <th>State</th>
+                <th>Reporting Manager</th>
+                <th>Project Code</th>
+                <th>Site</th>
+                <th>Candidate Name</th>
+                <th>Position Applied</th>
+                <th>Experience in Current Company</th>
+                <th>Total Experience</th>
+                <th>Highest Qualification</th>
+                <th>Qualification</th>
+                <th>Notice Period</th>
+                <th>Current Salary (NET)</th>
+                <th>Expected Salary (NET)</th>
+                <th>Approved Hike</th>
+                <th>Approved Fixed Salary</th>
+                <th>10% Variable</th>
+                <th>Total Fixed + Variable</th>
+                <th>Final Hike from Current</th>
+                <th>Delta from Expected</th>
+                <th>Gross CTC</th>
+                <th>Margin</th>
+                <th>Laptop</th>
+                <th>Total</th>
+                <th>GST</th>
+                <th>Grand Total</th>
+                <th>One-time Sourcing Fee</th>
+                <th>BGV Cost</th>
+                <th>Total</th>
+                <th>GST</th>
+                <th>Grand Total</th>
+                <th>Offer Release Date</th>
+                <th>Date of Joining</th>
+            </tr>
+        </ng-template>
+        <ng-template #body let-candidate let-i="rowIndex">
+            <tr>
+                <td>{{ i + 1 }}</td>
+                <td>{{ candidate.reqId }}</td>
+                <td>{{ candidate.State }}</td>
+                <td>{{ candidate.rm }}</td>
+                <td>{{ candidate.pCode }}</td>
+                <td>{{ candidate.site }}</td>
+                <td>{{ candidate.candidateName }}</td>
+                <td>{{ candidate.positionApplied }}</td>
+                <td>{{ candidate.exp }}</td>
+                <td>{{ candidate.totalExp }}</td>
+                <td>{{ candidate.highQualification }}</td>
+                <td>{{ candidate.qualification }}</td>
+                <td>{{ candidate.noticePeriod }}</td>
+                <td>{{ candidate.currentSalary }}</td>
+                <td>{{ candidate.expectedSalary }}</td>
+                <td>{{ candidate.hike }}</td>
+                <td>{{ candidate.fixedSalary }}</td>
+                <td>{{ candidate.percentVariable }}</td>
+                <td>{{ candidate.fixedVariable }}</td>
+                <td>{{ candidate.finalHike }}</td>
+                <td>{{ candidate.delta }}</td>
+                <td>{{ candidate.grossCtc }}</td>
+                <td>{{ candidate.margin }}</td>
+                <td>{{ candidate.laptop }}</td>
+                <td>{{ candidate.total }}</td>
+                <td>{{ candidate.gst }}</td>
+                <td>{{ candidate.grandTotal }}</td>
+                <td>{{ candidate.fee }}</td>
+                <td>{{ candidate.cost }}</td>
+                <td>{{ candidate.costTotal }}</td>
+                <td>{{ candidate.costGst }}</td>
+                <td>{{ candidate.costGrandTotal }}</td>
+                <td>{{ candidate.offerRelease }}</td>
+                <td>{{ candidate.doj }}</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
+<p-dialog header="Add Candidate" [(visible)]="openCandidateCostPlus" [modal]="true" [style]="{width: '50rem'}">
+    <form>
+        <div class="grid grid-cols-2 gap-2">
+            <div class="grid col-span-1 gap-1">
+                <label for="cluster">Cluster</label>
+                <p-select id="cluster" [filter]="true" appendTo="body" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="reporting-manager">Reporting Manager</label>
+                <input type="text" id="reporting-manager" pInputText />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="project-code">Project Code</label>
+                <p-select id="project-code" [filter]="true" appendTo="body" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="site-incharge">Site Incharge</label>
+                <p-select id="site-incharge" [filter]="true" appendTo="body" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="candidate-name">Candidate Name</label>
+                <input type="text" id="candidate-name" pInputText />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="position-applied">Position Applied</label>
+                <input type="text" id="position-applied" pInputText />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="current-experience">Current Experience</label>
+                <input type="text" id="current-experience" pInputText />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="total-experience">Total Experience</label>
+                <input type="text" id="total-experience" pInputText />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="highest-qualification">Highest Qualification</label>
+                <input type="text" id="highest-qualification" pInputText />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="qualification">Qualification</label>
+                <input type="text" id="qualification" pInputText />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="notice-period">Notice Period</label>
+                <input type="text" id="notice-period" pInputText />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="current-salary">Current Salary (NET)</label>
+                <input type="text" id="current-salary" pInputText />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="expected-salary">Expected Salary (NET)</label>
+                <input type="text" id="expected-salary" pInputText />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="approved-hike">Approved Hike</label>
+                <input type="text" id="approved-hike" pInputText />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="approved-salary">Approved Fixed Salary</label>
+                <input type="text" id="approved-salary" pInputText />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="percent-variable">10% Variable</label>
+                <input type="text" id="percent-variable" pInputText />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="fixed-variable">Total Fixed + Variable</label>
+                <input type="text" id="fixed-variable" pInputText />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="final-hike">Final Hike From Current</label>
+                <input type="text" id="final-hike" pInputText />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="delta">Delta From Expected</label>
+                <input type="text" id="delta" pInputText />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="gross-ctc">Gross CTC</label>
+                <input type="text" id="gross-ctc" pInputText />
+            </div>
+        </div>
+        <div class="flex justify-end mt-3">
+            <button pButton pRipple>
+                <span pButtonLabel>Save</span>
+            </button>
+        </div>
+    </form>
+</p-dialog>
+
+<p-toast />

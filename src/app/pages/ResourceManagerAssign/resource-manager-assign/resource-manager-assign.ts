@@ -3,6 +3,7 @@ import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-resource-manager-assign',
@@ -15,6 +16,9 @@ export class ResourceManagerAssign implements OnInit {
 
   resourceManagerDemandList: any;
   resourceManagerList: any;
+
+  offSet = 0;
+  pageSize = 10;
 
   PCode:any = [
     {name:'PCODE 1',id:1},
@@ -153,7 +157,7 @@ export class ResourceManagerAssign implements OnInit {
   { label: 'Quality', id: 101 }, { label: 'Safety', id: 102 },
  ];
 
-  constructor(private fb: FormBuilder, private apiService: Apiservice) {}
+  constructor(private fb: FormBuilder, private apiService: Apiservice, private messageService: MessageService) {}
 
   ngOnInit(): void {
     this.demandForm = this.fb.group({
@@ -178,15 +182,24 @@ export class ResourceManagerAssign implements OnInit {
   }
 
   fetchDemandResourceManager(){
-    this.apiService.fetchDemandResourceManager('').subscribe({
-      next: val => {
-        console.log(val);
-        this.resourceManagerDemandList = val.data;
-      },
-      error: err => {
-        console.log(err);
+    try {
+      const data = {
+        offSet: this.offSet,
+        pageSize: this.pageSize
       }
-    })
+
+      this.apiService.fetchDemandResourceManager(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.resourceManagerDemandList = val?.data.data;
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   fetchResourceManagerList(){
@@ -199,6 +212,30 @@ export class ResourceManagerAssign implements OnInit {
         next: val => {
           console.log(val);
           this.resourceManagerList = val.data;
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  selectedResourceManager(demandId: number, resourceManagerId: any){
+    try {   
+      console.log(resourceManagerId);
+  
+      const data = {
+        demandId: demandId,
+        resourceManager: resourceManagerId
+      }
+  
+      this.apiService.assignResourceManager(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.messageService.add({severity: 'success', summary: 'Success', detail: 'Resource Manager Successfully Assigned'});
+          this.fetchDemandResourceManager();
         },
         error: err => {
           console.log(err);

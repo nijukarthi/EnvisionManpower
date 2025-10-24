@@ -36,7 +36,8 @@
     </p-table>
 </div>
 
-<p-dialog [header]="projectId ? 'Edit Project' : 'Add New Project'" [modal]="true" [(visible)]="openProject" [style]="{width: '50rem'}" (onHide)="onDialogClose()">
+<p-dialog [header]="projectId ? 'Edit Project' : 'Add New Project'" [modal]="true" [(visible)]="openProject" 
+    [style]="{width: '50rem'}" (onHide)="onDialogClose()">
     <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
         <div class="grid grid-cols-2 gap-2">
             <div class="grid col-span-1 gap-1">
