@@ -54,7 +54,7 @@
                         <td>
                             <p-select [options]="envisionRoleList" appendTo="body" optionLabel="roleName" optionValue="id"
                                 placeholder="Select Role" [filter]="true" filterBy="roleName" 
-                                class="w-full md:w-56" [disabled]="loggedUserGroupId !== UserGroups.RESOURCEMANAGER"
+                                class="w-full md:w-56" [disabled]="loggedUserGroupId !== UserGroups.RESOURCEMANAGER && loggedUserGroupId !== UserGroups.ADMIN"
                                 (onChange)="assignEnvisionRoles(demand.demandId, $event.value)" />
                         </td>
                         <td>
