@@ -27,6 +27,8 @@ import { NewCandidateFixedCost } from '@/pages/new-candidate-fixed-cost/new-cand
 import { ExistingCandidateFixedCost } from '@/pages/existing-candidate-fixed-cost/existing-candidate-fixed-cost';
 import { NewCandidateCostPlus } from '@/pages/new-candidate-cost-plus/new-candidate-cost-plus';
 import { ConsultancyForm } from '@/pages/consultancy/consultancy-form/consultancy-form';
+import { ConsultancyPage } from '@/pages/consultancy-page/consultancy-page';
+import { GuestUserPage } from '@/pages/guest-user-page/guest-user-page';
 
 export const appRoutes: Routes = [
     {
@@ -67,6 +69,8 @@ export const appRoutes: Routes = [
             { path: 'uikit', canActivate: [authGuard], loadChildren: () => import('./app/pages/uikit/uikit.routes') },
             { path: 'documentation', component: Documentation, canActivate: [authGuard] },
             { path: 'addEmployee', component: AddEmployee, canActivate: [authGuard] },
+            { path: 'consultancyPage', component: ConsultancyPage, canActivate: [authGuard] },
+            { path: 'guestUserPage', component: GuestUserPage, canActivate: [authGuard] },
             { path: 'existingEmployee', component: ExistingEmployee, canActivate: [authGuard] },
             { path: 'candidate/new/fixed-cost', component: NewCandidateFixedCost, canActivate: [authGuard] },
             { path: 'candidate/new/cost-plus', component: NewCandidateCostPlus, canActivate: [authGuard] },
