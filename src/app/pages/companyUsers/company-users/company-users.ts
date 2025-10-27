@@ -2,9 +2,9 @@ import { Shared } from '@/service/shared';
 import { Component, inject, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CompanyUsersService } from '@/service/masters/companyUsers/company-users';
-import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Apiservice } from '@/service/apiservice/apiservice';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-company-users',
@@ -22,11 +22,14 @@ export class CompanyUsers implements OnInit {
 
   selectedDepartments: number[] = [];
 
+  userId: number | null = null;
+
   private fb = inject(FormBuilder);
 
   constructor(
     private apiService: Apiservice, 
-    private messageService: MessageService
+    private messageService: MessageService,
+    private confirmationService: ConfirmationService
   ){}
 
   first = 0;
@@ -40,8 +43,10 @@ export class CompanyUsers implements OnInit {
     userName: [''],
     email: [''],
     userGroupId: [0],
-    userDepartments: this.fb.array([this.assignDepartments()])
+    userDepartments: this.fb.array([])
   });
+
+  departmentsControl = new FormControl([]);
 
   assignDepartments(): FormGroup{
     return this.fb.group({
@@ -61,20 +66,30 @@ export class CompanyUsers implements OnInit {
     return [
       {
         label: 'Edit',
-        icon: 'pi pi-pencil'
-      },
+        icon: 'pi pi-pencil',
+        command: () => this.editUser(user)
+       },
       {
         label: 'Delete',
-        icon: 'pi pi-trash'
+        icon: 'pi pi-trash',
+        command: () => this.deleteUser(user)
       }
     ]
+  }
+
+  pageChange(event: any){
+    console.log(event);
+
+    this.offSet = event.first;
+    this.pageSize = event.rows;
+    this.fetchActiveCompanyUsers();
   }
 
   fetchActiveCompanyUsers(){
     try {
       let data = {
-        offSet: 0,
-        pageSize: 10
+        offSet: this.offSet,
+        pageSize: this.pageSize
       }
       this.apiService.fetchActiveCompanyUsers(data).subscribe({
         next: val => {
@@ -164,26 +179,116 @@ export class CompanyUsers implements OnInit {
     }
   }
 
-  onSubmit(){
-  try{
-    if(this.actionName == "Add"){
-      let data = this.companyUserForm.value;
-      this.apiService.createCompanyUsers(data)
-      .subscribe({
-        next:(res)=>{
-          this.openCompanyUser = false;
-          this.companyUserForm.reset();
-          this.fetchActiveCompanyUsers();
-        },error:error=>{
+  fetchViewCompanyUser(){
+    try {
+      const data = {
+        userId: this.userId
+      }
 
+      this.apiService.viewCompanyUser(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.companyUserForm.patchValue({
+            ...val.data
+          });
+        },
+        error: err => {
+          console.log(err);
         }
       })
-    }else if(this.actionName == "Update"){
-
+    } catch (error) {
+      console.log(error);
     }
-
-  }catch(e){
-
   }
+
+  editUser(user: any){
+    console.log(user);
+    this.userId = user.userId;
+    this.openCompanyUser = true;
+    this.actionName = 'Update';
+    this.fetchViewCompanyUser();
+    this.fetchActiveUserGroups();
+    this.fetchActiveDepartments();
+    this.showDepartments = user.userGroupId !== 301;
+    // this.companyUserForm.patchValue({
+    //   userId: user.userId,
+    //   userName: user.userName,
+    //   email: user.email,
+    //   userGroupId: user.userGroupId,
+    //   userDepartments: user.userDepartments
+    // })
+  }
+
+  onSubmit(){
+    try{
+      console.log(this.companyUserForm.value);
+      if(this.actionName == "Add"){
+        let data = this.companyUserForm.value;
+        this.apiService.createCompanyUsers(data).subscribe({
+          next:(res)=>{
+            console.log(res);
+            this.messageService.add({severity: 'success', summary: 'Success', detail: 'User Created Successfully'});
+            this.openCompanyUser = false;
+            this.companyUserForm.reset();
+            this.userDepartments.clear();
+            this.departmentsControl.reset();
+            this.fetchActiveCompanyUsers();
+          },
+          error:error=>{
+            console.log(error);
+          }
+        })
+      }
+      else if(this.actionName == "Update"){
+
+      }
+    }
+    catch(e){
+      console.log(e);
+    }
+  }
+
+  deleteUser(user: any){
+    this.confirmationService.confirm({
+      message: 'Do you want to delete this record?',
+      header: `Delete ${user.userName}`,
+      icon: 'pi pi-info-circle',
+      rejectLabel: 'Cancel',
+      rejectButtonProps: {
+        label: 'Cancel',
+        severity: 'secondary',
+        outlined: true
+      },
+      acceptButtonProps: {
+        label: 'Delete',
+        severity: 'danger'
+      },
+      accept: () => {
+        try {
+          const data = {
+            userId: user.userId
+          }
+
+          this.apiService.deleteCompanyUser(data).subscribe({
+            next: val => {
+              console.log(val);
+              this.messageService.add({severity: 'success', summary: 'Success', detail: 'User Deleted Successfully'});
+              this.fetchActiveCompanyUsers();
+            },
+            error: err => {
+              console.log(err);
+            }
+          })
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    })
+  }
+
+  onDialogClose(){
+    this.userId = null;
+    this.companyUserForm.reset();
   }
 }
+

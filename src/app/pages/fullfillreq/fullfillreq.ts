@@ -3,6 +3,7 @@ import { Shared } from '../../service/shared';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { MessageService } from 'primeng/api';
+import { UserGroups } from '@/models/usergroups/usergroups.enum';
 
 @Component({
   selector: 'app-fullfillreq',
@@ -16,8 +17,12 @@ export class Fullfillreq implements OnInit {
  offSet = 0;
  pageSize = 10;
 
+ UserGroups = UserGroups;
+
  demandFullfillList: any;
  envisionRoleList: any;
+
+ loggedUserGroupId = Number(sessionStorage.getItem('userGroupId'));
 
   PCode:any = [
     {name:'PCODE 1',id:1},
