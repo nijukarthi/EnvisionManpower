@@ -156,6 +156,18 @@ export class Apiservice {
     return this.postMethod('user/account/create', params);
   }
 
+  viewCompanyUser(params: any): Observable<any>{
+    return this.postMethod('user/account/view', params);
+  }
+
+  updateCompanyUser(params: any){
+    return this.postMethod('user/account/update', params);
+  }
+
+  deleteCompanyUser(params: any): Observable<any>{
+    return this.postMethod('user/account/remove', params);
+  }
+
   createRequesition(params: any){
     return this.postMethod('requesition/create', params);
   }
