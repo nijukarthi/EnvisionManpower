@@ -176,6 +176,10 @@ export class Apiservice {
     return this.postMethod('requesition/demand/assigned', params);
   }
 
+  viewRequisition(params: any): Observable<any>{
+    return this.postMethod('requesition/view', params);
+  }
+
   approveDemandByClusterHead(params: any){
     return this.postMethod('requesition/demand/approve/statehead', params);
   }
@@ -202,6 +206,18 @@ export class Apiservice {
 
   assignEnvisionRoles(params: any){
     return this.postMethod('requesition/demand/envisionrole/assign', params);
+  }
+
+  createConsultancy(params: any){
+    return this.postMethod('user/consultancy/create', params);
+  }
+
+  fetchActiveConsultancy(params: any): Observable<any>{
+    return this.postMethod('user/active/consultancy', params);
+  }
+
+  deleteConsultancy(params: any): Observable<any>{
+    return this.postMethod('user/consultancy/remove', params);
   }
 
 }

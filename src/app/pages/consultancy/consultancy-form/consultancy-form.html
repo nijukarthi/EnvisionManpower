@@ -1,0 +1,73 @@
+<div class="card">
+    <h5>Consultancy Form</h5>
+    <form [formGroup]="consultancyForm" (ngSubmit)="onSubmit()">
+        <div class="grid grid-cols-2 gap-2">
+            <div class="grid col-span-1 gap-1">
+                <label for="consultancy-name">Consultancy Name</label>
+                <input type="text" pInputText formControlName="consultancyName" id="consultancy-name" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="hr-name">HR Name</label>
+                <input type="text" pInputText formControlName="userName" id="hr-name" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="email">Email</label>
+                <input type="email" pInputText formControlName="email" id="email" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="phone-number">Phone Number</label>
+                <input type="number" pInputText formControlName="phoneNumber" id="phone-number" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="address-line-1">Address Line 1</label>
+                <input type="text" pInputText formControlName="address_1" id="address-line-1" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="address-line-2">Address Line 2</label>
+                <input type="text" pInputText formControlName="address_2" id="address-line-2" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="city">City</label>
+                <input type="text" pInputText formControlName="city" id="city" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="state">State</label>
+                <input type="text" pInputText formControlName="state" id="state" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="country">Country</label>
+                <input type="text" pInputText formControlName="country" id="country" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="pincode">Pincode</label>
+                <input type="text" pInputText formControlName="pinCode" id="pincode" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="pan-number">PAN Number</label>
+                <input type="text" pInputText formControlName="panNumber" id="pan-number" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="tan-number">TAN Number</label>
+                <input type="text" pInputText formControlName="tanNumber" id="tan-number" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="gst-number">GST Number</label>
+                <input type="text" pInputText formControlName="gstNumber" id="gst-number" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="category">Category</label>
+                <p-multiselect [options]="categoryList" [formControl]="consultancyCategoryControl" id="category" 
+                    optionLabel="categoryName" optionValue="categoryId" [filter]="true" filterBy="categoryName" 
+                    display="chip" [maxSelectedLabels]="1" placeholder="Select Category" 
+                    (onChange)="categoryChange($event.value)" [showClear]="true" appendTo="body" />
+            </div>
+        </div>
+        <div class="flex justify-end mt-4">
+            <button pButton pRipple type="submit">
+                <span pButtonLabel>Submit</span>
+            </button>
+        </div>
+    </form>
+</div>
+
+<p-toast />

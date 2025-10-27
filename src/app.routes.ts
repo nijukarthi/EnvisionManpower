@@ -26,6 +26,7 @@ import { ExistingEmployee } from '@/pages/existing-employee/existing-employee';
 import { NewCandidateFixedCost } from '@/pages/new-candidate-fixed-cost/new-candidate-fixed-cost';
 import { ExistingCandidateFixedCost } from '@/pages/existing-candidate-fixed-cost/existing-candidate-fixed-cost';
 import { NewCandidateCostPlus } from '@/pages/new-candidate-cost-plus/new-candidate-cost-plus';
+import { ConsultancyForm } from '@/pages/consultancy/consultancy-form/consultancy-form';
 
 export const appRoutes: Routes = [
     {
@@ -53,6 +54,7 @@ export const appRoutes: Routes = [
             { path: 'fullFill', component: Fullfillreq, canActivate: [authGuard]},
             { path: 'interviewManagement', component: InterviewManagement, canActivate: [authGuard]},
             { path: 'consultancies', component: ConsultancyTable, canActivate: [authGuard] },
+            { path: 'consultancies/new', component: ConsultancyForm, canActivate: [authGuard] },
             { path: 'departments', component: DepartmentTable, canActivate: [authGuard] },
             { path: 'spn', component: SpnTable, canActivate: [authGuard] },
             { path: 'categories', component: CategoryTable, canActivate: [authGuard] },

@@ -1,50 +1,36 @@
 <div class="card">
     <div class="flex items-center justify-between">
         <h5>Consultancies</h5>
-        <p-button label="Add Consultancy" icon="pi pi-plus" (click)="addConsultancy()"/>
+        <p-button label="Add Consultancy" icon="pi pi-plus" routerLink="/home/consultancies/new" />
     </div>
-    <p-table [value]="consultancy" showGridlines>
+    <p-table [value]="consultancyList" showGridlines>
         <ng-template #header>
             <tr>
                 <th>SI No</th>
-                <th>Name</th>
+                <th>Consultancy Name</th>
+                <th>Hr Name</th>
                 <th>Phone</th>
                 <th>Email</th>
+                <th>Gst Number</th>
+                <th>Actions</th>
             </tr>
         </ng-template>
-        <ng-template #body let-consul>
+        <ng-template #body let-consul let-i="rowIndex">
             <tr>
-                <td>{{ consul.id }}</td>
-                <td>{{ consul.name }}</td>
-                <td>{{ consul.phone }}</td>
+                <td>{{ i + 1 }}</td>
+                <td>{{ consul.consultancyName }}</td>
+                <td>{{ consul.userName }}</td>
+                <td>{{ consul.phoneNumber }}</td>
                 <td>{{ consul.email }}</td>
+                <td>{{ consul.gstNumber }}</td>
+                <td>
+                    <p-menu #menu [model]="getMenuItems(consul)" [popup]="true" appendTo="body" />
+                    <p-button (click)="menu.toggle($event)" icon="pi pi-ellipsis-v" [rounded]="true" variant="text" />
+                </td>
             </tr>
         </ng-template>
     </p-table>
 </div>
 
-<p-dialog [header]="consultancyId ? 'Edit SPN' : 'Add Consultancy'" [modal]="true" [(visible)]="openAddConsultancy" 
-    [style]="{width: '50rem'}" (onHide)="onDialogClose()">
-    <form [formGroup]="consultancyForm" (ngSubmit)="onSubmit()">
-        <div class="grid grid-cols-2 gap-2">
-            <div class="grid col-span-1 gap-1">
-                <label for="name">Name</label>
-                <input type="text" pInputText formControlName="name" id="name" />
-            </div>
-            <div class="grid col-span-1 gap-1">
-                <label for="phone">Phone</label>
-                <input type="text" pInputText formControlName="phone" id="phone" />
-            </div>
-            <div class="grid col-span-1 gap-1">
-                <label for="email">Email</label>
-                <input type="text" pInputText formControlName="email" id="email" />
-
-            </div>
-        </div>
-        <div class="flex justify-start mt-4" >
-            <button pButton pRipple type="submit" class="w-full">
-                <span pButtonLabel>{{ actionName }}</span>
-            </button>
-        </div>
-    </form>
-</p-dialog>
+<p-toast />
+<p-confirmdialog />

@@ -45,7 +45,10 @@
                         <td>
                             <p-tableCheckbox [value]="demand" />
                         </td>
-                        <td><p-button icon="pi pi-eye" [rounded]="true" class="w-full" severity="warn" (click)="showDetailPopup(demand)"/></td>
+                        <td>
+                            <p-button icon="pi pi-eye" [rounded]="true" 
+                                class="w-full" severity="warn" (click)="showDetailPopup(demand.requesitionId)"/>
+                        </td>
                         <td>{{ rowIndex + 1 }}</td>
                         <td>{{ demand.demandCode }}</td>
                         <td>{{ demand.spn.spnCode }}</td>
@@ -97,58 +100,57 @@
        
     </p-fluid>
 
-    <p-dialog header="" [resizable]="true" [draggable]="false" [modal]="true" [maximizable]="true"
-    appendTo="body" [(visible)]="viewDetail" [style]="{ width: '99vw' }" [contentStyle]="{ height: '500px' }">
+    <p-dialog header="View Requistion" [resizable]="true" [draggable]="false" [modal]="true" [maximizable]="true"
+    appendTo="body" [(visible)]="viewDetail" [style]="{ width: '90vw' }" [contentStyle]="{ height: '500px' }">
     <p-fluid>
-        <div class=" card flex">
+        <div class="card flex">
             <form [formGroup]="demandForm">
-                <div class="card grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="card grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <div class="flex flex-wrap gap-2 w-full">
                         <label for="firstname2">Requision ID</label>
-                        <input pInputText id="firstname2" formControlName="requisitionId" type="text" />
+                        <input pInputText id="firstname2" formControlName="requesitionCode" type="text" />
                     </div>
                     <div class="flex flex-wrap gap-2 w-full">
                         <label for="lastname2">P-code</label>
-                        <p-select [options]="PCode" formControlName="pCode" optionLabel="name" optionValue="name"
-                            placeholder="Select PCode" [filter]="true" filterBy="name" class="w-full md:w-56" />
+                        <p-select [options]="PCodeList" formControlName="projectId" optionLabel="projectCode" optionValue="projectId"
+                            placeholder="Select Project Code" [filter]="true" filterBy="projectCode" class="w-full md:w-56" />
                     </div>
-                    <div class="flex flex-wrap gap-2 w-full">
-                        <label for="lastname2">State</label>
-                        <p-select [options]="states" formControlName="state" optionLabel="label" optionValue="label"
-                            placeholder="Select State" [filter]="true" filterBy="label" class="w-full md:w-56" />
+                    <div class="flex flex-wrap gap-2 w-full" formGroupName="cluster">
+                        <label for="lastname2">Cluster</label>
+                        <p-select [options]="clusterList" formControlName="clusterId" optionLabel="clusterName" optionValue="clusterId"
+                            placeholder="Select State" [filter]="true" filterBy="clusterName" class="w-full md:w-56" />
                     </div>
-                     <div class="flex flex-wrap gap-2 w-full">
+                    <div class="flex flex-wrap gap-2 w-full" formGroupName="clusterHead">
+                        <label for="lastname2">Cluster Head</label>
+                        <p-select [options]="clusterHeadList" formControlName="userId" optionLabel="userName" optionValue="userId"
+                            placeholder="Select State" [filter]="true" filterBy="userName" class="w-full md:w-56" />
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full" formGroupName="siteIncharge">
+                        <label for="lastname2">Site Incharge</label>
+                        <p-select [options]="siteInchargeList" formControlName="userId" optionLabel="userName" optionValue="userId"
+                            placeholder="Select State" [filter]="true" filterBy="userName" class="w-full md:w-56" />
+                    </div>
+                     <div class="flex flex-wrap gap-2 w-full" formGroupName="department">
                         <label for="lastname2"> Department</label>
-                        <p-select [options]="departmentList" formControlName="department" optionLabel="label" optionValue="label"
-                            placeholder="Select Department" [filter]="true" filterBy="label" class="w-full md:w-56" />
+                        <p-select [options]="departmentList" formControlName="departmentId" optionLabel="departmentName" optionValue="departmentId"
+                            placeholder="Select Department" [filter]="true" filterBy="departmentName" class="w-full md:w-56" />
                     </div>
-                     <div class="flex flex-wrap gap-2 w-full">
+                    <div class="flex flex-wrap gap-2 w-full" formGroupName="departmentHead">
+                        <label for="lastname2"> Department Head</label>
+                        <p-select [options]="departmentHeadList" formControlName="userId" optionLabel="userName"
+                            optionValue="userId" placeholder="Select Department" [filter]="true" filterBy="userName"
+                            class="w-full md:w-56" />
+                    </div>
+                     <div class="flex flex-wrap gap-2 w-full" formGroupName="category">
                         <label for="lastname2">Category</label>
-                        <p-select [options]="categoryList" formControlName="category" optionLabel="label" optionValue="label"
-                            placeholder="Select Category" [filter]="true" filterBy="label" class="w-full md:w-56" />
+                        <p-select [options]="categoryList" formControlName="categoryId" optionLabel="categoryName" optionValue="categoryId"
+                            placeholder="Select Category" [filter]="true" filterBy="categoryName" class="w-full md:w-56" />
                     </div>
-                    <div class="flex flex-wrap gap-2 w-full">
-                        <label for="lastname2">Planed deployment date</label>
-                        <input pInputText id="firstname2" formControlName="plannedDate" type="text" />
-    
-                        <!-- <p-datepicker appendTo="body" formControlName="plannedDate" placeholder="Select Date" class="w-full" /> -->
-                    </div>
-                    <div class="flex flex-wrap gap-2 w-full">
-                        <label for="lastname2">Actual deployment date</label>
-                        <input pInputText id="firstname2" formControlName="actualDate" type="text" />
-    
-                        <!-- <p-datepicker appendTo="body" formControlName="actualDate" placeholder="Select Date" class="w-full" /> -->
-                    </div>
-                   
-                    <div class="flex flex-wrap gap-2 w-full">
+                    <div class="flex flex-wrap gap-2 w-full" formGroupName="requestedBy">
                         <label for="lastname2">Requested By</label>
-                        <input pInputText formControlName="requestedBy" type="text" class="w-full" />
+                        <input pInputText formControlName="userName" type="text" class="w-full" />
                     </div>
-    
-    
-    
-                </div>
-    
+                </div>    
             </form>
         </div>
     </p-fluid>

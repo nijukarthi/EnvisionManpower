@@ -17,6 +17,13 @@ export class Approval implements OnInit {
   selectedPCode:any = "";
 
   demandProcessingList: any;
+  PCodeList: any;
+  clusterList: any;
+  departmentList:any;
+  categoryList: any;
+  clusterHeadList: any;
+  siteInchargeList: any;
+  departmentHeadList: any;
 
   USERGROUPS = UserGroups;
   DEMANDSTATUS = DemandStatus;
@@ -147,35 +154,34 @@ export class Approval implements OnInit {
  ];
  selectedApprovalList:any = [];
  viewDetail:boolean = false;
-  departmentList:any = [
-  {label:'O&M',id:1},
-    {label:'BESS',id:2},
-    {label:'Projects',id:3},
-    {label:'QEHS',id:4},
-
- ]
-
- categoryList: any[] = [
-  { label: 'Maintenance', id: 101 }, { label: 'Operations', id: 102 },
-  { label: 'Battery Testing', id: 101 }, { label: 'BMS', id: 102 },
-  { label: 'Fixed Cost Manpower Services', id: 101 }, { label: 'Cost Plus Manpower Services', id: 102 },
-  { label: 'Quality', id: 101 }, { label: 'Safety', id: 102 },
- ];
 
   constructor(private fb: FormBuilder, private apiService: Apiservice, private messageService: MessageService) {}
 
   ngOnInit(): void {
     this.demandForm = this.fb.group({
-      requisitionId: [{ value: 'MPT001', disabled: true }],
-      pCode: [{ value: 'PCODE 1', disabled: true }, Validators.required],
-      state: [{ value: 'Karnataka', disabled: true }, Validators.required],
-      plannedDate: [{ value: '10-10-2025', disabled: true },],
-      department: [{ value: 'Projects', disabled: true },],
-      category: [{ value: 'Fixed Cost Manpower Services', disabled: true },],
-      actualDate: [{ value: '09-10-2025', disabled: true },],
-      durationDate: [{ value: '12-10-2025', disabled: true },],
-      requestedBy: [{ value: 'ADMIN', disabled: true }],
-     // spvArray: this.fb.array([])  // FormArray for dynamic rows
+      requesitionCode: [{ value: '', disabled: true }],
+      projectId: [{ value: '', disabled: true }, Validators.required],
+      cluster: this.fb.group({
+        clusterId: [{ value: '', disabled: true }]
+      }),
+      clusterHead: this.fb.group({
+        userId: [{ value: '', disabled: true }]
+      }),
+      category: this.fb.group({
+        categoryId: [{ value: '', disabled: true }]
+      }),
+      department: this.fb.group({
+        departmentId: [{ value: '', disabled: true }]
+      }),
+      departmentHead: this.fb.group({
+        userId: [{ value: '', disabled: true }]
+      }),
+      requestedBy: this.fb.group({
+        userName: [{ value: '', disabled: true }]
+      }),
+      siteIncharge: this.fb.group({
+        userId: [{ value: '', disabled: true }]
+      })
     });
 
     this.fetchDemandRequest();
@@ -306,7 +312,144 @@ export class Approval implements OnInit {
     console.log(this.demandForm.value);
   }
 
-  showDetailPopup(val:any){
-    this.viewDetail = true;
+  fetchPCodes(){
+    try {   
+      this.apiService.fetchProjectCodes('').subscribe({
+        next: val => {
+          console.log(val);
+          this.PCodeList = val.data;
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  fetchActiveDepartments(){
+    try {    
+      this.apiService.fetchActiveDepartments('').subscribe({
+        next: val => {
+          console.log(val);
+          this.departmentList = val.data;
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  fetchActiveClusters(){
+    try {   
+      this.apiService.getActiveClusters('').subscribe({
+        next: val => {
+          console.log(val);
+          this.clusterList = val.data;
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+
+  fetchActiveCategory(){
+    try { 
+      this.apiService.fetchActiveCategory('').subscribe({
+        next: val => {
+          console.log(val);
+          this.categoryList = val.data;
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  fetchClusterHeadByCluster(clusterId: number){
+    console.log(clusterId);
+    try {
+      const data = {
+        clusterId: clusterId
+      }
+      console.log(data);
+      this.apiService.fetchClusterHeadByCluster(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.clusterHeadList = val.data ? [val.data] : [];
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  findUserGroup(userGroupId: number, type: 'siteIncharge' | 'departmentHead'){
+    try {
+      const data = {
+        userGroupId: userGroupId
+      }
+      console.log(data);
+      this.apiService.findUserGroup(data).subscribe({
+        next: val => {
+          console.log(val);
+          if (type === 'siteIncharge') {
+            this.siteInchargeList = val?.data;
+            console.log("siteInchargeList:", this.siteInchargeList);
+          } else if (type === 'departmentHead') {
+            this.departmentHeadList = val?.data;
+            console.log("departmentHeadList", this.departmentHeadList);
+          }
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  showDetailPopup(requesitionId:number){
+    try {
+      this.viewDetail = true;
+      this.fetchPCodes();
+      this.fetchActiveClusters();
+      this.fetchActiveDepartments();
+      this.fetchActiveCategory();
+      this.findUserGroup(UserGroups.SITEINCHARGE, 'siteIncharge');
+      this.findUserGroup(UserGroups.DEPARTMENTHEAD, 'departmentHead');
+
+      const data = {
+        requesitionId: requesitionId
+      }
+
+      this.apiService.viewRequisition(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.fetchClusterHeadByCluster(val.data.cluster.clusterId);
+          this.demandForm.patchValue(val.data);
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
