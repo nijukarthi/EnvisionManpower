@@ -16,7 +16,7 @@
             </div>
             <div class="grid col-span-1 gap-1">
                 <label for="phone-number">Phone Number</label>
-                <input type="number" pInputText formControlName="phoneNumber" id="phone-number" />
+                <input type="text" pInputText formControlName="phoneNumber" pKeyFilter="int" maxlength="10" id="phone-number" />
             </div>
             <div class="grid col-span-1 gap-1">
                 <label for="address-line-1">Address Line 1</label>
@@ -40,7 +40,7 @@
             </div>
             <div class="grid col-span-1 gap-1">
                 <label for="pincode">Pincode</label>
-                <input type="text" pInputText formControlName="pinCode" id="pincode" />
+                <input type="text" pInputText formControlName="pinCode" pKeyFilter="int" maxlength="10" id="pincode" />
             </div>
             <div class="grid col-span-1 gap-1">
                 <label for="pan-number">PAN Number</label>

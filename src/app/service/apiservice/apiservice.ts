@@ -104,6 +104,10 @@ export class Apiservice {
     return this.postMethod('master/cluster/head', params);
   }
 
+  fetchDepartmentHeadByDepartment(params: any): Observable<any>{
+    return this.postMethod('master/department/head', params);
+  }
+
   fetchActiveSpns(params: any): Observable<any>{
     return this.postMethod('master/spn', params);
   }
@@ -214,6 +218,10 @@ export class Apiservice {
 
   fetchActiveConsultancy(params: any): Observable<any>{
     return this.postMethod('user/active/consultancy', params);
+  }
+
+  fetchViewConsultancy(params: any): Observable<any>{
+    return this.postMethod('user/consultancy/view', params);
   }
 
   deleteConsultancy(params: any): Observable<any>{

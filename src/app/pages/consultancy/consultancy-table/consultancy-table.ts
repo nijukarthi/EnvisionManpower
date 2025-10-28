@@ -41,7 +41,7 @@ export class ConsultancyTable implements OnInit {
       {
         label: 'Edit',
         icon: 'pi pi-pencil',
-        // command: () => this.editUser(user)
+        command: () => this.router.navigate(['/home/consultancies', consultancy.userId])
        },
       {
         label: 'Delete',

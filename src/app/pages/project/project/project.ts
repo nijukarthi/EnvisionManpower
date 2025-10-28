@@ -132,6 +132,27 @@ export class Project implements OnInit {
     }
   }
 
+  fetchDepartmentHeadByDepartment(departmentId: number){
+    try {
+      const data = {
+        departmentId: departmentId
+      }
+      console.log(data);
+
+      this.apiService.fetchDepartmentHeadByDepartment(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.departmentHeadList = val.data ? [val.data] : [];
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   fetchActiveDepartments(){
     this.apiService.fetchActiveDepartments('').subscribe({
       next: val => {

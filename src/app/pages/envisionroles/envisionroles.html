@@ -16,9 +16,9 @@
             <tr>
                 <td>{{ i + 1 }}</td>
                 <td>{{ role.roleName }}</td>
-                <td class="flex justify-start gap-3">
-                    <p-button icon="pi pi-pencil" [rounded]="true" [outlined]="true" (click)="editRole(role)" />
-                    <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" (click)="deleteRole(role.id, role.roleName)" />
+                <td>
+                    <p-menu #menu [model]="getMenuItems(role)" [popup]="true" appendTo="body" />
+                    <p-button (onClick)="menu.toggle($event)" icon="pi pi-ellipsis-v" [rounded]="true" text="variant" />
                 </td>
             </tr>
         </ng-template>
@@ -30,7 +30,7 @@
     <form [formGroup]="roleForm" (ngSubmit)="onSubmit()">
         <div class="grid grid-cols-1 gap-1">
             <div class="grid col-span-1 gap-1">
-                <label for="category-name">ROle Name</label>
+                <label for="category-name">Role Name</label>
                 <input type="text" pInputText formControlName="roleName" id="category-name" />
             </div>
         </div>

@@ -2,7 +2,7 @@ import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 
 @Component({
@@ -14,9 +14,11 @@ import { MessageService } from 'primeng/api';
 export class ConsultancyForm implements OnInit {
   categoryList: any;
 
+  userId = 0;
+
   private fb = inject(FormBuilder);
 
-  constructor(private apiService: Apiservice, private messageService: MessageService, private router: Router){}
+  constructor(private apiService: Apiservice, private messageService: MessageService, private router: Router, private route: ActivatedRoute){}
 
   consultancyForm = this.fb.group({
     consultancyName: [''],
@@ -48,7 +50,39 @@ export class ConsultancyForm implements OnInit {
   }
 
   ngOnInit(): void {
+    this.route.paramMap.subscribe(param => {
+      const id = param.get('id');
+      console.log(id);
+
+      if (id) {
+        this.userId = Number(id);
+        this.fetchViewConsultancy(this.userId);
+      }
+    })
+
     this.fetchActiveCategory();
+  }
+
+  fetchViewConsultancy(userId: number){
+    try {
+      const data = {
+        userId: userId
+      }
+      this.apiService.fetchViewConsultancy(data).subscribe({
+        next: val => {
+          console.log(val);
+          const categoryIds = val.data.consultancyCategory.map((c: any) => c.categoryId);
+          this.consultancyCategoryControl.patchValue(categoryIds);
+
+          this.consultancyForm.patchValue(val.data);
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   fetchActiveCategory(){

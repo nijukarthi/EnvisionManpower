@@ -63,7 +63,7 @@ export class CompanyUsers implements OnInit {
   }
 
   getMenuItems(user: any){
-    return [
+    const items = [
       {
         label: 'Edit',
         icon: 'pi pi-pencil',
@@ -75,6 +75,8 @@ export class CompanyUsers implements OnInit {
         command: () => this.deleteUser(user)
       }
     ]
+
+    return user.isDefault ? items.filter((item: any) => item.label !== 'Delete') : items;
   }
 
   pageChange(event: any){
@@ -188,9 +190,11 @@ export class CompanyUsers implements OnInit {
       this.apiService.viewCompanyUser(data).subscribe({
         next: val => {
           console.log(val);
-          this.companyUserForm.patchValue({
-            ...val.data
-          });
+          const departmentIds = val.data.userDepartments.map((d: any) => d.departmentId);
+          this.departmentsControl.patchValue(departmentIds);
+
+          this.companyUserForm.patchValue(val.data);
+          
         },
         error: err => {
           console.log(err);
@@ -202,7 +206,7 @@ export class CompanyUsers implements OnInit {
   }
 
   editUser(user: any){
-    console.log(user);
+    // console.log(user);
     this.userId = user.userId;
     this.openCompanyUser = true;
     this.actionName = 'Update';
@@ -210,13 +214,16 @@ export class CompanyUsers implements OnInit {
     this.fetchActiveUserGroups();
     this.fetchActiveDepartments();
     this.showDepartments = user.userGroupId !== 301;
-    // this.companyUserForm.patchValue({
-    //   userId: user.userId,
-    //   userName: user.userName,
-    //   email: user.email,
-    //   userGroupId: user.userGroupId,
-    //   userDepartments: user.userDepartments
-    // })
+    if (this.actionName === 'Update') {
+      this.companyUserForm.get('email')?.disable();
+    }else {
+      this.companyUserForm.get('email')?.enable();
+    }
+    if (!this.showDepartments) {
+      this.companyUserForm.get('userGroupId')?.disable();
+    } else {
+      this.companyUserForm.get('userGroupId')?.enable();
+    }
   }
 
   onSubmit(){
@@ -240,7 +247,29 @@ export class CompanyUsers implements OnInit {
         })
       }
       else if(this.actionName == "Update"){
+        const data = {
+          ...this.companyUserForm.value
+        };
 
+        if(!data.userDepartments?.length && this.showDepartments){
+          const existingDepartments = this.departmentsControl.value?.map((id: number) => ({departmentId: id}));
+          data.userDepartments = existingDepartments;
+        }
+
+        console.log(data);
+        this.apiService.updateCompanyUser(data).subscribe({
+          next: val => {
+            console.log(val);
+            this.messageService.add({severity: 'success', summary: 'Success', detail: 'User Updated Successfully'});
+            this.openCompanyUser = false;
+            this.companyUserForm.reset();
+            this.departmentsControl.reset();
+            this.fetchActiveCompanyUsers();
+          },
+          error: err => {
+            console.log(err);
+          }
+        })
       }
     }
     catch(e){

@@ -16,9 +16,9 @@
             <tr>
                 <td>{{ i + 1 }}</td>
                 <td>{{ category.categoryName }}</td>
-                <td class="flex justify-start gap-3">
-                    <p-button icon="pi pi-pencil" [rounded]="true" [outlined]="true" (click)="editCategory(category)" />
-                    <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" (click)="deleteCategory(category.categoryId, category.categoryName)" />
+                <td>
+                    <p-menu #menu [model]="getMenuItems(category)" [popup]="true" appendTo="body" />
+                    <p-button (onClick)="menu.toggle($event)" icon="pi pi-ellipsis-v" [rounded]="true" variant="text" />
                 </td>
             </tr>
         </ng-template>

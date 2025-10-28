@@ -15,11 +15,6 @@ export class Envisionroles {
 
   openNewRoleyPopup = false;
   roleId: any;
-  /* private apiService = inject(Category);
-  private fb = inject(FormBuilder);
-  private router = inject(Router);
-  private confirmationService = inject(ConfirmationService);
-  private messageService = inject(MessageService); */
   roleList:any;
   roleForm:any;
   actionName:any = "Save";
@@ -34,6 +29,21 @@ export class Envisionroles {
    })
    this.fetchViewRole('');
     //this.roleList = this.apiService.fetchActiveCategory('');
+  }
+
+  getMenuItems(role: any){
+    return [
+      {
+        label: 'Edit',
+        icon: "pi pi-pencil",
+        command: () => this.editRole(role)
+      },
+      {
+        label: 'Delete',
+        icon: "pi pi-trash",
+        command: () => this.deleteRole(role)
+      }
+    ]
   }
 
   addRoles(){
@@ -95,11 +105,6 @@ export class Envisionroles {
             this.openNewRoleyPopup = false;
             this.roleForm.reset();
             this.fetchViewRole('');
-           /*  this.route.navigate(['/home']).then(success => {
-              if(success){
-                this.route.navigate(['/home/categories']);
-              }
-            }) */
           },
           error: err => {
             console.log(err);
@@ -135,11 +140,6 @@ export class Envisionroles {
             this.openNewRoleyPopup = false;
             this.roleForm.reset();
             this.fetchViewRole('');
-            /* this.route.navigate(['/home']).then(success => {
-              if(success){
-                this.route.navigate(['/home/categories']);
-              }
-            }) */
           },
           error: err =>{
             console.log(err);
@@ -159,10 +159,10 @@ export class Envisionroles {
     }
   }
 
-  deleteRole(roleId: number, roleName: string){
+  deleteRole(role: any){
     this.confirmationService.confirm({
       message: 'Do you want to delete this record?',
-      header: `Delete ${roleName}`,
+      header: `Delete ${role.roleName}`,
       icon: 'pi pi-info-circle',
       rejectLabel: 'Cancel',
       rejectButtonProps: {
@@ -177,19 +177,12 @@ export class Envisionroles {
       accept: () => {
         try {
           let data = {
-            id:roleId
+            id: role.id
           }
           this.apiService.deleteEnvRole(data).subscribe({
             next: val => {
               console.log(val);
               this.fetchViewRole('');
-             /*  setTimeout(() => {
-                this.route.navigate(['/home']).then(success => {
-                  if(success){
-                    this.route.navigate(['/home/categories']);
-                  }
-                })
-              }, 1000); */
             },
             error: err => {
               console.log(err);
