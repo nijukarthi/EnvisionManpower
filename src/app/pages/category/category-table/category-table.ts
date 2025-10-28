@@ -36,6 +36,21 @@ export class CategoryTable implements OnInit {
     //this.categoryList = this.apiService.fetchActiveCategory('');
   }
 
+  getMenuItems(category: any){
+    return [ 
+      {
+        label: 'Edit',
+        icon: 'pi pi-pencil',
+        command: () => this.editCategory(category)
+      },
+      {
+        label: 'Delete',
+        icon: 'pi pi-trash',
+        command: () => this.deleteCategory(category)
+      }
+    ]
+  }
+
   addCategory(){
     try {
       this.openNewCategoryPopup = true;
@@ -148,10 +163,10 @@ export class CategoryTable implements OnInit {
     }
   }
 
-  deleteCategory(categoryId: number, categoryName: string){
+  deleteCategory(category: any){
     this.confirmationService.confirm({
       message: 'Do you want to delete this record?',
-      header: `Delete ${categoryName}`,
+      header: `Delete ${category.categoryName}`,
       icon: 'pi pi-info-circle',
       rejectLabel: 'Cancel',
       rejectButtonProps: {
@@ -166,7 +181,7 @@ export class CategoryTable implements OnInit {
       accept: () => {
         try {
           let data = {
-            categoryId:categoryId
+            categoryId: category.categoryId
           }
           this.apiService.deleteCategory(data).subscribe({
             next: val => {

@@ -38,6 +38,7 @@ import { OrganizationChartModule } from 'primeng/organizationchart';
 import { ChartModule } from 'primeng/chart';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { RippleModule } from 'primeng/ripple';
+import { KeyFilterModule } from 'primeng/keyfilter';
 
 @NgModule({
   declarations: [],
@@ -81,7 +82,8 @@ import { RippleModule } from 'primeng/ripple';
     OrganizationChartModule,
     ChartModule,
     SelectButtonModule,
-    RippleModule
+    RippleModule,
+    KeyFilterModule
   ],
   providers:[
     MessageService,

@@ -7,6 +7,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Observable } from 'rxjs';
 import { Apiservice } from '@/service/apiservice/apiservice';
+import { UserGroups } from '@/models/usergroups/usergroups.enum';
 
 @Component({
   selector: 'app-department-table',
@@ -19,14 +20,11 @@ export class DepartmentTable implements OnInit {
 
   departmentId: any;
 
- /* private departmentService = inject(Department);
-  private router = inject(Router);
-  private confirmationService = inject(ConfirmationService);
-  private messageService = inject(MessageService); */
-
   departmentList: any;
 
   departmentForm :any;
+  departmentHeadList: any;
+
   actionName:any = "Save";
 
     constructor(private messageService: MessageService, private apiService: Apiservice, private fb: FormBuilder,private route:Router,private confirmationService:ConfirmationService) { }
@@ -35,34 +33,75 @@ export class DepartmentTable implements OnInit {
   ngOnInit(): void {
     this.departmentForm = this.fb.group({
     departmentId: [],
-    departmentName: ['',Validators.required]
+    departmentName: ['',Validators.required],
+    departmentHead: this.fb.group({
+      userId: [0]
+    })
   })
-    this.fetchViewDepartment('');
+    this.fetchActiveDepartments();
+  }
+
+  getMenuItems(category: any){
+    return [
+      {
+        label: 'Edit',
+        icon: 'pi pi-pencil',
+        command: () => this.editDepartment(category)
+      },
+      {
+        label: 'Delete',
+        icon: 'pi pi-trash',
+        command: () => this.deleteDepartment(category)
+      }
+    ]
   }
 
   addDepartment(){
     try {
       this.openNewDepartmentPopup = true;
       this.actionName = "Save";
+      this.findUserGroup(UserGroups.DEPARTMENTHEAD);
     } catch (error) {
       console.log(error);
     }
   }
 
-  fetchViewDepartment(departmentId: any){
-    let data = {
-      departmentId:departmentId ? "" : ""
-    }
-    this.apiService.fetchActiveDepartments(data).subscribe({
-      next: val => {
-        console.log(val);
-        this.departmentList = val.data
-        
-      },
-      error: err => {
-        console.log(err);
+  findUserGroup(userGroupId: number){
+    try {
+      const data = {
+        userGroupId: userGroupId
       }
-    })
+      console.log(data);
+      this.apiService.findUserGroup(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.departmentHeadList = val?.data;
+          console.log("departmentHeadList", this.departmentHeadList);
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  fetchActiveDepartments(){
+    try { 
+      this.apiService.fetchActiveDepartments('').subscribe({
+        next: val => {
+          console.log(val);
+          this.departmentList = val.data
+          
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   editDepartment(department: any){
@@ -70,12 +109,16 @@ export class DepartmentTable implements OnInit {
       this.departmentId = department;
       this.openNewDepartmentPopup = true;
       this.actionName = "Update";
+      this.findUserGroup(UserGroups.DEPARTMENTHEAD);
 
       if (this.departmentId) {     
         this.departmentForm.patchValue({
-          departmentId:this.departmentId.departmentId,
-          departmentName:this.departmentId.departmentName});
-         
+          departmentId: department.departmentId,
+          departmentName: department.departmentName,
+          departmentHead: {
+            userId: department?.departmentHead?.userId
+          }
+        });
       }
     } catch (error) {
       console.log(error);
@@ -86,9 +129,11 @@ export class DepartmentTable implements OnInit {
     console.log(this.departmentForm.value);
     if (!this.departmentId) {
       if(this.departmentForm.valid){
-        var name = this.departmentForm.get('departmentName').value
-      let data = {
-        departmentName:name
+      const data = {
+        departmentName: this.departmentForm.get('departmentName').value,
+        departmentHead: {
+          userId: this.departmentForm.get('departmentHead.userId').value
+        }
       }
       this.apiService.createNewDepartment(data).subscribe({
         next: val => {
@@ -100,19 +145,14 @@ export class DepartmentTable implements OnInit {
         })
           this.openNewDepartmentPopup = false;
           this.departmentForm.reset();
-          this.fetchViewDepartment('');
-          /* this.route.navigate(['/home']).then(success => {
-            if (success) {
-              this.route.navigate(['/home/departments']);
-            }
-          }) */
+          this.fetchActiveDepartments();
         },
         error: err => {
           console.log(err);
         }
       })
       }else{
- this.messageService.add({
+        this.messageService.add({
           severity: 'error',
           summary: 'Error',
           detail: 'Please Enter Department'
@@ -121,36 +161,36 @@ export class DepartmentTable implements OnInit {
       
     } else {
       if(this.departmentForm.valid){
-         this.departmentForm.patchValue({
-        departmentId: this.departmentId.departmentId
-      });
-      console.log(this.departmentForm.value);
+        this.departmentForm.patchValue({
+          departmentId: this.departmentId.departmentId
+        });
+        console.log(this.departmentForm.value);
 
-       let data = {
-            "departmentId": this.departmentForm.get('departmentId').value,
-            "departmentName":this.departmentForm.get('departmentName').value
-          }
-          this.apiService.updateDepartment(data)
-          .subscribe({
-            next:(res)=>{
+        const data = this.departmentForm.value;
+        console.log(data);
+        this.apiService.updateDepartment(data)
+        .subscribe({
+          next:(res)=>{
+            console.log(res);
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: 'Department Updated Successfully'
+            })
+            this.openNewDepartmentPopup = false;
+            this.departmentForm.reset();
+            this.fetchActiveDepartments();
+          },error:(error)=>{
+            console.log(error);
               this.messageService.add({
-          severity: 'success',
-          summary: 'Success',
-          detail: 'Department Updated Successfully'
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Failed To Update Please Try Again'
+            })
+          }
         })
-          this.openNewDepartmentPopup = false;
-          this.departmentForm.reset();
-          this.fetchViewDepartment('');
-            },error:(error)=>{
-               this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'Failed To Update Please Try Again'
-        })
-            }
-          })
       }else{
- this.messageService.add({
+        this.messageService.add({
           severity: 'error',
           summary: 'Error',
           detail: 'Please Enter Department'
@@ -165,11 +205,10 @@ export class DepartmentTable implements OnInit {
     this.departmentForm.reset();
   }
 
-  deleteDepartment(event: Event, departmentId: number, departmentName: string){
+  deleteDepartment(department: any){
     this.confirmationService.confirm({
-      target: event.target as EventTarget,
       message: 'Do you want to delete this record?',
-      header: `Delete ${departmentName}`,
+      header: `Delete ${department.departmentName}`,
       icon: 'pi pi-info-circle',
       rejectLabel: 'Cancel',
       rejectButtonProps: {
@@ -183,19 +222,12 @@ export class DepartmentTable implements OnInit {
       },
       accept: () =>{
         let data = {
-          departmentId:departmentId
+          departmentId:department.departmentId
         }
         this.apiService.deleteDepartment(data).subscribe({
           next: val => {
             console.log(val);
-            this.fetchViewDepartment('');
-            /* setTimeout(() => {
-              this.route.navigate(['/home']).then(success => {
-                if (success) {
-                  this.route.navigate(['/home/departments']);
-                }
-              })
-            }, 1000); */
+            this.fetchActiveDepartments();
           },
           error: err => {
             console.log(err);

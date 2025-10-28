@@ -8,6 +8,7 @@
             <tr>
                 <th>SI No</th>
                 <th>Department Name</th>
+                <th>Department Head</th>
                 <th>Actions</th>
             </tr>
         </ng-template>
@@ -15,9 +16,10 @@
             <tr>
                 <td>{{ i + 1 }}</td>
                 <td>{{ department.departmentName }}</td>
-                <td class="flex justify-start gap-3">
-                    <p-button icon="pi pi-pencil" [rounded]="true" [outlined]="true" (click)="editDepartment(department)" />
-                    <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" (click)="deleteDepartment($event, department.departmentId, department.departmentName)" />
+                <td>{{ department.departmentHead.userName }}</td>
+                <td>
+                    <p-menu #menu [model]="getMenuItems(department)" [popup]="true" appendTo="body" />
+                    <p-button (onClick)="menu.toggle($event)" icon="pi pi-ellipsis-v" [rounded]="true" variant="text" />
                 </td>
             </tr>
         </ng-template>
@@ -25,12 +27,18 @@
 </div>
 
 <p-dialog [header]="departmentId ? 'Edit Department' : 'Add New Department'" [modal]="true"
-    [(visible)]="openNewDepartmentPopup" [style]="{width: '30rem'}" (onHide)="onDialogClose()">
+    [(visible)]="openNewDepartmentPopup" [style]="{width: '50rem'}" (onHide)="onDialogClose()">
     <form [formGroup]="departmentForm" (ngSubmit)="onSubmit()">
-        <div class="grid grid-cols-1 gap-1">
+        <div class="grid grid-cols-2 gap-1">
             <div class="col-span-1 grid gap-1">
                 <label for="department-name">Department Name</label>
                 <input type="text" pInputText formControlName="departmentName" id="department-name" />
+            </div>
+            <div class="col-span-1 grid gap-1" formGroupName="departmentHead">
+                <label for="department-head">Department Head</label>
+                <p-select [options]="departmentHeadList" formControlName="userId" id="department-head" 
+                    optionLabel="userName" optionValue="userId" [filter]="true" filterBy="userName" 
+                    placeholder="Select Department Head" [showClear]="true" appendTo="body" />
             </div>
         </div>
         <div class="flex justify-start mt-4 w-full">

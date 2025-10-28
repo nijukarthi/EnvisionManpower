@@ -57,6 +57,7 @@ export const appRoutes: Routes = [
             { path: 'interviewManagement', component: InterviewManagement, canActivate: [authGuard]},
             { path: 'consultancies', component: ConsultancyTable, canActivate: [authGuard] },
             { path: 'consultancies/new', component: ConsultancyForm, canActivate: [authGuard] },
+            { path: 'consultancies/:id', component: ConsultancyForm, canActivate: [authGuard] },
             { path: 'departments', component: DepartmentTable, canActivate: [authGuard] },
             { path: 'spn', component: SpnTable, canActivate: [authGuard] },
             { path: 'categories', component: CategoryTable, canActivate: [authGuard] },

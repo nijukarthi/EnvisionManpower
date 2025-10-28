@@ -93,10 +93,11 @@
                                 <input pInputText type="number" min="1" formControlName="quantity" />
                             </td>
                             <td>
-                                <p-datepicker formControlName="plannedReleaseDate" placeholder="Select Date" appendTo="body" />
+                                <p-datepicker formControlName="plannedDeploymentDate" [minDate]="minDate" 
+                                    placeholder="Select Date" appendTo="body" (onSelect)="selectedDeploymentDate($event)" />
                             </td>
                             <td>
-                                <p-datepicker formControlName="plannedDeploymentDate" placeholder="Select Date" appendTo="body" />
+                                <p-datepicker formControlName="plannedReleaseDate" [minDate]="releaseMinDate" placeholder="Select Date" appendTo="body" />
                             </td>
                             @if (demandDetails.length > 1) {
                                 <td>

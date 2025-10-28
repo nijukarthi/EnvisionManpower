@@ -49,16 +49,12 @@
                   (onChange)="selectedUserGroup($event.value)" placeholder="Select User Group" [showClear]="true" appendTo="body" />
             </div>
             @if (showDepartments) {
-                <div>
-                    <!-- @for (item of userDepartments.controls; track $index; let i = $index) { -->
-                        <div class="grid col-span-1 gap-1">
-                            <label for="department">Department</label>
-                            <p-multiselect [options]="departmentList" [formControl]="departmentsControl" id="department" 
-                               optionLabel="departmentName" optionValue="departmentId" display="chip" 
-                               [filter]="true" [maxSelectedLabels]="3" filterBy="departmentName" [showClear]="true" 
-                               (onChange)="selectDepartments($event.value)" placeholder="Select Departments" appendTo="body" />
-                        </div>
-                    <!-- } -->
+                <div class="grid col-span-1 gap-1">
+                    <label for="department">Department</label>
+                    <p-multiselect [options]="departmentList" [formControl]="departmentsControl" id="department" 
+                       optionLabel="departmentName" optionValue="departmentId" display="chip" 
+                       [filter]="true" [maxSelectedLabels]="3" filterBy="departmentName" [showClear]="true" 
+                       (onChange)="selectDepartments($event.value)" placeholder="Select Departments" appendTo="body" />
                 </div>
             }
         </div>

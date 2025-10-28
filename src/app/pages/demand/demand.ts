@@ -24,6 +24,9 @@ export class Demand implements OnInit {
   departmentHeadList: any;
   spnInfoList: any;
 
+  minDate: Date | undefined;
+  releaseMinDate: Date | undefined;
+
   loading = false;
 
   private fb = inject(FormBuilder);
@@ -67,8 +70,8 @@ export class Demand implements OnInit {
       spnDescription: ['', Validators.required],
       experience: [{ value: '', disabled: true }, Validators.required],
       quantity: [null, [Validators.required, Validators.min(1)]],
-      plannedReleaseDate: ['', Validators.required],
       plannedDeploymentDate: ['', Validators.required],
+      plannedReleaseDate: ['', Validators.required]
     });
   }
 
@@ -80,6 +83,9 @@ export class Demand implements OnInit {
     this.findUserGroup(UserGroups.SITEINCHARGE, 'siteIncharge');
     this.findUserGroup(UserGroups.DEPARTMENTHEAD, 'departmentHead');
     this.fetchSpnInfo();
+
+    const today = new Date();
+    this.minDate = new Date(today.setDate(today.getDate() + 30));
   }
 
   get demandDetails(): FormArray {
@@ -290,6 +296,14 @@ export class Demand implements OnInit {
       spn: event,
       experience: event
     })
+  }
+
+  selectedDeploymentDate(deploymentDate: any){
+    console.log(deploymentDate);
+
+    const releaseStart = new Date(deploymentDate);
+    releaseStart.setDate(releaseStart.getDate() + 7);
+    this.releaseMinDate = releaseStart;
   }
 
   onSubmit(): void {
