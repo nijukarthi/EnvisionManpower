@@ -16,7 +16,7 @@
             <tr>
                 <td>{{ i + 1 }}</td>
                 <td>{{ department.departmentName }}</td>
-                <td>{{ department.departmentHead.userName }}</td>
+                <td>{{ department?.departmentHead?.userName }}</td>
                 <td>
                     <p-menu #menu [model]="getMenuItems(department)" [popup]="true" appendTo="body" />
                     <p-button (onClick)="menu.toggle($event)" icon="pi pi-ellipsis-v" [rounded]="true" variant="text" />

@@ -224,6 +224,10 @@ export class Apiservice {
     return this.postMethod('user/consultancy/view', params);
   }
 
+  updateConsultancy(params: any): Observable<any>{
+    return this.postMethod('user/consultancy/update', params);
+  }
+
   deleteConsultancy(params: any): Observable<any>{
     return this.postMethod('user/consultancy/remove', params);
   }
