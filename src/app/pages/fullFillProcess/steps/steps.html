@@ -1,0 +1,194 @@
+<div class="card">
+    <h5>Full Fill Process Steps</h5>
+    <p-stepper [value]="1">
+        <p-step-list>
+            <p-step [value]="1">Step 1</p-step>
+            <p-step [value]="2">Step 2</p-step>
+            <p-step [value]="3">Step 3</p-step>
+            <p-step [value]="4">Step 4</p-step>
+            <p-step [value]="5">Step 5</p-step>
+            <p-step [value]="6">Step 6</p-step>
+            <p-step [value]="7">Step 7</p-step>
+        </p-step-list>
+        <p-step-panels>
+            <p-step-panel [value]="1">
+                <ng-template #content>
+                    <form>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div class="grid col-span-1 gap-1">
+                                <label for="consultancy-name">Consultancy</label>
+                                <p-multiselect [options]="consultancyList" optionLabel="consultancyName" optionValue="userId" 
+                                    id="consultancy-name" [filter]="true" filterBy="consultancyName" display="chip" 
+                                    [maxSelectedLabels]="3" [showClear]="true" placeholder="Select Consultancy" appendTo="body" />
+                            </div>
+                            <div class="grid col-span-1 gap-1">
+                                <label for="hr-name">HR Name</label>
+                                <p-select id="hr-name" [filter]="true" 
+                                   [showClear]="true" appendTo="body" />
+                            </div>
+                            <div class="grid col-span-1 gap-1">
+                                <label for="interview-date">Schedule Interview Date</label>
+                                <p-datepicker placeholder="Select Date" [iconDisplay]="'input'" [showIcon]="true" 
+                                    inputId="interview-date" appendTo="body" />
+                            </div>
+                            <div class="grid col-span-1 gap-1">
+                                <label for="templatedisplay">Schedule Interview Time</label>
+                                <p-datepicker placeholder="Select Time" [iconDisplay]="'input'" [showIcon]="true"
+                                    [timeOnly]="true" inputId="templatedisplay" appendTo="body">
+                                    <ng-template #inputicon let-clickCallBack="clickCallBack">
+                                        <i class="pi pi-clock" (click)="clickCallBack($event)"></i>
+                                    </ng-template>
+                                </p-datepicker>
+                            </div>
+                            <div class="grid col-span-1 gap-1">
+                                <label for="interviewer">Interviewer</label>
+                                <p-select id="interviewer" [filter]="true" [showClear]="true" appendTo="body" />
+                            </div>
+                        </div>
+                        <div class="flex justify-end mt-4">
+                            <button pButton pRipple type="submit">
+                                <span pButtonLabel>Submit</span>
+                            </button>
+                        </div>
+                    </form>
+                </ng-template>
+            </p-step-panel>
+            <p-step-panel [value]="2">
+                <ng-template #content>
+                    <form>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div class="grid col-span-1 gap-1">
+                                <label for="candidate-name">Candidate Name</label>
+                                <p-multiselect id="candidate-name" [filter]="true" display="chip" [maxSelectedLabels]="3" 
+                                    [showClear]="true" appendTo="body" />
+                            </div>
+                            <div class="grid col-span-1 gap-1">
+                                <label for="emp-code">Temporary Employee Code</label>
+                                <p-multiselect id="emp-code" [filter]="true" display="chip" [maxSelectedLabels]="3" [showClear]="true"
+                                    appendTo="body" />
+                            </div>
+                            <div class="grid col-span-1 gap-1">
+                                <label for="designation">Current Designation</label>
+                                <p-select id="designation" [filter]="true" [showClear]="true"
+                                    appendTo="body" />
+                            </div>
+                        </div>
+                        <div class="flex justify-end mt-4">
+                            <button pButton pRipple type="submit">
+                                <span pButtonLabel>Submit</span>
+                            </button>
+                        </div>
+                    </form>
+                </ng-template>
+            </p-step-panel>
+            <p-step-panel [value]="3">
+                <ng-template #content>
+                    <form>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div class="grid col-span-1 gap-1">
+                                <label for="accept-reject">Accept/Reject</label>
+                                <p-select id="accept-reject" placeholder="Select Status" appendTo="body" />
+                            </div>
+                            <div class="grid col-start-1 col-span-1 gap-1">
+                                <label for="feedback">Feedback</label>
+                                <textarea rows="3" pTextarea id="feedback"></textarea>
+                            </div>
+                        </div>
+                        <div class="flex justify-end mt-4">
+                            <button pButton pRipple type="submit">
+                                <span pButtonLabel>Submit</span>
+                            </button>
+                        </div>
+                    </form>
+                </ng-template>
+            </p-step-panel>
+            <p-step-panel [value]="4">
+                <ng-template #content>
+                    <form>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div class="grid col-span-1 gap-1">
+                                <label for="final-interview-date">Final Interview Schedule Date</label>
+                                <p-datepicker [iconDisplay]="'input'" [showIcon]="true" 
+                                    inputId="final-interview-date" placeholder="Select Date" appendTo="body" />
+                            </div>
+                            <div class="grid col-span-1 gap-1">
+                                <label for="final-interview-time">Final Interview Schedule Time</label>
+                                <p-datepicker inputId="final-interview-time" [showIcon]="true" [iconDisplay]="'input'" 
+                                    [timeOnly]="true" placeholder="Select Time" appendTo="body">
+                                    <ng-template #inputicon let-clickCallBack="clickCallBack">
+                                        <i class="pi pi-clock" (click)="clickCallBack($event)"></i>
+                                    </ng-template>
+                                </p-datepicker>
+                            </div>
+                        </div>
+                        <div class="flex justify-end mt-4">
+                            <button pButton pRipple type="submit">
+                                <span pButtonLabel>Submit</span>
+                            </button>
+                        </div>
+                    </form>
+                </ng-template>
+            </p-step-panel>
+            <p-step-panel [value]="5">
+                <ng-template #content>
+                    <form>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div class="grid col-span-1 gap-1">
+                                <label for="accept-reject">Accept/Reject</label>
+                                <p-select id="accept-reject" placeholder="Select Status" appendTo="body" />
+                            </div>
+                            <div class="grid col-start-1 col-span-1 gap-1">
+                                <label for="feedback">Feedback</label>
+                                <textarea rows="3" pTextarea id="feedback"></textarea>
+                            </div>
+                        </div>
+                        <div class="flex justify-end mt-4">
+                            <button pButton pRipple type="submit">
+                                <span pButtonLabel>Submit</span>
+                            </button>
+                        </div>
+                    </form>
+                </ng-template>
+            </p-step-panel>
+            <p-step-panel [value]="6">
+                <ng-template #content>
+                    <form>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div class="grid col-span-1 gap-1">
+                                <label for="status">Status By Resource Manager</label>
+                                <p-select id="status" placeholder="Select Status" appendTo="body" />
+                            </div>
+                        </div>
+                        <div class="flex justify-end mt-4">
+                            <button pButton pRipple type="submit">
+                                <span pButtonLabel>Submit</span>
+                            </button>
+                        </div>
+                    </form>
+                </ng-template>
+            </p-step-panel>
+            <p-step-panel [value]="7">
+                <ng-template #content>
+                    <form>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div class="grid col-span-1 gap-1">
+                                <label for="candidate-status">Candidate Acceptance (Yes/No)</label>
+                                <p-select id="candidate-status" placeholder="Select Status" appendTo="body" />
+                            </div>
+                            <div class="grid col-span-1 gap-1">
+                                <label for="joining-date">Joining Date If Yes</label>
+                                <p-datepicker [iconDisplay]="'input'" [showIcon]="true" inputId="joining-date"
+                                    placeholder="Select Joining Date" appendTo="body" />
+                            </div>
+                        </div>
+                        <div class="flex justify-end mt-4">
+                            <button pButton pRipple type="submit">
+                                <span pButtonLabel>Submit</span>
+                            </button>
+                        </div>
+                    </form>
+                </ng-template>
+            </p-step-panel>
+        </p-step-panels>
+    </p-stepper>
+</div>

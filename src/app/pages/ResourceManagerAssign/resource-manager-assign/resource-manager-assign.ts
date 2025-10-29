@@ -161,8 +161,8 @@ export class ResourceManagerAssign implements OnInit {
 
   ngOnInit(): void {
     this.demandForm = this.fb.group({
-      requisitionId: [{ value: 'MPT001', disabled: true }],
-      pCode: [{ value: 'PCODE 1', disabled: true }, Validators.required],
+      requesitionCode: [{ value: '', disabled: true }],
+      projectId: [{ value: '', disabled: true }, Validators.required],
       state: [{ value: 'Karnataka', disabled: true }, Validators.required],
       plannedDate: [{ value: '10-10-2025', disabled: true },],
       department: [{ value: 'Projects', disabled: true },],
@@ -265,7 +265,25 @@ export class ResourceManagerAssign implements OnInit {
     console.log(this.demandForm.value);
   }
 
-  showDetailPopup(val:any){
-    this.viewDetail = true;
+  showDetailPopup(requesitionId: number){
+    try {
+      this.viewDetail = true;
+      
+      const data = {
+        requesitionId: requesitionId
+      }
+
+      this.apiService.viewRequisition(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.demandForm.patchValue(val.data);
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

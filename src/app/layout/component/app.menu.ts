@@ -86,21 +86,32 @@ export class AppMenu {
                         icon: 'pi pi-address-book',
                         routerLink: ['/home/fullFill']
                     },
-                     {
-                        label: 'Consultancy',
-                        icon: 'pi pi-credit-card',
-                        routerLink: ['/home/consultancyPage']
-                    },
                     {
-                        label: 'Guest User',
-                        icon: 'pi pi-eraser',
-                        routerLink: ['/home/guestUserPage']
+                        label: 'Full Fill Process',
+                        icon: 'pi pi-history',
+                        items: [
+                            {
+                                label: 'Resource Manager',
+                                icon: 'pi pi-address-book',
+                                routerLink: ['/home/fullfillprocess/resource-manager']
+                            },
+                            {
+                               label: 'Consultancy',
+                               icon: 'pi pi-credit-card',
+                               routerLink: ['/home/consultancyPage']
+                           },
+                           {
+                               label: 'Guest User',
+                               icon: 'pi pi-eraser',
+                               routerLink: ['/home/guestUserPage']
+                           },
+                        ]
                     },
-                    {
-                        label: 'Interview Management',
-                        icon: 'pi pi-eject',
-                        routerLink: ['/home/interviewManagement']
-                    },
+                    // {
+                    //     label: 'Interview Management',
+                    //     icon: 'pi pi-eject',
+                    //     routerLink: ['/home/interviewManagement']
+                    // },
                     {
                         label: 'Resource Pool',
                         icon: 'pi pi-server', 
