@@ -29,6 +29,8 @@ import { NewCandidateCostPlus } from '@/pages/new-candidate-cost-plus/new-candid
 import { ConsultancyForm } from '@/pages/consultancy/consultancy-form/consultancy-form';
 import { ConsultancyPage } from '@/pages/consultancy-page/consultancy-page';
 import { GuestUserPage } from '@/pages/guest-user-page/guest-user-page';
+import { Steps } from '@/pages/fullFillProcess/steps/steps';
+import { ResourceManager } from '@/pages/fullFillProcess/resource-manager/resource-manager';
 
 export const appRoutes: Routes = [
     {
@@ -72,6 +74,8 @@ export const appRoutes: Routes = [
             { path: 'addEmployee', component: AddEmployee, canActivate: [authGuard] },
             { path: 'consultancyPage', component: ConsultancyPage, canActivate: [authGuard] },
             { path: 'guestUserPage', component: GuestUserPage, canActivate: [authGuard] },
+            { path: 'fullfillprocess/resource-manager', component: ResourceManager, canActivate: [authGuard] },
+            { path: 'fullfillprocess/steps', component: Steps, canActivate: [authGuard] },
             { path: 'existingEmployee', component: ExistingEmployee, canActivate: [authGuard] },
             { path: 'candidate/new/fixed-cost', component: NewCandidateFixedCost, canActivate: [authGuard] },
             { path: 'candidate/new/cost-plus', component: NewCandidateCostPlus, canActivate: [authGuard] },

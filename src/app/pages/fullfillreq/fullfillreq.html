@@ -23,8 +23,8 @@
                         <th>Planned deployment date</th>
                         <th>Planned release date</th>
                         <th>Role</th>
-                        <th>Consultancy Name</th>
-                        <th>Name of HR</th>
+                        <!-- <th>Consultancy Name</th>
+                        <th>Name of HR</th> -->
                     </tr>
                     <tr>
                         <td></td>
@@ -57,14 +57,14 @@
                                 class="w-full md:w-56" [disabled]="loggedUserGroupId !== UserGroups.RESOURCEMANAGER && loggedUserGroupId !== UserGroups.ADMIN"
                                 (onChange)="assignEnvisionRoles(demand.demandId, $event.value)" />
                         </td>
-                        <td>
+                        <!-- <td>
                             <p-select [options]="consultancyList" appendTo="body" optionLabel="label" optionValue="label"
                                 placeholder="Select Consultancy" [filter]="true" filterBy="label" class="w-full md:w-56" />
                         </td>
                         <td>
                             <p-select [options]="manpowerList" appendTo="body" optionLabel="name" optionValue="name"
                                 placeholder="Select Manpower" [filter]="true" filterBy="name" class="w-full md:w-56" />
-                        </td>
+                        </td> -->
                         
                     </tr>
                 </ng-template>

@@ -39,6 +39,7 @@ import { ChartModule } from 'primeng/chart';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { RippleModule } from 'primeng/ripple';
 import { KeyFilterModule } from 'primeng/keyfilter';
+import { StepperModule } from 'primeng/stepper';
 
 @NgModule({
   declarations: [],
@@ -83,7 +84,8 @@ import { KeyFilterModule } from 'primeng/keyfilter';
     ChartModule,
     SelectButtonModule,
     RippleModule,
-    KeyFilterModule
+    KeyFilterModule,
+    StepperModule
   ],
   providers:[
     MessageService,

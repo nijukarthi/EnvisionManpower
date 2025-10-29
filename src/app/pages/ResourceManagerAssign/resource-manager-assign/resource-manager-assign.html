@@ -1,5 +1,6 @@
 <p-fluid>
-    <div class=" card">
+    <div class="card">
+        <h5>Resource Manager Assign</h5>
         <p-table [value]="resourceManagerDemandList" #dt [(selection)]="selectedApprovalList" dataKey="id"
             [tableStyle]="{ 'min-width': '120rem' }" [paginator]="true" [rowsPerPageOptions]="[10, 20, 30]"
             stripedRows [rows]="10" [rowHover]="true" [showGridlines]="true" [showCurrentPageReport]="true"
@@ -48,7 +49,7 @@
                         <p-tableCheckbox [value]="demand" />
                     </td>
                     <td><p-button icon="pi pi-eye" [rounded]="true" class="w-full" severity="warn"
-                            (click)="showDetailPopup(demand)" /></td>
+                            (click)="showDetailPopup(demand.requesitionId)" /></td>
                     <td>{{ rowIndex + 1 }}</td>
                     <td>{{ demand.demandCode }}</td>
                     <td>{{ demand.spn.spnCode }}</td>
@@ -92,12 +93,12 @@
             <form [formGroup]="demandForm">
                 <div class="card grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <div class="flex flex-wrap gap-2 w-full">
-                        <label for="firstname2">Requision ID</label>
-                        <input pInputText id="firstname2" formControlName="requisitionId" type="text" />
+                        <label for="firstname2">Requision Code</label>
+                        <input pInputText id="firstname2" formControlName="requesitionCode" type="text" />
                     </div>
                     <div class="flex flex-wrap gap-2 w-full">
-                        <label for="lastname2">P-code</label>
-                        <p-select [options]="PCode" formControlName="pCode" optionLabel="name" optionValue="name"
+                        <label for="lastname2">Project Code</label>
+                        <p-select [options]="PCode" formControlName="projectId" optionLabel="name" optionValue="name"
                             placeholder="Select PCode" [filter]="true" filterBy="name" class="w-full md:w-56" />
                     </div>
                     <div class="flex flex-wrap gap-2 w-full">

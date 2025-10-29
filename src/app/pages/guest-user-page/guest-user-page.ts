@@ -191,17 +191,15 @@ selectedPCode:any = "";
           console.log(val);
          // this.demandFullfillList = val.data.data;
           this.demandFullfillList = [
-        {
-            "requesitionId": 1,
+          {
+            "requesitionCode": 'ABC',
+            requestedBy: 'Admin',
             "demandId": 1,
-            "stepId": 4,
+            "stepId": 3,
             "demandCode": "R2710001-1",
+            pCode: 'P8008',
+            clusterCode: 'KA',
             "demandStatus": 102,
-            "resourceManager": {
-                "userId": 9,
-                "userName": "Aravind",
-                "email": "aravind@env.co.in"
-            },
             "spn": {
                 "spnId": 5,
                 "spnCode": "SPN328345",
@@ -211,43 +209,16 @@ selectedPCode:any = "";
             "quantity": 5,
             "plannedDeploymentDate": "2025-11-21",
             "plannedReleaseDate": "2025-11-06",
-            "stateHeadApproval": {
-                "approvalStatus": 200,
-                "approvedBy": {
-                    "userId": 1,
-                    "userName": "Admin",
-                    "email": "ari.g@cloute.co.in"
-                },
-                "approvedOn": "2025-10-27T16:39:32.973396"
-            },
-            "departmentHeadApproval": {
-                "approvalStatus": 200,
-                "approvedBy": {
-                    "userId": 1,
-                    "userName": "Admin",
-                    "email": "ari.g@cloute.co.in"
-                },
-                "approvedOn": null
-            },
-            "envisionRole": {
-                "id": 1,
-                "roleName": "Test 1"
-            },
-            "status": true,
-            "modifiedBy": null,
-            "modifiedOn": null
-        },
+          },
          {
-            "requesitionId": 2,
+            "requesitionCode": 'MNO',
+            requestedBy: 'Admin',
             "demandId": 2,
-            "stepId": 7,
+            "stepId": 5,
             "demandCode": "R2710001-2",
+            pCode: 'P8009',
+            clusterCode: 'TN',
             "demandStatus": 102,
-            "resourceManager": {
-                "userId": 9,
-                "userName": "Aravind",
-                "email": "aravind@env.co.in"
-            },
             "spn": {
                 "spnId": 5,
                 "spnCode": "SPN328346",
@@ -257,43 +228,16 @@ selectedPCode:any = "";
             "quantity": 5,
             "plannedDeploymentDate": "2025-11-21",
             "plannedReleaseDate": "2025-11-06",
-            "stateHeadApproval": {
-                "approvalStatus": 200,
-                "approvedBy": {
-                    "userId": 1,
-                    "userName": "Admin",
-                    "email": "ari.g@cloute.co.in"
-                },
-                "approvedOn": "2025-10-27T16:39:32.973396"
-            },
-            "departmentHeadApproval": {
-                "approvalStatus": 200,
-                "approvedBy": {
-                    "userId": 1,
-                    "userName": "Admin",
-                    "email": "ari.g@cloute.co.in"
-                },
-                "approvedOn": null
-            },
-            "envisionRole": {
-                "id": 1,
-                "roleName": "Test 2"
-            },
-            "status": true,
-            "modifiedBy": null,
-            "modifiedOn": null
-        },
+          },
           {
-            "requesitionId": 3,
+            "requesitionCode": 'KELL',
+            requestedBy: 'Admin',
             "demandId": 2,
-            "stepId": 4,
+            "stepId": 3,
             "demandCode": "R2710001-3",
+            pCode: 'P8003',
+            clusterCode: 'KA',
             "demandStatus": 102,
-            "resourceManager": {
-                "userId": 9,
-                "userName": "Aravind",
-                "email": "aravind@env.co.in"
-            },
             "spn": {
                 "spnId": 5,
                 "spnCode": "SPN328343",
@@ -303,32 +247,7 @@ selectedPCode:any = "";
             "quantity": 5,
             "plannedDeploymentDate": "2025-11-21",
             "plannedReleaseDate": "2025-11-06",
-            "stateHeadApproval": {
-                "approvalStatus": 200,
-                "approvedBy": {
-                    "userId": 1,
-                    "userName": "Admin",
-                    "email": "ari.g@cloute.co.in"
-                },
-                "approvedOn": "2025-10-27T16:39:32.973396"
-            },
-            "departmentHeadApproval": {
-                "approvalStatus": 200,
-                "approvedBy": {
-                    "userId": 1,
-                    "userName": "Admin",
-                    "email": "ari.g@cloute.co.in"
-                },
-                "approvedOn": null
-            },
-            "envisionRole": {
-                "id": 1,
-                "roleName": "Test 3"
-            },
-            "status": true,
-            "modifiedBy": null,
-            "modifiedOn": null
-        }
+          }
     ]
         },
         error: err => {
