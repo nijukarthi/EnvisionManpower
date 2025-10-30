@@ -1,18 +1,99 @@
 <div class="card">
     <h5>Full Fill Process Steps</h5>
-    <p-stepper [value]="1">
+    <p-stepper [(value)]="activeStep">
         <p-step-list>
-            <p-step [value]="1">Step 1</p-step>
-            <p-step [value]="2">Step 2</p-step>
-            <p-step [value]="3">Step 3</p-step>
-            <p-step [value]="4">Step 4</p-step>
-            <p-step [value]="5">Step 5</p-step>
-            <p-step [value]="6">Step 6</p-step>
-            <p-step [value]="7">Step 7</p-step>
+            <p-step [value]="1">
+                <ng-template #content let-activateCallback="activateCallback" let-value="value">
+                    <button class="cursor-pointer bg-transparent border-0 inline-flex items-center gap-2" (click)="activateCallback()">
+                        <span class="rounded-full border-2 border-gray-300 w-8 h-8 inline-flex items-center justify-center" 
+                            [ngClass]="{
+                            'bg-primary text-primary-contrast border-primary': value === activeStep,
+                            }">
+                            {{ value }}
+                        </span>
+                        <span [ngClass]="{ 'font-semibold text-primary': value === activeStep }">
+                            Step 1
+                        </span>
+                    </button>
+                </ng-template>
+            </p-step>
+            <p-step [value]="2">
+                <ng-template #content let-activateCallback="activateCallback" let-value="value">
+                    <button class="cursor-pointer bg-transparent border-0 inline-flex items-center gap-2" (click)="activateCallback()">
+                        <span class="rounded-full border-2 border-gray-300 w-8 h-8 inline-flex items-center justify-center" 
+                            [ngClass]="{
+                                'bg-primary text-primary-contrast border-primary': value === activeStep
+                                }">
+                            {{ value }}
+                        </span>
+                        <span [ngClass]="{ 'font-semibold text-primary': value === activeStep }">
+                            Step 2
+                        </span>
+                    </button>
+                </ng-template>
+            </p-step>
+            <p-step [value]="3">
+                <ng-template #content let-activateCallback="activateCallback" let-value="value">
+                    <button class="cursor-pointer bg-transparent flex items-center gap-2" (click)="activateCallback()">
+                        <span class="rounded-full w-8 h-8 border-2 border-gray-300 flex items-center justify-center"
+                            [ngClass]="{
+                                'bg-primary text-primary-contrast border-primary': value === activeStep
+                            }">
+                            {{ value }}
+                        </span>
+                        <span [ngClass]="{'font-semibold text-primary': value === activeStep}">Step 3</span>
+                    </button>
+                </ng-template>
+            </p-step>
+            <p-step [value]="4">
+                <ng-template #content let-activateCallback="activateCallback" let-value="value">
+                    <button class="cursor-pointer flex items-center gap-2" (click)="activateCallback()">
+                        <span class="rounded-full w-8 h-8 border-2 border-gray-300 flex items-center justify-center"
+                            [ngClass]="{
+                                'bg-primary text-primary-contrast border-primary': value === activeStep
+                            }">{{ value }}</span>
+                        <span [ngClass]="{'font-semibold text-primary': value === activeStep}">Step 4</span>
+                    </button>
+                </ng-template>
+            </p-step>
+            <p-step [value]="5">
+                <ng-template #content let-activateCallback="activateCallback" let-value="value">
+                    <button class="cursor-pointer flex items-center gap-2" (click)="activateCallback()">
+                        <span class="border-2 border-gray-300 rounded-full w-8 h-8 flex items-center justify-center"
+                            [ngClass]="{
+                                'bg-primary text-primary-contrast border-primary': value === activeStep
+                            }">{{ value }}</span>
+                        <span [ngClass]="{'font-semibold text-primary': value === activeStep}">Step 5</span>
+                    </button>
+                </ng-template>
+            </p-step>
+            <p-step [value]="6">
+                <ng-template #content let-activateCallback="activateCallback" let-value="value">
+                    <button class="cursor-pointer flex items-center gap-2" (click)="activateCallback()">
+                        <span class="border-2 border-gray-300 rounded-full w-8 h-8 flex items-center justify-center"
+                            [ngClass]="{
+                                'bg-primary text-primary-contrast border-primary': value === activeStep
+                            }">{{ value }}</span>
+                        <span [ngClass]="{'font-semibold text-primary': value === activeStep}">Step 6</span>
+                    </button>
+                </ng-template>
+            </p-step>
+            <p-step [value]="7">
+                <ng-template #content let-activateCallback="activateCallback" let-value="value">
+                    <button class="cursor-pointer flex items-center gap-2" (click)="activateCallback()">
+                        <span class="border-2 border-gray-300 w-8 h-8 rounded-full flex items-center justify-center"
+                            [ngClass]="{
+                                'bg-primary text-primary-contrast border-primary': value === activeStep
+                            }">{{ value }}</span>
+                        <span [ngClass]="{'font-semibold text-primary': value === activeStep }">Step 7</span>
+                    </button>
+                </ng-template>
+            </p-step>
         </p-step-list>
         <p-step-panels>
             <p-step-panel [value]="1">
                 <ng-template #content>
+                    <p class="text-primary text-lg font-semibold">Consultancy Assign</p>
                     <form>
                         <div class="grid grid-cols-2 gap-2">
                             <div class="grid col-span-1 gap-1">
@@ -55,6 +136,7 @@
             </p-step-panel>
             <p-step-panel [value]="2">
                 <ng-template #content>
+                    <p class="text-primary text-lg font-semibold">Candidate Addition</p>
                     <form>
                         <div class="grid grid-cols-2 gap-2">
                             <div class="grid col-span-1 gap-1">
@@ -83,28 +165,60 @@
             </p-step-panel>
             <p-step-panel [value]="3">
                 <ng-template #content>
-                    <form>
-                        <div class="grid grid-cols-2 gap-2">
-                            <div class="grid col-span-1 gap-1">
-                                <label for="accept-reject">Accept/Reject</label>
-                                <p-select id="accept-reject" placeholder="Select Status" appendTo="body" />
-                            </div>
-                            <div class="grid col-start-1 col-span-1 gap-1">
-                                <label for="feedback">Feedback</label>
-                                <textarea rows="3" pTextarea id="feedback"></textarea>
-                            </div>
-                        </div>
-                        <div class="flex justify-end mt-4">
-                            <button pButton pRipple type="submit">
-                                <span pButtonLabel>Submit</span>
-                            </button>
-                        </div>
-                    </form>
+                    <p class="text-primary text-lg font-semibold">First Interview</p>
+
+                    <p-table [value]="candidateList" showGridlines [rowHover]="true">
+                        <ng-template #header>
+                            <tr>
+                                <th>SI No</th>
+                                <th>Assigned Candidates Name</th>
+                                <th>Accept/Reject</th>
+                                <th>Feedback</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template #body let-candidate let-i="rowIndex">
+                            <tr>
+                                <td>{{ i + 1 }}</td>
+                                <td>{{ candidate.candidateName }}</td>
+                                <td>
+                                    <p-select id="accept-reject" placeholder="Select Status" appendTo="body" class="w-full" />
+                                </td>
+                                <td>
+                                    <textarea rows="3" pTextarea id="feedback" class="w-full"></textarea>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+
+                    <div class="flex justify-end mt-4">
+                        <button pButton pRipple type="submit">
+                            <span pButtonLabel>Submit</span>
+                        </button>
+                    </div>
                 </ng-template>
             </p-step-panel>
             <p-step-panel [value]="4">
                 <ng-template #content>
-                    <form>
+                    <p class="text-primary text-lg font-semibold">Interviewer Assign (Final)</p>
+
+                    <p-table [value]="candidateList" showGridlines [rowHover]="true">
+                        <ng-template #header>
+                            <tr>
+                                <th>SI No</th>
+                                <th>Candidates Name</th>
+                                <th>First Interview Feedback</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template #body let-candidate let-i="rowIndex">
+                            <tr>
+                                <td>{{ i + 1 }}</td>
+                                <td>{{ candidate.candidateName }}</td>
+                                <td>{{ candidate.feedback }}</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+
+                    <form class="mt-6">
                         <div class="grid grid-cols-2 gap-2">
                             <div class="grid col-span-1 gap-1">
                                 <label for="final-interview-date">Final Interview Schedule Date</label>
@@ -131,62 +245,109 @@
             </p-step-panel>
             <p-step-panel [value]="5">
                 <ng-template #content>
-                    <form>
-                        <div class="grid grid-cols-2 gap-2">
-                            <div class="grid col-span-1 gap-1">
-                                <label for="accept-reject">Accept/Reject</label>
-                                <p-select id="accept-reject" placeholder="Select Status" appendTo="body" />
-                            </div>
-                            <div class="grid col-start-1 col-span-1 gap-1">
-                                <label for="feedback">Feedback</label>
-                                <textarea rows="3" pTextarea id="feedback"></textarea>
-                            </div>
-                        </div>
-                        <div class="flex justify-end mt-4">
-                            <button pButton pRipple type="submit">
-                                <span pButtonLabel>Submit</span>
-                            </button>
-                        </div>
-                    </form>
+                    <p class="text-primary text-lg font-semibold">Final Interview</p>
+
+                    <p-table [value]="candidateList" showGridlines [rowHover]="true">
+                        <ng-template #header>
+                            <tr>
+                                <th>SI No</th>
+                                <th>Selected Candidates Name</th>
+                                <th>Accept/Reject</th>
+                                <th>Feedback</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template #body let-candidate let-i="rowIndex">
+                            <tr>
+                                <td>{{ i + 1 }}</td>
+                                <td>{{ candidate.candidateName }}</td>
+                                <td>
+                                    <p-select id="accept-reject" placeholder="Select Status" appendTo="body" class="w-full" />
+                                </td>
+                                <td>
+                                    <textarea rows="3" pTextarea id="feedback" class="w-full"></textarea>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+
+                    <div class="flex justify-end mt-4">
+                        <button pButton pRipple type="submit">
+                            <span pButtonLabel>Submit</span>
+                        </button>
+                    </div>
+
                 </ng-template>
             </p-step-panel>
             <p-step-panel [value]="6">
                 <ng-template #content>
-                    <form>
-                        <div class="grid grid-cols-2 gap-2">
-                            <div class="grid col-span-1 gap-1">
-                                <label for="status">Status By Resource Manager</label>
-                                <p-select id="status" placeholder="Select Status" appendTo="body" />
-                            </div>
-                        </div>
-                        <div class="flex justify-end mt-4">
-                            <button pButton pRipple type="submit">
-                                <span pButtonLabel>Submit</span>
-                            </button>
-                        </div>
-                    </form>
+                    <p class="text-primary text-lg font-semibold">Final Approval</p>
+
+                    <p-table [value]="candidateList" showGridlines [rowHover]="true">
+                        <ng-template #header>
+                            <tr>
+                                <th>SI No</th>
+                                <th>Selected Candidates Name</th>
+                                <th>First Interview Feedback</th>
+                                <th>Final Interview Feedback</th>
+                                <th>Status By Resource Manager</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template #body let-candidate let-i="rowIndex">
+                            <tr>
+                                <td>{{ i + 1 }}</td>
+                                <td>{{ candidate.candidateName }}</td>
+                                <td>Better Performance</td>
+                                <td>Better Performance</td>
+                                <td>
+                                    <p-select id="status" placeholder="Select Status" appendTo="body" class="w-full" />
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                    <div class="flex justify-end mt-4">
+                        <button pButton pRipple type="submit">
+                            <span pButtonLabel>Submit</span>
+                        </button>
+                    </div>
                 </ng-template>
             </p-step-panel>
             <p-step-panel [value]="7">
                 <ng-template #content>
-                    <form>
-                        <div class="grid grid-cols-2 gap-2">
-                            <div class="grid col-span-1 gap-1">
-                                <label for="candidate-status">Candidate Acceptance (Yes/No)</label>
-                                <p-select id="candidate-status" placeholder="Select Status" appendTo="body" />
-                            </div>
-                            <div class="grid col-span-1 gap-1">
-                                <label for="joining-date">Joining Date If Yes</label>
-                                <p-datepicker [iconDisplay]="'input'" [showIcon]="true" inputId="joining-date"
-                                    placeholder="Select Joining Date" appendTo="body" />
-                            </div>
-                        </div>
-                        <div class="flex justify-end mt-4">
-                            <button pButton pRipple type="submit">
-                                <span pButtonLabel>Submit</span>
-                            </button>
-                        </div>
-                    </form>
+                    <p class="text-primary text-lg font-semibold">Joining Process</p>
+
+                    <p-table [value]="candidateList" showGridlines [rowHover]="true" [tableStyle]="{'min-width': '90rem'}">
+                        <ng-template #header>
+                            <tr>
+                                <th>SI No</th>
+                                <th>Selected Candidates Name</th>
+                                <th>First Interview Feedback</th>
+                                <th>Final Interview Feedback</th>
+                                <th>Candidate Acceptance (Yes/No)</th>
+                                <th>Joining Date If Yes</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template #body let-candidate let-i="rowIndex">
+                            <tr>
+                                <td>{{ i + 1 }}</td>
+                                <td>{{ candidate.candidateName }}</td>
+                                <td>Better Performance</td>
+                                <td>Better Performance</td>
+                                <td>
+                                    <p-select id="candidate-status" placeholder="Select Status" appendTo="body" class="w-full" />
+                                </td>
+                                <td>
+                                    <p-datepicker [iconDisplay]="'input'" [showIcon]="true" inputId="joining-date" 
+                                        placeholder="Select Joining Date" appendTo="body" class="w-full" />
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+
+                    <div class="flex justify-end mt-4">
+                        <button pButton pRipple type="submit">
+                            <span pButtonLabel>Submit</span>
+                        </button>
+                    </div>
                 </ng-template>
             </p-step-panel>
         </p-step-panels>

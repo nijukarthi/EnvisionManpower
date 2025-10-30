@@ -247,9 +247,9 @@ export class CompanyUsers implements OnInit {
         })
       }
       else if(this.actionName == "Update"){
-        const data = {
-          ...this.companyUserForm.value
-        };
+        this.companyUserForm.get('email')?.enable();
+        const data = { ...this.companyUserForm.value };
+        this.companyUserForm.get('email')?.disable();
 
         if(!data.userDepartments?.length && this.showDepartments){
           const existingDepartments = this.departmentsControl.value?.map((id: number) => ({departmentId: id}));
