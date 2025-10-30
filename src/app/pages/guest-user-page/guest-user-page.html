@@ -44,7 +44,9 @@
                 <ng-template #body let-demand let-rowIndex="rowIndex">
                     <tr>
                         <td>{{ rowIndex + 1 }}</td>
-                        <td class="underline cursor-pointer" routerLink="/home/fullfillprocess/steps">{{'Step ' + demand.stepId}}</td>
+                        <td class="underline cursor-pointer" routerLink="/home/fullfillprocess/steps">
+                            <p-button icon="pi pi-eye" [rounded]="true" />
+                        </td>
                         <td>{{ demand.requesitionCode }}</td>
                         <td>{{ demand.requestedBy }}</td>
                         <td>{{ demand.demandCode }}</td>

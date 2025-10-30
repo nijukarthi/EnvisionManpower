@@ -43,11 +43,11 @@ export class CategoryTable implements OnInit {
         icon: 'pi pi-pencil',
         command: () => this.editCategory(category)
       },
-      {
-        label: 'Delete',
-        icon: 'pi pi-trash',
-        command: () => this.deleteCategory(category)
-      }
+      // {
+      //   label: 'Delete',
+      //   icon: 'pi pi-trash',
+      //   command: () => this.deleteCategory(category)
+      // }
     ]
   }
 
