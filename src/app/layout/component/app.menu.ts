@@ -126,36 +126,30 @@ export class AppMenu {
                                 icon: 'pi pi pi-user',
                                 items:[
                                     {
-                                        label: 'New Candidate',
-                                        icon: 'pi pi-file-plus',
-                                        items: [
-                                            {
-                                                label: 'Fixed Cost',
-                                                icon: 'pi pi-wallet',
-                                                routerLink: ['/home/candidate/new/fixed-cost']
-                                            },
-                                            {
-                                                label: 'Cost Plus',
-                                                icon: 'pi pi-receipt',
-                                                routerLink: ['/home/candidate/new/cost-plus']
-                                            }
-                                        ]
+                                        label: 'Fixed Cost',
+                                        icon: 'pi pi-wallet',
+                                        routerLink: ['/home/candidate/fixed-cost']
                                     },
                                     {
-                                        label: 'Existing Candidate',
-                                        icon: 'pi pi-folder-plus',
-                                        items: [
-                                            {
-                                                label: 'Fixed Cost',
-                                                icon: 'pi pi-wallet',
-                                                routerLink: ['/home/candidate/existing/fixed-cost']
-                                            },
-                                            {
-                                                label: 'Cost Plus',
-                                                icon: 'pi pi-receipt'
-                                            }
-                                        ]
-                                    }
+                                        label: 'Cost Plus',
+                                        icon: 'pi pi-receipt',
+                                        routerLink: ['/home/candidate/cost-plus']
+                                    },
+                                    // {
+                                    //     label: 'Existing Candidate',
+                                    //     icon: 'pi pi-folder-plus',
+                                    //     items: [
+                                    //         {
+                                    //             label: 'Fixed Cost',
+                                    //             icon: 'pi pi-wallet',
+                                    //             routerLink: ['/home/candidate/existing/fixed-cost']
+                                    //         },
+                                    //         {
+                                    //             label: 'Cost Plus',
+                                    //             icon: 'pi pi-receipt'
+                                    //         }
+                                    //     ]
+                                    // }
                                 ]
                             }
                         ]

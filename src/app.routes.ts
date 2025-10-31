@@ -23,14 +23,15 @@ import { Envisionroles } from '@/pages/envisionroles/envisionroles';
 import { Project } from '@/pages/project/project/project';
 import { AddEmployee } from '@/pages/add-employee/add-employee';
 import { ExistingEmployee } from '@/pages/existing-employee/existing-employee';
-import { NewCandidateFixedCost } from '@/pages/new-candidate-fixed-cost/new-candidate-fixed-cost';
-import { ExistingCandidateFixedCost } from '@/pages/existing-candidate-fixed-cost/existing-candidate-fixed-cost';
-import { NewCandidateCostPlus } from '@/pages/new-candidate-cost-plus/new-candidate-cost-plus';
+import { CandidateFixedCost } from '@/pages/candidate/candidate-fixed-cost/candidate-fixed-cost';
+import { CandidateCostPlus } from '@/pages/candidate/candidate-cost-plus/candidate-cost-plus';
 import { ConsultancyForm } from '@/pages/consultancy/consultancy-form/consultancy-form';
-import { ConsultancyPage } from '@/pages/consultancy-page/consultancy-page';
-import { GuestUserPage } from '@/pages/guest-user-page/guest-user-page';
+import { ConsultancyPage } from '@/pages/fullFillProcess/consultancy-page/consultancy-page';
+import { GuestUserPage } from '@/pages/fullFillProcess/guest-user-page/guest-user-page';
 import { Steps } from '@/pages/fullFillProcess/steps/steps';
 import { ResourceManager } from '@/pages/fullFillProcess/resource-manager/resource-manager';
+import { FixedCostCandidateForm } from '@/pages/candidate/fixed-cost-candidate-form/fixed-cost-candidate-form';
+import { CostPlusCandidateForm } from '@/pages/candidate/cost-plus-candidate-form/cost-plus-candidate-form';
 
 export const appRoutes: Routes = [
     {
@@ -77,9 +78,10 @@ export const appRoutes: Routes = [
             { path: 'fullfillprocess/resource-manager', component: ResourceManager, canActivate: [authGuard] },
             { path: 'fullfillprocess/steps', component: Steps, canActivate: [authGuard] },
             { path: 'existingEmployee', component: ExistingEmployee, canActivate: [authGuard] },
-            { path: 'candidate/new/fixed-cost', component: NewCandidateFixedCost, canActivate: [authGuard] },
-            { path: 'candidate/new/cost-plus', component: NewCandidateCostPlus, canActivate: [authGuard] },
-            { path: 'candidate/existing/fixed-cost',component: ExistingCandidateFixedCost, canActivate: [authGuard] },
+            { path: 'candidates/fixed-cost/new', component: FixedCostCandidateForm, canActivate: [authGuard] },
+            { path: 'candidates/cost-plus/new', component: CostPlusCandidateForm, canActivate: [authGuard] },
+            { path: 'candidate/fixed-cost', component: CandidateFixedCost, canActivate: [authGuard] },
+            { path: 'candidate/cost-plus', component: CandidateCostPlus, canActivate: [authGuard] },
             { path: 'pages', canActivate: [authGuard], loadChildren: () => import('./app/pages/pages.routes') }
         ]
     },

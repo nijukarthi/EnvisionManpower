@@ -1,0 +1,101 @@
+<div class="card">
+    <h5>Add Candidate</h5>
+    <form>
+        <div class="grid grid-cols-2 gap-2">
+            <div class="grid col-span-1 gap-1">
+                <label for="candidate-name">Candidate Name</label>
+                <input type="text" id="candidate-name" pInputText />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="position-applied">Position Applied</label>
+                <input type="text" id="position-applied" pInputText />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="current-experience">Current Experience</label>
+                <input type="text" id="current-experience" pInputText />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="total-experience">Total Experience</label>
+                <input type="text" id="total-experience" pInputText />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="highest-qualification">Highest Qualification</label>
+                <input type="text" id="highest-qualification" pInputText />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="qualification">Qualification</label>
+                <input type="text" id="qualification" pInputText />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="notice-period">Notice Period</label>
+                <input type="text" id="notice-period" pInputText />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="current-salary">Current Salary (NET)</label>
+                <input type="text" id="current-salary" pInputText />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="expected-salary">Expected Salary (NET)</label>
+                <input type="text" id="expected-salary" pInputText />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="approved-hike">Approved Hike</label>
+                <input type="text" id="approved-hike" pInputText />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="approved-salary">Approved Fixed Salary</label>
+                <input type="text" id="approved-salary" pInputText />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="percent-variable">10% Variable</label>
+                <input type="text" id="percent-variable" pInputText />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="fixed-variable">Total Fixed + Variable</label>
+                <input type="text" id="fixed-variable" pInputText />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="final-hike">Final Hike From Current</label>
+                <input type="text" id="final-hike" pInputText />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="delta">Delta From Expected</label>
+                <input type="text" id="delta" pInputText />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="gross-ctc">Gross CTC</label>
+                <input type="text" id="gross-ctc" pInputText />
+            </div>
+        </div>
+        <div class="flex justify-end mt-3">
+            <button pButton pRipple>
+                <span pButtonLabel>Submit</span>
+            </button>
+        </div>
+    </form>
+</div>
+
+<div class="card">
+    <h5>Employee Details</h5>
+    <form>
+        <div class="grid grid-cols-2 gap-2">
+            <div class="grid col-span-1 gap-1">
+                <label for="cluster">Cluster</label>
+                <p-select id="cluster" [filter]="true" appendTo="body" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="reporting-manager">Reporting Manager</label>
+                <p-select id="reporting-manager" [filter]="true" appendTo="body" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="project-code">Project Code</label>
+                <p-select id="project-code" [filter]="true" appendTo="body" />
+            </div>
+        </div>
+        <div class="flex justify-end mt-3">
+            <button pButton pRipple>
+                <span pButtonLabel>Submit</span>
+            </button>
+        </div>
+    </form>
+</div>

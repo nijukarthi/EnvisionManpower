@@ -4,11 +4,10 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-new-candidate-cost-plus',
   imports: [Shared],
-  templateUrl: './new-candidate-cost-plus.html',
-  styleUrl: './new-candidate-cost-plus.scss'
+  templateUrl: './candidate-cost-plus.html',
+  styleUrl: './candidate-cost-plus.scss'
 })
-export class NewCandidateCostPlus {
-  openCandidateCostPlus = false;
+export class CandidateCostPlus {
 
   costPlusList = [
     {
@@ -84,12 +83,4 @@ export class NewCandidateCostPlus {
       doj: '24-10-2025'
     },
   ]
-
-  addCandidate(){
-    try {
-      this.openCandidateCostPlus = true;
-    } catch (error) {
-      console.log(error);
-    }
-  }
 }
