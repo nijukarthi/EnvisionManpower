@@ -232,4 +232,12 @@ export class Apiservice {
     return this.postMethod('user/consultancy/remove', params);
   }
 
+  createFixedCostCandidate(params: any){
+    return this.postMethod('candidate/fixedcost/create', params);
+  }
+
+  fetchActiveFixedCostCandidates(params: any): Observable<any>{
+    return this.postMethod('candidate/fixedcost/active', params);
+  }
+
 }
