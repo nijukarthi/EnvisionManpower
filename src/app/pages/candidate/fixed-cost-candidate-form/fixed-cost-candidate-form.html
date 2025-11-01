@@ -58,7 +58,7 @@
 
 @if (fixedCostCandidateForm.get('workingCurrently')?.value === true) {
     <div class="card">
-        <h5>Current Employee Details</h5>
+        <h5>Current Employment Details</h5>
         <form [formGroup]="fixedCostCandidateForm" (ngSubmit)="addExistingCandidate()">
             <div class="grid grid-cols-2 gap-2" formGroupName="employmentDetails">
                 <div class="grid col-span-1 gap-1" formGroupName="project">
@@ -69,11 +69,11 @@
                 </div>
                 <div class="grid col-span-1 gap-1">
                     <label for="cluster">Cluster</label>
-                    <input type="text" pInputText [value]="projectDetails?.cluster?.clusterName" [disabled]="true" />
+                    <input type="text" pInputText [value]="projectDetails?.cluster?.clusterName" id="cluster" [disabled]="true" />
                 </div>
                 <div class="grid col-span-1 gap-1">
                     <label for="site-incharge">Site Incharge</label>
-                    <input type="text" pInputText [value]="projectDetails?.siteIncharge?.userName" [disabled]="true" />
+                    <input type="text" pInputText [value]="projectDetails?.siteIncharge?.userName" id="site-incharge" [disabled]="true" />
                 </div>
                 <div class="grid col-start-1 col-span-1 gap-1" formGroupName="spn">
                     <label for="spn-code">SPN Code</label>
@@ -83,27 +83,34 @@
                 </div>
                 <div class="grid col-span-1 gap-1" formGroupName="spn">
                     <label for="spn-description">SPN Description</label>
-                    <p-select [options]="spnInfoList" formControlName="spnId" id="spn-description" optionLabel="spnDescription" optionValue="spnId"
+                    <p-select [options]="spnInfoList" formControlName="spnId" id="spn-description" optionValue="spnId"
                         [filter]="true" filterBy="spnDescription" [showClear]="true" (onChange)="selectedSPN($event.value)"
-                        placeholder="Select SPN Description" appendTo="body" />
+                        placeholder="Select SPN Description" appendTo="body"> 
+                        <ng-template #item let-item>
+                            {{ item.spnDescription }} - ({{ item.experience === '0' ? item.experience + ' year' : item.experience + ' years' }})
+                        </ng-template> 
+                        <ng-template #selectedItem let-item>
+                            {{ item.spnDescription }} - ({{ item.experience === '0' ? item.experience + ' year' : item.experience + ' years' }})
+                        </ng-template>
+                    </p-select>
                 </div>
                 <div class="grid col-span-1 gap-1">
                     <label for="experience">Experience</label>
-                    <input type="text" pInputText [value]="selectedSpn?.experience" [disabled]="true" />
+                    <input type="text" pInputText [value]="selectedSpn?.experience" id="experience" [disabled]="true" />
                 </div>
                 <div class="grid col-start-1 col-span-1 gap-1" formGroupName="envisionRole">
                     <label for="role">Role</label>
                     <p-select [options]="envisionRoleList" formControlName="id" id="role" optionLabel="roleName" optionValue="id"
                         [filter]="true" filterBy="roleName" placeholder="Select Role" [showClear]="true" appendTo="body" />
                 </div>
-                <div class="grid col-start-1 col-span-1 gap-1">
-                    <label for="joining-date">Joining Date</label>
-                    <p-datepicker formControlName="joiningDate" [iconDisplay]="'input'" [showIcon]="true" inputId="joining-date"
-                        placeholder="Select Date" appendTo="body" />
-                </div>
                 <div class="grid col-span-1 gap-1">
                     <label for="offer-release-date">Offer Release Date</label>
                     <p-datepicker formControlName="offerReleaseDate" [iconDisplay]="'input'" [showIcon]="true" inputId="offer-release-date" 
+                        placeholder="Select Date" appendTo="body" />
+                </div>
+                <div class="grid col-start-1 col-span-1 gap-1">
+                    <label for="joining-date">Joining Date</label>
+                    <p-datepicker formControlName="joiningDate" [iconDisplay]="'input'" [showIcon]="true" inputId="joining-date"
                         placeholder="Select Date" appendTo="body" />
                 </div>
             </div>

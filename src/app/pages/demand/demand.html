@@ -3,37 +3,30 @@
         <p class="font-semibold text-xl">Demand Request</p>
         <form [formGroup]="demandForm" (ngSubmit)="onSubmit()">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="flex flex-wrap gap-2 w-full">
+                <div class="flex flex-wrap gap-2 w-full" formGroupName="project">
                     <label for="p-code">Project Code</label>
-                    <p-select [options]="PCodeList" formControlName="projectId" id="p-code" optionLabel="projectCode" optionValue="projectId" placeholder="Select PCode"
+                    <p-select [options]="PCodeList" formControlName="projectId" id="p-code" optionLabel="projectCode" optionValue="projectId" placeholder="Select Project Code"
                         [filter]="true" filterBy="projectCode" [showClear]="true" class="w-full md:w-56" (onChange)="selectedPCode($event.value)"/>
                 </div>
-                <div class="flex flex-wrap gap-2 w-full" formGroupName="cluster">
+                <div class="flex flex-wrap gap-2 w-full">
                     <label for="cluster">Cluster</label>
-                    <p-select [options]="clusterList" formControlName="clusterId" id="cluster" optionLabel="clusterName" 
-                        optionValue="clusterId"  placeholder="Select Cluster" [filter]="true" filterBy="clusterName" 
-                        [showClear]="true" class="w-full md:w-56" />
+                    <input type="text" pInputText [value]="projectDetails?.cluster?.clusterName" id="cluster" [disabled]="true" />
                 </div>
-                <div class="flex flex-wrap gap-2 w-full" formGroupName="clusterHead">
+                <div class="flex flex-wrap gap-2 w-full">
                     <label for="cluster-head">Cluster Head</label>
-                    <p-select [options]="clusterHeadList" formControlName="userId" id="cluster-head" optionLabel="userName" 
-                        optionValue="userId" placeholder="Select Cluster Head" [filter]="true" filterBy="userName"
-                        [showClear]="true" class="w-full md:w-56" />
+                    <input type="text" pInputText [value]="projectDetails?.clusterHead?.userName" id="cluster-head" [disabled]="true" />
                 </div>
-                <div class="flex flex-wrap gap-2 w-full" formGroupName="siteIncharge">
+                <div class="flex flex-wrap gap-2 w-full">
                     <label for="site-incharge">Site Incharge</label>
-                    <p-select [options]="siteInchargeList" formControlName="userId" id="site-incharge" optionLabel="userName" optionValue="userId" 
-                        placeholder="Select Site Incharge" [filter]="true" filterBy="userName" [showClear]="true" class="w-full md:w-56" />
+                    <input type="text" pInputText [value]="projectDetails?.siteIncharge?.userName" id="site-incharge" [disabled]="true" />
                 </div>
-                <div class="flex flex-wrap gap-2 w-full" formGroupName="department">
+                <div class="flex flex-wrap gap-2 w-full">
                     <label for="department">Department</label>
-                    <p-select [options]="departmentList" formControlName="departmentId" id="department" optionLabel="departmentName" optionValue="departmentId" 
-                        placeholder="Select Department" [filter]="true" filterBy="departmentName" [showClear]="true" class="w-full md:w-56" />
+                    <input type="text" pInputText [value]="projectDetails?.department?.departmentName" id="department" [disabled]="true" />
                 </div>
-                <div class="flex flex-wrap gap-2 w-full" formGroupName="departmentHead">
+                <div class="flex flex-wrap gap-2 w-full">
                     <label for="department-head">Department Head</label>
-                    <p-select [options]="departmentHeadList" formControlName="userId" id="department-head" optionLabel="userName" optionValue="userId" 
-                        placeholder="Select Department Head" [filter]="true" filterBy="userName" [showClear]="true" class="w-full md:w-56"  />
+                    <input type="text" pInputText [value]="projectDetails?.departmentHead?.userName" id="department-head" [disabled]="true" />
                 </div>
                 <div class="flex flex-wrap gap-2 w-full" formGroupName="category">
                     <label for="category">Category</label>
@@ -41,7 +34,7 @@
                         placeholder="Select Category" [filter]="true" filterBy="categoryName" class="w-full md:w-56" />
                 </div>
                 <div class="flex flex-wrap gap-2 w-full">
-                    <label for="lastname2">Requested By</label>
+                    <label for="requestedBy">Requested By</label>
                     <input pInputText type="text" [value]="requestedBy" [disabled]="true" class="w-full" />
                 </div>
                 <div class="flex flex-wrap gap-2 w-full">
@@ -80,9 +73,16 @@
                                     placeholder="Select SPN Code" appendTo="body" (onChange)="selectedSpnCode($event.value, rowIndex)" />
                             </td>
                             <td>
-                                <p-select [options]="spnInfoList" formControlName="spnDescription" optionLabel="spnDescription" 
+                                <p-select [options]="spnInfoList" formControlName="spnDescription" 
                                     optionValue="spnId" [filter]="true" filterBy="spnDescription" [showClear]="true" 
-                                    placeholder="Select SPN Description" appendTo="body" (onChange)="selectedSpnDescription($event.value, rowIndex)" />
+                                    placeholder="Select SPN Description" appendTo="body" (onChange)="selectedSpnDescription($event.value, rowIndex)">
+                                    <ng-template #item let-item>
+                                        {{ item.spnDescription }} - ({{ item.experience === '0' ? item.experience + ' year' : item.experience + ' years' }})
+                                    </ng-template>
+                                    <ng-template #selectedItem let-item>
+                                        {{ item.spnDescription }} - ({{ item.experience === '0' ? item.experience + ' year' : item.experience + ' years' }})
+                                    </ng-template>
+                                </p-select>
                             </td>
                             <td>
                                 <p-select [options]="spnInfoList" formControlName="experience" optionLabel="experience" 

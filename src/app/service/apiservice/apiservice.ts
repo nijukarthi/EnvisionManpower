@@ -240,4 +240,12 @@ export class Apiservice {
     return this.postMethod('candidate/fixedcost/active', params);
   }
 
+  fetchActiveCostPlusCandidates(params: any): Observable<any>{
+    return this.postMethod('candidate/costplus/active', params);
+  }
+
+  createCostPlusCandidates(params: any){
+    return this.postMethod('candidate/costplus/create', params);
+  }
+
 }

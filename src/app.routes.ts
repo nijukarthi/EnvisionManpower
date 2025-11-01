@@ -7,7 +7,6 @@ import { Login } from '@/pages/auth/login';
 import { Demand } from '@/pages/demand/demand';
 import { Approval } from '@/pages/approval/approval';
 import { Fullfillreq } from '@/pages/fullfillreq/fullfillreq';
-import { InterviewManagement } from '@/pages/interview-management/interview-management';
 import { Register } from '@/pages/auth/register';
 import { ConsultancyTable } from '@/pages/consultancy/consultancy-table/consultancy-table';
 import { SpnTable } from '@/pages/spn/spn-table/spn-table';
@@ -21,8 +20,6 @@ import { ResourceManagerAssign } from '@/pages/ResourceManagerAssign/resource-ma
 import { Loginpage } from '@/pages/loginpage/loginpage';
 import { Envisionroles } from '@/pages/envisionroles/envisionroles';
 import { Project } from '@/pages/project/project/project';
-import { AddEmployee } from '@/pages/add-employee/add-employee';
-import { ExistingEmployee } from '@/pages/existing-employee/existing-employee';
 import { CandidateFixedCost } from '@/pages/candidate/candidate-fixed-cost/candidate-fixed-cost';
 import { CandidateCostPlus } from '@/pages/candidate/candidate-cost-plus/candidate-cost-plus';
 import { ConsultancyForm } from '@/pages/consultancy/consultancy-form/consultancy-form';
@@ -57,7 +54,6 @@ export const appRoutes: Routes = [
                 canActivate: [authGuard]
             },
             { path: 'fullFill', component: Fullfillreq, canActivate: [authGuard]},
-            { path: 'interviewManagement', component: InterviewManagement, canActivate: [authGuard]},
             { path: 'consultancies', component: ConsultancyTable, canActivate: [authGuard] },
             { path: 'consultancies/new', component: ConsultancyForm, canActivate: [authGuard] },
             { path: 'consultancies/:id', component: ConsultancyForm, canActivate: [authGuard] },
@@ -72,12 +68,10 @@ export const appRoutes: Routes = [
             { path: 'envisionRoles', component: Envisionroles, canActivate: [authGuard] },
             { path: 'uikit', canActivate: [authGuard], loadChildren: () => import('./app/pages/uikit/uikit.routes') },
             { path: 'documentation', component: Documentation, canActivate: [authGuard] },
-            { path: 'addEmployee', component: AddEmployee, canActivate: [authGuard] },
             { path: 'consultancyPage', component: ConsultancyPage, canActivate: [authGuard] },
             { path: 'guestUserPage', component: GuestUserPage, canActivate: [authGuard] },
             { path: 'fullfillprocess/resource-manager', component: ResourceManager, canActivate: [authGuard] },
             { path: 'fullfillprocess/steps', component: Steps, canActivate: [authGuard] },
-            { path: 'existingEmployee', component: ExistingEmployee, canActivate: [authGuard] },
             { path: 'candidates/fixed-cost/new', component: FixedCostCandidateForm, canActivate: [authGuard] },
             { path: 'candidates/cost-plus/new', component: CostPlusCandidateForm, canActivate: [authGuard] },
             { path: 'candidate/fixed-cost', component: CandidateFixedCost, canActivate: [authGuard] },

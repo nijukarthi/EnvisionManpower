@@ -1,5 +1,6 @@
+import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-new-candidate-cost-plus',
@@ -7,80 +8,50 @@ import { Component } from '@angular/core';
   templateUrl: './candidate-cost-plus.html',
   styleUrl: './candidate-cost-plus.scss'
 })
-export class CandidateCostPlus {
+export class CandidateCostPlus implements OnInit {
+  offSet = 0;
+  pageSize = 10;
 
-  costPlusList = [
-    {
-      id: 1,
-      reqId: 'R001',
-      State: 'MH',
-      rm: 'Surendra Singh',
-      pCode: 'P8001',
-      site: 'MH',
-      candidateName: 'Sagar',
-      positionApplied: 'Store Executive',
-      exp: '2',
-      totalExp: '6',
-      highQualification: 'diploma',
-      qualification: 'Electrical',
-      noticePeriod: '15 days',
-      currentSalary: '27000',
-      expectedSalary: '40000',
-      hike: '30%',
-      fixedSalary: '35100',
-      percentVariable: '3510',
-      fixedVariable: '38610',
-      finalHike: '43%',
-      delta: '-1390',
-      grossCtc: '45000',
-      margin: '2700',
-      laptop: '2500',
-      total: '50200',
-      gst: '9036',
-      grandTotal: '59236',
-      fee: '4000',
-      cost: '1475',
-      costTotal: '5475',
-      costGst: '986',
-      costGrandTotal: '6461',
-      offerRelease: '24-10-2025',
-      doj: '24-10-2025'
-    },
-    {
-      id: 2,
-      reqId: 'R002',
-      State: 'KA',
-      rm: 'Srikant Shanmugan',
-      pCode: 'P8002',
-      site: 'KA',
-      candidateName: 'Taja Ram',
-      positionApplied: 'Electrical Engineer',
-      exp: '6',
-      totalExp: '9',
-      highQualification: 'BE',
-      qualification: 'Mechanical',
-      noticePeriod: '20 days',
-      currentSalary: '27000',
-      expectedSalary: '40000',
-      hike: '30%',
-      fixedSalary: '35100',
-      percentVariable: '3510',
-      fixedVariable: '38610',
-      finalHike: '43%',
-      delta: '-1390',
-      grossCtc: '45000',
-      margin: '2700',
-      laptop: '2500',
-      total: '50200',
-      gst: '9036',
-      grandTotal: '59236',
-      fee: '4000',
-      cost: '1475',
-      costTotal: '5475',
-      costGst: '986',
-      costGrandTotal: '6461',
-      offerRelease: '24-10-2025',
-      doj: '24-10-2025'
-    },
-  ]
+  costPlusCandidateList: any;
+
+  constructor(private apiService: Apiservice){}
+
+  ngOnInit(): void {
+    this.fetchActiveCostPlusCandidates();
+  }
+
+  getMenuItems(candidate: any){
+    return [
+      {
+        label: 'Edit',
+        icon: 'pi pi-pencil'
+       },
+      {
+        label: 'Delete',
+        icon: 'pi pi-trash'
+      }
+    ]
+  }
+
+  fetchActiveCostPlusCandidates(){
+    try {
+      const data = {
+        offSet: this.offSet,
+        pageSize: this.pageSize
+      }
+
+      this.apiService.fetchActiveCostPlusCandidates(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.costPlusCandidateList = val?.data?.data;
+        }, 
+        error: err => {
+          console.log(err);
+        }
+      })
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }

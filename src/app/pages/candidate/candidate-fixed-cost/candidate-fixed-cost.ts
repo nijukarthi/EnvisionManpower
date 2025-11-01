@@ -20,6 +20,19 @@ export class CandidateFixedCost implements OnInit {
     this.fetchActiveFixedCostCandidates();
   }
 
+  getMenuItems(candidate: any){
+     return [
+      {
+        label: 'Edit',
+        icon: 'pi pi-pencil'
+       },
+      {
+        label: 'Delete',
+        icon: 'pi pi-trash'
+      }
+    ]
+  }
+
   fetchActiveFixedCostCandidates(){
     const data = {
       offSet: this.offSet,
@@ -29,7 +42,7 @@ export class CandidateFixedCost implements OnInit {
     this.apiService.fetchActiveFixedCostCandidates(data).subscribe({
       next: val => {
         console.log(val);
-        this.fixedCostCandidateList = val.data.data;
+        this.fixedCostCandidateList = val?.data?.data;
       },
       error: err => {
         console.log(err);
