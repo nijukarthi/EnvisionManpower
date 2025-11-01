@@ -177,6 +177,8 @@ export class Loginpage {
                 sessionStorage.setItem('userGroupId', val.data.userGroupId);
                 if (val.data.userGroupId === UserGroups.CLUSTERHEAD || val.data.userGroupId === UserGroups.DEPARTMENTHEAD) {
                     this.route.navigate(['/home/approval']);
+                } else if(val.data.userGroupId === UserGroups.CONSULTANCY){
+                    this.route.navigate(['/home/consultancies']);
                 } else {
                     this.route.navigate(['/home/demand']);
                 }

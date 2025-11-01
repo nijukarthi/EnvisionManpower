@@ -3,18 +3,14 @@
         <h5>Cost Plus Candidates</h5>
         <p-button label="Add Candidate" icon="pi pi-plus" routerLink="/home/candidates/cost-plus/new" />
     </div>
-    <p-table [value]="costPlusList" showGridlines [rowHover]="true" [tableStyle]="{'min-width': '250rem'}">
+    <p-table [value]="costPlusCandidateList" showGridlines [rowHover]="true" [tableStyle]="{'min-width': '330rem'}">
         <ng-template #header>
             <tr>
                 <th>SI No</th>
-                <th>Requisition Code</th>
-                <th>State</th>
-                <th>Reporting Manager</th>
-                <th>Project Code</th>
-                <th>Site</th>
+                <th>Candidate Code</th>
                 <th>Candidate Name</th>
                 <th>Position Applied</th>
-                <th>Experience in Current Company</th>
+                <th>Current Experience</th>
                 <th>Total Experience</th>
                 <th>Highest Qualification</th>
                 <th>Qualification</th>
@@ -40,44 +36,59 @@
                 <th>Grand Total</th>
                 <th>Offer Release Date</th>
                 <th>Date of Joining</th>
+                <th>Project Code</th>
+                <th>Site Incharge</th>
+                <th>SPN Code</th>
+                <th>SPN Description</th>
+                <th>Experience</th>
+                <th>Role Name</th>
+                <th>Actions</th>
             </tr>
         </ng-template>
         <ng-template #body let-candidate let-i="rowIndex">
             <tr>
                 <td>{{ i + 1 }}</td>
-                <td>{{ candidate.reqId }}</td>
-                <td>{{ candidate.State }}</td>
-                <td>{{ candidate.rm }}</td>
-                <td>{{ candidate.pCode }}</td>
-                <td>{{ candidate.site }}</td>
+                <td>{{ candidate.candidateCode }}</td>
                 <td>{{ candidate.candidateName }}</td>
                 <td>{{ candidate.positionApplied }}</td>
-                <td>{{ candidate.exp }}</td>
-                <td>{{ candidate.totalExp }}</td>
-                <td>{{ candidate.highQualification }}</td>
+                <td>{{ candidate.currentExperience }}</td>
+                <td>{{ candidate.totalExperience }}</td>
+                <td>{{ candidate.highestQualification }}</td>
                 <td>{{ candidate.qualification }}</td>
                 <td>{{ candidate.noticePeriod }}</td>
-                <td>{{ candidate.currentSalary }}</td>
-                <td>{{ candidate.expectedSalary }}</td>
-                <td>{{ candidate.hike }}</td>
-                <td>{{ candidate.fixedSalary }}</td>
-                <td>{{ candidate.percentVariable }}</td>
-                <td>{{ candidate.fixedVariable }}</td>
-                <td>{{ candidate.finalHike }}</td>
-                <td>{{ candidate.delta }}</td>
-                <td>{{ candidate.grossCtc }}</td>
-                <td>{{ candidate.margin }}</td>
-                <td>{{ candidate.laptop }}</td>
-                <td>{{ candidate.total }}</td>
-                <td>{{ candidate.gst }}</td>
-                <td>{{ candidate.grandTotal }}</td>
-                <td>{{ candidate.fee }}</td>
-                <td>{{ candidate.cost }}</td>
-                <td>{{ candidate.costTotal }}</td>
-                <td>{{ candidate.costGst }}</td>
-                <td>{{ candidate.costGrandTotal }}</td>
-                <td>{{ candidate.offerRelease }}</td>
-                <td>{{ candidate.doj }}</td>
+                <td>{{ candidate.costPlusSalaryDetails ? candidate.costPlusSalaryDetails.currentSalaryNet : '-' }}</td>
+                <td>{{ candidate.costPlusSalaryDetails ? candidate.costPlusSalaryDetails.expectedSalaryNet : '-' }}</td>
+                <td>{{ candidate.costPlusSalaryDetails ? candidate.costPlusSalaryDetails.approvedHike : '-' }}</td>
+                <td>{{ candidate.costPlusSalaryDetails ? candidate.costPlusSalaryDetails.approvedFixedSalary : '-' }}</td>
+                <td>{{ candidate.costPlusSalaryDetails ? candidate.costPlusSalaryDetails.tenPercentVariable : '-' }}</td>
+                <td>{{ candidate.costPlusSalaryDetails ? candidate.costPlusSalaryDetails.totalFixedVariable ?? '-' : '-' }}</td>
+                <td>{{ candidate.costPlusSalaryDetails ? candidate.costPlusSalaryDetails.finalHikeFromCurrent ?? '-' : '-' }}</td>
+                <td>{{ candidate.costPlusSalaryDetails ? candidate.costPlusSalaryDetails.deltaFromExpected ?? '-' : '-' }}</td>
+                <td>{{ candidate.monthlyReimbursements ? candidate.monthlyReimbursements.grossCTC : '-' }}</td>
+                <td>{{ candidate.monthlyReimbursements ? candidate.monthlyReimbursements.margin : '-' }}</td>
+                <td>{{ candidate.monthlyReimbursements ? candidate.monthlyReimbursements.laptop : '-' }}</td>
+                <td>{{ candidate.monthlyReimbursements ? candidate.monthlyReimbursements.total : '-' }}</td>
+                <td>{{ candidate.monthlyReimbursements ? candidate.monthlyReimbursements.gst : '-' }}</td>
+                <td>{{ candidate.monthlyReimbursements ? candidate.monthlyReimbursements.grandTotal : '-'}}</td>
+                <td>{{ candidate?.oneTimeReimbursements?.oneTimeSourcingFee }}</td>
+                <td>{{ candidate.oneTimeReimbursements.bgvCost }}</td>
+                <td>{{ candidate.oneTimeReimbursements.total }}</td>
+                <td>{{ candidate.oneTimeReimbursements.gst }}</td>
+                <td>{{ candidate.oneTimeReimbursements.grandTotal }}</td>
+                <td>{{ candidate.employmentDetails ? candidate.employmentDetails.offerReleaseDate : '-' }}</td>
+                <td>{{ candidate.employmentDetails ? candidate.employmentDetails.joiningDate : '-' }}</td>
+                <td>
+                    {{ candidate.employmentDetails ? candidate.employmentDetails?.project?.projectCode : '-' }}
+                </td>
+                <td>{{ candidate.employmentDetails ? candidate.employmentDetails?.siteIncharge?.userName : '-' }}</td>
+                <td>{{ candidate.employmentDetails ? candidate.employmentDetails?.spn?.spnCode : '-' }}</td>
+                <td>{{ candidate.employmentDetails ? candidate.employmentDetails?.spn?.spnDescription : '-' }}</td>
+                <td>{{ candidate.employmentDetails ? candidate.employmentDetails?.spn?.experience : '-' }}</td>
+                <td>{{ candidate.employmentDetails ? candidate.employmentDetails?.envisionRole?.roleName : '-' }}</td>
+                <td>
+                    <p-menu #menu [model]="getMenuItems(candidate)" [popup]="true" appendTo="body" />
+                    <p-button (onClick)="menu.toggle($event)" icon="pi pi-ellipsis-v" [rounded]="true" variant="text" />
+                </td>
             </tr>
         </ng-template>
     </p-table>
