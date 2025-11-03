@@ -5,10 +5,10 @@ import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'app-resource-manager',
   imports: [Shared],
-  templateUrl: './resource-manager.html',
-  styleUrl: './resource-manager.scss'
+  templateUrl: './demand-fullfillment.html',
+  styleUrl: './demand-fullfillment.scss'
 })
-export class ResourceManager implements OnInit {
+export class DemandFullfillment implements OnInit {
 
   constructor(private apiService: Apiservice){}
 

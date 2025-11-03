@@ -1,6 +1,7 @@
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-new-candidate-fixed-cost',
@@ -14,7 +15,7 @@ export class CandidateFixedCost implements OnInit {
 
   fixedCostCandidateList: any;
 
-  constructor(private apiService: Apiservice){}
+  constructor(private apiService: Apiservice, private router: Router){}
 
   ngOnInit(): void {
     this.fetchActiveFixedCostCandidates();
@@ -24,7 +25,8 @@ export class CandidateFixedCost implements OnInit {
      return [
       {
         label: 'Edit',
-        icon: 'pi pi-pencil'
+        icon: 'pi pi-pencil',
+        command: () => this.router.navigate(['/home/candidates/fixed-cost', candidate.candidateId])
        },
       {
         label: 'Delete',
@@ -50,37 +52,4 @@ export class CandidateFixedCost implements OnInit {
       complete: () => console.log('Complete signal')
     })
   }
-
-  fixedCostList = [
-    {
-      id: 1,
-      reqId: 'R001',
-      State: 'MH',
-      rm: 'Surendra Singh',
-      pCode: 'P8001',
-      site: 'MH',
-      candidateName: 'Sagar',
-      positionApplied: 'Store Executive',
-      exp: '2',
-      totalExp: '6',
-      highQualification: 'diploma',
-      qualification: 'Electrical',
-      noticePeriod: '15 days'
-    },
-    {
-      id: 2,
-      reqId: 'R002',
-      State: 'KA',
-      rm: 'Srikant Shanmugan',
-      pCode: 'P8002',
-      site: 'KA',
-      candidateName: 'Taja Ram',
-      positionApplied: 'Electrical Engineer',
-      exp: '6',
-      totalExp: '9',
-      highQualification: 'BE',
-      qualification: 'Mechanical',
-      noticePeriod: '20 days'
-    },
-  ]
 }

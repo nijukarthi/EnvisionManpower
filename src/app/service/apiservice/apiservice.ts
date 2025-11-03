@@ -248,4 +248,41 @@ export class Apiservice {
     return this.postMethod('candidate/costplus/create', params);
   }
 
+  fetchViewCandidate(params: any): Observable<any>{
+    return this.postMethod('candidate/view', params);
+  }
+
+  updateFixedCostCandidate(params: any){
+    return this.postMethod('candidate/fixedcost/update', params);
+  }
+
+  fetchEmploymentStatus(params: any): Observable<any>{
+    return this.postMethod('candidate/employmentstatus', params);
+  }
+
+  updateEmploymentStatus(params: any): Observable<any>{
+    return this.postMethod('candidate/employmentdetail/status/update', params);
+  }
+
+
+  fetchActiveInterviewers(params: any): Observable<any>{
+    return this.postMethod('user/active/guestuser', params);
+  }
+
+  createNewInterviewer(params: any){
+    return this.postMethod('user/guestuser/create', params);
+  }
+
+  fetchViewInterviewer(params: any): Observable<any>{
+    return this.postMethod('user/guestuser/view', params);
+  }
+
+  updateInterviewer(params: any){
+    return this.postMethod('user/guestuser/update', params);
+  }
+
+  deleteInterviewer(params: any){
+    return this.postMethod('user/guestuser/remove', params);
+  }
+
 }

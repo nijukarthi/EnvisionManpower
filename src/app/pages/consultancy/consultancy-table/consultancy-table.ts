@@ -21,6 +21,8 @@ export class ConsultancyTable implements OnInit {
   consultancyForm:any;
   actionName:any = 'Add';
 
+  loggedUserGroupId = Number(sessionStorage.getItem('userGroupId'));
+
   offSet = 0;
   pageSize = 10;
 

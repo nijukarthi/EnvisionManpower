@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ResourceManager } from './resource-manager';
+import { Interviewer } from './interviewer';
 
-describe('ResourceManager', () => {
-  let component: ResourceManager;
-  let fixture: ComponentFixture<ResourceManager>;
+describe('Interviewer', () => {
+  let component: Interviewer;
+  let fixture: ComponentFixture<Interviewer>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ResourceManager]
+      imports: [Interviewer]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ResourceManager);
+    fixture = TestBed.createComponent(Interviewer);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

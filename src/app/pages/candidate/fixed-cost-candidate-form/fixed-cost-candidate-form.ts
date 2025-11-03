@@ -2,7 +2,7 @@ import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 
 @Component({
@@ -17,10 +17,17 @@ export class FixedCostCandidateForm implements OnInit {
   spnInfoList: any;
   projectDetails: any;
   selectedSpn: any;
+  employmentStatusList: any;
+
+  candidateId = 0;
+  employmentId = 0;
+
+  actionName = 'Submit';
 
   private fb = inject(FormBuilder);
 
   fixedCostCandidateForm = this.fb.group({
+    candidateId: [0],
     candidateName: [''],
     positionApplied: [''],
     currentExperience: [0],
@@ -40,27 +47,124 @@ export class FixedCostCandidateForm implements OnInit {
         id: [0]
       }),
       joiningDate: [''],
-      offerReleaseDate: ['']
+      offerReleaseDate: [''],
+      employmentStatus: ['']
     })
   })
 
-  constructor(private apiService: Apiservice, private messageService: MessageService, private router: Router){}
+  constructor(private apiService: Apiservice, private messageService: MessageService, private router: Router, private route: ActivatedRoute){}
 
   ngOnInit(): void {
     this.fetchPCodes();
     this.fetchEnvisionRoles();
     this.fetchSpnInfo();
+
+    this.route.paramMap.subscribe(param => {
+      const id = param.get('id');
+      console.log(id);
+
+      if (id) {
+        this.candidateId = Number(id);
+        this.actionName = 'Update';
+        this.fetchViewCandidate(this.candidateId);
+      }
+    })
   }
 
   fixedCostCandidateApi(data: any){
     try {
-      this.apiService.createFixedCostCandidate(data).subscribe({
+      if (!this.candidateId) {    
+        this.apiService.createFixedCostCandidate(data).subscribe({
+          next: val => {
+            console.log(val);
+            this.messageService.add({severity: 'success', summary: 'Success', detail: 'Candidate Created Successfully'});
+            setTimeout(() => {
+              this.router.navigate(['/home/candidate/fixed-cost']);
+            }, 2000);
+          },
+          error: err => {
+            console.log(err);
+          }
+        })
+      } else {
+        this.apiService.updateFixedCostCandidate(data).subscribe({
+          next: val => {
+            console.log(val);
+            this.messageService.add({severity: 'success', summary: 'Success', detail: 'Candidate Updated Successfully'});
+            setTimeout(() => {
+              this.router.navigate(['/home/candidate/fixed-cost']);
+            }, 2000);
+          },
+          error: err => {
+            console.log(err);
+          }
+        })
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  onSubmit(){
+    console.log(this.fixedCostCandidateForm.value);
+
+    let { employmentDetails, ...data } = this.fixedCostCandidateForm.value;
+    console.log('Final data to send:', data);
+    
+    if (this.candidateId) {
+      data = {
+        ...data,
+        candidateId: this.candidateId
+      }
+    }
+    this.fixedCostCandidateApi(data);
+  }
+
+  fetchViewCandidate(candidateId: number){
+    try {
+      const data = {
+        candidateId: candidateId
+      }
+      this.apiService.fetchViewCandidate(data).subscribe({
         next: val => {
           console.log(val);
-          this.messageService.add({severity: 'success', summary: 'Success', detail: 'Candidate Created Successfully'});
-          setTimeout(() => {
-            this.router.navigate(['/home/candidate/fixed-cost']);
-          }, 2000);
+          const candidateData = val.data;
+          
+          const formattedData = {
+            ...candidateData,
+            employmentDetails: {
+              ...candidateData.employmentDetails,
+              offerReleaseDate: candidateData?.employmentDetails?.offerReleaseDate 
+                ? new Date(candidateData.employmentDetails.offerReleaseDate)
+                : null,
+              joiningDate: candidateData?.employmentDetails?.joiningDate
+                ? new Date(candidateData.employmentDetails.joiningDate)
+                : null
+            }
+          }
+          this.fixedCostCandidateForm.patchValue(formattedData);
+          this.employmentId = candidateData.employmentDetails.employmentId;
+
+          if (candidateId) {
+            this.fixedCostCandidateForm.get('employmentDetails.project.projectId')?.disable();
+            this.fixedCostCandidateForm.get('employmentDetails.spn.spnId')?.disable();
+            this.fixedCostCandidateForm.get('employmentDetails.envisionRole.id')?.disable();
+            this.fixedCostCandidateForm.get('employmentDetails.joiningDate')?.disable();
+            this.fixedCostCandidateForm.get('employmentDetails.offerReleaseDate')?.disable();
+          } else {
+            this.fixedCostCandidateForm.get('employmentDetails.project.projectId')?.enable();
+            this.fixedCostCandidateForm.get('employmentDetails.spn.spnId')?.enable();
+            this.fixedCostCandidateForm.get('employmentDetails.envisionRole.id')?.enable();
+            this.fixedCostCandidateForm.get('employmentDetails.joiningDate')?.enable();
+            this.fixedCostCandidateForm.get('employmentDetails.offerReleaseDate')?.enable();
+          }
+
+          const spnId = candidateData?.employmentDetails?.spn?.spnId;
+          if (candidateData.employmentDetails) {    
+            this.selectedPCode(candidateData?.employmentDetails?.project?.projectId);
+            this.selectedSPN(spnId);
+          }
+          this.fetchEmploymentStatus();
         },
         error: err => {
           console.log(err);
@@ -71,13 +175,20 @@ export class FixedCostCandidateForm implements OnInit {
     }
   }
 
-  onSubmit(){
-    console.log(this.fixedCostCandidateForm.value);
-
-    const { employmentDetails, ...data } = this.fixedCostCandidateForm.value;
-    console.log('Final data to send:', data);
-    
-    this.fixedCostCandidateApi(data);
+  fetchEmploymentStatus(){
+    try {
+      this.apiService.fetchEmploymentStatus('').subscribe({
+        next: val => {
+          console.log(val);
+          this.employmentStatusList = val.data;
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   fetchPCodes(){
@@ -152,6 +263,7 @@ export class FixedCostCandidateForm implements OnInit {
 
   selectedSPN(spnId: number){
     this.selectedSpn = this.spnInfoList.find((spn: any) => spn.spnId === spnId);
+    console.log(this.selectedSpn);
 
     const spnGroup = this.fixedCostCandidateForm.get('employmentDetails.spn');
     spnGroup?.patchValue({
@@ -159,10 +271,49 @@ export class FixedCostCandidateForm implements OnInit {
     })
   }
 
+  updateEmploymentStatus(){
+    try {
+      const data = {
+        employmentId: this.employmentId,
+        employmentStatus: this.fixedCostCandidateForm.get('employmentDetails.employmentStatus')?.value
+      }
+
+      this.apiService.updateEmploymentStatus(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.messageService.add({severity: 'success', summary: 'Success', detail: 'Employment Status Updated Successfully'});
+          setTimeout(() => {
+            this.router.navigate(['/home/candidate/fixed-cost']);
+          }, 2000);
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   addExistingCandidate(){
     console.log(this.fixedCostCandidateForm.value);
-    const data = this.fixedCostCandidateForm.value;
+    const formValue = this.fixedCostCandidateForm.value;
+
+    let data;
+
+    if (this.candidateId) {
+      const {employmentDetails, ...payload} = formValue;
+      data = {
+        ...payload,
+        candidateId: this.candidateId
+      }
+    } else {
+      data = formValue;
+    }
 
     this.fixedCostCandidateApi(data);
+    if (this.fixedCostCandidateForm.get('employmentDetails.employmentStatus')?.valid) {
+      this.updateEmploymentStatus();
+    }
   }
 }

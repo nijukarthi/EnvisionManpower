@@ -1,5 +1,5 @@
 <div class="card">
-    <h5>Resource Manager</h5>
+    <h5>Demand FullFillment</h5>
     <p-table [value]="demandFullfillList" showGridlines [rowHover]="true" [tableStyle]="{'min-width': '120rem'}">
         <ng-template #header>
             <tr>
@@ -21,7 +21,7 @@
         <ng-template #body let-demand let-i="rowIndex">
             <tr>
                 <td>{{ i + 1 }}</td>
-                <td class="underline cursor-pointer" routerLink="/home/fullfillprocess/steps">
+                <td class="underline cursor-pointer" routerLink="/home/demand-fullfillment/steps">
                     <p-button icon="pi pi-eye" [rounded]="true" />
                 </td>
                 <td>{{ demand.requesitionCode }}</td>

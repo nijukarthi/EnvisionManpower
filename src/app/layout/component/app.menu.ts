@@ -38,36 +38,77 @@ export class AppMenu {
                         routerLink: ['/home/approval']
                     },
                     {
-                        label: 'Resource Manager Assign',
-                        icon: 'pi pi-address-book',
-                        routerLink: ['/home/manager']
-                    },
-                    {
-                        label: 'Full Fill Request',
-                        icon: 'pi pi-address-book',
-                        routerLink: ['/home/fullFill']
-                    },
-                    {
-                        label: 'Full Fill Process',
-                        icon: 'pi pi-history',
+                        label: 'Demand Management',
+                        icon: 'pi pi-briefcase',
                         items: [
                             {
-                                label: 'Resource Manager',
+                                label: 'Assign Resource Manager',
                                 icon: 'pi pi-address-book',
-                                routerLink: ['/home/fullfillprocess/resource-manager']
+                                routerLink: ['/home/manager']
                             },
                             {
-                               label: 'Consultancy',
-                               icon: 'pi pi-credit-card',
-                               routerLink: ['/home/consultancyPage']
-                           },
-                           {
-                               label: 'Guest User',
-                               icon: 'pi pi-eraser',
-                               routerLink: ['/home/guestUserPage']
-                           },
+                                label: 'Assign Standard Role',
+                                icon: 'pi pi-address-book',
+                                routerLink: ['/home/assign-role']
+                            },
+                            {
+                                label: 'Demand Fullfillment',
+                                icon: 'pi pi-history',
+                                routerLink: ['/home/demand-fullfillment']
+                                // items: [
+                                //     {
+                                //         label: 'Resource Manager',
+                                //         icon: 'pi pi-address-book',
+                                        
+                                //     },
+                                //     {
+                                //         label: 'Consultancy',
+                                //         icon: 'pi pi-credit-card',
+                                //         routerLink: ['/home/consultancyPage']
+                                //     },
+                                //     {
+                                //         label: 'Interviewer',
+                                //         icon: 'pi pi-eraser',
+                                //         routerLink: ['/home/guestUserPage']
+                                //     },
+                                // ]
+                            },
+                            {
+                                label: 'Onboarding',
+                                icon: 'pi pi-graduation-cap'
+                            },
+                            {
+                                label: 'Training',
+                                icon: 'pi pi-warehouse'
+                            }
                         ]
                     },
+                    {
+                        label: 'Performance & Attendance',
+                        icon: 'pi pi-chart-bar',
+                        items: [
+                            {
+                                label: 'Attendance',
+                                icon: 'pi pi-book'
+                            },
+                            {
+                                label: 'Site Performance',
+                                icon: 'pi pi-map'
+                            },
+                            {
+                                label: 'Transfer',
+                                icon: 'pi pi-hourglass'
+                            },
+                            {
+                                label: 'Exit',
+                                icon: 'pi pi-arrow-circle-left'
+                            }
+                        ]
+                    },  
+                    {
+                        label: 'Accounts Payable',
+                        icon: 'pi pi-money-bill'
+                    },        
                     {
                         label: 'Resource Pool',
                         icon: 'pi pi-server', 
@@ -140,8 +181,9 @@ export class AppMenu {
                                 routerLink: ['/home/users']
                             },
                             {
-                                label: 'Guest Users',
-                                icon: "pi pi-address-book"
+                                label: 'Interviewer',
+                                icon: "pi pi-address-book",
+                                routerLink: ['/home/interviewers']
                             }
                         ]
                     },
@@ -163,8 +205,10 @@ export class AppMenu {
                         ...group,
                         items: group.items.filter(
                             item =>
-                                item?.label === 'Full Fill Process' ||
+                                item?.label === 'Demand Management' ||
                                 item?.label === 'Resource Pool' || 
+                                item.label === 'Performance & Attendance' ||
+                                item.label === 'Accounts Payable' ||
                                 item?.label === 'Logout'
                         ),
                     };

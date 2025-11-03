@@ -1,7 +1,9 @@
 <div class="card">
     <div class="flex items-center justify-between">
         <h5>Consultancies</h5>
-        <p-button label="Add Consultancy" icon="pi pi-plus" routerLink="/home/consultancies/new" />
+        @if (loggedUserGroupId !== 360) {
+            <p-button label="Add Consultancy" icon="pi pi-plus" routerLink="/home/consultancies/new" />
+        }
     </div>
     <p-table [value]="consultancyList" showGridlines>
         <ng-template #header>

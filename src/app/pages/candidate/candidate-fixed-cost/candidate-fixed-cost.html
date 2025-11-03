@@ -15,7 +15,6 @@
                 <th>Highest Qualification</th>
                 <th>Qualification</th>
                 <th>Notice Period</th>
-                <th>Assigned By</th>
                 <th>Project Code</th>
                 <th>Site Incharge</th>
                 <th>SPN Code</th>
@@ -36,8 +35,7 @@
                 <td>{{ candidate.qualification }}</td>
                 <td>{{ candidate.highestQualification }}</td>
                 <td>{{ candidate.noticePeriod }}</td>
-                <td>{{ candidate.employmentDetails ? candidate.employmentDetails?.assignedBy?.userName ?? '-' : '-' }}</td>
-                <td>{{ candidate.employmentDetails ? candidate.employmentDetails.envisionRole.roleName : '-'}}</td>
+                <td>{{ candidate.employmentDetails ? candidate.employmentDetails.project.projectCode : '-'}}</td>
                 <td>{{ candidate.employmentDetails ? candidate.employmentDetails.siteIncharge.userName : '-' }}</td>
                 <td>{{ candidate.employmentDetails ? candidate.employmentDetails.spn.spnCode : '-' }}</td>
                 <td>{{ candidate.employmentDetails ? candidate.employmentDetails.spn.spnDescription : '-' }}</td>

@@ -49,7 +49,7 @@
         @if (fixedCostCandidateForm.get('workingCurrently')?.value === false) {
             <div class="flex justify-end mt-3">
                 <button pButton pRipple>
-                    <span pButtonLabel>Submit</span>
+                    <span pButtonLabel>{{ actionName }}</span>
                 </button>
             </div>
         }
@@ -103,20 +103,25 @@
                     <p-select [options]="envisionRoleList" formControlName="id" id="role" optionLabel="roleName" optionValue="id"
                         [filter]="true" filterBy="roleName" placeholder="Select Role" [showClear]="true" appendTo="body" />
                 </div>
-                <div class="grid col-span-1 gap-1">
+                <div class="grid col-start-1 col-span-1 gap-1">
                     <label for="offer-release-date">Offer Release Date</label>
                     <p-datepicker formControlName="offerReleaseDate" [iconDisplay]="'input'" [showIcon]="true" inputId="offer-release-date" 
                         placeholder="Select Date" appendTo="body" />
                 </div>
-                <div class="grid col-start-1 col-span-1 gap-1">
+                <div class="grid col-span-1 gap-1">
                     <label for="joining-date">Joining Date</label>
                     <p-datepicker formControlName="joiningDate" [iconDisplay]="'input'" [showIcon]="true" inputId="joining-date"
                         placeholder="Select Date" appendTo="body" />
                 </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="employment-status">Employment Status</label>
+                    <p-select [options]="employmentStatusList" formControlName="employmentStatus" id="employment-status"
+                        placeholder="Select Status" [showClear]="true" appendTo="body" />
+                </div>
             </div>
             <div class="flex justify-end mt-3">
                 <button pButton pRipple>
-                    <span pButtonLabel>Submit</span>
+                    <span pButtonLabel>{{ actionName }}</span>
                 </button>
             </div>
         </form>

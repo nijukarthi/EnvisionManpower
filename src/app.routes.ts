@@ -26,9 +26,10 @@ import { ConsultancyForm } from '@/pages/consultancy/consultancy-form/consultanc
 import { ConsultancyPage } from '@/pages/fullFillProcess/consultancy-page/consultancy-page';
 import { GuestUserPage } from '@/pages/fullFillProcess/guest-user-page/guest-user-page';
 import { Steps } from '@/pages/fullFillProcess/steps/steps';
-import { ResourceManager } from '@/pages/fullFillProcess/resource-manager/resource-manager';
+import { DemandFullfillment } from '@/pages/fullFillProcess/demand-fullfillment/demand-fullfillment';
 import { FixedCostCandidateForm } from '@/pages/candidate/fixed-cost-candidate-form/fixed-cost-candidate-form';
 import { CostPlusCandidateForm } from '@/pages/candidate/cost-plus-candidate-form/cost-plus-candidate-form';
+import { Interviewer } from '@/pages/interviewer/interviewer';
 
 export const appRoutes: Routes = [
     {
@@ -53,7 +54,7 @@ export const appRoutes: Routes = [
                 component: Approval,
                 canActivate: [authGuard]
             },
-            { path: 'fullFill', component: Fullfillreq, canActivate: [authGuard]},
+            { path: 'assign-role', component: Fullfillreq, canActivate: [authGuard]},
             { path: 'consultancies', component: ConsultancyTable, canActivate: [authGuard] },
             { path: 'consultancies/new', component: ConsultancyForm, canActivate: [authGuard] },
             { path: 'consultancies/:id', component: ConsultancyForm, canActivate: [authGuard] },
@@ -66,13 +67,15 @@ export const appRoutes: Routes = [
             { path: 'manager', component: ResourceManagerAssign, canActivate: [authGuard] },
             { path: 'projects', component: Project, canActivate: [authGuard]},
             { path: 'envisionRoles', component: Envisionroles, canActivate: [authGuard] },
+            { path: 'interviewers', component: Interviewer, canActivate: [authGuard] },
             { path: 'uikit', canActivate: [authGuard], loadChildren: () => import('./app/pages/uikit/uikit.routes') },
             { path: 'documentation', component: Documentation, canActivate: [authGuard] },
             { path: 'consultancyPage', component: ConsultancyPage, canActivate: [authGuard] },
             { path: 'guestUserPage', component: GuestUserPage, canActivate: [authGuard] },
-            { path: 'fullfillprocess/resource-manager', component: ResourceManager, canActivate: [authGuard] },
-            { path: 'fullfillprocess/steps', component: Steps, canActivate: [authGuard] },
+            { path: 'demand-fullfillment', component: DemandFullfillment, canActivate: [authGuard] },
+            { path: 'demand-fullfillment/steps', component: Steps, canActivate: [authGuard] },
             { path: 'candidates/fixed-cost/new', component: FixedCostCandidateForm, canActivate: [authGuard] },
+            { path: 'candidates/fixed-cost/:id', component: FixedCostCandidateForm, canActivate: [authGuard] },
             { path: 'candidates/cost-plus/new', component: CostPlusCandidateForm, canActivate: [authGuard] },
             { path: 'candidate/fixed-cost', component: CandidateFixedCost, canActivate: [authGuard] },
             { path: 'candidate/cost-plus', component: CandidateCostPlus, canActivate: [authGuard] },
