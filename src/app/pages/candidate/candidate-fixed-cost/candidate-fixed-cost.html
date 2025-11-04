@@ -3,7 +3,13 @@
         <h5>Fixed Cost Candidates</h5>
         <p-button label="Add Candidate" icon="pi pi-plus" routerLink="/home/candidates/fixed-cost/new" />
     </div>
-    <p-table [value]="fixedCostCandidateList" showGridlines [rowHover]="true" [tableStyle]="{'min-width': '150rem'}">
+    <p-table [value]="fixedCostCandidateList" showGridlines [rowHover]="true" [paginator]="true"
+        [rows]="10" [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true" (onPage)="pageChange($event)"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [tableStyle]="{'min-width': '150rem'}">
+        <ng-template #caption>
+            <p-multiselect display="chip" [options]="viewOptions" optionLabel="label" optionValue="value" 
+                placeholder="Choose Columns" (onChange)="selectedView($event.value)" [style]="{ 'min-width': '200px' }" />
+        </ng-template>
         <ng-template #header>
             <tr>
                 <th>SI NO</th>
@@ -27,7 +33,10 @@
         <ng-template #body let-candidate let-i="rowIndex">
             <tr>
                 <td>{{ i + 1 }}</td>
-                <td>{{ candidate.candidateCode }}</td>
+                <td>
+                    <p-menu #menu [model]="getMenuItems(candidate)" [popup]="true" appendTo="body" />
+                    <p-button (click)="menu.toggle($event)" [label]="candidate.candidateCode" variant="text" link />
+                </td>
                 <td>{{ candidate.candidateName }}</td>
                 <td>{{ candidate.positionApplied }}</td>
                 <td>{{ candidate.currentExperience }}</td>
@@ -50,4 +59,5 @@
     </p-table>
 </div>
 
-<p-toast />
+<p-toast position="top-center" />
+<p-confirmdialog />

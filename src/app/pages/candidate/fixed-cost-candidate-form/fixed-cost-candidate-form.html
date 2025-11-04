@@ -1,5 +1,5 @@
 <div class="card">
-    <h5>Add Candidate</h5>
+    <h5>{{ candidateId ? 'Edit Candidate' : 'Add Candidate' }}</h5>
     <form [formGroup]="fixedCostCandidateForm" (ngSubmit)="onSubmit()">
         <div class="grid grid-cols-2 gap-2">
             <div class="grid col-span-1 gap-1">
@@ -32,19 +32,21 @@
                 <label for="notice-period">Notice Period</label>
                 <p-inputNumber formControlName="noticePeriod" inputId="notice-period" [useGrouping]="false" />
             </div>
-            <div class="col-start-1 flex items-center gap-3 mt-2">
-                <label for="currently-working">Is This Candidate Currently Working in Envision?</label>
-                <div class="flex items-center gap-3">
-                    <div class="flex items-center gap-1">
-                        <p-radiobutton formControlName="workingCurrently" [value]="true" inputId="yes" />
-                        <label for="yes">Yes</label>
-                    </div>
-                    <div class="flex items-center gap-1">
-                        <p-radiobutton formControlName="workingCurrently" [value]="false" inputId="no" />
-                        <label for="no">No</label>
+            @if (!(candidateId && loggedUserGroupId === 360 && fixedCostCandidateForm.get('workingCurrently')?.value === false)) {
+                <div class="col-start-1 flex items-center gap-3 mt-2">
+                    <label for="currently-working">Is This Candidate Currently Working in Envision?</label>
+                    <div class="flex items-center gap-3">
+                        <div class="flex items-center gap-1">
+                            <p-radiobutton formControlName="workingCurrently" [value]="true" inputId="yes" />
+                            <label for="yes">Yes</label>
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <p-radiobutton formControlName="workingCurrently" [value]="false" inputId="no" />
+                            <label for="no">No</label>
+                        </div>
                     </div>
                 </div>
-            </div>
+            }
         </div>
         @if (fixedCostCandidateForm.get('workingCurrently')?.value === false) {
             <div class="flex justify-end mt-3">

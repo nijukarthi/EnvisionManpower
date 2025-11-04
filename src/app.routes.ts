@@ -77,6 +77,7 @@ export const appRoutes: Routes = [
             { path: 'candidates/fixed-cost/new', component: FixedCostCandidateForm, canActivate: [authGuard] },
             { path: 'candidates/fixed-cost/:id', component: FixedCostCandidateForm, canActivate: [authGuard] },
             { path: 'candidates/cost-plus/new', component: CostPlusCandidateForm, canActivate: [authGuard] },
+            { path: 'candidates/cost-plus/:id', component: CostPlusCandidateForm, canActivate: [authGuard] },
             { path: 'candidate/fixed-cost', component: CandidateFixedCost, canActivate: [authGuard] },
             { path: 'candidate/cost-plus', component: CandidateCostPlus, canActivate: [authGuard] },
             { path: 'pages', canActivate: [authGuard], loadChildren: () => import('./app/pages/pages.routes') }

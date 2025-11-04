@@ -350,6 +350,12 @@ export class Project implements OnInit {
     })
   }
 
+  pageChange(event: any){
+    this.offSet = event.first;
+    this.pageSize = event.rows;
+    this.fetchActiveProjects();
+  }
+
   onDialogClose(){
     this.projectId = null;
     this.projectForm.reset();

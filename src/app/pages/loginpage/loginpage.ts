@@ -25,7 +25,10 @@ export class Loginpage {
   loginUserForm: any;
   loginScreen:boolean = true;
   registerScreen:boolean = false;
+  registerInterviewerScreen = false;
   userOtpForm:any;
+  interviewerForm: any;
+  interviewerOtpForm: any;
 
   UserGroups = UserGroups;
 
@@ -35,13 +38,20 @@ export class Loginpage {
     sessionStorage.clear();
     this.loginUserForm = this.fb.group({
       email: [''],
-      guestMobileNumber: [''],
-
     })
 
     this.userOtpForm = this.fb.group({
         email: [''],
         otp: ['',Validators.required]
+    })
+
+    this.interviewerForm = this.fb.group({
+        phoneNumber: ['']
+    })
+
+    this.interviewerOtpForm = this.fb.group({
+        phoneNumber: [''],
+        otp: ['', Validators.required]
     })
 
      const nav = this.route.getCurrentNavigation();
@@ -86,8 +96,8 @@ export class Loginpage {
                 ]);
                 this.loginUserForm.get('email')?.updateValueAndValidity();
 
-                this.loginUserForm.get('guestMobileNumber')?.clearValidators();
-                this.loginUserForm.get('guestMobileNumber')?.updateValueAndValidity();
+                this.interviewerForm.get('phoneNumber')?.clearValidators();
+                this.interviewerForm.get('phoneNumber')?.updateValueAndValidity();
 
                 if(this.loginUserForm.valid){
                     var email = this.loginUserForm.get('email')?.value;
@@ -120,20 +130,20 @@ export class Loginpage {
                
 
             } else if (action == 'guest') {
-                this.loginUserForm.get('guestMobileNumber')?.setValidators([
+                this.interviewerForm.get('phoneNumber')?.setValidators([
                     Validators.required,
                     Validators.pattern('^[0-9]{10}$')
                 ]);
-                this.loginUserForm.get('guestMobileNumber')?.updateValueAndValidity();
+                this.interviewerForm.get('phoneNumber')?.updateValueAndValidity();
 
                  this.loginUserForm.get('email')?.clearValidators();
                 this.loginUserForm.get('email')?.updateValueAndValidity();
                 this.loginUserForm.updateValueAndValidity();
 
                 if(this.loginUserForm.valid){
-                    var guestMobileNumber = this.loginUserForm.get('guestMobileNumber')?.value;
+                    var phoneNumber = this.loginUserForm.get('phoneNumber')?.value;
                     let data = {
-                        "email": guestMobileNumber
+                        "email": phoneNumber
                     }
                     this.apiService.sendOTP(data).subscribe({
                     next: val => {
@@ -144,7 +154,6 @@ export class Loginpage {
                             this.loginUserResponse = val;
                             this.otpTimer(this.loginUserResponse.expireBy);
                             return;
-                            /* this.route.navigate(['/register']) */
                         }
                          this.registerScreen = false;
                             this.loginScreen = true;
@@ -169,6 +178,37 @@ export class Loginpage {
        
     }
 
+    submitInterviewer(){
+        try {
+            console.log(this.interviewerForm.value);
+            if (this.interviewerForm.valid) {
+                const data = this.interviewerForm.value;
+                console.log(data);
+                this.apiService.sendInterviewerOtp(data).subscribe({
+                    next: val => {
+                        console.log(val);
+                        this.loginScreen = false;
+                        this.registerInterviewerScreen = true;
+                        this.loginUserResponse = val;
+                        this.otpTimer(this.loginUserResponse.expireBy);
+                        return;
+                    },
+                    error: err => {
+                        console.log(err);
+                        this.loginScreen = true;
+                        this.registerInterviewerScreen = false;
+
+                        if (err.status === 400) {
+                            this.messageService.add({severity: 'error', summary: 'Error', detail: err.error.detail})
+                        }
+                    }
+                })
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     fetchUserProfile(){
         this.apiService.fetchUserProfile('').subscribe({
             next: val => {
@@ -179,7 +219,10 @@ export class Loginpage {
                     this.route.navigate(['/home/approval']);
                 } else if(val.data.userGroupId === UserGroups.CONSULTANCY){
                     this.route.navigate(['/home/consultancies']);
-                } else {
+                } else if (val.data.userGroupId === UserGroups.GUESTUSER) {
+                    this.route.navigate(['/home/demand-fullfillment']);
+                }
+                else {
                     this.route.navigate(['/home/demand']);
                 }
             },
@@ -219,6 +262,37 @@ export class Loginpage {
 
         }
         
+    }
+
+    verifyInterviewerOtp(){
+        try {
+            console.log(this.interviewerOtpForm.value);
+            if (this.interviewerOtpForm.valid) {
+                this.interviewerOtpForm.patchValue({
+                    phoneNumber: this.loginUserResponse.data.email
+                })
+
+                const data = this.interviewerOtpForm.value;
+                console.log(data);
+
+                this.apiService.verifyInterviewerOtp(data).subscribe({
+                    next: val => {
+                        console.log(val);
+                        sessionStorage.setItem('token', val.data.token);
+                        this.fetchUserProfile();
+                    },
+                    error: err => {
+                        console.log(err);
+
+                        if (err.status === 400) {
+                            this.messageService.add({severity: 'error', summary: 'Error', detail: err.error.detail});
+                        }
+                    }
+                })
+            }
+        } catch (error) {
+            console.log(error);
+        }
     }
 
 

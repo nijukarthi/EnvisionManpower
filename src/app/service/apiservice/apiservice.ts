@@ -28,6 +28,14 @@ export class Apiservice {
     return this.postMethod('auth/user/verify-otp', params);
   }
 
+  sendInterviewerOtp(params: any){
+    return this.postMethod('auth/guestuser/send-otp', params);
+  }
+
+  verifyInterviewerOtp(params: any): Observable<any>{
+    return this.postMethod('auth/guestuser/verify-otp', params);
+  }
+
   createNewDepartment(params: any): Observable<any> {
     return this.postMethod('master/department/create', params);
   }
@@ -262,6 +270,10 @@ export class Apiservice {
 
   updateEmploymentStatus(params: any): Observable<any>{
     return this.postMethod('candidate/employmentdetail/status/update', params);
+  }
+
+  deleteCandidate(params: any){
+    return this.postMethod('candidate/remove', params);
   }
 
 

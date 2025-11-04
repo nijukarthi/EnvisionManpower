@@ -2,7 +2,7 @@ import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 
 @Component({
@@ -20,7 +20,11 @@ export class CostPlusCandidateForm implements OnInit {
   envisionRoleList: any;
   selectedSpn: any;
 
-  constructor(private apiService: Apiservice, private messageService: MessageService, private router: Router){}
+  actionName = 'Submit';
+
+  candidateId = 0;
+
+  constructor(private apiService: Apiservice, private messageService: MessageService, private router: Router, private route: ActivatedRoute){}
 
   costPlusCandidateForm = this.fb.group({
     candidateName: [''],
@@ -87,6 +91,37 @@ export class CostPlusCandidateForm implements OnInit {
     this.fetchPCodes();
     this.fetchSpnInfo();
     this.fetchEnvisionRoles();
+
+    this.route.paramMap.subscribe(param => {
+      const id = param.get('id');
+      console.log(id);
+
+      if (id) {
+        this.candidateId = Number(id);
+        this.actionName = 'Update';
+        this.fetchViewCandidate(this.candidateId);
+      }
+    })
+  }
+
+  fetchViewCandidate(candidateId: number){
+    try {
+      const data = {
+        candidateId: candidateId
+      }
+
+      this.apiService.fetchViewCandidate(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.costPlusCandidateForm.patchValue(val.data);
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   updateMonthlyTotal(){
@@ -227,8 +262,10 @@ export class CostPlusCandidateForm implements OnInit {
       this.apiService.createCostPlusCandidates(data).subscribe({
         next: val => {
           console.log(val);
-          this.messageService.add({severity: 'Success', summary: 'success', detail: 'Candidate Created Successfully'});
-          this.router.navigate(['/home/candidate/cost-plus']);
+          this.messageService.add({severity: 'success', summary: 'Success', detail: 'Candidate Created Successfully'});
+          setTimeout(() => {
+            this.router.navigate(['/home/candidate/cost-plus']);
+          }, 2000);
         },
         error: err => {
           console.log(err);

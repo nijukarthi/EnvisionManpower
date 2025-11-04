@@ -1,3 +1,4 @@
+import { UserGroups } from '@/models/usergroups/usergroups.enum';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
 import { Component, inject, OnInit } from '@angular/core';
@@ -21,6 +22,8 @@ export class FixedCostCandidateForm implements OnInit {
 
   candidateId = 0;
   employmentId = 0;
+
+  loggedUserGroupId = Number(sessionStorage.getItem('userGroupId'));
 
   actionName = 'Submit';
 
@@ -48,7 +51,7 @@ export class FixedCostCandidateForm implements OnInit {
       }),
       joiningDate: [''],
       offerReleaseDate: [''],
-      employmentStatus: ['']
+      employmentStatus: ['ACTIVE']
     })
   })
 
@@ -58,6 +61,7 @@ export class FixedCostCandidateForm implements OnInit {
     this.fetchPCodes();
     this.fetchEnvisionRoles();
     this.fetchSpnInfo();
+    this.fetchEmploymentStatus();
 
     this.route.paramMap.subscribe(param => {
       const id = param.get('id');
@@ -143,20 +147,25 @@ export class FixedCostCandidateForm implements OnInit {
             }
           }
           this.fixedCostCandidateForm.patchValue(formattedData);
-          this.employmentId = candidateData.employmentDetails.employmentId;
+          this.employmentId = candidateData?.employmentDetails?.employmentId;
 
-          if (candidateId) {
+          if (candidateId && this.loggedUserGroupId === 360) {
             this.fixedCostCandidateForm.get('employmentDetails.project.projectId')?.disable();
             this.fixedCostCandidateForm.get('employmentDetails.spn.spnId')?.disable();
             this.fixedCostCandidateForm.get('employmentDetails.envisionRole.id')?.disable();
             this.fixedCostCandidateForm.get('employmentDetails.joiningDate')?.disable();
             this.fixedCostCandidateForm.get('employmentDetails.offerReleaseDate')?.disable();
-          } else {
+            this.fixedCostCandidateForm.get('employmentDetails.employmentStatus')?.disable();
+          } else if (candidateId && (UserGroups.SITEINCHARGE === this.loggedUserGroupId || UserGroups.ADMIN === this.loggedUserGroupId)) {
+            this.fixedCostCandidateForm.get('employmentDetails.employmentStatus')?.enable();
+          }
+          else {
             this.fixedCostCandidateForm.get('employmentDetails.project.projectId')?.enable();
             this.fixedCostCandidateForm.get('employmentDetails.spn.spnId')?.enable();
             this.fixedCostCandidateForm.get('employmentDetails.envisionRole.id')?.enable();
             this.fixedCostCandidateForm.get('employmentDetails.joiningDate')?.enable();
             this.fixedCostCandidateForm.get('employmentDetails.offerReleaseDate')?.enable();
+            this.fixedCostCandidateForm.get('employmentDetails.employmentStatus')?.enable();
           }
 
           const spnId = candidateData?.employmentDetails?.spn?.spnId;
@@ -312,8 +321,8 @@ export class FixedCostCandidateForm implements OnInit {
     }
 
     this.fixedCostCandidateApi(data);
-    if (this.fixedCostCandidateForm.get('employmentDetails.employmentStatus')?.valid) {
-      this.updateEmploymentStatus();
-    }
+    // if (this.fixedCostCandidateForm.get('employmentDetails.employmentStatus')?.valid) {
+    //   this.updateEmploymentStatus();
+    // }
   }
 }
