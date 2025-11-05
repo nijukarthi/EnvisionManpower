@@ -1,7 +1,7 @@
 <div class="grid grid-cols-[2fr_1.4fr] gap-5 items-start">
     <div class="card">
         <h5>{{ candidateId ? 'Edit Candidate' : 'Add Candidate' }}</h5>
-        <form [formGroup]="costPlusCandidateForm">
+        <form [formGroup]="costPlusCandidateForm" (ngSubmit)="updatePersonalDetails()">
             <div class="grid grid-cols-2 gap-2">
                 <div class="grid col-span-1 gap-1">
                     <label for="candidate-name">Candidate Name</label>
@@ -34,12 +34,19 @@
                     <p-inputNumber formControlName="noticePeriod" inputId="notice-period" [useGrouping]="false" />
                 </div>
             </div>
+            @if (candidateId) {
+                <div class="flex justify-end mt-4">
+                    <button pButton pRipple type="submit">
+                        <span pButtonLabel>Update</span>
+                    </button>
+                </div>
+            }
         </form>
     </div>
 
     <div class="card">
         <h5>Monthly Reimbursements</h5>
-        <form [formGroup]="costPlusCandidateForm">
+        <form [formGroup]="costPlusCandidateForm" (ngSubmit)="updateMonthlyReimbursements()">
             <div class="grid grid-cols-2 gap-2" formGroupName="monthlyReimbursements">
                 <div class="grid col-span-2 gap-1">
                     <label for="gross-ctc">Gross CTC</label>
@@ -72,6 +79,13 @@
                        mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="2" fluid />
                 </div>
             </div>
+            @if (candidateId) {
+                <div class="flex justify-end mt-4">
+                    <button pButton pRipple type="submit">
+                        <span pButtonLabel>Update</span>
+                    </button>
+                </div>
+            }
         </form>
     </div>
 </div>
@@ -119,7 +133,7 @@
                 </div>
             </div>
         </div>
-        @if (costPlusCandidateForm.get('workingCurrently')?.value === false) {
+        @if (costPlusCandidateForm.get('workingCurrently')?.value === false || candidateId) {
             <div class="flex justify-end mt-3">
                 <button pButton pRipple type="submit">
                     <span pButtonLabel>{{ actionName }}</span>
@@ -249,4 +263,4 @@
     </div>
 }
 
-<p-toast />
+<p-toast position="top-center" />

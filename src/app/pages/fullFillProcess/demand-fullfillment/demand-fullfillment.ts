@@ -1,6 +1,8 @@
+import { DemandStatus } from '@/models/demand-status/demand-status.enum';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-resource-manager',
@@ -9,97 +11,88 @@ import { Component, OnInit } from '@angular/core';
   styleUrl: './demand-fullfillment.scss'
 })
 export class DemandFullfillment implements OnInit {
+  offSet = 0;
+  pageSize = 10;
 
-  constructor(private apiService: Apiservice){}
+  demandFullfillmentList: any;
+  requisitionDetails: any;
 
-  envisionRoleList: any;
+  openViewRequisition = false;
 
-  demandFullfillList = [
-        {
-            "requesitionCode": 'ABC',
-            "stepId": 1,
-            requestedBy: 'Admin',
-            "demandCode": "R2710001-1",
-            pCode: 'P8002',
-            clusterCode: 'KA',
-            "spn": {
-                "spnId": 5,
-                "spnCode": "SPN328345",
-                "spnDescription": "Project Civil Manager",
-                "experience": "6-8"
-            },
-            "quantity": 5,
-            "plannedDeploymentDate": "2025-11-21",
-            "plannedReleaseDate": "2025-11-06"
-          },
-         {
-            "requesitionCode": 'DEF',
-            "stepId": 3,
-            requestedBy: 'Admin',
-            clusterCode: 'TN',
-            "demandCode": "R2710001-2",
-            pCode: 'P8003',
-            "spn": {
-                "spnId": 5,
-                "spnCode": "SPN328346",
-                "spnDescription": "Project Civil Manager",
-                "experience": "6-8"
-            },
-            "quantity": 5,
-            "plannedDeploymentDate": "2025-11-21",
-            "plannedReleaseDate": "2025-11-06"
-        },
+  constructor(private apiService: Apiservice, private router: Router){}
+
+  ngOnInit(): void {
+    this.fetchDemandFullfillment();
+  }
+
+  getMenuItems(demand: any){
+    return [
+      {
+        label: 'View Requisition',
+        icon: 'pi pi-eye',
+        command: () => this.viewRequisition(demand)
+      },
+      {
+        label: 'View Steps',
+        icon: 'pi pi-eye',
+        command: () => this.router.navigate(['/home/demand-fullfillment/steps'], 
           {
-            "requesitionCode": 'XYZ',
-            "stepId": 4,
-            requestedBy: 'Admin',
-            "demandCode": "R2710001-3",
-            clusterCode: 'KA',
-            pCode: 'P8004',
-            "demandStatus": 102,
-            "spn": {
-                "spnId": 5,
-                "spnCode": "SPN328343",
-                "spnDescription": "Project Civil Manager",
-                "experience": "6-8"
-            },
-            "quantity": 5,
-            "plannedDeploymentDate": "2025-11-21",
-            "plannedReleaseDate": "2025-11-06"
-        },
-        {
-            "requesitionCode": 'MNO',
-            "stepId": 6,
-            requestedBy: 'Admin',
-            "demandCode": "R2710001-3",
-            clusterCode: 'KA',
-            pCode: 'P8005',
-            "demandStatus": 102,
-            "spn": {
-                "spnId": 5,
-                "spnCode": "SPN328343",
-                "spnDescription": "Project Civil Manager",
-                "experience": "6-8"
-            },
-            "quantity": 5,
-            "plannedDeploymentDate": "2025-11-21",
-            "plannedReleaseDate": "2025-11-06"
-        }
+            state: {
+              requesitionId: demand.requesitionId,
+              demandId: demand.demandId
+            }
+          }
+        )
+      }
     ]
+  }
 
-    ngOnInit(): void {
-      this.fetchEnvisionRole();
-    }
+  fetchDemandFullfillment(){
+    try {
+      const data = {
+        demandStatus: DemandStatus.PROCESSING,
+        offSet: this.offSet,
+        pageSize: this.pageSize
+      }
 
-    fetchEnvisionRole(){
-      this.apiService.fetchActiveEnvRole('').subscribe({
+      this.apiService.fetchDemandFullFill(data).subscribe({
         next: val => {
           console.log(val);
-          this.envisionRoleList = val.data;
+          this.demandFullfillmentList = val.data.data;
         },
         error: err => {
           console.log(err);
         }
       })
+    } catch (error) {
+      console.log(error);
     }
+  }
+
+  viewRequisition(demand: any){
+    try {
+      this.openViewRequisition = true;
+      const data = {
+        requesitionId: demand.requesitionId
+      }
+
+      this.apiService.viewRequisition(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.requisitionDetails = val.data;
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  pageChange(event: any){
+    this.offSet = event.first;
+    this.pageSize = event.rows;
+    this.fetchDemandFullfillment();
+  }
 }

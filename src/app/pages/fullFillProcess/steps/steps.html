@@ -94,36 +94,42 @@
             <p-step-panel [value]="1">
                 <ng-template #content>
                     <p class="text-primary text-lg font-semibold">Consultancy Assign</p>
-                    <form>
+                    <form [formGroup]="firstInterviewScheduleForm" (ngSubmit)="submitFirstInterviewSchedule()">
                         <div class="grid grid-cols-2 gap-2">
                             <div class="grid col-span-1 gap-1">
                                 <label for="consultancy-name">Consultancy</label>
-                                <p-multiselect [options]="consultancyList" optionLabel="consultancyName" optionValue="userId" 
+                                <p-multiselect [options]="consultancyList" [formControl]="demandConsultancyControl" 
+                                    optionLabel="consultancyName" optionValue="userId" 
                                     id="consultancy-name" [filter]="true" filterBy="consultancyName" display="chip" 
-                                    [maxSelectedLabels]="3" [showClear]="true" placeholder="Select Consultancy" appendTo="body" />
+                                    [maxSelectedLabels]="3" [showClear]="true" placeholder="Select Consultancy" 
+                                    (onChange)="selectedConsultancyId($event.value)" appendTo="body" />
                             </div>
                             <div class="grid col-span-1 gap-1">
                                 <label for="hr-name">HR Name</label>
-                                <p-select id="hr-name" [filter]="true" 
-                                   [showClear]="true" appendTo="body" />
+                                <p-multiselect [options]="consultancyList" [formControl]="demandHrControl" 
+                                    optionLabel="userName" optionValue="userId"
+                                   id="hr-name" [filter]="true" filterBy="userName" display="chip" 
+                                   [maxSelectedLabels]="3" [showClear]="true" appendTo="body" />
                             </div>
                             <div class="grid col-span-1 gap-1">
                                 <label for="interview-date">Schedule Interview Date</label>
-                                <p-datepicker placeholder="Select Date" [iconDisplay]="'input'" [showIcon]="true" 
-                                    inputId="interview-date" appendTo="body" />
+                                <p-datepicker formControlName="interviewDate" placeholder="Select Date" 
+                                    [iconDisplay]="'input'" [showIcon]="true" inputId="interview-date" appendTo="body" />
                             </div>
                             <div class="grid col-span-1 gap-1">
                                 <label for="templatedisplay">Schedule Interview Time</label>
-                                <p-datepicker placeholder="Select Time" [iconDisplay]="'input'" [showIcon]="true"
+                                <p-datepicker formControlName="interviewTime" placeholder="Select Time" [iconDisplay]="'input'" [showIcon]="true"
                                     [timeOnly]="true" inputId="templatedisplay" appendTo="body">
                                     <ng-template #inputicon let-clickCallBack="clickCallBack">
                                         <i class="pi pi-clock" (click)="clickCallBack($event)"></i>
                                     </ng-template>
                                 </p-datepicker>
                             </div>
-                            <div class="grid col-span-1 gap-1">
+                            <div class="grid col-span-1 gap-1" formGroupName="interviewer">
                                 <label for="interviewer">Interviewer</label>
-                                <p-select id="interviewer" [filter]="true" [showClear]="true" appendTo="body" />
+                                <p-select [options]="interviewerList" formControlName="userId" id="interviewer" optionLabel="userName" optionValue="userId"
+                                    [filter]="true" filterBy="userName" placeholder="Select Interviewer"
+                                    [showClear]="true" appendTo="body" />
                             </div>
                         </div>
                         <div class="flex justify-end mt-4">

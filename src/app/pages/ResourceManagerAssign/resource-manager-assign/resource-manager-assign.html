@@ -86,59 +86,60 @@
 
 </p-fluid>
 
-<p-dialog header="" [resizable]="true" [draggable]="false" [modal]="true" [maximizable]="true" appendTo="body"
-    [(visible)]="viewDetail" [style]="{ width: '99vw' }" [contentStyle]="{ height: '500px' }">
+<p-dialog header="View Requisition" [resizable]="true" [draggable]="false" [modal]="true" [maximizable]="true" appendTo="body"
+    [(visible)]="viewDetail" [style]="{ width: '50rem' }" [contentStyle]="{ height: '320px' }">
     <p-fluid>
-        <div class=" card flex">
-            <form [formGroup]="demandForm">
-                <div class="card grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div class="flex flex-wrap gap-2 w-full">
-                        <label for="firstname2">Requision Code</label>
-                        <input pInputText id="firstname2" formControlName="requesitionCode" type="text" />
-                    </div>
-                    <div class="flex flex-wrap gap-2 w-full">
-                        <label for="lastname2">Project Code</label>
-                        <p-select [options]="PCode" formControlName="projectId" optionLabel="name" optionValue="name"
-                            placeholder="Select PCode" [filter]="true" filterBy="name" class="w-full md:w-56" />
-                    </div>
-                    <div class="flex flex-wrap gap-2 w-full">
-                        <label for="lastname2">State</label>
-                        <p-select [options]="states" formControlName="state" optionLabel="label" optionValue="label"
-                            placeholder="Select State" [filter]="true" filterBy="label" class="w-full md:w-56" />
-                    </div>
-                    <div class="flex flex-wrap gap-2 w-full">
-                        <label for="lastname2"> Department</label>
-                        <p-select [options]="departmentList" formControlName="department" optionLabel="label"
-                            optionValue="label" placeholder="Select Department" [filter]="true" filterBy="label"
-                            class="w-full md:w-56" />
-                    </div>
-                    <div class="flex flex-wrap gap-2 w-full">
-                        <label for="lastname2">Category</label>
-                        <p-select [options]="categoryList" formControlName="category" optionLabel="label"
-                            optionValue="label" placeholder="Select Category" [filter]="true" filterBy="label"
-                            class="w-full md:w-56" />
-                    </div>
-                    <div class="flex flex-wrap gap-2 w-full">
-                        <label for="lastname2">Planed deployment date</label>
-                        <input pInputText id="firstname2" formControlName="plannedDate" type="text" />
-
-                        <!-- <p-datepicker appendTo="body" formControlName="plannedDate" placeholder="Select Date" class="w-full" /> -->
-                    </div>
-                    <div class="flex flex-wrap gap-2 w-full">
-                        <label for="lastname2">Actual deployment date</label>
-                        <input pInputText id="firstname2" formControlName="actualDate" type="text" />
-
-                        <!-- <p-datepicker appendTo="body" formControlName="actualDate" placeholder="Select Date" class="w-full" /> -->
-                    </div>
-
-                    <div class="flex flex-wrap gap-2 w-full">
-                        <label for="lastname2">Requested By</label>
-                        <input pInputText formControlName="requestedBy" type="text" class="w-full" />
-                    </div>
-
-                </div>
-
-            </form>
+        <div class="grid grid-cols-2 gap-2">
+            <div class="grid col-span-1 gap-1">
+                <label for="requisition-code">Requisition Code</label>
+                <input type="text" pInputText [value]="requisitionDetails?.requesitionCode" id="requisition-code"
+                    [disabled]="true" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="requested-by">Requested By</label>
+                <input type="text" pInputText [value]="requisitionDetails?.requestedBy?.userName" id="requested-by"
+                    [disabled]="true" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="project-code">Project Code</label>
+                <input type="text" pInputText [value]="requisitionDetails?.project?.projectCode" id="project-code"
+                    [disabled]="true" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="cluster-name">Cluster Name</label>
+                <input type="text" pInputText [value]="requisitionDetails?.cluster?.clusterName" id="cluster-name"
+                    [disabled]="true" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="cluster-code">Cluster Code</label>
+                <input type="text" pInputText [value]="requisitionDetails?.cluster?.clusterCode" id="cluster-name"
+                    [disabled]="true" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="cluster-head">Cluster Head</label>
+                <input type="text" pInputText [value]="requisitionDetails?.clusterHead?.userName" id="cluster-head"
+                    [disabled]="true" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="site-incharge">Site Incharge</label>
+                <input type="text" pInputText [value]="requisitionDetails?.siteIncharge?.userName" id="site-incharge"
+                    [disabled]="true" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="department">Department</label>
+                <input type="text" pInputText [value]="requisitionDetails?.department?.departmentName" id="department"
+                    [disabled]="true" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="department-head">Department Head</label>
+                <input type="text" pInputText [value]="requisitionDetails?.departmentHead?.userName" id="department-head"
+                    [disabled]="true" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="category">Category</label>
+                <input type="text" pInputText [value]="requisitionDetails?.category?.categoryName" id="category"
+                    [disabled]="true" />
+            </div>
         </div>
     </p-fluid>
 </p-dialog>

@@ -216,6 +216,14 @@ export class Apiservice {
     return this.postMethod('requesition/demand/fullfill', params);
   }
 
+  fetchConsultancyByCategory(params: any): Observable<any>{
+    return this.postMethod('user/category/consultancy', params);
+  }
+
+  fetchInterviewerInfoList(params: any): Observable<any>{
+    return this.postMethod('user/active/list/guestuserinfo', params);
+  }
+
   assignEnvisionRoles(params: any){
     return this.postMethod('requesition/demand/envisionrole/assign', params);
   }
@@ -276,6 +284,17 @@ export class Apiservice {
     return this.postMethod('candidate/remove', params);
   }
 
+  updateCostPlusPersonalCandidate(params: any){
+    return this.postMethod('candidate/costplus/update', params);
+  }
+
+  updateMonthlyReimbursementCandidate(params: any){
+    return this.postMethod('candidate/monthlyreimbursement/update', params);
+  }
+
+  updateOneTimeReimbursementCandidate(params: any){
+    return this.postMethod('candidate/onetimereimbursement/update', params);
+  }
 
   fetchActiveInterviewers(params: any): Observable<any>{
     return this.postMethod('user/active/guestuser', params);
@@ -295,6 +314,10 @@ export class Apiservice {
 
   deleteInterviewer(params: any){
     return this.postMethod('user/guestuser/remove', params);
+  }
+
+  createFirstInterview(params: any){
+    return this.postMethod('requesition/demand/interview/first-round/create', params);
   }
 
 }

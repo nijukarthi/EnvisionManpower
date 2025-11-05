@@ -1,45 +1,92 @@
 <div class="card">
     <h5>Demand FullFillment</h5>
-    <p-table [value]="demandFullfillList" showGridlines [rowHover]="true" [tableStyle]="{'min-width': '120rem'}">
+    <p-table [value]="demandFullfillmentList" showGridlines [rowHover]="true" [paginator]="true"
+        [rows]="10" [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true" (onPage)="pageChange($event)"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [tableStyle]="{'min-width': '90rem'}">
         <ng-template #header>
             <tr>
                 <th>SI No</th>
-                <th>Actions</th>
-                <th>Requistion Code</th>
-                <th>Requested By</th>
                 <th>Demand Code</th>
-                <th>Project Code</th>
-                <th>Cluster Code</th>
                 <th>SPN Code</th>
                 <th>SPN Description</th>
                 <th>Quantity</th>
                 <th>Planned Deployment Date</th>
                 <th>Planned Release Date</th>
                 <th>Role</th>
+                <th>Actions</th>
             </tr>
         </ng-template>
         <ng-template #body let-demand let-i="rowIndex">
             <tr>
                 <td>{{ i + 1 }}</td>
-                <td class="underline cursor-pointer" routerLink="/home/demand-fullfillment/steps">
-                    <p-button icon="pi pi-eye" [rounded]="true" />
+                <td>
+                    <p-menu #menu [model]="getMenuItems(demand)" [popup]="true" appendTo="body" />
+                    <p-button (onClick)="menu.toggle($event)" [label]="demand.demandCode" variant="text" link />
                 </td>
-                <td>{{ demand.requesitionCode }}</td>
-                <td>{{ demand.requestedBy }}</td>
-                <td>{{ demand.demandCode }}</td>
-                <td>{{ demand.pCode }}</td>
-                <td>{{ demand.clusterCode }}</td>
                 <td>{{ demand.spn.spnCode }}</td>
                 <td>{{ demand.spn.spnDescription }}</td>
                 <td>{{ demand.quantity }}</td>
                 <td>{{ demand.plannedDeploymentDate }}</td>
                 <td>{{ demand.plannedReleaseDate }}</td>
                 <td>
-                    <p-select [options]="envisionRoleList" optionLabel="roleName" optionValue="id" 
-                        placeholder="Select Role" [filter]="true" filterBy="roleName" appendTo="body" 
-                        class="w-full md:w-56" />
+                    {{ demand?.envisionRole?.roleName ?? '-' }}
+                </td>
+                <td>
+                    <p-menu #menu [model]="getMenuItems(demand)" [popup]="true" appendTo="body" />
+                    <p-button (onClick)="menu.toggle($event)" icon="pi pi-ellipsis-v" [rounded]="true" variant="text"  />
                 </td>
             </tr>
         </ng-template>
     </p-table>
 </div>
+
+<p-dialog header="View Requisition" [modal]="true" [(visible)]="openViewRequisition" [style]="{width: '50rem'}">
+    <div class="grid grid-cols-2 gap-2">
+        <div class="grid col-span-1 gap-1">
+            <label for="requisition-code">Requisition Code</label>
+            <input type="text" pInputText [value]="requisitionDetails?.requesitionCode" id="requisition-code" [disabled]="true" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="requested-by">Requested By</label>
+            <input type="text" pInputText [value]="requisitionDetails?.requestedBy?.userName" id="requested-by" [disabled]="true" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="project-code">Project Code</label>
+            <input type="text" pInputText [value]="requisitionDetails?.project?.projectCode" id="project-code" [disabled]="true" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="cluster-name">Cluster Name</label>
+            <input type="text" pInputText [value]="requisitionDetails?.cluster?.clusterName" id="cluster-name" [disabled]="true" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="cluster-code">Cluster Code</label>
+            <input type="text" pInputText [value]="requisitionDetails?.cluster?.clusterCode" id="cluster-name"
+                [disabled]="true" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="cluster-head">Cluster Head</label>
+            <input type="text" pInputText [value]="requisitionDetails?.clusterHead?.userName" id="cluster-head"
+                [disabled]="true" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="site-incharge">Site Incharge</label>
+            <input type="text" pInputText [value]="requisitionDetails?.siteIncharge?.userName" id="site-incharge"
+                [disabled]="true" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="department">Department</label>
+            <input type="text" pInputText [value]="requisitionDetails?.department?.departmentName" id="department"
+                [disabled]="true" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="department-head">Department Head</label>
+            <input type="text" pInputText [value]="requisitionDetails?.departmentHead?.userName" id="department-head"
+                [disabled]="true" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="category">Category</label>
+            <input type="text" pInputText [value]="requisitionDetails?.category?.categoryName" id="category"
+                [disabled]="true" />
+        </div>
+    </div>
+</p-dialog>

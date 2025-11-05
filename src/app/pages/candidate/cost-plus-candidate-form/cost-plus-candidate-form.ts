@@ -27,6 +27,7 @@ export class CostPlusCandidateForm implements OnInit {
   constructor(private apiService: Apiservice, private messageService: MessageService, private router: Router, private route: ActivatedRoute){}
 
   costPlusCandidateForm = this.fb.group({
+    candidateId: [0],
     candidateName: [''],
     positionApplied: [''],
     currentExperience: [0],
@@ -177,6 +178,50 @@ export class CostPlusCandidateForm implements OnInit {
     this.costPlusCandidateForm.get('costPlusSalaryDetails.deltaFromExpected')?.setValue(deltaFromExpected, { emitEvent: false });
   }
 
+  updatePersonalDetails(){
+    try {
+      const { monthlyReimbursements, oneTimeReimbursements, employmentDetails, costPlusSalaryDetails, ...data } = this.costPlusCandidateForm.value;
+      console.log(data);
+      this.apiService.updateCostPlusPersonalCandidate(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.messageService.add({severity: 'success', summary: 'Success', detail: 'Candidate Personal Detials Updated Successfully'});
+          this.fetchViewCandidate(this.candidateId);
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  updateMonthlyReimbursements(){
+    try {
+      let data = this.costPlusCandidateForm.get('monthlyReimbursements')?.getRawValue();
+
+      data = {
+        candidateId: this.candidateId,
+        ...data
+      }
+      console.log(data);
+
+      this.apiService.updateMonthlyReimbursementCandidate(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.messageService.add({severity: 'success', summary: 'Success', detail: 'Candidate Monthly Reimbursements Updated Successfully'});
+          this.fetchViewCandidate(this.candidateId);
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   fetchPCodes(){
     try {
       this.apiService.fetchProjectCodes('').subscribe({
@@ -259,18 +304,33 @@ export class CostPlusCandidateForm implements OnInit {
 
   costPlusCandidateApi(data: any){
     try {
-      this.apiService.createCostPlusCandidates(data).subscribe({
-        next: val => {
-          console.log(val);
-          this.messageService.add({severity: 'success', summary: 'Success', detail: 'Candidate Created Successfully'});
-          setTimeout(() => {
-            this.router.navigate(['/home/candidate/cost-plus']);
-          }, 2000);
-        },
-        error: err => {
-          console.log(err);
-        }
-      })
+      if (!this.candidateId) {     
+        this.apiService.createCostPlusCandidates(data).subscribe({
+          next: val => {
+            console.log(val);
+            this.messageService.add({severity: 'success', summary: 'Success', detail: 'Candidate Created Successfully'});
+            setTimeout(() => {
+              this.router.navigate(['/home/candidate/cost-plus']);
+            }, 2000);
+          },
+          error: err => {
+            console.log(err);
+          }
+        })
+      } else {
+        this.apiService.updateOneTimeReimbursementCandidate(data).subscribe({
+          next: val => {
+            console.log(val);
+            this.messageService.add({severity: 'success', summary: 'Success', detail: 'Candidate Updated Successfully'});
+            setTimeout(() => {
+              this.router.navigate(['/home/candidate/cost-plus']);
+            }, 2000);
+          },
+          error: err => {
+            console.log(err);
+          }
+        })
+      }
     } catch (error) {
       console.log(error);
     }
@@ -279,8 +339,20 @@ export class CostPlusCandidateForm implements OnInit {
   onSubmit(){
     console.log(this.costPlusCandidateForm.getRawValue());
 
-    const { employmentDetails, costPlusSalaryDetails, ...data} = this.costPlusCandidateForm.getRawValue();
-    console.log('Final data to send:', data);
+    let data;
+    
+    if (this.candidateId) {
+      data = this.costPlusCandidateForm.get('oneTimeReimbursements')?.getRawValue();
+
+      data = {
+        candidateId: this.candidateId,
+        ...data
+      }
+    } else {
+      const { employmentDetails, costPlusSalaryDetails, ...rest} = this.costPlusCandidateForm.getRawValue();
+      data = rest;
+      console.log('Final data to send:', data);
+    }
     
     this.costPlusCandidateApi(data);
   }
