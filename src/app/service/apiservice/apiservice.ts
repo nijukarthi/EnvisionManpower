@@ -320,4 +320,44 @@ export class Apiservice {
     return this.postMethod('requesition/demand/interview/first-round/create', params);
   }
 
+  viewFirstInterview(params: any): Observable<any>{
+    return this.postMethod('requesition/demand/interview/first-round/view', params);
+  }
+
+  assignNewConsultancy(params: any){
+    return this.postMethod('requesition/demand/interview/consultancy/assign', params);
+  }
+
+  removeAssignedConsultancy(params: any){
+    return this.postMethod('requesition/demand/interview/consultancy/remove', params);
+  }
+
+  updateFirstInterviewDetails(params: any){
+    return this.postMethod('requesition/demand/interview/update', params);
+  }
+
+  fetchCandidateInfoList(params: any): Observable<any>{
+    return this.postMethod('candidate/infolist', params);
+  }
+
+  assignCandidatesFirstInterview(params: any){
+    return this.postMethod('requesition/demand/interview/first-round/candidate/assign', params);
+  }
+
+  viewAssignedCandidates(params: any): Observable<any>{
+    return this.postMethod('requesition/demand/interview/candidates', params);
+  }
+
+  assignMoreCandidates(params: any){
+    return this.postMethod('requesition/demand/interview/first-round/candidate/assign-more', params);
+  }
+
+  removeAssignedCandidates(params: any){
+    return this.postMethod('requesition/demand/interview/first-round/candidate/remove', params);
+  }
+
+  firstInterviewRoundStatus(params: any){
+    return this.postMethod('requesition/demand/interview/first-round/candidate/update', params);
+  }
+
 }

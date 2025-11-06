@@ -1,6 +1,6 @@
 <div class="card">
     <h5>Full Fill Process Steps</h5>
-    <p-stepper [(value)]="activeStep">
+    <p-stepper [(value)]="activeStep" (valueChange)="stepChange($event)">
         <p-step-list>
             <p-step [value]="1">
                 <ng-template #content let-activateCallback="activateCallback" let-value="value">
@@ -101,8 +101,8 @@
                                 <p-multiselect [options]="consultancyList" [formControl]="demandConsultancyControl" 
                                     optionLabel="consultancyName" optionValue="userId" 
                                     id="consultancy-name" [filter]="true" filterBy="consultancyName" display="chip" 
-                                    [maxSelectedLabels]="3" [showClear]="true" placeholder="Select Consultancy" 
-                                    (onChange)="selectedConsultancyId($event.value)" appendTo="body" />
+                                    [maxSelectedLabels]="2" [showClear]="true" placeholder="Select Consultancy" 
+                                    (onChange)="selectedConsultancyId($event.value)" appendTo="body" fluid />
                             </div>
                             <div class="grid col-span-1 gap-1">
                                 <label for="hr-name">HR Name</label>
@@ -134,7 +134,7 @@
                         </div>
                         <div class="flex justify-end mt-4">
                             <button pButton pRipple type="submit">
-                                <span pButtonLabel>Submit</span>
+                                <span pButtonLabel>{{ actionName }}</span>
                             </button>
                         </div>
                     </form>
@@ -143,27 +143,35 @@
             <p-step-panel [value]="2">
                 <ng-template #content>
                     <p class="text-primary text-lg font-semibold">Candidate Addition</p>
-                    <form>
+                    <form [formGroup]="assignCandidateFirstInterviewForm" (ngSubmit)="submitStep2Form()">
                         <div class="grid grid-cols-2 gap-2">
                             <div class="grid col-span-1 gap-1">
                                 <label for="candidate-name">Candidate Name</label>
-                                <p-multiselect id="candidate-name" [filter]="true" display="chip" [maxSelectedLabels]="3" 
-                                    [showClear]="true" appendTo="body" />
+                                <p-multiselect [options]="candidateList" [formControl]="candidateInterviewControl" id="candidate-name" 
+                                    optionLabel="candidateName" optionValue="candidateId"
+                                    [filter]="true" filterBy="candidateName" display="chip" [maxSelectedLabels]="3" 
+                                    [showClear]="true" placeholder="Select Candidates" 
+                                    (onChange)="selectedCandidateIds($event.value)" appendTo="body" />
                             </div>
                             <div class="grid col-span-1 gap-1">
                                 <label for="emp-code">Temporary Employee Code</label>
-                                <p-multiselect id="emp-code" [filter]="true" display="chip" [maxSelectedLabels]="3" [showClear]="true"
-                                    appendTo="body" />
+                                <p-multiselect [options]="candidateList" [formControl]="candidateCodeControl" id="emp-code" 
+                                    optionLabel="candidateCode" optionValue="candidateId"
+                                    [filter]="true" filterBy="candidateCode" display="chip" [maxSelectedLabels]="3" 
+                                    [showClear]="true" placeholder="Select Candidate Codes" 
+                                    (onChange)="selectedCandidateIds($event.value)" appendTo="body" />
                             </div>
                             <div class="grid col-span-1 gap-1">
                                 <label for="designation">Current Designation</label>
-                                <p-select id="designation" [filter]="true" [showClear]="true"
-                                    appendTo="body" />
+                                <p-multiselect [options]="candidateList" [formControl]="candidateDesignationControl" id="designation" 
+                                    optionLabel="positionApplied" optionValue="candidateId"
+                                    [filter]="true" filterBy="positionApplied" display="chip" [maxSelectedLabels]="3" 
+                                    [showClear]="true" appendTo="body" />
                             </div>
                         </div>
                         <div class="flex justify-end mt-4">
                             <button pButton pRipple type="submit">
-                                <span pButtonLabel>Submit</span>
+                                <span pButtonLabel>{{ actionName }}</span>
                             </button>
                         </div>
                     </form>
@@ -172,42 +180,46 @@
             <p-step-panel [value]="3">
                 <ng-template #content>
                     <p class="text-primary text-lg font-semibold">First Interview</p>
+                    <form [formGroup]="firstInterviewRoundForm" (ngSubmit)="submitStep3Form()">
+                        <p-table [value]="assignedCandidateList" showGridlines [rowHover]="true" 
+                            formArrayName="candidateInterviewMappings">
+                            <ng-template #header>
+                                <tr>
+                                    <th>SI No</th>
+                                    <th>Assigned Candidates Name</th>
+                                    <th>Accept/Reject</th>
+                                    <th>Feedback</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template #body let-candidate let-i="rowIndex">
+                                <tr [formGroupName]="i">
+                                    <td>{{ i + 1 }}</td>
+                                    <td>{{ candidate.candidate.candidateName }}</td>
+                                    <td>
+                                        <p-select [options]="performanceStatusList" formControlName="performanceStatus" id="accept-reject" 
+                                            optionLabel="label" optionValue="value"
+                                            placeholder="Select Status" appendTo="body" class="w-full" />
+                                    </td>
+                                    <td>
+                                        <textarea rows="3" formControlName="feedback" pTextarea id="feedback" class="w-full"></textarea>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                        <div class="flex justify-end mt-4">
+                            <button pButton pRipple type="submit">
+                                <span pButtonLabel>Submit</span>
+                            </button>
+                        </div>
+                    </form>
 
-                    <p-table [value]="candidateList" showGridlines [rowHover]="true">
-                        <ng-template #header>
-                            <tr>
-                                <th>SI No</th>
-                                <th>Assigned Candidates Name</th>
-                                <th>Accept/Reject</th>
-                                <th>Feedback</th>
-                            </tr>
-                        </ng-template>
-                        <ng-template #body let-candidate let-i="rowIndex">
-                            <tr>
-                                <td>{{ i + 1 }}</td>
-                                <td>{{ candidate.candidateName }}</td>
-                                <td>
-                                    <p-select id="accept-reject" placeholder="Select Status" appendTo="body" class="w-full" />
-                                </td>
-                                <td>
-                                    <textarea rows="3" pTextarea id="feedback" class="w-full"></textarea>
-                                </td>
-                            </tr>
-                        </ng-template>
-                    </p-table>
-
-                    <div class="flex justify-end mt-4">
-                        <button pButton pRipple type="submit">
-                            <span pButtonLabel>Submit</span>
-                        </button>
-                    </div>
                 </ng-template>
             </p-step-panel>
             <p-step-panel [value]="4">
                 <ng-template #content>
                     <p class="text-primary text-lg font-semibold">Interviewer Assign (Final)</p>
 
-                    <p-table [value]="candidateList" showGridlines [rowHover]="true">
+                    <p-table [value]="candidatePerformanceList" showGridlines [rowHover]="true">
                         <ng-template #header>
                             <tr>
                                 <th>SI No</th>
@@ -257,7 +269,7 @@
                 <ng-template #content>
                     <p class="text-primary text-lg font-semibold">Final Interview</p>
 
-                    <p-table [value]="candidateList" showGridlines [rowHover]="true">
+                    <p-table [value]="candidatePerformanceList" showGridlines [rowHover]="true">
                         <ng-template #header>
                             <tr>
                                 <th>SI No</th>
@@ -292,7 +304,7 @@
                 <ng-template #content>
                     <p class="text-primary text-lg font-semibold">Final Approval</p>
 
-                    <p-table [value]="candidateList" showGridlines [rowHover]="true">
+                    <p-table [value]="candidatePerformanceList" showGridlines [rowHover]="true">
                         <ng-template #header>
                             <tr>
                                 <th>SI No</th>
@@ -325,7 +337,7 @@
                 <ng-template #content>
                     <p class="text-primary text-lg font-semibold">Joining Process</p>
 
-                    <p-table [value]="candidateList" showGridlines [rowHover]="true" [tableStyle]="{'min-width': '90rem'}">
+                    <p-table [value]="candidatePerformanceList" showGridlines [rowHover]="true" [tableStyle]="{'min-width': '90rem'}">
                         <ng-template #header>
                             <tr>
                                 <th>SI No</th>
@@ -363,3 +375,5 @@
         </p-step-panels>
     </p-stepper>
 </div>
+
+<p-toast />

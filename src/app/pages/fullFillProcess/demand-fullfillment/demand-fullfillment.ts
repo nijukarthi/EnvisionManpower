@@ -39,7 +39,8 @@ export class DemandFullfillment implements OnInit {
           {
             state: {
               requesitionId: demand.requesitionId,
-              demandId: demand.demandId
+              demandId: demand.demandId,
+              fullfillmentStatus: demand.fullfillmentStatus
             }
           }
         )
