@@ -1,0 +1,37 @@
+<div class="card">
+    <h5>Site Performance</h5>
+    <p-table [value]="sitePerformanceList" showGridlines [rowHover]="true" [tableStyle]="{'min-width': '130rem'}">
+        <ng-template #header>
+            <tr>
+                <th>SL No</th>
+                <th>Employee Code</th>
+                <th>Candidate Code</th>
+                <th>Project Code</th>
+                <th>Employee Name</th>
+                <th>Site</th>
+                <th>State</th>
+                <th>Designation</th>
+                <th>Expected DOJ</th>
+                <th>Actual DOJ</th>
+                <th>Contact Number</th>
+                <th>Emergency Contact Number</th>
+            </tr>
+        </ng-template>
+        <ng-template #body let-performance let-i="rowIndex">
+            <tr>
+                <td>{{ i + 1 }}</td>
+                <td>{{ performance.employeeCode }}</td>
+                <td>{{ performance.candidateCode }}</td>
+                <td>{{ performance.pCode }}</td>
+                <td>{{ performance.employeeName }}</td>
+                <td>{{ performance.site }}</td>
+                <td>{{ performance.state }}</td>
+                <td>{{ performance.designation }}</td>
+                <td>{{ performance.expectedDoj }}</td>
+                <td>{{ performance.actualDoj }}</td>
+                <td>{{ performance.contact }}</td>
+                <td>{{ performance.eContact }}</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

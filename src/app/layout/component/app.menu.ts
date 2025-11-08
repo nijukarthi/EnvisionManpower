@@ -28,17 +28,17 @@ export class AppMenu {
                 routerLink: ['/pages'],
                 items: [
                     {
-                        label: 'Demand Request',
+                        label: 'Manpower Request',
                         icon: 'pi pi-calendar',
                         routerLink: ['/home/demand']
                     },
                     {
-                        label: 'Demand Approval',
+                        label: 'Manpower Approval',
                         icon: 'pi pi-ticket',
                         routerLink: ['/home/approval']
                     },
                     {
-                        label: 'Demand Management',
+                        label: 'Manpower Management',
                         icon: 'pi pi-briefcase',
                         items: [
                             {
@@ -52,34 +52,23 @@ export class AppMenu {
                                 routerLink: ['/home/assign-role']
                             },
                             {
-                                label: 'Demand Fullfillment',
+                                label: 'Manpower Fullfillment',
                                 icon: 'pi pi-history',
                                 routerLink: ['/home/demand-fullfillment']
-                                // items: [
-                                //     {
-                                //         label: 'Resource Manager',
-                                //         icon: 'pi pi-address-book',
-                                        
-                                //     },
-                                //     {
-                                //         label: 'Consultancy',
-                                //         icon: 'pi pi-credit-card',
-                                //         routerLink: ['/home/consultancyPage']
-                                //     },
-                                //     {
-                                //         label: 'Interviewer',
-                                //         icon: 'pi pi-eraser',
-                                //         routerLink: ['/home/guestUserPage']
-                                //     },
-                                // ]
                             },
                             {
                                 label: 'Onboarding',
-                                icon: 'pi pi-graduation-cap'
+                                icon: 'pi pi-graduation-cap',
+                                routerLink: ['/home/onboarding']
+                            },
+                            {
+                                label: 'On-roll Employees',
+                                icon: 'pi pi-user'
                             },
                             {
                                 label: 'Training',
-                                icon: 'pi pi-warehouse'
+                                icon: 'pi pi-warehouse',
+                                routerLink: ['/home/training']
                             }
                         ]
                     },
@@ -93,7 +82,8 @@ export class AppMenu {
                             },
                             {
                                 label: 'Site Performance',
-                                icon: 'pi pi-map'
+                                icon: 'pi pi-map',
+                                routerLink: ['/home/site-performance']
                             },
                             {
                                 label: 'Transfer',

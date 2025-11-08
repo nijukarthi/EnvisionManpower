@@ -170,7 +170,7 @@ export class FixedCostCandidateForm implements OnInit {
 
           const spnId = candidateData?.employmentDetails?.spn?.spnId;
           if (candidateData.employmentDetails) {    
-            this.selectedPCode(candidateData?.employmentDetails?.project?.projectId);
+            this.projectDetails = candidateData?.employmentDetails;
             this.selectedSPN(spnId);
           }
           this.fetchEmploymentStatus();

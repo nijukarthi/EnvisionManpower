@@ -1,11 +1,12 @@
 <div class="card">
-    <h5>Demand FullFillment</h5>
+    <h5>Demand FulFillment</h5>
     <p-table [value]="demandFullfillmentList" showGridlines [rowHover]="true" [paginator]="true"
         [rows]="10" [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true" (onPage)="pageChange($event)"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [tableStyle]="{'min-width': '90rem'}">
         <ng-template #header>
             <tr>
                 <th>SI No</th>
+                <th>Steps</th>
                 <th>Demand Code</th>
                 <th>SPN Code</th>
                 <th>SPN Description</th>
@@ -19,6 +20,9 @@
         <ng-template #body let-demand let-i="rowIndex">
             <tr>
                 <td>{{ i + 1 }}</td>
+                <td>
+                    <p-button [label]="getStepLabel(demand.fullfillmentStatus)" variant="text" link />
+                </td>
                 <td>
                     <p-menu #menu [model]="getMenuItems(demand)" [popup]="true" appendTo="body" />
                     <p-button (onClick)="menu.toggle($event)" [label]="demand.demandCode" variant="text" link />

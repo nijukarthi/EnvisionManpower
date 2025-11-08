@@ -17,7 +17,8 @@ export class Steps implements OnInit {
   offSet = 0;
   pageSize = 10;
   activeStep = 1;
-  interviewId = 0;
+  firstInterviewId = 0;
+  finalInterviewId = 0;
   categoryId = 0;
 
   actionName = 'Submit';
@@ -32,19 +33,8 @@ export class Steps implements OnInit {
   candidateList: any;
   candidateArray: any;
   assignedCandidateList: any;
-
-  candidatePerformanceList = [
-    {
-      id: 1,
-      candidateName: 'Praveen',
-      feedback: 'Better Performance'
-    },
-    {
-      id: 2,
-      candidateName: 'Rahul',
-      feedback: 'Better Performance'
-    }
-  ]
+  finalApprovalCandidateList: any;
+  joiningProcessCandidateList: any;
 
   performanceStatusList = [
     {
@@ -54,6 +44,32 @@ export class Steps implements OnInit {
     {
       label: 'Rejected',
       value: 15
+    }
+  ]
+
+  resourceManagerStatusList = [
+    {
+      label: 'Accepted',
+      value: 100
+    },
+    {
+      label: 'Hold',
+      value: 406
+    },
+    {
+      label: 'Rejected',
+      value: 499
+    }
+  ]
+
+  candidateAcceptanceList = [
+    {
+      label: 'Yes',
+      value: true
+    },
+    {
+      label: 'No',
+      value: false
     }
   ]
 
@@ -120,6 +136,52 @@ export class Steps implements OnInit {
     return this.firstInterviewRoundForm.get('candidateInterviewMappings') as FormArray;
   }
 
+  finalInterviewerAssignForm = this.fb.group({
+    interviewId: [0],
+    interviewer: this.fb.group({
+      userId: [0]
+    }),
+    interviewDate: [''],
+    interviewTime: ['']
+  })
+
+  finalInterviewRoundForm = this.fb.group({
+    interviewId: [0],
+    candidateFinalInterviewMappings: this.fb.array([])
+  })
+
+  takeFinalInterviewRound(candidateId: number): FormGroup{
+    return this.fb.group({
+      candidate: this.fb.group({
+        candidateId: [candidateId],
+      }),
+      feedback: [''],
+      performanceStatus: [0]
+    })
+  }
+
+  get candidateFinalInterviewMappings(): FormArray {
+    return this.finalInterviewRoundForm.get('candidateFinalInterviewMappings') as FormArray;
+  }
+
+  finalApprovalCandidateForm = this.fb.group({
+    demandId: [0],
+    approvalCandidates: this.fb.array([])
+  })
+
+  takeFinalApproval(candidateId: number): FormGroup{
+    return this.fb.group({
+      candidate: this.fb.group({
+        candidateId: [candidateId]
+      }),
+      statusByResourceManager: [0]
+    })
+  }
+
+  get approvalCandidates(): FormArray{
+    return this.finalApprovalCandidateForm.get('approvalCandidates') as FormArray;
+  }
+
   constructor(private apiService: Apiservice, private router: Router, private messageService: MessageService, 
     private datePipe: DatePipe){}
 
@@ -170,6 +232,18 @@ export class Steps implements OnInit {
       this.actionName = 'Update';
       this.fetchViewAssignedCandidates();
     }
+
+    if (this.activeStep === 4 || this.activeStep === 5) {
+      this.fetchFinalInterviewDetails();
+    }
+
+    if (this.activeStep === 6) {
+      this.fetchFinalApprovalCandidateList();
+    }
+
+    if (this.activeStep === 7) {
+      this.fetchJoiningProcessCandidateList();
+    }
   }
 
   fetchViewFirstInterview(){
@@ -189,7 +263,7 @@ export class Steps implements OnInit {
 
           
           const data = val.data;
-          this.interviewId = data.interviewId;
+          this.firstInterviewId = data.interviewId;
 
           const interviewDate = data.interviewDate ? new Date(data.interviewDate) : null;
           let interviewTime = null;
@@ -319,10 +393,10 @@ export class Steps implements OnInit {
     console.log(this.firstInterviewScheduleForm.value);
   }
 
-  formatDateAndTime(){
-    console.log(this.firstInterviewScheduleForm.get('interviewDate')?.value);
-    const interviewDate = new Date(this.firstInterviewScheduleForm.get('interviewDate')?.value ?? '');
-    const interviewTime = new Date(this.firstInterviewScheduleForm.get('interviewTime')?.value ?? '');
+  formatDateAndTime(form: FormGroup): {formattedDate: string | null; formattedTime: string | null }{
+    console.log(form.get('interviewDate')?.value);
+    const interviewDate = new Date(form.get('interviewDate')?.value ?? '');
+    const interviewTime = new Date(form.get('interviewTime')?.value ?? '');
 
     if (interviewDate && interviewTime) {
       const formattedDate = this.datePipe.transform(interviewDate, 'yyyy-MM-dd');
@@ -331,18 +405,19 @@ export class Steps implements OnInit {
       console.log('Formatted Date:', formattedDate);
       console.log('Formatted Time:', formattedTime);
 
-      this.firstInterviewScheduleForm.patchValue({
+      form.patchValue({
         interviewDate: formattedDate,
         interviewTime: formattedTime
-      })
-
-      console.log(this.firstInterviewScheduleForm.value);
+      });
+      console.log(form.value);
+      return { formattedDate, formattedTime };
     }
+    return { formattedDate: null, formattedTime: null };
   }
 
   submitFirstInterviewSchedule(){
     try {   
-      this.formatDateAndTime();
+      this.formatDateAndTime(this.firstInterviewScheduleForm);
       
       if (this.demandDetails.fullfillmentStatus === FullFillmentStatus.STEP1) {
         this.firstInterviewScheduleForm.patchValue({
@@ -370,7 +445,7 @@ export class Steps implements OnInit {
         const { demand, demandConsultancyMap, ...rest } = this.firstInterviewScheduleForm.value;
         const data = {
           ...rest,
-          interviewId: this.interviewId
+          interviewId: this.firstInterviewId
         }
         console.log(data);
 
@@ -420,7 +495,7 @@ export class Steps implements OnInit {
     console.log('checking');
     try {
       const data = {
-        interviewId: this.interviewId
+        interviewId: this.firstInterviewId
       }
       console.log(data);
 
@@ -429,6 +504,7 @@ export class Steps implements OnInit {
           console.log(val);
           this.assignedCandidateList = val.data.candidateInterviewMappings;
           this.populateCandidateInterviewMappings();
+          this.populateCandidateFinalInterviewMapping();
           this.candidateArray = val.data.candidateInterviewMappings.map((c: any) => c.candidate.candidateId);
           this.candidateInterviewControl.patchValue(this.candidateArray);
           this.candidateCodeControl.patchValue(this.candidateArray);
@@ -454,7 +530,7 @@ export class Steps implements OnInit {
   
         if (newIds.length > 0) {
           const data = {
-            interviewId: this.interviewId,
+            interviewId: this.firstInterviewId,
             candidate: {
               candidateId: newIds[0]
             }
@@ -481,7 +557,7 @@ export class Steps implements OnInit {
 
         if (removeIds.length > 0) {
           const data = {
-            interviewId: this.interviewId,
+            interviewId: this.firstInterviewId,
             candidate: {
               candidateId: removeIds[0]
             }
@@ -522,7 +598,7 @@ export class Steps implements OnInit {
     try {
       const data = {
         ...this.assignCandidateFirstInterviewForm.value,
-        interviewId: this.interviewId
+        interviewId: this.firstInterviewId
       }
 
       console.log(data);
@@ -563,7 +639,7 @@ export class Steps implements OnInit {
       
       const data = {
         ...this.firstInterviewRoundForm.value,
-        interviewId: this.interviewId
+        interviewId: this.firstInterviewId
       }
 
       console.log(data);
@@ -585,4 +661,194 @@ export class Steps implements OnInit {
       console.log(error);
     }
   }
+
+  fetchFinalInterviewDetails(){
+    try {
+      const data = {
+        demandId: this.demandDetails.demandId
+      }
+      console.log(data);
+
+      this.apiService.viewFinalInterviewDetails(data).subscribe({
+        next: val => {
+          console.log(val);
+          const data = val.data;
+          this.finalInterviewId = data.interviewId;
+
+          const interviewDate = data.interviewDate ? new Date(data.interviewDate) : null;
+
+          let interviewTime = null;
+          if(data.interviewDate && data.interviewTime){
+            interviewTime = new Date(`${data.interviewDate}T${data.interviewTime}`)
+          }
+          
+          this.finalInterviewerAssignForm.patchValue({
+            ...data,
+            interviewDate: interviewDate,
+            interviewTime: interviewTime
+          });
+
+          this.finalInterviewRoundForm.patchValue({
+            ...data,
+            candidateFinalInterviewMappings: data.candidateInterviewMappings
+          });
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  submitStep4Form(){
+    try {
+      this.formatDateAndTime(this.finalInterviewerAssignForm);
+      const data = {
+        ...this.finalInterviewerAssignForm.value,
+        interviewId: this.finalInterviewId,
+      }
+      console.log(data);
+
+      this.apiService.updateFirstInterviewDetails(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.messageService.add({severity: 'success', summary: 'Success', detail: 'Successfully Scheduled For Final Interview'});
+          setTimeout(() => {
+            this.router.navigate(['/home/demand-fullfillment']);
+          }, 2000);
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  populateCandidateFinalInterviewMapping(){
+    const formArray = this.candidateFinalInterviewMappings;
+    formArray.clear();
+
+    this.assignedCandidateList.forEach((candidate: any) => {
+      formArray.push(this.takeFinalInterviewRound(candidate.candidate.candidateId))
+    })
+  }
+
+  submitStep5Form(){
+    try {
+      console.log(this.finalInterviewRoundForm.value);
+
+      const data = {
+        interviewId: this.finalInterviewId,
+        candidateInterviewMappings: this.finalInterviewRoundForm.get('candidateFinalInterviewMappings')?.value
+      }
+
+      console.log(data);
+
+      this.apiService.updateFinalInterviewRound(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.messageService.add({severity: 'success', summary: 'Success', detail: 'Final Interview Conducted Successfully' });
+          this.fetchFinalInterviewDetails();
+          setTimeout(() => {
+            this.router.navigate(['/home/demand-fullfillment']);
+          }, 2000);
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  fetchFinalApprovalCandidateList(){
+    try {
+      const data = {
+        demandId: this.demandDetails.demandId
+      }
+
+      console.log(data);
+
+      this.apiService.finalApprovalCandidateList(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.finalApprovalCandidateList = val.data;
+          this.populateFinalApprovalCandidateMapping();
+          this.finalApprovalCandidateForm.patchValue({
+            ...val.data,
+            approvalCandidates: val.data
+          })
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  populateFinalApprovalCandidateMapping(){
+    const formArray = this.approvalCandidates;
+    formArray.clear();
+
+    this.finalApprovalCandidateList.forEach((candidate: any) => {
+      formArray.push(this.takeFinalApproval(candidate.candidate.candidateId))
+    })
+  }
+
+  submitStep6Form(){
+    try {
+      console.log(this.finalApprovalCandidateForm.value);
+
+      const data = {
+        ...this.finalApprovalCandidateForm.value,
+        demandId: this.demandDetails.demandId
+      }
+      console.log(data);
+
+      this.apiService.finalApprovalRound(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.messageService.add({severity: 'success', summary: 'Success', detail: 'Final Approval Done Successfully' });
+          setTimeout(() => {
+            this.router.navigate(['/home/demand-fullfillment']);
+          }, 2000);
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  fetchJoiningProcessCandidateList(){
+    try {
+      const data = {
+        demandId: this.demandDetails.demandId
+      }
+
+      console.log(data);
+
+      this.apiService.joiningProcessCandidateList(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.joiningProcessCandidateList = val.data;
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  
 }

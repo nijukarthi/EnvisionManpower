@@ -360,4 +360,24 @@ export class Apiservice {
     return this.postMethod('requesition/demand/interview/first-round/candidate/update', params);
   }
 
+  viewFinalInterviewDetails(params: any): Observable<any>{
+    return this.postMethod('requesition/demand/interview/second-round/view', params);
+  }
+
+  updateFinalInterviewRound(params: any){
+    return this.postMethod('requesition/demand/interview/second-round/candidate/update', params);
+  }
+
+  finalApprovalCandidateList(params: any): Observable<any>{
+    return this.postMethod('requesition/demand/finalapproval/candidate', params);
+  }
+
+  finalApprovalRound(params: any){
+    return this.postMethod('requesition/demand/finalapproval/candidate/update', params);
+  }
+
+  joiningProcessCandidateList(params: any): Observable<any>{
+    return this.postMethod('requesition/demand/joiningprocess/candidate', params);
+  }
+
 }

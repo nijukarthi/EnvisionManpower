@@ -1,0 +1,43 @@
+<div class="card">
+    <h5>Onboarding</h5>
+    <p-table [value]="onboardingList" showGridlines [rowHover]="true" [tableStyle]="{'min-width': '130rem'}">
+        <ng-template #header>
+            <tr>
+                <th>SL No</th>
+                <th>Employee Code</th>
+                <th>Candidate Code</th>
+                <th>Project Code</th>
+                <th>Employee Name</th>
+                <th>Site</th>
+                <th>State</th>
+                <th>Designation</th>
+                <th>Expected DOJ</th>
+                <th>Actual DOJ</th>
+                <th>Contact Number</th>
+                <th>Emergency Contact Number</th>
+                <th>UAN</th>
+                <th>Aadhar Number</th>
+                <th>PPE Type</th>
+            </tr>
+        </ng-template>
+        <ng-template #body let-onboarding let-i="rowIndex">
+            <tr>
+                <td>{{ i + 1 }}</td>
+                <td>{{ onboarding.employeeCode }}</td>
+                <td>{{ onboarding.candidateCode }}</td>
+                <td>{{ onboarding.pCode }}</td>
+                <td>{{ onboarding.employeeName }}</td>
+                <td>{{ onboarding.site }}</td>
+                <td>{{ onboarding.state }}</td>
+                <td>{{ onboarding.designation }}</td>
+                <td>{{ onboarding.expectedDoj }}</td>
+                <td>{{ onboarding.actualDoj }}</td>
+                <td>{{ onboarding.contact }}</td>
+                <td>{{ onboarding.eContact }}</td>
+                <td>{{ onboarding.uan }}</td>
+                <td>{{ onboarding.aadharNo }}</td>
+                <td>{{ onboarding.ppeType }}</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

@@ -1,0 +1,40 @@
+<div class="card">
+    <h5>Training</h5>
+    <p-table [value]="trainingList" showGridlines [rowHover]="true" [tableStyle]="{'min-width': '130rem'}">
+        <ng-template #header>
+            <tr>
+                <th rowspan="2">SL No</th>
+                <th rowspan="2">Employee Code</th>
+                <th rowspan="2">Candidate Code</th>
+                <th rowspan="2">Project Code</th>
+                <th rowspan="2">Employee Name</th>
+                <th rowspan="2">Site</th>
+                <th rowspan="2">State</th>
+                <th rowspan="2">Designation</th>
+                <th colspan="4" style="text-align: center;">GWO</th>
+            </tr>
+            <tr>
+                <th>Yes/No</th>
+                <th>Winda Id</th>
+                <th>Valid From</th>
+                <th>Valid Till</th>
+            </tr>
+        </ng-template>
+        <ng-template #body let-training let-i="rowIndex">
+            <tr>
+                <td>{{ i + 1 }}</td>
+                <td>{{ training.employeeCode }}</td>
+                <td>{{ training.candidateCode }}</td>
+                <td>{{ training.pCode }}</td>
+                <td>{{ training.employeeName }}</td>
+                <td>{{ training.site }}</td>
+                <td>{{ training.state }}</td>
+                <td>{{ training.designation }}</td>
+                <td>{{ training.yesOrNo }}</td>
+                <td>{{ training.windId }}</td>
+                <td>{{ training.validFrom }}</td>
+                <td>{{ training.validTill }}</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

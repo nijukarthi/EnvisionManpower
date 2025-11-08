@@ -219,7 +219,7 @@
                 <ng-template #content>
                     <p class="text-primary text-lg font-semibold">Interviewer Assign (Final)</p>
 
-                    <p-table [value]="candidatePerformanceList" showGridlines [rowHover]="true">
+                    <p-table [value]="assignedCandidateList" showGridlines [rowHover]="true">
                         <ng-template #header>
                             <tr>
                                 <th>SI No</th>
@@ -230,31 +230,34 @@
                         <ng-template #body let-candidate let-i="rowIndex">
                             <tr>
                                 <td>{{ i + 1 }}</td>
-                                <td>{{ candidate.candidateName }}</td>
+                                <td>{{ candidate.candidate.candidateName }}</td>
                                 <td>{{ candidate.feedback }}</td>
                             </tr>
                         </ng-template>
                     </p-table>
 
-                    <form class="mt-6">
+                    <form class="mt-6" [formGroup]="finalInterviewerAssignForm" (ngSubmit)="submitStep4Form()">
                         <div class="grid grid-cols-2 gap-2">
                             <div class="grid col-span-1 gap-1">
                                 <label for="final-interview-date">Final Interview Schedule Date</label>
-                                <p-datepicker [iconDisplay]="'input'" [showIcon]="true" 
+                                <p-datepicker formControlName="interviewDate" [iconDisplay]="'input'" [showIcon]="true" 
                                     inputId="final-interview-date" placeholder="Select Date" appendTo="body" />
                             </div>
                             <div class="grid col-span-1 gap-1">
                                 <label for="final-interview-time">Final Interview Schedule Time</label>
-                                <p-datepicker inputId="final-interview-time" [showIcon]="true" [iconDisplay]="'input'" 
+                                <p-datepicker formControlName="interviewTime" inputId="final-interview-time" [showIcon]="true" [iconDisplay]="'input'" 
                                     [timeOnly]="true" placeholder="Select Time" appendTo="body">
                                     <ng-template #inputicon let-clickCallBack="clickCallBack">
                                         <i class="pi pi-clock" (click)="clickCallBack($event)"></i>
                                     </ng-template>
                                 </p-datepicker>
                             </div>
-                            <div class="grid col-span-1 gap-1">
+                            <div class="grid col-span-1 gap-1" formGroupName="interviewer">
                                 <label for="interviewer">Interviewer</label>
-                                <p-select id="interviewer" [filter]="true" [showClear]="true" appendTo="body" />
+                                <p-select [options]="interviewerList" formControlName="userId" id="interviewer"
+                                    optionLabel="userName" optionValue="userId" 
+                                    [filter]="true" filterBy="userName" [showClear]="true" 
+                                    placeholder="Select Interviewer" appendTo="body" />
                             </div>
                         </div>
                         <div class="flex justify-end mt-4">
@@ -268,35 +271,39 @@
             <p-step-panel [value]="5">
                 <ng-template #content>
                     <p class="text-primary text-lg font-semibold">Final Interview</p>
+                    <form [formGroup]="finalInterviewRoundForm" (ngSubmit)="submitStep5Form()">
+                        <p-table [value]="assignedCandidateList" showGridlines [rowHover]="true" 
+                            formArrayName="candidateFinalInterviewMappings">
+                            <ng-template #header>
+                                <tr>
+                                    <th>SI No</th>
+                                    <th>Selected Candidates Name</th>
+                                    <th>Accept/Reject</th>
+                                    <th>Feedback</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template #body let-candidate let-i="rowIndex">
+                                <tr [formGroupName]="i">
+                                    <td>{{ i + 1 }}</td>
+                                    <td>{{ candidate.candidate.candidateName }}</td>
+                                    <td>
+                                        <p-select [options]="performanceStatusList" formControlName="performanceStatus" id="accept-reject"
+                                            optionLabel="label" optionValue="value" 
+                                            placeholder="Select Status" appendTo="body" class="w-full" />
+                                    </td>
+                                    <td>
+                                        <textarea rows="3" formControlName="feedback" pTextarea id="feedback" class="w-full"></textarea>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                        <div class="flex justify-end mt-4">
+                            <button pButton pRipple type="submit">
+                                <span pButtonLabel>Submit</span>
+                            </button>
+                        </div>
+                    </form>
 
-                    <p-table [value]="candidatePerformanceList" showGridlines [rowHover]="true">
-                        <ng-template #header>
-                            <tr>
-                                <th>SI No</th>
-                                <th>Selected Candidates Name</th>
-                                <th>Accept/Reject</th>
-                                <th>Feedback</th>
-                            </tr>
-                        </ng-template>
-                        <ng-template #body let-candidate let-i="rowIndex">
-                            <tr>
-                                <td>{{ i + 1 }}</td>
-                                <td>{{ candidate.candidateName }}</td>
-                                <td>
-                                    <p-select id="accept-reject" placeholder="Select Status" appendTo="body" class="w-full" />
-                                </td>
-                                <td>
-                                    <textarea rows="3" pTextarea id="feedback" class="w-full"></textarea>
-                                </td>
-                            </tr>
-                        </ng-template>
-                    </p-table>
-
-                    <div class="flex justify-end mt-4">
-                        <button pButton pRipple type="submit">
-                            <span pButtonLabel>Submit</span>
-                        </button>
-                    </div>
 
                 </ng-template>
             </p-step-panel>
@@ -304,66 +311,75 @@
                 <ng-template #content>
                     <p class="text-primary text-lg font-semibold">Final Approval</p>
 
-                    <p-table [value]="candidatePerformanceList" showGridlines [rowHover]="true">
-                        <ng-template #header>
-                            <tr>
-                                <th>SI No</th>
-                                <th>Selected Candidates Name</th>
-                                <th>First Interview Feedback</th>
-                                <th>Final Interview Feedback</th>
-                                <th>Status By Resource Manager</th>
-                            </tr>
-                        </ng-template>
-                        <ng-template #body let-candidate let-i="rowIndex">
-                            <tr>
-                                <td>{{ i + 1 }}</td>
-                                <td>{{ candidate.candidateName }}</td>
-                                <td>Better Performance</td>
-                                <td>Better Performance</td>
-                                <td>
-                                    <p-select id="status" placeholder="Select Status" appendTo="body" class="w-full" />
-                                </td>
-                            </tr>
-                        </ng-template>
-                    </p-table>
-                    <div class="flex justify-end mt-4">
-                        <button pButton pRipple type="submit">
-                            <span pButtonLabel>Submit</span>
-                        </button>
-                    </div>
+                    <form [formGroup]="finalApprovalCandidateForm" (ngSubmit)="submitStep6Form()">
+                        <p-table [value]="finalApprovalCandidateList" showGridlines [rowHover]="true"
+                            formArrayName="approvalCandidates">
+                            <ng-template #header>
+                                <tr>
+                                    <th>SI No</th>
+                                    <th>Selected Candidates Name</th>
+                                    <th>First Interview Feedback</th>
+                                    <th>Final Interview Feedback</th>
+                                    <th>Status By Resource Manager</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template #body let-candidate let-i="rowIndex">
+                                <tr [formGroupName]="i">
+                                    <td>{{ i + 1 }}</td>
+                                    <td>{{ candidate.candidate.candidateName }}</td>
+                                    <td>{{ candidate.firstInterviewFeedback }}</td>
+                                    <td>{{ candidate.finalInterviewFeedback }}</td>
+                                    <td>
+                                        <p-select [options]="resourceManagerStatusList" formControlName="statusByResourceManager" 
+                                            id="status" optionLabel="label" optionValue="value"
+                                            placeholder="Select Status" appendTo="body" class="w-full" />
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                        <div class="flex justify-end mt-4">
+                            <button pButton pRipple type="submit">
+                                <span pButtonLabel>Submit</span>
+                            </button>
+                        </div>
+                    </form>
                 </ng-template>
             </p-step-panel>
             <p-step-panel [value]="7">
                 <ng-template #content>
                     <p class="text-primary text-lg font-semibold">Joining Process</p>
 
-                    <p-table [value]="candidatePerformanceList" showGridlines [rowHover]="true" [tableStyle]="{'min-width': '90rem'}">
-                        <ng-template #header>
-                            <tr>
-                                <th>SI No</th>
-                                <th>Selected Candidates Name</th>
-                                <th>First Interview Feedback</th>
-                                <th>Final Interview Feedback</th>
-                                <th>Candidate Acceptance (Yes/No)</th>
-                                <th>Joining Date If Yes</th>
-                            </tr>
-                        </ng-template>
-                        <ng-template #body let-candidate let-i="rowIndex">
-                            <tr>
-                                <td>{{ i + 1 }}</td>
-                                <td>{{ candidate.candidateName }}</td>
-                                <td>Better Performance</td>
-                                <td>Better Performance</td>
-                                <td>
-                                    <p-select id="candidate-status" placeholder="Select Status" appendTo="body" class="w-full" />
-                                </td>
-                                <td>
-                                    <p-datepicker [iconDisplay]="'input'" [showIcon]="true" inputId="joining-date" 
-                                        placeholder="Select Joining Date" appendTo="body" class="w-full" />
-                                </td>
-                            </tr>
-                        </ng-template>
-                    </p-table>
+                    <form>
+                        <p-table [value]="joiningProcessCandidateList" showGridlines [rowHover]="true" [tableStyle]="{'min-width': '90rem'}">
+                            <ng-template #header>
+                                <tr>
+                                    <th>SI No</th>
+                                    <th>Selected Candidates Name</th>
+                                    <th>First Interview Feedback</th>
+                                    <th>Final Interview Feedback</th>
+                                    <th>Candidate Acceptance (Yes/No)</th>
+                                    <th>Joining Date If Yes</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template #body let-candidate let-i="rowIndex">
+                                <tr>
+                                    <td>{{ i + 1 }}</td>
+                                    <td>{{ candidate.candidate.candidateName }}</td>
+                                    <td>{{ candidate.firstInterviewFeedback }}</td>
+                                    <td>{{ candidate.finalInterviewFeedback }}</td>
+                                    <td>
+                                        <p-select [options]="candidateAcceptanceList" id="candidate-status" 
+                                            optionLabel="label" optionValue="value"
+                                            placeholder="Select Status" appendTo="body" class="w-full" />
+                                    </td>
+                                    <td>
+                                        <p-datepicker [iconDisplay]="'input'" [showIcon]="true" inputId="joining-date" 
+                                            placeholder="Select Joining Date" appendTo="body" class="w-full" />
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </form>
 
                     <div class="flex justify-end mt-4">
                         <button pButton pRipple type="submit">

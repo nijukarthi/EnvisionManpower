@@ -30,6 +30,9 @@ import { DemandFullfillment } from '@/pages/fullFillProcess/demand-fullfillment/
 import { FixedCostCandidateForm } from '@/pages/candidate/fixed-cost-candidate-form/fixed-cost-candidate-form';
 import { CostPlusCandidateForm } from '@/pages/candidate/cost-plus-candidate-form/cost-plus-candidate-form';
 import { Interviewer } from '@/pages/interviewer/interviewer';
+import { OnboardingTable } from '@/pages/onboarding/onboarding-table/onboarding-table';
+import { TrainingTable } from '@/pages/training/training-table/training-table';
+import { SitePerformance } from '@/pages/performanceAttendance/site-performance/site-performance';
 
 export const appRoutes: Routes = [
     {
@@ -74,6 +77,9 @@ export const appRoutes: Routes = [
             { path: 'guestUserPage', component: GuestUserPage, canActivate: [authGuard] },
             { path: 'demand-fullfillment', component: DemandFullfillment, canActivate: [authGuard] },
             { path: 'demand-fullfillment/steps', component: Steps, canActivate: [authGuard] },
+            { path: 'onboarding', component: OnboardingTable, canActivate: [authGuard] },
+            { path: 'training', component: TrainingTable, canActivate: [authGuard] },
+            { path: 'site-performance', component: SitePerformance, canActivate: [authGuard] },
             { path: 'candidates/fixed-cost/new', component: FixedCostCandidateForm, canActivate: [authGuard] },
             { path: 'candidates/fixed-cost/:id', component: FixedCostCandidateForm, canActivate: [authGuard] },
             { path: 'candidates/cost-plus/new', component: CostPlusCandidateForm, canActivate: [authGuard] },

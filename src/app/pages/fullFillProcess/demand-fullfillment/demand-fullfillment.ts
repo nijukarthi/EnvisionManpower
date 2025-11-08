@@ -1,4 +1,5 @@
 import { DemandStatus } from '@/models/demand-status/demand-status.enum';
+import { FullFillmentStatus } from '@/models/fullfillment-status/fullfillment-status.enum';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
 import { Component, OnInit } from '@angular/core';
@@ -48,6 +49,27 @@ export class DemandFullfillment implements OnInit {
     ]
   }
 
+  getStepLabel(status: number): string{
+    switch(status){
+      case FullFillmentStatus.STEP1:
+        return 'Step 1'
+      case FullFillmentStatus.STEP2:
+        return 'Step 2'
+      case FullFillmentStatus.STEP3:
+        return 'Step 3'
+      case FullFillmentStatus.STEP4:
+        return 'Step 4'
+      case FullFillmentStatus.STEP5:
+        return 'Step 5'
+      case FullFillmentStatus.STEP6:
+        return "Step 6"
+      case FullFillmentStatus.STEP7:
+        return 'Step 7'
+      default:
+        return '-'
+    }
+  }
+
   fetchDemandFullfillment(){
     try {
       const data = {
@@ -59,7 +81,7 @@ export class DemandFullfillment implements OnInit {
       this.apiService.fetchDemandFullFill(data).subscribe({
         next: val => {
           console.log(val);
-          this.demandFullfillmentList = val.data.data;
+          this.demandFullfillmentList = val.data.data.filter((fulfill: any) => fulfill.fullfillmentStatus !== 0);
         },
         error: err => {
           console.log(err);
