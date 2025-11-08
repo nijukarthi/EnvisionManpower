@@ -33,6 +33,9 @@ import { Interviewer } from '@/pages/interviewer/interviewer';
 import { OnboardingTable } from '@/pages/onboarding/onboarding-table/onboarding-table';
 import { TrainingTable } from '@/pages/training/training-table/training-table';
 import { SitePerformance } from '@/pages/performanceAttendance/site-performance/site-performance';
+import { InvoiceSubmission } from '@/pages/accounts-payable/invoice-submission/invoice-submission';
+import { InvoiceReceipt } from '@/pages/accounts-payable/invoice-receipt/invoice-receipt';
+import { InvoiceDisbursement } from '@/pages/accounts-payable/invoice-disbursement/invoice-disbursement';
 
 export const appRoutes: Routes = [
     {
@@ -80,6 +83,9 @@ export const appRoutes: Routes = [
             { path: 'onboarding', component: OnboardingTable, canActivate: [authGuard] },
             { path: 'training', component: TrainingTable, canActivate: [authGuard] },
             { path: 'site-performance', component: SitePerformance, canActivate: [authGuard] },
+            { path: 'invoice-submission', component: InvoiceSubmission, canActivate: [authGuard] },
+            { path: 'invoice-receipt', component: InvoiceReceipt, canActivate: [authGuard] },
+            { path: 'invoice-disbursement', component: InvoiceDisbursement, canActivate: [authGuard] },
             { path: 'candidates/fixed-cost/new', component: FixedCostCandidateForm, canActivate: [authGuard] },
             { path: 'candidates/fixed-cost/:id', component: FixedCostCandidateForm, canActivate: [authGuard] },
             { path: 'candidates/cost-plus/new', component: CostPlusCandidateForm, canActivate: [authGuard] },

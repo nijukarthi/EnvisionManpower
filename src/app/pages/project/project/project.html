@@ -10,6 +10,7 @@
             <tr>
                 <th>SI No</th>
                 <th>Project Code</th>
+                <th>Site Name</th>
                 <th>Cluster Name</th>
                 <th>Cluster Head</th>
                 <th>Department</th>
@@ -22,6 +23,7 @@
             <tr>
                 <td>{{ i + 1 }}</td>
                 <td>{{ project.projectCode }}</td>
+                <td>{{ project.siteName }}</td>
                 <td>{{ project.cluster.clusterName }}</td>
                 <td>{{ project.clusterHead.userName }}</td>
                 <td>{{ project.department.departmentName }}</td>
@@ -43,6 +45,10 @@
             <div class="grid col-span-1 gap-1">
                 <label for="project-code">Project Code</label>
                 <input type="text" pInputText formControlName="projectCode" id="project-code" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="site-name">Site Name</label>
+                <input type="text" [value]="siteName" pInputText id="site-name" [disabled]="true" />
             </div>
             <div class="grid col-span-1 gap-1" formGroupName="cluster">
                 <label for="project-code">Cluster</label>

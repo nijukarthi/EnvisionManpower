@@ -35,6 +35,7 @@ export class Steps implements OnInit {
   assignedCandidateList: any;
   finalApprovalCandidateList: any;
   joiningProcessCandidateList: any;
+  assignedFinalInterviewCandidateList: any;
 
   performanceStatusList = [
     {
@@ -122,13 +123,14 @@ export class Steps implements OnInit {
     candidateInterviewMappings: this.fb.array([])
   })
 
-  takeFirstInterviewRound(candidateId: number): FormGroup {
+  takeFirstInterviewRound(candidate: any): FormGroup {
+    const isDisabled = candidate.performanceStatus !== 9;
     return this.fb.group({
       candidate: this.fb.group({
-        candidateId: [candidateId]
+        candidateId: [candidate.candidate.candidateId]
       }),
-      feedback: [''],
-      performanceStatus: [0]
+      feedback: [{ value: '', disabled: isDisabled }],
+      performanceStatus: [{ value: 0, disabled: isDisabled }]
     })
   }
 
@@ -150,13 +152,14 @@ export class Steps implements OnInit {
     candidateFinalInterviewMappings: this.fb.array([])
   })
 
-  takeFinalInterviewRound(candidateId: number): FormGroup{
+  takeFinalInterviewRound(candidate: any): FormGroup{
+    const isDisabled = candidate.performanceStatus !== 9;
     return this.fb.group({
       candidate: this.fb.group({
-        candidateId: [candidateId],
+        candidateId: [candidate.candidate.candidateId],
       }),
-      feedback: [''],
-      performanceStatus: [0]
+      feedback: [{value: '', disabled: isDisabled }],
+      performanceStatus: [{value: 0, disabled: isDisabled }]
     })
   }
 
@@ -169,17 +172,55 @@ export class Steps implements OnInit {
     approvalCandidates: this.fb.array([])
   })
 
-  takeFinalApproval(candidateId: number): FormGroup{
+  takeFinalApproval(candidate: any): FormGroup{
+    const isDisabled = candidate.statusByResourceManager !== 89;
+
     return this.fb.group({
       candidate: this.fb.group({
-        candidateId: [candidateId]
+        candidateId: [candidate.candidate.candidateId]
       }),
-      statusByResourceManager: [0]
+      statusByResourceManager: [{value: 0, disabled: isDisabled}]
     })
   }
 
   get approvalCandidates(): FormArray{
     return this.finalApprovalCandidateForm.get('approvalCandidates') as FormArray;
+  }
+
+  joiningProcessCandidateForm = this.fb.group({
+    demandId: [0],
+    joiningProcessCandidates: this.fb.array([])
+  })
+
+  takeJoiningProcess(candidateId: number): FormGroup{
+    const group = this.fb.group({
+      candidate: this.fb.group({
+        candidateId: [candidateId]
+      }),
+      candidateAcceptance: [false],
+      joiningDate: [{value: '', disabled: true}]
+    })
+
+    group.get('candidateAcceptance')?.valueChanges.subscribe(isAccepted => {
+      const joiningDateControl = group.get('joiningDate');
+
+      if (isAccepted) {
+        joiningDateControl?.enable();
+      } else {
+        joiningDateControl?.disable();
+      }
+    })
+    return group;
+  }
+
+  get joiningProcessCandidates(): FormArray {
+    return this.joiningProcessCandidateForm.get('joiningProcessCandidates') as FormArray;
+  }
+
+  get hasAcceptedCandidate(){
+    return this.joiningProcessCandidates.controls.some(
+      (c) => c.get('candidateAcceptance')?.value === true
+    )
   }
 
   constructor(private apiService: Apiservice, private router: Router, private messageService: MessageService, 
@@ -504,7 +545,7 @@ export class Steps implements OnInit {
           console.log(val);
           this.assignedCandidateList = val.data.candidateInterviewMappings;
           this.populateCandidateInterviewMappings();
-          this.populateCandidateFinalInterviewMapping();
+          
           this.candidateArray = val.data.candidateInterviewMappings.map((c: any) => c.candidate.candidateId);
           this.candidateInterviewControl.patchValue(this.candidateArray);
           this.candidateCodeControl.patchValue(this.candidateArray);
@@ -573,6 +614,11 @@ export class Steps implements OnInit {
             },
             error: err => {
               console.log(err);
+
+              if (err.status === 400) {
+                this.messageService.add({severity: 'error', summary: 'Error', detail: err.error.detail });
+                this.fetchViewAssignedCandidates();
+              }
             }
           })
         }
@@ -629,17 +675,21 @@ export class Steps implements OnInit {
     formArray.clear();
 
     this.assignedCandidateList.forEach((candidate: any) => {
-      formArray.push(this.takeFirstInterviewRound(candidate.candidate.candidateId))
+      formArray.push(this.takeFirstInterviewRound(candidate))
     })
   }
 
   submitStep3Form(){
     try {
       console.log(this.firstInterviewRoundForm.value);
+
+      const allCandidates = this.firstInterviewRoundForm.get('candidateInterviewMappings')?.value || [];
+      const changedCandidates = allCandidates.filter((_: any, i: number) => this.candidateInterviewMappings.at(i).dirty);
+      console.log(changedCandidates);
       
       const data = {
-        ...this.firstInterviewRoundForm.value,
-        interviewId: this.firstInterviewId
+        interviewId: this.firstInterviewId,
+        candidateInterviewMappings: changedCandidates
       }
 
       console.log(data);
@@ -655,6 +705,10 @@ export class Steps implements OnInit {
         },
         error: err => {
           console.log(err);
+
+          if (err.status === 400) {
+            this.messageService.add({severity: 'error', summary: 'Error', detail: err.error.detail });
+          }
         }
       })
     } catch (error) {
@@ -673,6 +727,8 @@ export class Steps implements OnInit {
         next: val => {
           console.log(val);
           const data = val.data;
+          this.assignedFinalInterviewCandidateList = data.candidateInterviewMappings;
+          this.populateCandidateFinalInterviewMapping();
           this.finalInterviewId = data.interviewId;
 
           const interviewDate = data.interviewDate ? new Date(data.interviewDate) : null;
@@ -690,7 +746,7 @@ export class Steps implements OnInit {
 
           this.finalInterviewRoundForm.patchValue({
             ...data,
-            candidateFinalInterviewMappings: data.candidateInterviewMappings
+            candidateFinalInterviewMappings: this.assignedFinalInterviewCandidateList
           });
         },
         error: err => {
@@ -732,18 +788,22 @@ export class Steps implements OnInit {
     const formArray = this.candidateFinalInterviewMappings;
     formArray.clear();
 
-    this.assignedCandidateList.forEach((candidate: any) => {
-      formArray.push(this.takeFinalInterviewRound(candidate.candidate.candidateId))
+    console.log(this.assignedFinalInterviewCandidateList);
+    this.assignedFinalInterviewCandidateList.forEach((candidate: any) => {
+      formArray.push(this.takeFinalInterviewRound(candidate))
     })
   }
 
   submitStep5Form(){
     try {
       console.log(this.finalInterviewRoundForm.value);
+      const allCandidates = this.finalInterviewRoundForm.get('candidateFinalInterviewMappings')?.value || [];
+      const changedCandidates = allCandidates.filter((_: any, i: number) => this.candidateFinalInterviewMappings.at(i).dirty);
+      console.log(changedCandidates);
 
       const data = {
         interviewId: this.finalInterviewId,
-        candidateInterviewMappings: this.finalInterviewRoundForm.get('candidateFinalInterviewMappings')?.value
+        candidateInterviewMappings: changedCandidates
       }
 
       console.log(data);
@@ -759,6 +819,10 @@ export class Steps implements OnInit {
         },
         error: err => {
           console.log(err);
+          
+          if (err.status === 400) {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
+          }
         }
       })
     } catch (error) {
@@ -777,7 +841,7 @@ export class Steps implements OnInit {
       this.apiService.finalApprovalCandidateList(data).subscribe({
         next: val => {
           console.log(val);
-          this.finalApprovalCandidateList = val.data;
+          this.finalApprovalCandidateList = val?.data;
           this.populateFinalApprovalCandidateMapping();
           this.finalApprovalCandidateForm.patchValue({
             ...val.data,
@@ -798,17 +862,19 @@ export class Steps implements OnInit {
     formArray.clear();
 
     this.finalApprovalCandidateList.forEach((candidate: any) => {
-      formArray.push(this.takeFinalApproval(candidate.candidate.candidateId))
+      formArray.push(this.takeFinalApproval(candidate))
     })
   }
 
   submitStep6Form(){
     try {
       console.log(this.finalApprovalCandidateForm.value);
+      const allCandidates = this.finalApprovalCandidateForm.get('approvalCandidates')?.value || [];
+      const changedCandidates = allCandidates.filter((_: any, i: number) => this.approvalCandidates.at(i).dirty);
 
       const data = {
-        ...this.finalApprovalCandidateForm.value,
-        demandId: this.demandDetails.demandId
+        demandId: this.demandDetails.demandId,
+        approvalCandidates: changedCandidates,
       }
       console.log(data);
 
@@ -816,6 +882,7 @@ export class Steps implements OnInit {
         next: val => {
           console.log(val);
           this.messageService.add({severity: 'success', summary: 'Success', detail: 'Final Approval Done Successfully' });
+          this.fetchFinalApprovalCandidateList();
           setTimeout(() => {
             this.router.navigate(['/home/demand-fullfillment']);
           }, 2000);
@@ -841,11 +908,62 @@ export class Steps implements OnInit {
         next: val => {
           console.log(val);
           this.joiningProcessCandidateList = val.data;
+          this.populateJoiningProcessCandidates();
+          const processedData = val.data.map((item: any) => ({
+            ...item,
+            joiningDate: item.joiningDate ? new Date(item.joiningDate) : null
+          }))
+          this.joiningProcessCandidateForm.patchValue({
+            ...val.data,
+            joiningProcessCandidates: processedData
+          });
         },
         error: err => {
           console.log(err);
         }
       })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  populateJoiningProcessCandidates(){
+    const formArray = this.joiningProcessCandidates;
+    formArray.clear();
+
+    this.joiningProcessCandidateList.forEach((candidate: any) => {
+      formArray.push(this.takeJoiningProcess(candidate.candidate.candidateId))
+    })
+  }
+
+  submitStep7Form(){
+    try {
+      const approvalCandidates = this.joiningProcessCandidates.value.map((candidate: any) => {
+        const updatedCandidate = { ...candidate };
+
+        if (!updatedCandidate.candidateAcceptance) {
+          delete updatedCandidate.joiningDate;
+        }
+
+        return updatedCandidate;
+      })
+
+      const data = {
+        demandId: this.demandDetails.demandId,
+        approvalCandidates: approvalCandidates
+      }
+
+      console.log(data);
+
+      this.apiService.joiningProcessCandidatesForm(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.fetchJoiningProcessCandidateList();
+        },
+        error: err => {
+          console.log(err);
+        }
+      })      
     } catch (error) {
       console.log(error);
     }

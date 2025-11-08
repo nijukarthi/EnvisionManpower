@@ -97,7 +97,24 @@ export class AppMenu {
                     },  
                     {
                         label: 'Accounts Payable',
-                        icon: 'pi pi-money-bill'
+                        icon: 'pi pi-money-bill',
+                        items: [
+                            {
+                                label: 'Invoice Submission',
+                                icon: 'pi pi-check-circle',
+                                routerLink: ['/home/invoice-submission']
+                            },
+                            {
+                                label: 'Invoice Receipt',
+                                icon: 'pi pi-receipt',
+                                routerLink: ['/home/invoice-receipt']
+                            },
+                            {
+                                label: 'Invoice Disbursement',
+                                icon: 'pi pi-file-o',
+                                routerLink: ['/home/invoice-disbursement']
+                            }
+                        ]
                     },        
                     {
                         label: 'Resource Pool',
@@ -195,7 +212,7 @@ export class AppMenu {
                         ...group,
                         items: group.items.filter(
                             item =>
-                                item?.label === 'Demand Management' ||
+                                item?.label === 'Manpower Management' ||
                                 item?.label === 'Resource Pool' || 
                                 item.label === 'Performance & Attendance' ||
                                 item.label === 'Accounts Payable' ||

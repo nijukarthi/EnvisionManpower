@@ -81,7 +81,7 @@ export class DemandFullfillment implements OnInit {
       this.apiService.fetchDemandFullFill(data).subscribe({
         next: val => {
           console.log(val);
-          this.demandFullfillmentList = val.data.data.filter((fulfill: any) => fulfill.fullfillmentStatus !== 0);
+          this.demandFullfillmentList = val?.data?.data?.filter((fulfill: any) => fulfill.fullfillmentStatus !== 0);
         },
         error: err => {
           console.log(err);

@@ -1,0 +1,33 @@
+<div class="card">
+    <h5>Invoice Submission</h5>
+    <p-table [value]="invoiceSubmissionList" showGridlines [rowHover]="true" [tableStyle]="{'min-width': '110rem'}">
+        <ng-template #header>
+            <tr>
+                <th>SL No</th>
+                <th>Name of the Entity</th>
+                <th>GST IN</th>
+                <th>Address</th>
+                <th>POD</th>
+                <th>HSN/SAC Code</th>
+                <th>Seal and Sign by Consultancy</th>
+                <th>PO Copy</th>
+                <th>Submitted Date</th>
+                <th>Submitted To</th>
+            </tr>
+        </ng-template>
+        <ng-template #body let-submission let-i="rowIndex">
+            <tr>
+                <td>{{ i + 1 }}</td>
+                <td>{{ submission.entityName }}</td>
+                <td>{{ submission.gstIn }}</td>
+                <td>{{ submission.address }}</td>
+                <td>{{ submission.pod }}</td>
+                <td>{{ submission.hsnSacCode }}</td>
+                <td>{{ submission.sealAndSign }}</td>
+                <td>{{ submission.poCopy }}</td>
+                <td>{{ submission.submittedDate }}</td>
+                <td>{{ submission.submittedTo }}</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

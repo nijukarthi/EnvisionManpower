@@ -24,7 +24,8 @@ export class Project implements OnInit {
   pageSize = 10;
 
   actionName = '';
-
+  siteName = '';
+ 
   private fb = inject(FormBuilder);
 
   constructor(private apiService: Apiservice, private messageService: MessageService, private confirmationService: ConfirmationService){}
@@ -212,6 +213,7 @@ export class Project implements OnInit {
       this.fetchClusterHeadByCluster(project.cluster.clusterId);
       this.findUserGroup(UserGroups.SITEINCHARGE, 'siteIncharge');
       this.findUserGroup(UserGroups.DEPARTMENTHEAD, 'departmentHead');
+      this.siteName = project.siteName;
       this.projectForm.patchValue({
         projectId: project.projectId,
         projectCode: project.projectCode,

@@ -9,6 +9,10 @@
                         [filter]="true" filterBy="projectCode" [showClear]="true" class="w-full md:w-56" (onChange)="selectedPCode($event.value)"/>
                 </div>
                 <div class="flex flex-wrap gap-2 w-full">
+                    <label for="site-name">Site Name</label>
+                    <input type="text" pInputText [value]="projectDetails?.siteName" id="site-name" [disabled]="true" />
+                </div>
+                <div class="flex flex-wrap gap-2 w-full">
                     <label for="cluster">Cluster</label>
                     <input type="text" pInputText [value]="projectDetails?.cluster?.clusterName" id="cluster" [disabled]="true" />
                 </div>

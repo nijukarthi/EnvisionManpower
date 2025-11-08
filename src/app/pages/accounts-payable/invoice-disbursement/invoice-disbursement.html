@@ -1,0 +1,33 @@
+<div class="card">
+    <h5>Invoice Disbursement</h5>
+    <p-table [value]="invoiceDisbursementList" showGridlines [rowHover]="true" [tableStyle]="{'min-width': '110rem'}">
+        <ng-template #header>
+            <tr>
+                <th>SL NO</th>
+                <th>Consultancy Code</th>
+                <th>GI Code</th>
+                <th>WBS</th>
+                <th>Cost/Profit Center</th>
+                <th>State Location</th>
+                <th>Bank Details</th>
+                <th>PAN</th>
+                <th>Cancelled Cheque</th>
+                <th>Due Date</th>
+            </tr>
+        </ng-template>
+        <ng-template #body let-disbursement let-i="rowIndex">
+            <tr>    
+                <td>{{ i + 1 }}</td>
+                <td>{{ disbursement.consultancyCode }}</td>
+                <td>{{ disbursement.giCode }}</td>
+                <td>{{ disbursement.wbs }}</td>
+                <td>{{ disbursement.costProfitCenter }}</td>
+                <td>{{ disbursement.stateLocation }}</td>
+                <td>{{ disbursement.bankDetails }}</td>
+                <td>{{ disbursement.pan }}</td>
+                <td>{{ disbursement.cancelledCheque }}</td>
+                <td>{{ disbursement.dueDate | date:'dd-MM-yyyy' }}</td>
+            </tr>
+        </ng-template>  
+    </p-table>
+</div>

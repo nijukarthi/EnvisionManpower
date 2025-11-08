@@ -380,4 +380,8 @@ export class Apiservice {
     return this.postMethod('requesition/demand/joiningprocess/candidate', params);
   }
 
+  joiningProcessCandidatesForm(params: any): Observable<any>{
+    return this.postMethod('requesition/demand/joiningprocess/candidate/update', params);
+  }
+
 }
