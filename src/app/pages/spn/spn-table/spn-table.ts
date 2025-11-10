@@ -16,6 +16,11 @@ import { Apiservice } from '@/service/apiservice/apiservice';
 export class SpnTable implements OnInit {
   openSpn = false;
 
+  offSet = 0;
+  pageSize = 10;
+  first = 0;
+  spnListLength = 0;
+
   actionName = '';
 
   spnId: number | null = null;
@@ -76,10 +81,15 @@ export class SpnTable implements OnInit {
 
   fetchActiveSpn(){
     try {
-      this.apiService.fetchActiveSpns('').subscribe({
+      const data = {
+        offSet: this.offSet,
+        pageSize: this.pageSize
+      }
+      this.apiService.fetchActiveSpns(data).subscribe({
         next: val => {
           console.log(val);
-          this.spnList = val?.data;
+          this.spnList = val?.data.data;
+          this.spnListLength = val?.data.length;
         }
       })
     } catch (error) {
@@ -201,6 +211,13 @@ export class SpnTable implements OnInit {
         }
       }
     })
+  }
+  
+  pageChange(event: any){
+    this.first = event.first;
+    this.offSet = event.first / event.rows;
+    this.pageSize = event.rows;
+    this.fetchActiveSpn();
   }
 
   onDialogClose(){

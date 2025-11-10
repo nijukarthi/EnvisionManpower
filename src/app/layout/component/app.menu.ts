@@ -63,7 +63,8 @@ export class AppMenu {
                             },
                             {
                                 label: 'On-roll Employees',
-                                icon: 'pi pi-user'
+                                icon: 'pi pi-user',
+                                routerLink: ['/home/onroll-employees']
                             },
                             {
                                 label: 'Training',

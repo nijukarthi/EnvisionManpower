@@ -1,0 +1,46 @@
+<div class="card">
+    <h5>On-roll Employees</h5>
+    <p-table [value]="onrollEmployeeList" showGridlines [rowHover]="true" [paginator]="true" [rows]="pageSize" [lazy]="true"
+        [first]="first" [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true" [totalRecords]="onrollEmployeeListLength" 
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        [tableStyle]="{'min-width': '130rem'}" (onPage)="pageChange($event)">
+        <ng-template #header>
+            <tr>
+                <th>SL No</th>
+                <th>Employee Code</th>
+                <th>Candidate Code</th>
+                <th>Project Code</th>
+                <th>Employee Name</th>
+                <th>Site</th>
+                <th>State</th>
+                <th>Designation</th>
+                <th>Expected DOJ</th>
+                <th>Actual DOJ</th>
+                <th>Contact Number</th>
+                <th>Emergency Contact Number</th>
+                <th>UAN</th>
+                <th>Aadhar Number</th>
+                <th>PPE Type</th>
+            </tr>
+        </ng-template>
+        <ng-template #body let-onroll let-i="rowIndex">
+            <tr>
+                <td>{{ i + 1 }}</td>
+                <td>{{ onroll.employeeCode || '-' }}</td>
+                <td>{{ onroll.candidateCode }}</td>
+                <td>{{ onroll.employmentDetails.project.projectCode }}</td>
+                <td>{{ onroll.candidateName }}</td>
+                <td>{{ onroll.employmentDetails.project.siteName ?? '-' }}</td>
+                <td>{{ onroll.state || '-' }}</td>
+                <td>{{ onroll.designation || '-' }}</td>
+                <td>{{ onroll.employmentDetails.expectedJoiningDate ?? '-' }}</td>
+                <td>{{ onroll.employmentDetails.joiningDate ?? '-' }}</td>
+                <td>{{ onroll.phoneNumber ?? '-' }}</td>
+                <td>{{ onroll.alternativeNumber ?? '-' }}</td>
+                <td>{{ onroll.uan ?? '-' }}</td>
+                <td>{{ onroll.aadharNumber ?? '-' }}</td>
+                <td>{{ onroll.ppeType || '-' }}</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

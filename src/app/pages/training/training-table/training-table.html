@@ -1,6 +1,9 @@
 <div class="card">
     <h5>Training</h5>
-    <p-table [value]="trainingList" showGridlines [rowHover]="true" [tableStyle]="{'min-width': '130rem'}">
+    <p-table [value]="trainingList" showGridlines [rowHover]="true" [paginator]="true" [rows]="pageSize" [lazy]="true"
+        [showCurrentPageReport]="true" [rowsPerPageOptions]="[10, 20, 30]" [totalRecords]="trainingListLength" [first]="first"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        [tableStyle]="{'min-width': '130rem'}" (onPage)="pageChange($event)">
         <ng-template #header>
             <tr>
                 <th rowspan="2">SL No</th>
@@ -23,17 +26,17 @@
         <ng-template #body let-training let-i="rowIndex">
             <tr>
                 <td>{{ i + 1 }}</td>
-                <td>{{ training.employeeCode }}</td>
+                <td>{{ training.employeeCode || '-' }}</td>
                 <td>{{ training.candidateCode }}</td>
-                <td>{{ training.pCode }}</td>
-                <td>{{ training.employeeName }}</td>
-                <td>{{ training.site }}</td>
-                <td>{{ training.state }}</td>
-                <td>{{ training.designation }}</td>
-                <td>{{ training.yesOrNo }}</td>
-                <td>{{ training.windId }}</td>
-                <td>{{ training.validFrom }}</td>
-                <td>{{ training.validTill }}</td>
+                <td>{{ training.employmentDetails.project.projectCode }}</td>
+                <td>{{ training.candidateName }}</td>
+                <td>{{ training.employmentDetails.project.siteName ?? '-' }}</td>
+                <td>{{ training.employmentDetails.cluster.clusterName }}</td>
+                <td>{{ training.designation || '-' }}</td>
+                <td>{{ training.yesOrNo || '-' }}</td>
+                <td>{{ training.windId || '-' }}</td>
+                <td>{{ training.validFrom || '-' }}</td>
+                <td>{{ training.validTill || '-' }}</td>
             </tr>
         </ng-template>
     </p-table>

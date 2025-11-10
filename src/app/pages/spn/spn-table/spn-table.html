@@ -3,7 +3,9 @@
         <h5>SPNs</h5>
         <p-button label="Add SPN" icon="pi pi-plus" (click)="addSpn()" />
     </div>
-    <p-table [value]="spnList" showGridlines [rowHover]="true">
+    <p-table [value]="spnList" showGridlines [rowHover]="true" [paginator]="true" [lazy]="true" [rows]="pageSize"
+        [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true" [totalRecords]="spnListLength" [first]="first"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" (onPage)="pageChange($event)">
         <ng-template #header>
             <tr>
                 <th>SI. No</th>

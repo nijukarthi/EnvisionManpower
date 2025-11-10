@@ -357,10 +357,41 @@ export class CostPlusCandidateForm implements OnInit {
     this.costPlusCandidateApi(data);
   }
 
+  updateSalaryDetails(){
+    try {
+      const formValue = this.costPlusCandidateForm.get('costPlusSalaryDetails')?.getRawValue();
+      const data = {
+        candidateId: this.candidateId,
+        ...formValue
+      }
+      console.log(data);
+
+      this.apiService.updateCostPlusSalaryDetails(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.messageService.add({severity: 'success', summary: 'Success', detail: 'Candidate Salary Details Updated Successfully'});
+          setTimeout(() => {
+            this.router.navigate(['/home/candidate/cost-plus']);
+          }, 2000);
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   submitEmploymentDetails(){
     console.log(this.costPlusCandidateForm.getRawValue());
     const data = this.costPlusCandidateForm.getRawValue();
 
-    this.costPlusCandidateApi(data);
+    if (this.costPlusCandidateForm.get('costPlusSalaryDetails')?.valid) {
+      this.updateSalaryDetails();
+    }
+    else{
+      this.costPlusCandidateApi(data);
+    }
   }
 }

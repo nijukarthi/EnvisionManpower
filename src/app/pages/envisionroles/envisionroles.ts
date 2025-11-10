@@ -12,6 +12,10 @@ import { ConfirmationService, MessageService } from 'primeng/api';
   styleUrl: './envisionroles.scss'
 })
 export class Envisionroles {
+  offSet = 0;
+  pageSize = 10;
+  first = 0;
+  roleListLength = 0;
 
   openNewRoleyPopup = false;
   roleId: any;
@@ -27,8 +31,7 @@ export class Envisionroles {
      roleId: [''],
      roleName: ['',Validators.required]
    })
-   this.fetchViewRole('');
-    //this.roleList = this.apiService.fetchActiveCategory('');
+   this.fetchActiveEnvRole();
   }
 
   getMenuItems(role: any){
@@ -55,13 +58,16 @@ export class Envisionroles {
     }
   }
 
-  fetchViewRole(categoryId: any){
-    
-    this.apiService.fetchActiveEnvRole('').subscribe({
+  fetchActiveEnvRole(){
+    const data = {
+      offSet: this.offSet,
+      pageSize: this.pageSize
+    }
+    this.apiService.fetchActiveEnvRole(data).subscribe({
       next: val =>{
         console.log(val);
-        this.roleList = val.data
-        //this.roleForm.patchValue(val);
+        this.roleList = val.data.data;
+        this.roleListLength = val?.data.length;
       },
       error: err => {
         console.log(err);
@@ -104,7 +110,7 @@ export class Envisionroles {
         })
             this.openNewRoleyPopup = false;
             this.roleForm.reset();
-            this.fetchViewRole('');
+            this.fetchActiveEnvRole();
           },
           error: err => {
             console.log(err);
@@ -139,7 +145,7 @@ export class Envisionroles {
         })
             this.openNewRoleyPopup = false;
             this.roleForm.reset();
-            this.fetchViewRole('');
+            this.fetchActiveEnvRole();
           },
           error: err =>{
             console.log(err);
@@ -182,7 +188,7 @@ export class Envisionroles {
           this.apiService.deleteEnvRole(data).subscribe({
             next: val => {
               console.log(val);
-              this.fetchViewRole('');
+              this.fetchActiveEnvRole();
             },
             error: err => {
               console.log(err);
@@ -199,6 +205,13 @@ export class Envisionroles {
   onDialogClose(){
     this.roleId = null;
     this.roleForm.reset();
+  }
+
+  pageChange(event: any){
+    this.first = event.first;
+    this.offSet = event.first / event.rows;
+    this.pageSize = event.rows;
+    this.fetchActiveEnvRole();
   }
 
 }

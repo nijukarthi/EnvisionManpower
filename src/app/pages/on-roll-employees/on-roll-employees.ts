@@ -3,39 +3,37 @@ import { Shared } from '@/service/shared';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-training-table',
+  selector: 'app-on-roll-employees',
   imports: [Shared],
-  templateUrl: './training-table.html',
-  styleUrl: './training-table.scss'
+  templateUrl: './on-roll-employees.html',
+  styleUrl: './on-roll-employees.scss'
 })
-export class TrainingTable implements OnInit {
+export class OnRollEmployees implements OnInit {
   offSet = 0;
   pageSize = 10;
   first = 0;
+  onrollEmployeeListLength = 0;
 
-  trainingList: any;
-  trainingListLength = 0;
+  onrollEmployeeList: any;
 
-  constructor(private apiService: Apiservice){}
+  constructor(private apiService: Apiservice) {}
 
   ngOnInit(): void {
-    this.fetchActiveTrainingList();
+    this.fetchActiveOnrollEmployees();
   }
 
-  fetchActiveTrainingList(){
-    try {
+  fetchActiveOnrollEmployees(){
+    try {   
       const data = {
         offSet: this.offSet,
         pageSize: this.pageSize
       }
-
       console.log(data);
-      
       this.apiService.fetchOnRollCandidates(data).subscribe({
         next: val => {
           console.log(val);
-          this.trainingList = val.data.data;
-          this.trainingListLength = val?.data.length;
+          this.onrollEmployeeList = val?.data.data;
+          this.onrollEmployeeListLength = val?.data.length;
         },
         error: err => {
           console.log(err);
@@ -50,6 +48,6 @@ export class TrainingTable implements OnInit {
     this.first = event.first;
     this.offSet = event.first / event.rows;
     this.pageSize = event.rows;
-    this.fetchActiveTrainingList();
+    this.fetchActiveOnrollEmployees();
   }
 }

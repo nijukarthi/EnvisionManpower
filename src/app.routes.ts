@@ -36,6 +36,7 @@ import { SitePerformance } from '@/pages/performanceAttendance/site-performance/
 import { InvoiceSubmission } from '@/pages/accounts-payable/invoice-submission/invoice-submission';
 import { InvoiceReceipt } from '@/pages/accounts-payable/invoice-receipt/invoice-receipt';
 import { InvoiceDisbursement } from '@/pages/accounts-payable/invoice-disbursement/invoice-disbursement';
+import { OnRollEmployees } from '@/pages/on-roll-employees/on-roll-employees';
 
 export const appRoutes: Routes = [
     {
@@ -81,6 +82,7 @@ export const appRoutes: Routes = [
             { path: 'demand-fullfillment', component: DemandFullfillment, canActivate: [authGuard] },
             { path: 'demand-fullfillment/steps', component: Steps, canActivate: [authGuard] },
             { path: 'onboarding', component: OnboardingTable, canActivate: [authGuard] },
+            { path: 'onroll-employees', component: OnRollEmployees, canActivate: [authGuard] },
             { path: 'training', component: TrainingTable, canActivate: [authGuard] },
             { path: 'site-performance', component: SitePerformance, canActivate: [authGuard] },
             { path: 'invoice-submission', component: InvoiceSubmission, canActivate: [authGuard] },

@@ -87,6 +87,9 @@ export class Apiservice {
    fetchActiveEnvRole(params: any): Observable<any> {
     return this.postMethod('master/env-role',params);
   }
+  fetchViewRole(params: any): Observable<any>{
+    return this.postMethod('master/env-role/view', params);
+  }
   deleteEnvRole(params: any): Observable<any> {
     return this.postMethod('master/env-role/delete',params);
   }
@@ -296,6 +299,10 @@ export class Apiservice {
     return this.postMethod('candidate/onetimereimbursement/update', params);
   }
 
+  updateCostPlusSalaryDetails(params: any){
+    return this.postMethod('candidate/costplussalary/update', params);
+  }
+
   fetchActiveInterviewers(params: any): Observable<any>{
     return this.postMethod('user/active/guestuser', params);
   }
@@ -382,6 +389,18 @@ export class Apiservice {
 
   joiningProcessCandidatesForm(params: any): Observable<any>{
     return this.postMethod('requesition/demand/joiningprocess/candidate/update', params);
+  }
+
+  fetchOnboardingCandidateList(params: any): Observable<any>{
+    return this.postMethod('candidate/onboarded', params);
+  }
+
+  fetchOnRollCandidates(params: any): Observable<any>{
+    return this.postMethod('candidate/onroll', params);
+  }
+
+  moveCandidatesToOnroll(params: any): Observable<any>{
+    return this.postMethod('candidate/move-to/onroll', params);
   }
 
 }

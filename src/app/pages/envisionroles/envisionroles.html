@@ -4,7 +4,9 @@
         <h5>Envision Roles</h5>
         <p-button label="Add Role" icon="pi pi-plus" (click)="addRoles()" />
     </div>
-    <p-table [value]="roleList" showGridlines [rowHover]="true">
+    <p-table [value]="roleList" showGridlines [rowHover]="true" [paginator]="true" [rows]="pageSize" [first]="first"
+        [lazy]="true" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10, 20, 30]" [totalRecords]="roleListLength" 
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" (onPage)="pageChange($event)">
         <ng-template #header>
             <tr>
                 <th>SI No</th>
