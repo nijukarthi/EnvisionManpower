@@ -1,6 +1,7 @@
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 
 @Component({
@@ -19,6 +20,8 @@ export class OnboardingTable implements OnInit {
 
   onboardingList: any;
   selectedCandidates: any[] = [];
+
+  private fb = inject(FormBuilder);
 
   constructor(private apiService: Apiservice, private messageService: MessageService){}
 
@@ -39,7 +42,14 @@ export class OnboardingTable implements OnInit {
       this.apiService.fetchOnboardingCandidateList(data).subscribe({
           next: (val) => {
             console.log(val);
-            this.onboardingList = val?.data.data;
+            this.onboardingList = val?.data?.data.map((onboarding: any) => ({
+              ...onboarding,
+              employmentDetails: {
+                ...onboarding.employmentDetails,
+                expectedJoiningDate: onboarding.employmentDetails.expectedJoiningDate ? new Date(onboarding.employmentDetails.expectedJoiningDate) : null,
+                joiningDate: onboarding.employmentDetails.joiningDate ? new Date(onboarding.employmentDetails.joiningDate) : null
+              },
+            }));
             this.onboardingListLength = val?.data?.length || 0;
             this.loading = false;
           },
@@ -81,6 +91,37 @@ export class OnboardingTable implements OnInit {
     })
   }
 
+  submitOnboardingForm(onboardingForm: any){
+    console.log(onboardingForm);
+    
+    const data = {
+      employmentDetails: {
+        employmentId: onboardingForm.employmentDetails.employmentId,
+        expectedJoiningDate: onboardingForm.employmentDetails.expectedJoiningDate,
+        joiningDate: onboardingForm.employmentDetails.joiningDate
+      },
+      phoneNumber: onboardingForm.phoneNumber,
+      alternativeNumber: onboardingForm.alternativeNumber,
+      uan: onboardingForm.uan,
+      aadharNumber: onboardingForm.aadharNumber
+    };
+
+    console.log(data);
+
+    this.apiService.updateOnboardCandidates(data).subscribe({
+      next: val => {
+        console.log(val);
+        this.messageService.add({severity: 'success', summary: 'Success', detail: 'Candidate Details Updated Successfully'});
+        setTimeout(() => {       
+          this.fetchOnboardingCandidateList();
+        }, 1000);
+      },
+      error: err => {
+        console.log(err);
+      }
+    })
+  }
+
   pageChange(event: any){
     console.log("Event:", event);
     this.first = event.first;
@@ -89,4 +130,6 @@ export class OnboardingTable implements OnInit {
     console.log("checking:", { offSet: this.offSet, pageSize: this.pageSize });
     this.fetchOnboardingCandidateList();
   }
+
+  
 }

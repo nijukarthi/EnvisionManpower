@@ -3,9 +3,10 @@
         <h5>Fixed Cost Candidates</h5>
         <p-button label="Add Candidate" icon="pi pi-plus" routerLink="/home/candidates/fixed-cost/new" />
     </div>
-    <p-table [value]="fixedCostCandidateList" showGridlines [rowHover]="true" [paginator]="true"
-        [rows]="10" [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true" (onPage)="pageChange($event)"
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [tableStyle]="{'min-width': '150rem'}">
+    <p-table [value]="fixedCostCandidateList" showGridlines [rowHover]="true" [paginator]="true" [lazy]="true" [first]="first"
+        [rows]="pageSize" [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true" (onPage)="pageChange($event)"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [totalRecords]="fixedCostCandidateListLength"
+        [tableStyle]="{'min-width': '150rem'}">
         <ng-template #caption>
             <p-multiselect display="chip" [options]="viewOptions" optionLabel="label" optionValue="value" 
                 placeholder="Choose Columns" (onChange)="selectedView($event.value)" [style]="{ 'min-width': '200px' }" />

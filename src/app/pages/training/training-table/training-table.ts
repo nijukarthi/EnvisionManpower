@@ -1,6 +1,7 @@
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
 import { Component, OnInit } from '@angular/core';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-training-table',
@@ -16,7 +17,18 @@ export class TrainingTable implements OnInit {
   trainingList: any;
   trainingListLength = 0;
 
-  constructor(private apiService: Apiservice){}
+  trainingStatusList = [
+    {
+      label: 'Yes',
+      value: true
+    },
+    {
+      label: 'No',
+      value: false
+    }
+  ]
+
+  constructor(private apiService: Apiservice, private messageService: MessageService){}
 
   ngOnInit(): void {
     this.fetchActiveTrainingList();
@@ -34,8 +46,49 @@ export class TrainingTable implements OnInit {
       this.apiService.fetchOnRollCandidates(data).subscribe({
         next: val => {
           console.log(val);
-          this.trainingList = val.data.data;
+          this.trainingList = val.data.data.map((training: any) => ({
+            ...training,
+            gwoTraining: training.gwoTraining || {
+              trainingStatus: null,
+              windaId: null,
+              validFrom: null,
+              validTill: null
+            }
+          }));
           this.trainingListLength = val?.data.length;
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  getTrainingStatus(value: boolean){
+    const status = this.trainingStatusList.find(item => item.value === value);
+    return status?.label || '-';
+  }
+
+  submitTrainingForm(training: any){
+    try {
+      console.log(training);
+
+      const data = {
+        candidateId: training.candidateId,
+        trainingStatus: training.gwoTraining.trainingStatus,
+        windaId: training.gwoTraining.windaId,
+        validFrom: training.gwoTraining.validFrom,
+        validTill: training.gwoTraining.validTill
+      }
+      console.log(data);
+
+      this.apiService.updateGwoTraining(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.messageService.add({severity: 'success', summary: 'Success', detail: 'Candidate GWO Training Details Updated Successfully'});
+          this.fetchActiveTrainingList();
         },
         error: err => {
           console.log(err);

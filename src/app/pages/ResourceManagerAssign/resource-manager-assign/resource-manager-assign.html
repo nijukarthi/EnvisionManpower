@@ -1,11 +1,12 @@
 <p-fluid>
     <div class="card">
         <h5>Resource Manager Assign</h5>
-        <p-table [value]="resourceManagerDemandList" #dt [(selection)]="selectedApprovalList" dataKey="id"
+        <p-table [value]="resourceManagerDemandList" #dt [(selection)]="selectedApprovalList" dataKey="id" [lazy]="true"
             [tableStyle]="{ 'min-width': '120rem' }" [paginator]="true" [rowsPerPageOptions]="[10, 20, 30]"
-            stripedRows [rows]="10" [rowHover]="true" [showGridlines]="true" [showCurrentPageReport]="true"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [paginator]="true"
-            responsiveLayout="scroll" [globalFilterFields]="['spn.spnCode','spn.spnDescription','spn.experience','quantity']">
+            stripedRows [rows]="pageSize" [rowHover]="true" [showGridlines]="true" [showCurrentPageReport]="true"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [first]="first"
+            responsiveLayout="scroll" [globalFilterFields]="['spn.spnCode','spn.spnDescription','spn.experience','quantity']"
+            [totalRecords]="demandListLength" (onPage)="pageChange($event)">
             <ng-template #header>
                 <tr>
                     <th style="width: 4rem"><p-tableHeaderCheckbox /></th>

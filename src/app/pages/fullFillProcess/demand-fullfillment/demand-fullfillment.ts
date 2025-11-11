@@ -14,6 +14,8 @@ import { Router } from '@angular/router';
 export class DemandFullfillment implements OnInit {
   offSet = 0;
   pageSize = 10;
+  first = 0;
+  demandFullfillmentListLength = 0;
 
   demandFullfillmentList: any;
   requisitionDetails: any;
@@ -82,6 +84,7 @@ export class DemandFullfillment implements OnInit {
         next: val => {
           console.log(val);
           this.demandFullfillmentList = val?.data?.data?.filter((fulfill: any) => fulfill.fullfillmentStatus !== 0);
+          this.demandFullfillmentListLength = val.data.length;
         },
         error: err => {
           console.log(err);
@@ -114,7 +117,8 @@ export class DemandFullfillment implements OnInit {
   }
 
   pageChange(event: any){
-    this.offSet = event.first;
+    this.first = event.first;
+    this.offSet = event.first / event.rows;
     this.pageSize = event.rows;
     this.fetchDemandFullfillment();
   }

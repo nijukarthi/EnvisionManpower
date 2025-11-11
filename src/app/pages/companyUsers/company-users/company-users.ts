@@ -35,6 +35,7 @@ export class CompanyUsers implements OnInit {
   first = 0;
   offSet = 0;
   pageSize = 10;
+  companyUserListLength = 0;
 
   actionName = 'Add';
 
@@ -81,8 +82,8 @@ export class CompanyUsers implements OnInit {
 
   pageChange(event: any){
     console.log(event);
-
-    this.offSet = event.first;
+    this.first = event.first;
+    this.offSet = event.first / event.rows;
     this.pageSize = event.rows;
     this.fetchActiveCompanyUsers();
   }
@@ -97,6 +98,7 @@ export class CompanyUsers implements OnInit {
         next: val => {
           console.log(val);
           this.companyUserList = val.data.data;
+          this.companyUserListLength = val.data.length;
         },
         error: err => {
           console.log(err);

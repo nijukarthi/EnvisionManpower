@@ -19,6 +19,8 @@ export class ResourceManagerAssign implements OnInit {
 
   offSet = 0;
   pageSize = 10;
+  first = 0;
+  demandListLength = 0;
 
   selectedState:any = "";
 
@@ -44,6 +46,7 @@ export class ResourceManagerAssign implements OnInit {
         next: val => {
           console.log(val);
           this.resourceManagerDemandList = val?.data.data;
+          this.demandListLength = val?.data.length;
         },
         error: err => {
           console.log(err);
@@ -118,5 +121,14 @@ export class ResourceManagerAssign implements OnInit {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  pageChange(event: any){
+    console.log(event);
+
+    this.first = event.first;
+    this.offSet = event.first / event.rows;
+    this.pageSize = event.rows;
+    this.fetchDemandResourceManager();
   }
 }

@@ -3,10 +3,10 @@
         <div class="flex items-center justify-between">
             <h5>Demand Approval</h5>
         </div>
-        <p-table [value]="demandProcessingList" #dt [(selection)]="selectedApprovalList" dataKey="id"
+        <p-table [value]="demandProcessingList" #dt [(selection)]="selectedApprovalList" dataKey="id" [lazy]="true"
             [tableStyle]="{ 'min-width': '110rem' }" [paginator]="true" [rowsPerPageOptions]="[10, 20, 30]" stripedRows
-            [rows]="10" [rowHover]="true" [showGridlines]="true" [showCurrentPageReport]="true"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [paginator]="true"
+            [rows]="pageSize" [rowHover]="true" [showGridlines]="true" [showCurrentPageReport]="true" [first]="first"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [totalRecords]="demandProcessingListLength"
             responsiveLayout="scroll" [globalFilterFields]="['spn.spnCode','spn.spnDescription','spn.experience','quantity']" 
             (onPage)="pageChange($event)">
             <ng-template #header>

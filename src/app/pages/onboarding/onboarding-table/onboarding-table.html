@@ -3,8 +3,8 @@
     <p-table [value]="onboardingList"  [(selection)]="selectedCandidates" showGridlines [rowHover]="true" [lazy]="true" 
         [loading]="loading" [paginator]="true" [rows]="pageSize" dataKey="employmentDetails.employmentId" selectionMode="multiple"
         [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true" [totalRecords]="onboardingListLength" [first]="first"
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-        [tableStyle]="{'min-width': '130rem'}" (onPage)="pageChange($event)">
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" editMode="row"
+        [tableStyle]="{'min-width': '160rem'}" (onPage)="pageChange($event)">
         <ng-template #caption>
             <div class="flex justify-end">
                 <p-button label="Move to On-roll" (onClick)="moveCandidateToOnroll()" />
@@ -31,8 +31,8 @@
                 <th>Actions</th>
             </tr>
         </ng-template>
-        <ng-template #body let-onboarding let-i="rowIndex">
-            <tr>
+        <ng-template #body let-onboarding let-editing="editing" let-i="rowIndex">
+            <tr [pEditableRow]="onboarding">
                 <td><p-tableCheckbox [value]="onboarding" /></td>
                 <td>{{ i + 1 }}</td>
                 <td>{{ onboarding.employeeCode || '-' }}</td>
@@ -42,15 +42,94 @@
                 <td>{{ onboarding.employmentDetails.project.siteName ?? '-' }}</td>
                 <td>{{ onboarding.employmentDetails.cluster.clusterName || '-' }}</td>
                 <td>{{ onboarding.designation || '-' }}</td>
-                <td>{{ onboarding.employmentDetails.expectedJoiningDate ?? '-' }}</td>
-                <td>{{ onboarding.employmentDetails.joiningDate ?? '-' }}</td>
-                <td>{{ onboarding.phoneNumber ?? '-' }}</td>
-                <td>{{ onboarding.alternativeNumber ?? '-' }}</td>
-                <td>{{ onboarding.uan ?? '-' }}</td>
-                <td>{{ onboarding.aadharNumber ?? '-' }}</td>
+                <td #pEditableColumn>
+                    <p-cellEditor>
+                        <ng-template #input>
+                            <p-datepicker [(ngModel)]="onboarding.employmentDetails.expectedJoiningDate" 
+                                [iconDisplay]="'input'" [showIcon]="true" 
+                                placeholder="Select Date" appendTo="body" fluid />
+                        </ng-template>
+                        <ng-template #output>
+                            {{ onboarding.employmentDetails.expectedJoiningDate 
+                                ? (onboarding.employmentDetails.expectedJoiningDate | date:'dd/MM/yyyy') 
+                                : '-' }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td #pEditableColumn>
+                    <p-cellEditor>
+                        <ng-template #input>
+                            <p-datepicker [(ngModel)]="onboarding.employmentDetails.joiningDate" 
+                                [iconDisplay]="'input'" [showIcon]="true" 
+                                placeholder="Select Date" appendTo="body" fluid />
+                        </ng-template>
+                        <ng-template #output>
+                            {{ onboarding.employmentDetails.joiningDate 
+                                ? (onboarding.employmentDetails.joiningDate | date: 'dd/MM/yyyy') 
+                                : '-' }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td #pEditableColumn>
+                    <p-cellEditor>
+                        <ng-template #input>
+                            <span pKeyFilter="int">
+                                <input type="text" pInputText maxlength="10" [(ngModel)]="onboarding.phoneNumber" />
+                            </span>
+                        </ng-template>
+                        <ng-template #output>
+                            {{ onboarding.phoneNumber ?? '-' }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td #pEditableColumn>
+                    <p-cellEditor>
+                        <ng-template #input>
+                            <span pKeyFilter="int">
+                                <input type="text" [(ngModel)]="onboarding.alternativeNumber" pInputText maxlength="10" />
+                            </span>
+                        </ng-template>
+                        <ng-template #output>
+                            {{ onboarding.alternativeNumber ?? '-' }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td #pEditableColumn>
+                    <p-cellEditor>
+                        <ng-template #input>
+                            <span pKeyFilter="int">
+                                <input type="text" [(ngModel)]="onboarding.uan" pInputText maxlength="12" />
+                            </span>
+                        </ng-template>
+                        <ng-template #output>
+                            {{ onboarding.uan ?? '-' }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td #pEditableColumn>
+                    <p-cellEditor>
+                        <ng-template #input>
+                            <span pKeyFilter="int">
+                                <input type="text" [(ngModel)]="onboarding.aadharNumber" pInputText maxlength="12" />
+                            </span>
+                        </ng-template>
+                        <ng-template #output>
+                            {{ onboarding.aadharNumber ?? '-' }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
                 <td>{{ onboarding.ppeType || '-' }}</td>
-                <td>
-                    <button pButton pRipple type="button" icon="pi pi-pencil" text rounded></button>
+                <td class="flex items-center justify-center gap-2">
+                    @if (!editing) {
+                        <button pButton pRipple type="button" pInitEditableRow
+                            icon="pi pi-pencil" rounded severity="secondary"></button>
+                    }
+                    @else {
+                        <button pButton pRipple type="button" pSaveEditableRow
+                            icon="pi pi-check" rounded severity="success" (click)="submitOnboardingForm(onboarding)"></button>
+                        <button pButton pRipple type="button" pCancelEditableRow
+                            icon="pi pi-times" rounded severity="danger"></button>
+                    }
                 </td>
             </tr>
         </ng-template>

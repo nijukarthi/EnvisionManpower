@@ -3,8 +3,8 @@
         <h5>Company Users</h5>
         <p-button label="Add Users" icon="pi pi-plus" (click)="addUser()" />
     </div>
-    <p-table [value]="companyUserList" showGridlines [rowHover]="true" 
-        [paginator]="true" [rows]="10" [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true"
+    <p-table [value]="companyUserList" showGridlines [rowHover]="true" [first]="first" [lazy]="true" [totalRecords]="companyUserListLength"
+        [paginator]="true" [rows]="pageSize" [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" (onPage)="pageChange($event)">
         <ng-template #header>
             <tr>

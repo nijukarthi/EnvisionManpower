@@ -1,8 +1,9 @@
 <div class="card">
     <h5>Demand FulFillment</h5>
-    <p-table [value]="demandFullfillmentList" showGridlines [rowHover]="true" [paginator]="true"
-        [rows]="10" [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true" (onPage)="pageChange($event)"
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [tableStyle]="{'min-width': '100rem'}">
+    <p-table [value]="demandFullfillmentList" showGridlines [rowHover]="true" [paginator]="true" [lazy]="true" [first]="first"
+        [rows]="pageSize" [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true" (onPage)="pageChange($event)"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" 
+        [totalRecords]="demandFullfillmentListLength" [tableStyle]="{'min-width': '100rem'}">
         <ng-template #header>
             <tr>
                 <th>SI No</th>

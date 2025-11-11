@@ -2,7 +2,7 @@
     <h5>Training</h5>
     <p-table [value]="trainingList" showGridlines [rowHover]="true" [paginator]="true" [rows]="pageSize" [lazy]="true"
         [showCurrentPageReport]="true" [rowsPerPageOptions]="[10, 20, 30]" [totalRecords]="trainingListLength" [first]="first"
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" editMode="row" dataKey="candidateId"
         [tableStyle]="{'min-width': '130rem'}" (onPage)="pageChange($event)">
         <ng-template #header>
             <tr>
@@ -15,16 +15,17 @@
                 <th rowspan="2">State</th>
                 <th rowspan="2">Designation</th>
                 <th colspan="4" style="text-align: center;">GWO</th>
+                <th rowspan="2" style="text-align: center;">Actions</th>
             </tr>
             <tr>
-                <th>Yes/No</th>
+                <th>Training Status</th>
                 <th>Winda Id</th>
                 <th>Valid From</th>
                 <th>Valid Till</th>
             </tr>
         </ng-template>
-        <ng-template #body let-training let-i="rowIndex">
-            <tr>
+        <ng-template #body let-training let-editing="editing" let-i="rowIndex">
+            <tr [pEditableRow]="training">
                 <td>{{ i + 1 }}</td>
                 <td>{{ training.employeeCode || '-' }}</td>
                 <td>{{ training.candidateCode }}</td>
@@ -33,10 +34,63 @@
                 <td>{{ training.employmentDetails.project.siteName ?? '-' }}</td>
                 <td>{{ training.employmentDetails.cluster.clusterName }}</td>
                 <td>{{ training.designation || '-' }}</td>
-                <td>{{ training.yesOrNo || '-' }}</td>
-                <td>{{ training.windId || '-' }}</td>
-                <td>{{ training.validFrom || '-' }}</td>
-                <td>{{ training.validTill || '-' }}</td>
+                <td #pEditableColumn>
+                    <p-cellEditor>
+                        <ng-template #input>
+                            <p-select [options]="trainingStatusList" [(ngModel)]="training.gwoTraining.trainingStatus" 
+                                optionLabel="label" optionValue="value" id="training-status"
+                                placeholder="Select Status" [showClear]="true" />
+                        </ng-template>
+                        <ng-template #output>
+                            {{ getTrainingStatus(training?.gwoTraining?.trainingStatus) }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td #pEditableColumn>
+                    <p-cellEditor>
+                        <ng-template #input>
+                            <input type="text" pInputText [(ngModel)]="training.gwoTraining.windaId" />
+                        </ng-template>
+                        <ng-template #output>
+                            {{ training?.gwoTraining?.windaId || '-' }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td #pEditableColumn>
+                    <p-cellEditor>
+                        <ng-template #input>
+                            <p-datepicker [(ngModel)]="training.gwoTraining.validFrom" [iconDisplay]="'input'" 
+                                [showIcon]="true" placeholder="Select Date" appendTo="body" />
+                        </ng-template>
+                        <ng-template #output>
+                            {{ training?.gwoTraining?.validFrom || '-' }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td #pEditableColumn>
+                    <p-cellEditor>
+                        <ng-template #input>
+                            <p-datepicker [(ngModel)]="training.gwoTraining.validTill" [iconDisplay]="'input'" 
+                                [showIcon]="true" placeholder="Select Date" appendTo="body" />
+                        </ng-template>
+                        <ng-template #output>
+                            {{ training?.gwoTraining?.validTill || '-' }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td class="flex items-center justify-center gap-2">
+                @if (!editing) {
+                    <button pButton pRipple type="button" icon="pi pi-pencil"
+                        pInitEditableRow rounded severity="secondary"></button>
+
+                } @else {
+                    <button pButton pRipple type="button" icon="pi pi-check"
+                        pSaveEditableRow rounded severity="success" (click)="submitTrainingForm(training)">
+                    </button>
+                    <button pButton pRipple type="button" icon="pi pi-times"
+                        pCancelEditableRow rounded severity="danger"></button>
+                }
+                </td>
             </tr>
         </ng-template>
     </p-table>

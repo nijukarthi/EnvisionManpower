@@ -13,6 +13,8 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 export class CandidateFixedCost implements OnInit {
   offSet = 0;
   pageSize = 10;
+  first = 0;
+  fixedCostCandidateListLength = 0;
 
   allFixedCostCandidates: any;
   fixedCostCandidateList: any;
@@ -55,6 +57,7 @@ export class CandidateFixedCost implements OnInit {
         console.log(val);
         this.allFixedCostCandidates = val?.data?.data;
         this.fixedCostCandidateList = val?.data?.data;
+        this.fixedCostCandidateListLength = val?.data.length;
       },
       error: err => {
         console.log(err);
@@ -126,7 +129,8 @@ export class CandidateFixedCost implements OnInit {
   }
 
   pageChange(event: any){
-    this.offSet = event.first;
+    this.first = event.first;
+    this.offSet = event.first / event.rows;
     this.pageSize = event.rows;
     this.fetchActiveFixedCostCandidates();
   }

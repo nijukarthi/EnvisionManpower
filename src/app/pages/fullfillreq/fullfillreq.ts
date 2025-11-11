@@ -19,6 +19,8 @@ export class Fullfillreq implements OnInit {
 
  offSet = 0;
  pageSize = 10;
+ first = 0;
+ demandFullfillListLength = 0;
 
  UserGroups = UserGroups;
 
@@ -51,6 +53,7 @@ export class Fullfillreq implements OnInit {
         next: val => {
           console.log(val);
           this.demandFullfillList = val.data.data;
+          this.demandFullfillListLength = val.data.length;
         },
         error: err => {
           console.log(err);
@@ -125,6 +128,13 @@ export class Fullfillreq implements OnInit {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  pageChange(event: any){
+    this.first = event.first;
+    this.offSet = event.first / event.rows;
+    this.pageSize = event.rows;
+    this.fetchDemandFullFillment();
   }
 
 }

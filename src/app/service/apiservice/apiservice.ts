@@ -403,4 +403,12 @@ export class Apiservice {
     return this.postMethod('candidate/move-to/onroll', params);
   }
 
+  updateOnboardCandidates(params: any): Observable<any>{
+    return this.postMethod('candidate/onboarded/update', params);
+  }
+
+  updateGwoTraining(params: any): Observable<any>{
+    return this.postMethod('candidate/training/gwo/update', params);
+  }
+
 }

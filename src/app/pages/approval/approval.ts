@@ -25,6 +25,8 @@ export class Approval implements OnInit {
 
   offSet = 0;
   pageSize = 10;
+  first = 0;
+  demandProcessingListLength = 0;
 
   selectedApprovalList:any = [];
   viewDetail:boolean = false;
@@ -37,7 +39,8 @@ export class Approval implements OnInit {
 
   pageChange(event: any){
     console.log(event);
-    this.offSet = event.first;
+    this.first = event.first;
+    this.offSet = event.first / event.rows;
     this.pageSize = event.rows;
     this.fetchDemandRequest();
   }
@@ -54,6 +57,7 @@ export class Approval implements OnInit {
         next: val => {
           console.log(val);
           this.demandProcessingList = val?.data?.data;
+          this.demandProcessingListLength = val?.data.length;
         },
         error: err => {
           console.log(err);

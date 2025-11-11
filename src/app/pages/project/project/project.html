@@ -3,8 +3,8 @@
         <h5>Projects</h5>
         <p-button label="Add Project" icon="pi pi-plus" (click)="addProject()" />
     </div>
-    <p-table [value]="projectList" showGridlines [rowHover]="true" [paginator]="true"
-        [rows]="10" [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true"
+    <p-table [value]="projectList" showGridlines [rowHover]="true" [paginator]="true" [first]="first" [lazy]="true"
+        [rows]="pageSize" [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true" [totalRecords]="projectListLength"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" (onPage)="pageChange($event)">
         <ng-template #header>
             <tr>
