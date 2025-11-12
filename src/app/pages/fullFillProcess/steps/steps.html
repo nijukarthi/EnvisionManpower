@@ -4,14 +4,20 @@
         <p-step-list>
             <p-step [value]="1">
                 <ng-template #content let-activateCallback="activateCallback" let-value="value">
-                    <button class="cursor-pointer bg-transparent border-0 inline-flex items-center gap-2" (click)="activateCallback()">
+                    <button class="cursor-pointer bg-transparent border-0 inline-flex items-center gap-2" 
+                        [disabled]="!canAccessStep(1)"
+                        (click)="canAccessStep(1) && activateCallback()">
                         <span class="rounded-full border-2 border-gray-300 w-8 h-8 inline-flex items-center justify-center" 
                             [ngClass]="{
                             'bg-primary text-primary-contrast border-primary': value === activeStep,
+                            'cursor-not-allowed': !canAccessStep(1)
                             }">
                             {{ value }}
                         </span>
-                        <span [ngClass]="{ 'font-semibold text-primary': value === activeStep }">
+                        <span [ngClass]="{ 
+                            'font-semibold text-primary': value === activeStep,
+                            'cursor-not-allowed': !canAccessStep(1)
+                            }">
                             Step 1
                         </span>
                     </button>
@@ -19,14 +25,20 @@
             </p-step>
             <p-step [value]="2">
                 <ng-template #content let-activateCallback="activateCallback" let-value="value">
-                    <button class="cursor-pointer bg-transparent border-0 inline-flex items-center gap-2" (click)="activateCallback()">
+                    <button class="cursor-pointer bg-transparent border-0 inline-flex items-center gap-2"
+                        [disabled]="!canAccessStep(2)" 
+                        (click)="canAccessStep(2) && activateCallback()">
                         <span class="rounded-full border-2 border-gray-300 w-8 h-8 inline-flex items-center justify-center" 
                             [ngClass]="{
-                                'bg-primary text-primary-contrast border-primary': value === activeStep
+                                'bg-primary text-primary-contrast border-primary': value === activeStep,
+                                'cursor-not-allowed': !canAccessStep(2)
                                 }">
                             {{ value }}
                         </span>
-                        <span [ngClass]="{ 'font-semibold text-primary': value === activeStep }">
+                        <span [ngClass]="{ 
+                            'font-semibold text-primary': value === activeStep,
+                             'cursor-not-allowed': !canAccessStep(2)
+                            }">
                             Step 2
                         </span>
                     </button>
@@ -34,58 +46,88 @@
             </p-step>
             <p-step [value]="3">
                 <ng-template #content let-activateCallback="activateCallback" let-value="value">
-                    <button class="cursor-pointer bg-transparent flex items-center gap-2" (click)="activateCallback()">
+                    <button class="cursor-pointer bg-transparent flex items-center gap-2" 
+                        [disabled]="!canAccessStep(3)"
+                        (click)="canAccessStep(3) && activateCallback()">
                         <span class="rounded-full w-8 h-8 border-2 border-gray-300 flex items-center justify-center"
                             [ngClass]="{
-                                'bg-primary text-primary-contrast border-primary': value === activeStep
+                                'bg-primary text-primary-contrast border-primary': value === activeStep,
+                                'cursor-not-allowed': !canAccessStep(3)
                             }">
                             {{ value }}
                         </span>
-                        <span [ngClass]="{'font-semibold text-primary': value === activeStep}">Step 3</span>
+                        <span [ngClass]="{
+                            'font-semibold text-primary': value === activeStep,
+                            'cursor-not-allowed': !canAccessStep(3)
+                            }">Step 3</span>
                     </button>
                 </ng-template>
             </p-step>
             <p-step [value]="4">
                 <ng-template #content let-activateCallback="activateCallback" let-value="value">
-                    <button class="cursor-pointer flex items-center gap-2" (click)="activateCallback()">
+                    <button class="cursor-pointer flex items-center gap-2" 
+                        [disabled]="!canAccessStep(4)"
+                        (click)="canAccessStep(4) && activateCallback()">
                         <span class="rounded-full w-8 h-8 border-2 border-gray-300 flex items-center justify-center"
                             [ngClass]="{
-                                'bg-primary text-primary-contrast border-primary': value === activeStep
+                                'bg-primary text-primary-contrast border-primary': value === activeStep,
+                                'cursor-not-allowed': !canAccessStep(4)
                             }">{{ value }}</span>
-                        <span [ngClass]="{'font-semibold text-primary': value === activeStep}">Step 4</span>
+                        <span [ngClass]="{
+                            'font-semibold text-primary': value === activeStep,
+                            'cursor-not-allowed': !canAccessStep(4)
+                            }">Step 4</span>
                     </button>
                 </ng-template>
             </p-step>
             <p-step [value]="5">
                 <ng-template #content let-activateCallback="activateCallback" let-value="value">
-                    <button class="cursor-pointer flex items-center gap-2" (click)="activateCallback()">
+                    <button class="cursor-pointer flex items-center gap-2"
+                        [disabled]="!canAccessStep(5)" 
+                        (click)="canAccessStep(5) && activateCallback()">
                         <span class="border-2 border-gray-300 rounded-full w-8 h-8 flex items-center justify-center"
                             [ngClass]="{
-                                'bg-primary text-primary-contrast border-primary': value === activeStep
+                                'bg-primary text-primary-contrast border-primary': value === activeStep,
+                                'cursor-not-allowed': !canAccessStep(5)
                             }">{{ value }}</span>
-                        <span [ngClass]="{'font-semibold text-primary': value === activeStep}">Step 5</span>
+                        <span [ngClass]="{
+                            'font-semibold text-primary': value === activeStep,
+                            'cursor-not-allowed': !canAccessStep(5)
+                            }">Step 5</span>
                     </button>
                 </ng-template>
             </p-step>
             <p-step [value]="6">
                 <ng-template #content let-activateCallback="activateCallback" let-value="value">
-                    <button class="cursor-pointer flex items-center gap-2" (click)="activateCallback()">
+                    <button class="cursor-pointer flex items-center gap-2" 
+                        [disabled]="!canAccessStep(6)"
+                        (click)="canAccessStep(6) && activateCallback()">
                         <span class="border-2 border-gray-300 rounded-full w-8 h-8 flex items-center justify-center"
                             [ngClass]="{
-                                'bg-primary text-primary-contrast border-primary': value === activeStep
+                                'bg-primary text-primary-contrast border-primary': value === activeStep,
+                                'cursor-not-allowed': !canAccessStep(6)
                             }">{{ value }}</span>
-                        <span [ngClass]="{'font-semibold text-primary': value === activeStep}">Step 6</span>
+                        <span [ngClass]="{
+                            'font-semibold text-primary': value === activeStep,
+                            'cursor-not-allowed': !canAccessStep(6)
+                            }">Step 6</span>
                     </button>
                 </ng-template>
             </p-step>
             <p-step [value]="7">
                 <ng-template #content let-activateCallback="activateCallback" let-value="value">
-                    <button class="cursor-pointer flex items-center gap-2" (click)="activateCallback()">
+                    <button class="cursor-pointer flex items-center gap-2" 
+                        [disabled]="!canAccessStep(7)"
+                        (click)="canAccessStep(7) && activateCallback()">
                         <span class="border-2 border-gray-300 w-8 h-8 rounded-full flex items-center justify-center"
                             [ngClass]="{
-                                'bg-primary text-primary-contrast border-primary': value === activeStep
+                                'bg-primary text-primary-contrast border-primary': value === activeStep,
+                                'cursor-not-allowed': !canAccessStep(7)
                             }">{{ value }}</span>
-                        <span [ngClass]="{'font-semibold text-primary': value === activeStep }">Step 7</span>
+                        <span [ngClass]="{
+                            'font-semibold text-primary': value === activeStep,
+                            'cursor-not-allowed': !canAccessStep(7)
+                            }">Step 7</span>
                     </button>
                 </ng-template>
             </p-step>

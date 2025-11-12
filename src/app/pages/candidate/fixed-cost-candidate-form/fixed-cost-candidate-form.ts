@@ -59,7 +59,7 @@ export class FixedCostCandidateForm implements OnInit {
 
   ngOnInit(): void {
     this.fetchPCodes();
-    this.fetchEnvisionRoles();
+    this.fetchEnvisionRolesInfoList();
     this.fetchSpnInfo();
     this.fetchEmploymentStatus();
 
@@ -216,9 +216,9 @@ export class FixedCostCandidateForm implements OnInit {
     }
   }
 
-  fetchEnvisionRoles(){
+  fetchEnvisionRolesInfoList(){
     try {
-      this.apiService.fetchActiveEnvRole('').subscribe({
+      this.apiService.fetchRoleInfoList('').subscribe({
         next: val => {
           console.log(val);
           this.envisionRoleList = val.data;

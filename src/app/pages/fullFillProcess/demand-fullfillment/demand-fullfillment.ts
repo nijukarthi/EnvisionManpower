@@ -2,6 +2,7 @@ import { DemandStatus } from '@/models/demand-status/demand-status.enum';
 import { FullFillmentStatus } from '@/models/fullfillment-status/fullfillment-status.enum';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
+import { StepStateService } from '@/service/step-service/step-state.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -22,7 +23,7 @@ export class DemandFullfillment implements OnInit {
 
   openViewRequisition = false;
 
-  constructor(private apiService: Apiservice, private router: Router){}
+  constructor(private apiService: Apiservice, private router: Router, private stepService: StepStateService){}
 
   ngOnInit(): void {
     this.fetchDemandFullfillment();
@@ -51,31 +52,40 @@ export class DemandFullfillment implements OnInit {
     ]
   }
 
-  getStepLabel(status: number): string{
+  getStepLabel(status: number): string {
     switch(status){
       case FullFillmentStatus.STEP1:
-        return 'Step 1'
+        return '1'
       case FullFillmentStatus.STEP2:
-        return 'Step 2'
+        return '2'
       case FullFillmentStatus.STEP3:
-        return 'Step 3'
+        return '3'
       case FullFillmentStatus.STEP4:
-        return 'Step 4'
+        return '4'
       case FullFillmentStatus.STEP5:
-        return 'Step 5'
+        return '5'
       case FullFillmentStatus.STEP6:
-        return "Step 6"
+        return "6"
       case FullFillmentStatus.STEP7:
-        return 'Step 7'
+        return '7'
       default:
         return '-'
     }
+  }
+
+  goToStep(status: number){
+    console.log(status);
+    const stepName = Number(this.getStepLabel(status));
+    console.log(stepName);
+    this.stepService.setActiveStep(stepName);
+    this.router.navigate(['/home/demand-fullfillment/steps']);
   }
 
   fetchDemandFullfillment(){
     try {
       const data = {
         demandStatus: DemandStatus.PROCESSING,
+        isEnvisionRoleAssigned: true,
         offSet: this.offSet,
         pageSize: this.pageSize
       }
@@ -83,7 +93,7 @@ export class DemandFullfillment implements OnInit {
       this.apiService.fetchDemandFullFill(data).subscribe({
         next: val => {
           console.log(val);
-          this.demandFullfillmentList = val?.data?.data?.filter((fulfill: any) => fulfill.fullfillmentStatus !== 0);
+          this.demandFullfillmentList = val?.data?.data;
           this.demandFullfillmentListLength = val.data.length;
         },
         error: err => {

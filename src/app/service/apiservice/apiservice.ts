@@ -94,6 +94,10 @@ export class Apiservice {
     return this.postMethod('master/env-role/delete',params);
   }
 
+  fetchRoleInfoList(params: any): Observable<any>{
+    return this.postMethod('master/env-role/info', params);
+  }
+
   createNewCluster(params: any): Observable<any> {
     return this.postMethod('master/cluster/create',params);
   }
@@ -405,6 +409,14 @@ export class Apiservice {
 
   updateOnboardCandidates(params: any): Observable<any>{
     return this.postMethod('candidate/onboarded/update', params);
+  }
+
+  fetchPpeDetails(params: any): Observable<any>{
+    return this.postMethod('candidate/onboarded/ppedetails/view', params);
+  }
+
+  updatePpeDetails(params: any){
+    return this.postMethod('candidate/onboarded/ppedetails/update', params);
   }
 
   updateGwoTraining(params: any): Observable<any>{

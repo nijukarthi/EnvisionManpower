@@ -1,6 +1,8 @@
+import { STEP_ACCESS } from '@/constants/step-access.config';
 import { FullFillmentStatus } from '@/models/fullfillment-status/fullfillment-status.enum';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
+import { StepStateService } from '@/service/step-service/step-state.service';
 import { DatePipe } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
@@ -22,6 +24,8 @@ export class Steps implements OnInit {
   categoryId = 0;
 
   actionName = 'Submit';
+
+  currentUserRole = Number(sessionStorage.getItem('userGroupId'));
 
   private fb = inject(FormBuilder);
 
@@ -73,6 +77,11 @@ export class Steps implements OnInit {
       value: false
     }
   ]
+
+  canAccessStep(stepNumber: number){
+    const allowedRoles = STEP_ACCESS[stepNumber];
+    return allowedRoles.includes(this.currentUserRole) || false;
+  }
 
   firstInterviewScheduleForm = this.fb.group({
     demand: this.fb.group({
@@ -224,12 +233,17 @@ export class Steps implements OnInit {
   }
 
   constructor(private apiService: Apiservice, private router: Router, private messageService: MessageService, 
-    private datePipe: DatePipe){}
+    private datePipe: DatePipe, private stepService: StepStateService){}
 
   ngOnInit(): void {
     this.demandDetails = history.state;
 
     console.log('Received Requisition ID:', this.demandDetails);
+
+    this.stepService.activeStep$.subscribe(step => {
+      console.log(step);
+      this.activeStep = step;
+    })
     this.fetchViewRequisition();
     this.fetchInterviewerList();
     if (this.demandDetails.fullfillmentStatus !== FullFillmentStatus.STEP1) {

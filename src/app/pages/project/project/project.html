@@ -46,10 +46,12 @@
                 <label for="project-code">Project Code</label>
                 <input type="text" pInputText formControlName="projectCode" id="project-code" />
             </div>
-            <div class="grid col-span-1 gap-1">
-                <label for="site-name">Site Name</label>
-                <input type="text" [value]="siteName" pInputText id="site-name" [disabled]="true" />
-            </div>
+            @if (projectId) {
+                <div class="grid col-span-1 gap-1">
+                    <label for="site-name">Site Name</label>
+                    <input type="text" [value]="siteName" pInputText id="site-name" [disabled]="true" />
+                </div>
+            }
             <div class="grid col-span-1 gap-1" formGroupName="cluster">
                 <label for="project-code">Cluster</label>
                 <p-select [options]="clusterList" formControlName="clusterId" id="cluster" optionLabel="clusterName" 

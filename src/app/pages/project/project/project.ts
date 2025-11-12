@@ -81,8 +81,8 @@ export class Project implements OnInit {
   fetchActiveProjects(){
     try {
       let data = {
-        offSet: 0,
-        pageSize: 10
+        offSet: this.offSet,
+        pageSize: this.pageSize
       }
       this.apiService.fetchActiveProjects(data).subscribe({
         next: val => {
@@ -358,6 +358,8 @@ export class Project implements OnInit {
     this.first = event.first;
     this.offSet = event.first / event.rows;
     this.pageSize = event.rows;
+    console.log(this.offSet);
+    console.log(this.pageSize);
     this.fetchActiveProjects();
   }
 

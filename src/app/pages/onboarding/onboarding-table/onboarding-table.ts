@@ -1,7 +1,7 @@
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
 import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormArray, FormBuilder } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 
 @Component({
@@ -15,15 +15,71 @@ export class OnboardingTable implements OnInit {
   pageSize = 10;
   onboardingListLength = 0;
   first = 0;
+  candidateId: number | null = null;
 
   loading = false;
+  openPpeModal = false;
 
   onboardingList: any;
   selectedCandidates: any[] = [];
+  ppeDetailsList: any;
 
   private fb = inject(FormBuilder);
 
   constructor(private apiService: Apiservice, private messageService: MessageService){}
+
+  ppeTypeList = [
+    {
+      label: 'Safety Helmet',
+      value: 'Safety Helmet'
+    },
+    {
+      label: 'Safety Shoes',
+      value: 'Safety Shoes'
+    },
+    {
+      label: 'Safety harness belt',
+      value: 'Safety harness belt'
+    },
+    {
+      label: 'Uniform Tshirt',
+      value: 'Uniform Tshirt'
+    },
+    {
+      label: 'Uniform Pants',
+      value: 'Uniform Pants'
+    },
+    {
+      label: 'Reflective vest',
+      value: 'Reflective vest'
+    },
+  ]
+
+  ppeDetailsForm = this.fb.group({
+    candidateId: [0],
+    ppeDetails: this.fb.array([])
+  })
+
+  updatePpeDetails(ppe: any){
+    return this.fb.group({
+      ppeType: [ppe.ppeType],
+      size: [ppe.size]
+    })
+  }
+
+  get ppeDetails(){
+    return this.ppeDetailsForm.get('ppeDetails') as FormArray;
+  }
+
+  addPpeDetail(){
+    console.log('checking');
+    const newPpeGroup = this.fb.group({
+      ppeType: [''],
+      size: ['']
+    })
+    
+    this.ppeDetails.push(newPpeGroup);
+  }
 
   ngOnInit(): void {
     this.fetchOnboardingCandidateList();
@@ -91,6 +147,82 @@ export class OnboardingTable implements OnInit {
     })
   }
 
+  fetchPpeDetails(){
+    try {
+      const data = {
+        candidateId: this.candidateId
+      }
+
+      this.apiService.fetchPpeDetails(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.ppeDetailsList = val.data;
+          this.populatePpeDetails();
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  populatePpeDetails(){
+    const formArray = this.ppeDetails;
+    formArray.clear();
+
+    this.ppeDetailsList.forEach((ppe: any) => {
+      formArray.push(this.updatePpeDetails(ppe))
+    })
+  }
+
+  ppeDetailsModal(onboarding: any){
+    try {
+      this.openPpeModal = true;
+      this.candidateId = onboarding.candidateId;
+      if (onboarding.ppeDetails && onboarding.ppeDetails.length > 0) {     
+        this.fetchPpeDetails();
+      } else {
+        this.ppeDetails.push(
+          this.fb.group({
+            ppeType: [''],
+            size: ['']
+          })
+        )
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  submitPpeDetailsForm(){
+    try {
+      console.log(this.ppeDetails.value);
+
+      const data = {
+        candidateId: this.candidateId,
+        ppeDetails: this.ppeDetails.value
+      };
+
+      console.log(data);
+
+      this.apiService.updatePpeDetails(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.messageService.add({severity: 'success', summary: 'Success', detail: 'Successfully Updated PPE Details'});
+          this.openPpeModal = false;
+          this.fetchOnboardingCandidateList();
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   submitOnboardingForm(onboardingForm: any){
     console.log(onboardingForm);
     
@@ -122,6 +254,10 @@ export class OnboardingTable implements OnInit {
     })
   }
 
+  deletePpeDetails(index: number){
+    this.ppeDetails.removeAt(index);
+  }
+
   pageChange(event: any){
     console.log("Event:", event);
     this.first = event.first;
@@ -131,5 +267,10 @@ export class OnboardingTable implements OnInit {
     this.fetchOnboardingCandidateList();
   }
 
-  
+  onDialogClose(){
+    this.candidateId = null;
+    this.ppeDetailsForm.reset();
+    this.ppeDetails.clear();
+    this.ppeDetailsList = [];
+  }  
 }

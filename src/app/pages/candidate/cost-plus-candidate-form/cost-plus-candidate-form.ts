@@ -91,7 +91,7 @@ export class CostPlusCandidateForm implements OnInit {
 
     this.fetchPCodes();
     this.fetchSpnInfo();
-    this.fetchEnvisionRoles();
+    this.fetchEnvisionRolesInfoList();
 
     this.route.paramMap.subscribe(param => {
       const id = param.get('id');
@@ -285,9 +285,9 @@ export class CostPlusCandidateForm implements OnInit {
     })
   }
 
-  fetchEnvisionRoles(){
+  fetchEnvisionRolesInfoList(){
     try {
-      this.apiService.fetchActiveEnvRole('').subscribe({
+      this.apiService.fetchRoleInfoList('').subscribe({
         next: val => {
           console.log(val);
           this.envisionRoleList = val.data;

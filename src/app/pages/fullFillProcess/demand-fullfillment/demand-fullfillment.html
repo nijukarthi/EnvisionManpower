@@ -23,7 +23,8 @@
             <tr>
                 <td>{{ i + 1 }}</td>
                 <td>
-                    <p-button [label]="getStepLabel(demand.fullfillmentStatus)" variant="text" link />
+                    <p-button [label]="'Step ' + getStepLabel(demand.fullfillmentStatus)" variant="text" link 
+                        (onClick)="goToStep(demand.fullfillmentStatus)" />
                 </td>
                 <td>
                     <p-menu #menu [model]="getMenuItems(demand)" [popup]="true" appendTo="body" />

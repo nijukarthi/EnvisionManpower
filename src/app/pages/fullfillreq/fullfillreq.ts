@@ -38,16 +38,18 @@ export class Fullfillreq implements OnInit {
 
   ngOnInit(): void {
     this.fetchDemandFullFillment();
-    this.fetchEnvisionRoles();
+    this.fetchEnvisionRolesInfoList();
   }
 
   fetchDemandFullFillment(){
     try {    
       const data = {
         demandStatus: DemandStatus.PROCESSING,
+        isEnvisionRoleAssigned: false,
         offSet: this.offSet,
         pageSize: this.pageSize
       }
+      console.log(data);
   
       this.apiService.fetchDemandFullFill(data).subscribe({
         next: val => {
@@ -64,9 +66,9 @@ export class Fullfillreq implements OnInit {
     }
   }
 
-  fetchEnvisionRoles(){
+  fetchEnvisionRolesInfoList(){
     try {  
-      this.apiService.fetchActiveEnvRole('').subscribe({
+      this.apiService.fetchRoleInfoList('').subscribe({
         next: val => {
           console.log(val);
           this.envisionRoleList = val.data;
