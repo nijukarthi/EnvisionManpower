@@ -13,7 +13,7 @@
                 <th rowspan="2">Employee Name</th>
                 <th rowspan="2">Site</th>
                 <th rowspan="2">State</th>
-                <th rowspan="2">Designation</th>
+                <th rowspan="2">Role</th>
                 <th colspan="4" style="text-align: center;">GWO</th>
                 <th rowspan="2" style="text-align: center;">Actions</th>
             </tr>
@@ -33,13 +33,13 @@
                 <td>{{ training.candidateName }}</td>
                 <td>{{ training.employmentDetails.project.siteName ?? '-' }}</td>
                 <td>{{ training.employmentDetails.cluster.clusterName }}</td>
-                <td>{{ training.designation || '-' }}</td>
+                <td>{{ training.employmentDetails.envisionRole.roleName || '-' }}</td>
                 <td #pEditableColumn>
                     <p-cellEditor>
                         <ng-template #input>
                             <p-select [options]="trainingStatusList" [(ngModel)]="training.gwoTraining.trainingStatus" 
                                 optionLabel="label" optionValue="value" id="training-status"
-                                placeholder="Select Status" [showClear]="true" />
+                                placeholder="Select Status" [showClear]="true" appendTo="body" />
                         </ng-template>
                         <ng-template #output>
                             {{ getTrainingStatus(training?.gwoTraining?.trainingStatus) }}
@@ -90,6 +90,13 @@
                     <button pButton pRipple type="button" icon="pi pi-times"
                         pCancelEditableRow rounded severity="danger"></button>
                 }
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template #emptymessage>
+            <tr>
+                <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground);">
+                    No Records Found
                 </td>
             </tr>
         </ng-template>

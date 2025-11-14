@@ -13,7 +13,7 @@
                 <th>Employee Name</th>
                 <th>Site</th>
                 <th>State</th>
-                <th>Designation</th>
+                <th>Role</th>
                 <th>Expected DOJ</th>
                 <th>Actual DOJ</th>
                 <th>Contact Number</th>
@@ -31,8 +31,8 @@
                 <td>{{ onroll.employmentDetails.project.projectCode }}</td>
                 <td>{{ onroll.candidateName }}</td>
                 <td>{{ onroll.employmentDetails.project.siteName ?? '-' }}</td>
-                <td>{{ onroll.state || '-' }}</td>
-                <td>{{ onroll.designation || '-' }}</td>
+                <td>{{ onroll.employmentDetails.cluster.clusterName || '-' }}</td>
+                <td>{{ onroll.employmentDetails.envisionRole.roleName || '-' }}</td>
                 <td>{{ onroll.employmentDetails.expectedJoiningDate ?? '-' }}</td>
                 <td>{{ onroll.employmentDetails.joiningDate ?? '-' }}</td>
                 <td>{{ onroll.phoneNumber ?? '-' }}</td>
@@ -40,6 +40,13 @@
                 <td>{{ onroll.uan ?? '-' }}</td>
                 <td>{{ onroll.aadharNumber ?? '-' }}</td>
                 <td>{{ onroll.ppeType || '-' }}</td>
+            </tr>
+        </ng-template>
+        <ng-template #emptymessage>
+            <tr>
+                <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground);">
+                    No Records Found
+                </td>
             </tr>
         </ng-template>
     </p-table>

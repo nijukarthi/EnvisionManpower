@@ -24,7 +24,7 @@
                 <td>{{ i + 1 }}</td>
                 <td>
                     <p-button [label]="'Step ' + getStepLabel(demand.fullfillmentStatus)" variant="text" link 
-                        (onClick)="goToStep(demand.fullfillmentStatus)" />
+                        (onClick)="goToStep(demand)" />
                 </td>
                 <td>
                     <p-menu #menu [model]="getMenuItems(demand)" [popup]="true" appendTo="body" />
@@ -42,6 +42,13 @@
                 <td>
                     <p-menu #menu [model]="getMenuItems(demand)" [popup]="true" appendTo="body" />
                     <p-button (onClick)="menu.toggle($event)" icon="pi pi-ellipsis-v" [rounded]="true" variant="text"  />
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template #emptymessage>
+            <tr>
+                <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground);">
+                    No Records Found
                 </td>
             </tr>
         </ng-template>

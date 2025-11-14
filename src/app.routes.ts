@@ -37,6 +37,9 @@ import { InvoiceSubmission } from '@/pages/accounts-payable/invoice-submission/i
 import { InvoiceReceipt } from '@/pages/accounts-payable/invoice-receipt/invoice-receipt';
 import { InvoiceDisbursement } from '@/pages/accounts-payable/invoice-disbursement/invoice-disbursement';
 import { OnRollEmployees } from '@/pages/on-roll-employees/on-roll-employees';
+import { Transfer } from '@/pages/performanceAttendance/transfer/transfer';
+import { Terminate } from '@/pages/performanceAttendance/terminate/terminate';
+import { TransferForm } from '@/pages/performanceAttendance/transfer-form/transfer-form';
 
 export const appRoutes: Routes = [
     {
@@ -85,6 +88,9 @@ export const appRoutes: Routes = [
             { path: 'onroll-employees', component: OnRollEmployees, canActivate: [authGuard] },
             { path: 'training', component: TrainingTable, canActivate: [authGuard] },
             { path: 'site-performance', component: SitePerformance, canActivate: [authGuard] },
+            { path: 'transfer/update', component: TransferForm, canActivate: [authGuard] },
+            { path: 'transfer', component: Transfer, canActivate: [authGuard] },
+            { path: 'terminate', component: Terminate, canActivate: [authGuard]},
             { path: 'invoice-submission', component: InvoiceSubmission, canActivate: [authGuard] },
             { path: 'invoice-receipt', component: InvoiceReceipt, canActivate: [authGuard] },
             { path: 'invoice-disbursement', component: InvoiceDisbursement, canActivate: [authGuard] },

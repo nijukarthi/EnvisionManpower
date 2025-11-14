@@ -73,12 +73,20 @@ export class DemandFullfillment implements OnInit {
     }
   }
 
-  goToStep(status: number){
+  goToStep(demand: any){
     console.log(status);
-    const stepName = Number(this.getStepLabel(status));
+    const stepName = Number(this.getStepLabel(demand.fullfillmentStatus));
     console.log(stepName);
     this.stepService.setActiveStep(stepName);
-    this.router.navigate(['/home/demand-fullfillment/steps']);
+    this.router.navigate(['/home/demand-fullfillment/steps'],
+      {
+        state: {
+          requesitionId: demand.requesitionId,
+          demandId: demand.demandId,
+          fullfillmentStatus: demand.fullfillmentStatus
+        }
+      }
+    );
   }
 
   fetchDemandFullfillment(){

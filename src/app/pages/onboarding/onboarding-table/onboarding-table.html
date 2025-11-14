@@ -20,7 +20,7 @@
                 <th>Employee Name</th>
                 <th>Site</th>
                 <th>State</th>
-                <th>Designation</th>
+                <th>Role</th>
                 <th>Expected DOJ</th>
                 <th>Actual DOJ</th>
                 <th>Contact Number</th>
@@ -41,7 +41,7 @@
                 <td>{{ onboarding.candidateName }}</td>
                 <td>{{ onboarding.employmentDetails.project.siteName ?? '-' }}</td>
                 <td>{{ onboarding.employmentDetails.cluster.clusterName || '-' }}</td>
-                <td>{{ onboarding.designation || '-' }}</td>
+                <td>{{ onboarding.employmentDetails.envisionRole.roleName || '-' }}</td>
                 <td #pEditableColumn>
                     <p-cellEditor>
                         <ng-template #input>
@@ -136,6 +136,13 @@
                         <button pButton pRipple type="button" pCancelEditableRow
                             icon="pi pi-times" rounded severity="danger"></button>
                     }
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template #emptymessage>
+            <tr>
+                <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground);">
+                    No Records Found
                 </td>
             </tr>
         </ng-template>

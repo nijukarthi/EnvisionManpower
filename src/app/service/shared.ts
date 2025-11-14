@@ -42,6 +42,7 @@ import { KeyFilterModule } from 'primeng/keyfilter';
 import { StepperModule } from 'primeng/stepper';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { RadioButtonModule } from 'primeng/radiobutton';
+import { SplitButtonModule } from 'primeng/splitbutton';
 
 @NgModule({
   declarations: [],
@@ -89,7 +90,8 @@ import { RadioButtonModule } from 'primeng/radiobutton';
     KeyFilterModule,
     StepperModule,
     InputNumberModule,
-    RadioButtonModule
+    RadioButtonModule,
+    SplitButtonModule
   ],
   providers:[
     MessageService,

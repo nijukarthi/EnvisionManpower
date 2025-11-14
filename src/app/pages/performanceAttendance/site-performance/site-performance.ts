@@ -1,5 +1,7 @@
 import { Shared } from '@/service/shared';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-site-performance',
@@ -8,6 +10,34 @@ import { Component } from '@angular/core';
   styleUrl: './site-performance.scss'
 })
 export class SitePerformance {
+  openTerminateModal = false;
+
+  private router = inject(Router);
+
+  actionItems: MenuItem[] = [
+    {
+      label: 'Transfer',
+      icon: '',
+      command: () => this.router.navigate(['/home/transfer/new'])
+    },
+    {
+      label: 'Terminate',
+      icon: '',
+      command: () => this.openTerminateModal = true
+    }
+  ]
+
+  noDueClearanceList = [
+    {
+      label: 'Yes',
+      value: true
+    },
+    {
+      label: 'No',
+      value: false
+    }
+  ]
+
   sitePerformanceList = [
     {
       id: 1,
@@ -17,7 +47,7 @@ export class SitePerformance {
       employeeName: 'Sandhya',
       site: 'P8001-KA',
       state: 'Karnataka',
-      designation: 'Store Engineer',
+      designation: 'QA/QC Engineer',
       expectedDoj: '17-11-2025',
       actualDoj: '20-11-2025',
       contact: '9498490284',
@@ -34,7 +64,7 @@ export class SitePerformance {
       employeeName: 'Suman',
       site: 'P8001-TN',
       state: 'Tamil Nadu',
-      designation: 'Store Engineer',
+      designation: 'QA/QC Engineer',
       expectedDoj: '12-11-2025',
       actualDoj: '20-11-2025',
       contact: '9498000284',

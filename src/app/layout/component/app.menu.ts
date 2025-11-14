@@ -88,11 +88,13 @@ export class AppMenu {
                             },
                             {
                                 label: 'Transfer',
-                                icon: 'pi pi-hourglass'
+                                icon: 'pi pi-hourglass',
+                                routerLink: ['/home/transfer']
                             },
                             {
-                                label: 'Exit',
-                                icon: 'pi pi-arrow-circle-left'
+                                label: 'Terminate',
+                                icon: 'pi pi-arrow-circle-left',
+                                routerLink: ['/home/terminate']
                             }
                         ]
                     },  

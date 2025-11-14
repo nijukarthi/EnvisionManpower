@@ -1,0 +1,84 @@
+<div class="card">
+    <h5>Transfer Employee</h5>
+    <p class="text-lg font-semibold">Transfer From</p>
+    <div class="grid grid-cols-2 gap-2">
+        <div class="grid col-span-1 gap-1">
+            <label for="">Project Code</label>
+            <input type="text" pInputText value="P8001" [disabled]="true" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="">Site Name</label>
+            <input type="text" pInputText value="P8001KA" [disabled]="true" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="">Cluster</label>
+            <input type="text" pInputText value="Karnataka" [disabled]="true" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="">Cluster Head</label>
+            <input type="text" pInputText value="John Doe" [disabled]="true" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="">Site Incharge</label>
+            <input type="text" pInputText value="Mamitha" [disabled]="true" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="">Department</label>
+            <input type="text" pInputText value="Project" [disabled]="true" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="">Department Head</label>
+            <input type="text" pInputText value="Murali" [disabled]="true" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="last-date">Last Working Date</label>
+            <p-datepicker [iconDisplay]="'input'" [showIcon]="true" inputId="last-date" placeholder="Select Date" appendTo="body" />
+        </div>
+    </div>
+</div>
+
+
+<div class="card">
+    <p class="text-lg font-semibold">Transfer To</p>
+    <div class="grid grid-cols-2 gap-2">
+        <div class="grid col-span-1 gap-1">
+            <label for="project-code">Project Code</label>
+            <p-select [options]="pcodesList" optionLabel="projectCode" optionValue="projectId"
+                placeholder="Select Project Code" inputId="project-code" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="site-name">Site Name</label>
+            <input type="text" pInputText id="site-name" [disabled]="true" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="cluster">Cluster</label>
+            <input type="text" pInputText id="cluster" [disabled]="true" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="cluster-head">Cluster Head</label>
+            <input type="text" pInputText id="cluster-head" [disabled]="true" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="site-incharge">Site Incharge</label>
+            <input type="text" pInputText id="site-incharge" [disabled]="true" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="department">Department</label>
+            <input type="text" pInputText id="department" [disabled]="true" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="department-head">Department Head</label>
+            <input type="text" pInputText id="department-head" [disabled]="true" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="joining-date">Expected Joining Date</label>
+            <p-datepicker [iconDisplay]="'input'" [showIcon]="true" 
+                placeholder="Select Date" appendTo="body" inputId="joining-date" />
+        </div>
+    </div>
+    <div class="flex justify-end mt-4">
+        <button pButton pRipple type="submit">
+            <span pButtonLabel>Submit</span>
+        </button>
+    </div>
+</div>

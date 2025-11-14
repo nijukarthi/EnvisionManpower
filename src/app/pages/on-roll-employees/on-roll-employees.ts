@@ -33,7 +33,7 @@ export class OnRollEmployees implements OnInit {
         next: val => {
           console.log(val);
           this.onrollEmployeeList = val?.data.data;
-          this.onrollEmployeeListLength = val?.data.length;
+          this.onrollEmployeeListLength = val?.data.length ?? 0;
         },
         error: err => {
           console.log(err);

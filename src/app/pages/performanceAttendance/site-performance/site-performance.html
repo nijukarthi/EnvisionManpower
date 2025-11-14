@@ -1,8 +1,16 @@
 <div class="card">
     <h5>Site Performance</h5>
     <p-table [value]="sitePerformanceList" showGridlines [rowHover]="true" [tableStyle]="{'min-width': '130rem'}">
+        <ng-template #caption>
+            <div class="flex justify-end">
+                <p-splitbutton label="Actions" [model]="actionItems" />
+            </div>
+        </ng-template>
         <ng-template #header>
             <tr>
+                <th>
+                    <p-tableHeaderCheckbox />
+                </th>
                 <th>SL No</th>
                 <th>Employee Code</th>
                 <th>Candidate Code</th>
@@ -10,7 +18,7 @@
                 <th>Employee Name</th>
                 <th>Site</th>
                 <th>State</th>
-                <th>Designation</th>
+                <th>Role</th>
                 <th>Expected DOJ</th>
                 <th>Actual DOJ</th>
                 <th>Contact Number</th>
@@ -19,6 +27,9 @@
         </ng-template>
         <ng-template #body let-performance let-i="rowIndex">
             <tr>
+                <td>
+                    <p-tableCheckbox [value]="performance" />
+                </td>
                 <td>{{ i + 1 }}</td>
                 <td>{{ performance.employeeCode }}</td>
                 <td>{{ performance.candidateCode }}</td>
@@ -33,5 +44,40 @@
                 <td>{{ performance.eContact }}</td>
             </tr>
         </ng-template>
+        <ng-template #emptymessage>
+            <tr>
+                <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground);">
+                    No Records Found
+                </td>
+            </tr>
+        </ng-template>
     </p-table>
 </div>
+
+<p-dialog header="Terminate Employee" [(visible)]="openTerminateModal" [modal]="true" [draggable]="false"
+    [style]="{width: '50rem'}">
+    <div class="grid grid-cols-2 gap-2">
+        <div class="col-span-1 gap-1 grid">
+            <label for="last-date">Last Working Date</label>
+            <p-datepicker [iconDisplay]="'input'" [showIcon]="true" inputId="last-date"
+                placeholder="Select Date" appendTo="body" />
+        </div>
+        <div class="col-span-1 col-start-1 gap-1 grid">
+            <label for="no-due-clerance-sm">No Due Clearance from Site Manager</label>
+            <p-select [options]="noDueClearanceList" optionLabel="label" optionValue="value"
+                inputId="no-due-clerance-sm" placeholder="Select Yes/No" appendTo="body" />
+        </div>
+        <div class="col-span-1 gap-1 grid">
+            <label for="no-due-clerance-rm">No Due Clearance from Resource Pool Manager</label>
+            <p-select [options]="noDueClearanceList" optionLabel="label" optionValue="value"
+                inputId="no-due-clerance-rm" placeholder="Select Yes/No" appendTo="body" />
+        </div>
+    </div>
+    <div class="flex justify-end mt-4">
+        <button pButton pRipple type="submit">
+            <span pButtonLabel>Submit</span>
+        </button>
+    </div>
+</p-dialog>
+
+<p-toast />
