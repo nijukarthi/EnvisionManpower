@@ -72,6 +72,7 @@ export class ConsultancyForm implements OnInit {
       const data = {
         userId: userId
       }
+      console.log(data);
       this.apiService.fetchViewConsultancy(data).subscribe({
         next: val => {
           console.log(val);

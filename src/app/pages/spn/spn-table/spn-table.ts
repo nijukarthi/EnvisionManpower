@@ -48,11 +48,11 @@ export class SpnTable implements OnInit {
   }
 
   experiences = [
-    { year: '0' },
-    { year: '3-5' },
-    { year: '5-8' },
-    { year: '6-8' },
-    { year: '8-10' },
+    { year: '0 year' },
+    { year: '3-5 years' },
+    { year: '5-8 years' },
+    { year: '6-8 years' },
+    { year: '8-10 years' },
   ]
 
   getMenuItems(spn: any){

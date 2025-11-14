@@ -81,10 +81,10 @@
                                     optionValue="spnId" [filter]="true" filterBy="spnDescription" [showClear]="true" 
                                     placeholder="Select SPN Description" appendTo="body" (onChange)="selectedSpnDescription($event.value, rowIndex)">
                                     <ng-template #item let-item>
-                                        {{ item.spnDescription }} - ({{ item.experience === '0' ? item.experience + ' year' : item.experience + ' years' }})
+                                        {{ item.spnDescription }} - ({{ item.experience }})
                                     </ng-template>
                                     <ng-template #selectedItem let-item>
-                                        {{ item.spnDescription }} - ({{ item.experience === '0' ? item.experience + ' year' : item.experience + ' years' }})
+                                        {{ item.spnDescription }} - ({{ item.experience }})
                                     </ng-template>
                                 </p-select>
                             </td>

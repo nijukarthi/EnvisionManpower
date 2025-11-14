@@ -188,7 +188,7 @@ export class CompanyUsers implements OnInit {
       const data = {
         userId: this.userId
       }
-
+      console.log(data);
       this.apiService.viewCompanyUser(data).subscribe({
         next: val => {
           console.log(val);

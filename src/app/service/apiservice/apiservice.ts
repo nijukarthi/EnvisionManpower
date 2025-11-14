@@ -219,6 +219,10 @@ export class Apiservice {
     return this.postMethod('requesition/demand/resourcemanager/assign', params);
   }
 
+  assignRoleForDemand(params: any): Observable<any>{
+    return this.postMethod('requesition/demand/envisionrole', params);
+  }
+
   fetchDemandFullFill(params: any): Observable<any>{
     return this.postMethod('requesition/demand/fullfill', params);
   }

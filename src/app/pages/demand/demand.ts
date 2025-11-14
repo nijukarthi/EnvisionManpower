@@ -207,6 +207,9 @@ export class Demand implements OnInit {
         console.log(val);
         this.messageService.add({severity: 'success', summary: 'Success', detail: 'Demand Request Created Successfully'});
         this.demandForm.reset();
+        this.demandDetails.clear();
+        this.projectDetails = null;
+        this.addSpnRow();
       },
       error: err => {
         console.log(err);

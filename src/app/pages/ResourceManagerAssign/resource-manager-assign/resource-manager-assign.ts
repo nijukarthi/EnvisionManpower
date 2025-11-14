@@ -46,7 +46,7 @@ export class ResourceManagerAssign implements OnInit {
         next: val => {
           console.log(val);
           this.resourceManagerDemandList = val?.data.data;
-          this.demandListLength = val?.data.length;
+          this.demandListLength = val?.data.length ?? 0;
         },
         error: err => {
           console.log(err);

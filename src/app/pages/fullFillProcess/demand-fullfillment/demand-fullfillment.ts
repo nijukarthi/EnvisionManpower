@@ -85,7 +85,6 @@ export class DemandFullfillment implements OnInit {
     try {
       const data = {
         demandStatus: DemandStatus.PROCESSING,
-        isEnvisionRoleAssigned: true,
         offSet: this.offSet,
         pageSize: this.pageSize
       }
