@@ -2,18 +2,14 @@ import { UserGroups } from '@/models/usergroups/usergroups.enum';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
 import { Component } from '@angular/core';
-import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { InputNumberModule } from 'primeng/inputnumber';
-import { InputOtpModule } from 'primeng/inputotp';
-import { PasswordModule } from 'primeng/password';
-import { RippleModule } from 'primeng/ripple';
 import { TabsModule } from 'primeng/tabs';
 
 @Component({
   selector: 'app-loginpage',
-  imports: [Shared, ReactiveFormsModule, PasswordModule, FormsModule, RouterModule, RippleModule, TabsModule, InputNumberModule, InputOtpModule],
+  imports: [Shared, TabsModule],
   templateUrl: './loginpage.html',
   styleUrl: './loginpage.scss'
 })

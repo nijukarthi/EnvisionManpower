@@ -3,7 +3,6 @@ import { Shared } from "@/service/shared";
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { Observable } from 'rxjs';
 import { Apiservice } from '@/service/apiservice/apiservice';
 
 @Component({

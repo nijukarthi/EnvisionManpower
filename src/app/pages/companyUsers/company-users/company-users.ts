@@ -1,7 +1,5 @@
 import { Shared } from '@/service/shared';
 import { Component, inject, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { CompanyUsersService } from '@/service/masters/companyUsers/company-users';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { ConfirmationService, MessageService } from 'primeng/api';

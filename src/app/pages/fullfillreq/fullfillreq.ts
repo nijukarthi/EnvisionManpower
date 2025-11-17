@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Shared } from '../../service/shared';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { MessageService } from 'primeng/api';
 import { UserGroups } from '@/models/usergroups/usergroups.enum';
-import { DemandStatus } from '@/models/demand-status/demand-status.enum';
 
 @Component({
   selector: 'app-fullfillreq',

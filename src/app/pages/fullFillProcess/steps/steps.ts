@@ -239,14 +239,18 @@ export class Steps implements OnInit {
     this.demandDetails = history.state;
 
     console.log('Received Requisition ID:', this.demandDetails);
+    this.fetchViewRequisition();
+    this.fetchInterviewerList();
 
     this.stepService.activeStep$.subscribe(step => {
       console.log(step);
       this.activeStep = step;
+
+      if (this.activeStep === 2) {
+        this.fetchCandidateByCategory(this.categoryId);
+      }
     })
-    this.fetchViewRequisition();
-    this.fetchInterviewerList();
-    if (this.demandDetails.fullfillmentStatus !== FullFillmentStatus.STEP1) {
+    if (this.demandDetails.fullfillmentStatus !== FullFillmentStatus.STEP1 && this.activeStep === 1) {
       this.actionName = 'Update';
       console.log('testing');      
       this.fetchViewFirstInterview();
@@ -280,11 +284,11 @@ export class Steps implements OnInit {
     console.log('Active Step:', this.activeStep);
 
     if (this.activeStep === 2) {
+      this.actionName = 'Submit';
       this.fetchCandidateByCategory(this.categoryId);
     }
 
     if (this.demandDetails.fullfillmentStatus !== FullFillmentStatus.STEP2) {
-      this.actionName = 'Update';
       this.fetchViewAssignedCandidates();
     }
 

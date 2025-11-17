@@ -1,17 +1,14 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Shared } from "@/service/shared";
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Department } from '@/service/masters/department/department';
 import { Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { Observable } from 'rxjs';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { UserGroups } from '@/models/usergroups/usergroups.enum';
 
 @Component({
   selector: 'app-department-table',
-  imports: [Shared, ReactiveFormsModule, ConfirmDialogModule],
+  imports: [Shared, ReactiveFormsModule],
   templateUrl: './department-table.html',
   styleUrl: './department-table.scss'
 })

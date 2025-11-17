@@ -4,12 +4,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { ButtonModule } from "primeng/button";
-import { TableModule } from "primeng/table";
 
 @Component({
   selector: 'app-consultancy-table',
-  imports: [ButtonModule, TableModule,Shared],
+  imports: [Shared],
   templateUrl: './consultancy-table.html',
   styleUrl: './consultancy-table.scss'
 })
