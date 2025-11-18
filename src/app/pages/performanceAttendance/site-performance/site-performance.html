@@ -1,60 +1,58 @@
 <div class="card">
-    <h5>Site Performance</h5>
-    <p-table [value]="sitePerformanceList" showGridlines [rowHover]="true" [tableStyle]="{'min-width': '130rem'}">
-        <ng-template #caption>
-            <div class="flex justify-end">
-                <p-splitbutton label="Actions" [model]="actionItems" />
-            </div>
-        </ng-template>
-        <ng-template #header>
-            <tr>
-                <th>
-                    <p-tableHeaderCheckbox />
-                </th>
-                <th>SL No</th>
-                <th>Employee Code</th>
-                <th>Candidate Code</th>
-                <th>Project Code</th>
-                <th>Employee Name</th>
-                <th>Site</th>
-                <th>State</th>
-                <th>Role</th>
-                <th>Expected DOJ</th>
-                <th>Actual DOJ</th>
-                <th>Contact Number</th>
-                <th>Emergency Contact Number</th>
-            </tr>
-        </ng-template>
-        <ng-template #body let-performance let-i="rowIndex">
-            <tr>
-                <td>
-                    <p-tableCheckbox [value]="performance" />
-                </td>
-                <td>{{ i + 1 }}</td>
-                <td>{{ performance.employeeCode }}</td>
-                <td>{{ performance.candidateCode }}</td>
-                <td>{{ performance.pCode }}</td>
-                <td>{{ performance.employeeName }}</td>
-                <td>{{ performance.site }}</td>
-                <td>{{ performance.state }}</td>
-                <td>{{ performance.designation }}</td>
-                <td>{{ performance.expectedDoj }}</td>
-                <td>{{ performance.actualDoj }}</td>
-                <td>{{ performance.contact }}</td>
-                <td>{{ performance.eContact }}</td>
-            </tr>
-        </ng-template>
-        <ng-template #emptymessage>
-            <tr>
-                <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground);">
-                    No Records Found
-                </td>
-            </tr>
-        </ng-template>
-    </p-table>
+    <div class="flex items-start justify-between">
+        <h5>Site Performance</h5>
+        <p-splitbutton label="Actions" [model]="actionItems" />
+    </div>
+    <div class="border border-[var(--p-surface-200)] rounded-lg overflow-hidden">
+        <p-table [value]="sitePerformancesList" stripedRows [rowHover]="true" [tableStyle]="{'min-width': '130rem'}">
+            <ng-template #header>
+                <tr>
+                    <th>
+                        <p-tableHeaderCheckbox />
+                    </th>
+                    <th>SL No</th>
+                    <th>Employee Code</th>
+                    <th>Employee Name</th>
+                    <th>Project Code</th>
+                    <th>Site</th>
+                    <th>Cluster Name</th>
+                    <th>Role</th>
+                    <th>Expected DOJ</th>
+                    <th>Actual DOJ</th>
+                    <th>Contact Number</th>
+                    <th>Emergency Contact Number</th>
+                </tr>
+            </ng-template>
+            <ng-template #body let-performance let-i="rowIndex">
+                <tr>
+                    <td>
+                        <p-tableCheckbox [value]="performance" />
+                    </td>
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ performance.employeeCode || '-' }}</td>
+                    <td>{{ performance.candidateName || '-' }}</td>
+                    <td>{{ performance.employmentDetails.project.projectCode || '-' }}</td>
+                    <td>{{ performance.employmentDetails.project.siteName || '-' }}</td>
+                    <td>{{ performance.employmentDetails.cluster.clusterName || '-' }}</td>
+                    <td>{{ performance.employmentDetails.envisionRole.roleName || '-' }}</td>
+                    <td>{{ performance.employmentDetails.expectedJoiningDate || '-' }}</td>
+                    <td>{{ performance.employmentDetails.joiningDate || '-' }}</td>
+                    <td>{{ performance.phoneNumber || '-' }}</td>
+                    <td>{{ performance.alternativeNumber || '-' }}</td>
+                </tr>
+            </ng-template>
+            <ng-template #emptymessage>
+                <tr>
+                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground);">
+                        No Records Found
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
 </div>
 
-<p-dialog header="Terminate Employee" [(visible)]="openTerminateModal" [modal]="true" [draggable]="false"
+<p-dialog header="Resignation Acceptance" [(visible)]="openTerminateModal" [modal]="true" [draggable]="false"
     [style]="{width: '50rem'}">
     <div class="grid grid-cols-2 gap-2">
         <div class="col-span-1 gap-1 grid">

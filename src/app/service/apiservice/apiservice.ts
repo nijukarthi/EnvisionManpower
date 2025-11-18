@@ -427,4 +427,8 @@ export class Apiservice {
     return this.postMethod('candidate/training/gwo/update', params);
   }
 
+  fetchCandidateSitePerformance(params: any): Observable<any>{
+    return this.postMethod('candidate/siteperfomance', params);
+  }
+
 }

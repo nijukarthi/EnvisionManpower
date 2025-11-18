@@ -1,6 +1,11 @@
 <div class="card">
     <h5>Invoice Receipt</h5>
     <p-table [value]="invoiceReceiptList" showGridlines [rowHover]="true" [tableStyle]="{'min-width': '230rem'}">
+        <!-- <ng-template #caption>
+            <div class="flex justify-end">
+                <p-button label="Add Invoice Receipt" icon="pi pi-plus" routerLink="/home/invoice-receipt/new" />
+            </div>
+        </ng-template> -->
         <ng-template #header>
             <tr>
                 <th>SL NO</th>

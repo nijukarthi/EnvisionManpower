@@ -18,7 +18,11 @@ export class InvoiceDisbursement {
       bankDetails: 'HDFC Bank, A/C No: 123456789012, IFSC: HDFC0001234',
       pan: 'AAACC1234F',
       cancelledCheque: '-',
-      dueDate: '2025-11-15'
+      dueDate: '2025-11-15',
+      gst: '-',
+      bookedOn: '2025-11-02',
+      paymentStatus: 'Processing',
+      delay: '-'
     },
     {
       consultancyCode: 'IWIN002',
@@ -29,7 +33,11 @@ export class InvoiceDisbursement {
       bankDetails: 'ICICI Bank, A/C No: 987654321045, IFSC: ICIC0004567',
       pan: 'AABCI4567P',
       cancelledCheque: '-',
-      dueDate: '2025-11-18'
+      dueDate: '2025-11-18',
+      gst: '-',
+      bookedOn: '2025-11-15',
+      paymentStatus: 'Processing',
+      delay: '-'
     },
     {
       consultancyCode: 'TS003',
@@ -40,7 +48,11 @@ export class InvoiceDisbursement {
       bankDetails: 'Axis Bank, A/C No: 567890123456, IFSC: UTIB0007890',
       pan: 'AABCT7890Q',
       cancelledCheque: '-',
-      dueDate: '2025-11-20'
+      dueDate: '2025-11-20',
+      gst: '-',
+      bookedOn: '2025-11-10',
+      paymentStatus: 'Processing',
+      delay: '-'
     }
   ];
 

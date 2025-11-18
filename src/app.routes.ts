@@ -39,6 +39,9 @@ import { OnRollEmployees } from '@/pages/on-roll-employees/on-roll-employees';
 import { Transfer } from '@/pages/performanceAttendance/transfer/transfer';
 import { Terminate } from '@/pages/performanceAttendance/terminate/terminate';
 import { TransferForm } from '@/pages/performanceAttendance/transfer-form/transfer-form';
+import { InvoiceSubmissionForm } from '@/pages/accounts-payable/invoice-submission-form/invoice-submission-form';
+import { InvoiceReceiptForm } from '@/pages/accounts-payable/invoice-receipt-form/invoice-receipt-form';
+import { InvoiceDisbursementForm } from '@/pages/accounts-payable/invoice-disbursement-form/invoice-disbursement-form';
 
 export const appRoutes: Routes = [
     {
@@ -90,8 +93,11 @@ export const appRoutes: Routes = [
             { path: 'transfer', component: Transfer, canActivate: [authGuard] },
             { path: 'terminate', component: Terminate, canActivate: [authGuard]},
             { path: 'invoice-submission', component: InvoiceSubmission, canActivate: [authGuard] },
+            { path: 'invoice-submission/new', component: InvoiceSubmissionForm, canActivate: [authGuard] },
             { path: 'invoice-receipt', component: InvoiceReceipt, canActivate: [authGuard] },
+            { path: 'invoice-receipt/new', component:InvoiceReceiptForm, canActivate: [authGuard] },
             { path: 'invoice-disbursement', component: InvoiceDisbursement, canActivate: [authGuard] },
+            { path: 'invoice-disbursement/new', component: InvoiceDisbursementForm, canActivate: [authGuard] },
             { path: 'candidates/fixed-cost/new', component: FixedCostCandidateForm, canActivate: [authGuard] },
             { path: 'candidates/fixed-cost/:id', component: FixedCostCandidateForm, canActivate: [authGuard] },
             { path: 'candidates/cost-plus/new', component: CostPlusCandidateForm, canActivate: [authGuard] },

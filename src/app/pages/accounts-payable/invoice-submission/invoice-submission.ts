@@ -16,7 +16,9 @@ export class InvoiceSubmission {
       pod: '-',
       hsnSacCode: '998314',
       sealAndSign: '-',
-      poCopy: '-',
+      poCopy: 'Yes',
+      invoiceNo: '8499',
+      invoiceDate: '2025-10-20',
       submittedDate: '2025-10-28',
       submittedTo: 'Accounts Department'
     },
@@ -27,7 +29,9 @@ export class InvoiceSubmission {
       pod: '-',
       hsnSacCode: '998312',
       sealAndSign: '-',
-      poCopy: '-',
+      poCopy: 'No',
+      invoiceNo: '2478',
+      invoiceDate: '2025-10-25',
       submittedDate: '2025-10-30',
       submittedTo: 'Finance Team'
     },
@@ -38,7 +42,9 @@ export class InvoiceSubmission {
       pod: '-',
       hsnSacCode: '998313',
       sealAndSign: '-',
-      poCopy: '-',
+      poCopy: 'Yes',
+      invoiceNo: '8908',
+      invoiceDate: '2025-10-28',
       submittedDate: '2025-11-01',
       submittedTo: 'Admin Department'
     }

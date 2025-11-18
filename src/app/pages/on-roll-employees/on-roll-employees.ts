@@ -14,7 +14,10 @@ export class OnRollEmployees implements OnInit {
   first = 0;
   onrollEmployeeListLength = 0;
 
+  openPpeDetails = false;
+
   onrollEmployeeList: any;
+  onrollPpeDetails: any;
 
   constructor(private apiService: Apiservice) {}
 
@@ -39,6 +42,15 @@ export class OnRollEmployees implements OnInit {
           console.log(err);
         }
       })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  viewPpeDetails(onroll: any){
+    try {
+      this.openPpeDetails = true;
+      this.onrollPpeDetails = onroll.ppeDetails;
     } catch (error) {
       console.log(error);
     }

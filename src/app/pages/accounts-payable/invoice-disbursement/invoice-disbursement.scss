@@ -1,5 +1,17 @@
+// tr th {
+//     background-color: rgb(228, 235, 253);
+//     color: #2563EB;
+//     font-weight: bold;
+// }
+
 tr th {
-    background-color: rgb(22, 68, 166);
-    color: #fff;
+    background-color: var(--p-primary-50);
+    color: var(--p-primary-600);
     font-weight: bold;
 }
+
+
+// .app-dark tr th {
+//     background-color: var(--p-surface-800);
+//     color: var(--p-primary-300);
+// }

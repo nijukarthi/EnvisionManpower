@@ -1,5 +1,6 @@
+import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 
@@ -9,8 +10,16 @@ import { MenuItem } from 'primeng/api';
   templateUrl: './site-performance.html',
   styleUrl: './site-performance.scss'
 })
-export class SitePerformance {
+export class SitePerformance implements OnInit {
   openTerminateModal = false;
+
+  offSet = 0;
+  pageSize = 10;
+  first = 0;
+
+  sitePerformancesList: any;
+
+  constructor(private apiService: Apiservice){}
 
   private router = inject(Router);
 
@@ -18,10 +27,10 @@ export class SitePerformance {
     {
       label: 'Transfer',
       icon: '',
-      command: () => this.router.navigate(['/home/transfer/new'])
+      command: () => this.router.navigate(['/home/transfer/update'])
     },
     {
-      label: 'Terminate',
+      label: 'Resignation',
       icon: '',
       command: () => this.openTerminateModal = true
     }
@@ -74,4 +83,30 @@ export class SitePerformance {
       ppeType: 'Gloves'
     }
   ] 
+
+  ngOnInit(): void {
+    this.fetchCandidateSitePerformance();
+  }
+
+  fetchCandidateSitePerformance(){
+    try {
+      const data = {
+        offSet: this.offSet,
+        pageSize: this.pageSize
+      }
+      console.log(data);
+
+      this.apiService.fetchCandidateSitePerformance(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.sitePerformancesList = val.data.data;
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }

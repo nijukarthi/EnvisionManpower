@@ -1,0 +1,62 @@
+<div class="card">
+    <h5>New Invoice Disbursement</h5>
+    <div class="grid grid-cols-2 gap-2">
+        <div class="grid col-span-1 gap-1">
+            <label for="consultancy-code">Consultancy Code</label>
+            <input type="text" pInputText id="consultancy-code" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="gi-code">GL Code</label>
+            <input type="text" pInputText id="gi-code" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="wbs">WBS</label>
+            <input type="text" pInputText id="wbs" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="profit">Cost/Profit Center</label>
+            <input type="text" pInputText id="profit" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="">State Location</label>
+            <input type="text" pInputText id="location" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="">Bank Details</label>
+            <input type="text" pInputText id="bank-details" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="pan">PAN</label>
+            <input type="text" pInputText id="pan" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="cancelled-cheque">Cancelled Cheque</label>
+            <input type="text" pInputText id="cancelled-cheque" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="due-date">Due Date</label>
+            <p-datepicker [showIcon]="true" [iconDisplay]="'input'" appendTo="body" placeholder="Select Date" inputId="due-date" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="gst">RCM/GST</label>
+            <input type="text" pInputText id="gst" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="booked-on">Booked On</label>
+            <p-datepicker [showIcon]="true" [iconDisplay]="'input'" appendTo="body" placeholder="Select Date" inputId="booked-on" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="payment-status">Payment Status</label>
+            <p-select inputId="payment-status" appendTo="body" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="reason">Reason For Delay</label>
+            <input type="text" pInputText id="reason" />
+        </div>
+    </div>
+    <div class="flex justify-end mt-4">
+        <button pButton pRipple type="submit">
+            <span pButtonLabel>Submit</span>
+        </button>
+    </div>
+</div>

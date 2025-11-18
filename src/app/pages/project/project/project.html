@@ -1,48 +1,50 @@
 <div class="card">
-    <div class="flex items-center justify-between">
+    <div class="flex items-baseline-last justify-between">
         <h5>Projects</h5>
         <p-button label="Add Project" icon="pi pi-plus" (click)="addProject()" />
     </div>
-    <p-table [value]="projectList" showGridlines [rowHover]="true" [paginator]="true" [first]="first" [lazy]="true"
-        [rows]="pageSize" [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true" [totalRecords]="projectListLength"
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" (onPage)="pageChange($event)">
-        <ng-template #header>
-            <tr>
-                <th>SI No</th>
-                <th>Project Code</th>
-                <th>Site Name</th>
-                <th>Cluster Name</th>
-                <th>Cluster Head</th>
-                <th>Department</th>
-                <th>Department Head</th>
-                <th>Site Incharge</th>
-                <th>Actions</th>
-            </tr>
-        </ng-template>
-        <ng-template #body let-project let-i="rowIndex">
-            <tr>
-                <td>{{ i + 1 }}</td>
-                <td>{{ project.projectCode }}</td>
-                <td>{{ project.siteName }}</td>
-                <td>{{ project.cluster.clusterName }}</td>
-                <td>{{ project.clusterHead.userName }}</td>
-                <td>{{ project.department.departmentName }}</td>
-                <td>{{ project.departmentHead.userName }}</td>
-                <td>{{ project.siteIncharge.userName }}</td>
-                <td>
-                    <p-menu #menu [model]="getMenuItems(project)" [popup]="true" appendTo="body" />
-                    <p-button (click)="menu.toggle($event)" icon="pi pi-ellipsis-v" [rounded]="true" variant="text" />
-                </td>
-            </tr>
-        </ng-template>
-        <ng-template #emptymessage>
-            <tr>
-                <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground);">
-                    No Records Found
-                </td>
-            </tr>
-        </ng-template>
-    </p-table>
+    <div class="border border-[var(--p-surface-200)] rounded-lg overflow-hidden">
+        <p-table [value]="projectList" stripedRows [rowHover]="true" [paginator]="true" [first]="first" [lazy]="true"
+            [rows]="pageSize" [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true" [totalRecords]="projectListLength"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" (onPage)="pageChange($event)">
+            <ng-template #header>
+                <tr class="bg-[var(--p-surface-200)]">
+                    <th>SL No</th>
+                    <th>Project Code</th>
+                    <th>Site Name</th>
+                    <th>Cluster Name</th>
+                    <th>Cluster Head</th>
+                    <th>Department</th>
+                    <th>Department Head</th>
+                    <th>Site Incharge</th>
+                    <th>Actions</th>
+                </tr>
+            </ng-template>
+            <ng-template #body let-project let-i="rowIndex">
+                <tr>
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ project.projectCode }}</td>
+                    <td>{{ project.siteName }}</td>
+                    <td>{{ project.cluster.clusterName }}</td>
+                    <td>{{ project.clusterHead.userName }}</td>
+                    <td>{{ project.department.departmentName }}</td>
+                    <td>{{ project.departmentHead.userName }}</td>
+                    <td>{{ project.siteIncharge.userName }}</td>
+                    <td>
+                        <p-menu #menu [model]="getMenuItems(project)" [popup]="true" appendTo="body" />
+                        <p-button (click)="menu.toggle($event)" icon="pi pi-ellipsis-v" [rounded]="true" variant="text" />
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template #emptymessage>
+                <tr>
+                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground);">
+                        No Records Found
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
 </div>
 
 <p-dialog [header]="projectId ? 'Edit Project' : 'Add New Project'" [modal]="true" [(visible)]="openProject" 
@@ -55,7 +57,7 @@
             </div>
             <div class="grid col-span-1 gap-1">
                 <label for="site-name">Site Name</label>
-                <input type="text" [value]="siteName" pInputText id="site-name" />
+                <input type="text" pInputText formControlName="siteName" id="site-name" />
             </div>
             <div class="grid col-span-1 gap-1" formGroupName="cluster">
                 <label for="project-code">Cluster</label>

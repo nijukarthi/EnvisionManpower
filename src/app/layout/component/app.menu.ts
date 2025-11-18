@@ -92,8 +92,8 @@ export class AppMenu {
                                 routerLink: ['/home/transfer']
                             },
                             {
-                                label: 'Terminate',
-                                icon: 'pi pi-arrow-circle-left',
+                                label: 'Resignation',
+                                icon: 'pi pi-file-excel',
                                 routerLink: ['/home/terminate']
                             }
                         ]
@@ -102,6 +102,10 @@ export class AppMenu {
                         label: 'Accounts Payable',
                         icon: 'pi pi-money-bill',
                         items: [
+                            {
+                                label: 'PO Creation',
+                                icon: 'pi pi-file-check'
+                            },
                             {
                                 label: 'Invoice Submission',
                                 icon: 'pi pi-check-circle',

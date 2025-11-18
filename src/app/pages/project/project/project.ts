@@ -41,6 +41,7 @@ export class Project implements OnInit {
   projectForm = this.fb.group({
     projectId: [0],
     projectCode: [''],
+    siteName: [''],
     cluster: this.fb.group({
       clusterId: [0]
     }),
@@ -219,6 +220,7 @@ export class Project implements OnInit {
       this.projectForm.patchValue({
         projectId: project.projectId,
         projectCode: project.projectCode,
+        siteName: project.siteName,
         cluster: {
           clusterId: project.cluster.clusterId
         },
@@ -247,6 +249,7 @@ export class Project implements OnInit {
         if (this.projectForm.valid) {
           const data = {
             projectCode: this.projectForm.get('projectCode')?.value,
+            siteName: this.projectForm.get('siteName')?.value,
             cluster: {
               clusterId: this.projectForm.get('cluster.clusterId')?.value
             },
@@ -281,6 +284,7 @@ export class Project implements OnInit {
           const data = {
             projectId: this.projectForm.get('projectId')?.value,
             projectCode: this.projectForm.get('projectCode')?.value,
+            siteName: this.projectForm.get('siteName')?.value,
             cluster: {
               clusterId: this.projectForm.get('cluster.clusterId')?.value
             },
