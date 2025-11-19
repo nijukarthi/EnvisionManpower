@@ -1,7 +1,7 @@
 <div class="card">
     <h5>Transfer</h5>
     <div class="rounded-lg overflow-hidden">
-        <p-table [value]="transferList" showGridlines stripedRows [rowHover]="true" [tableStyle]="{'min-width': '120rem'}">
+        <p-table [value]="transferredEmployeeList" showGridlines stripedRows [rowHover]="true" [tableStyle]="{'min-width': '120rem'}">
             <ng-template #header>
                 <tr>
                     <th rowspan="2">SL No</th>
@@ -14,36 +14,58 @@
                 </tr>
                 <tr>
                     <th>Project Code</th>
-                    <th>Site</th>
-                    <th>State</th>
+                    <th>Site Name</th>
+                    <th>Cluster Name</th>
                     <th>Role</th>
                     <th>Project Code</th>
-                    <th>Site</th>
-                    <th>State</th>
-                    <th>Designation</th>
+                    <th>Site Name</th>
+                    <th>Cluster Name</th>
+                    <th>Role</th>
                 </tr>
             </ng-template>
             <ng-template #body let-transfer let-i="rowIndex">
                 <tr>
                     <td>{{ i + 1 }}</td>
-                    <td>{{ transfer.employeeCode }}</td>
-                    <td>{{ transfer.employeeName }}</td>
-                    <td>{{ transfer.pCode }}</td>
-                    <td>{{ transfer.site }}</td>
-                    <td>{{ transfer.state }}</td>
-                    <td>{{ transfer.designation }}</td>
-                    <td>{{ transfer.tPCode }}</td>
-                    <td>{{ transfer.tSite }}</td>
-                    <td>{{ transfer.tState }}</td>
-                    <td>{{ transfer.tDesignation }}</td>
+                    <td>{{ transfer.candidate.employeeCode }}</td>
+                    <td>{{ transfer.candidate.candidateName }}</td>
+                    <td>{{ transfer.transferFrom.project.projectCode }}</td>
+                    <td>{{ transfer.transferFrom.project.siteName }}</td>
+                    <td>{{ transfer.transferFrom.cluster.clusterName }}</td>
+                    <td>{{ transfer.transferFrom.envisionRole.roleName }}</td>
+                    <td>{{ transfer.transferTo.projectCode }}</td>
+                    <td>{{ transfer.transferTo.siteName }}</td>
+                    <td>{{ transfer.transferTo.cluster.clusterName }}</td>
+                    <td>{{ transfer.transferFrom.envisionRole.roleName }}</td>
                     <td class="flex items-center justify-center gap-2">
-                        <p-button icon="pi pi-check" severity="primary" rounded />
-                        <p-button icon="pi pi-times" severity="danger" rounded />
+                        @if (transfer.stateHeadApproval.approvalStatus === APPROVALSTATUS.ACCEPTED) {
+                            <p-button icon="pi pi-check" severity="primary" rounded [disabled]="true" />
+                        } @else if (transfer.stateHeadApproval.approvalStatus === APPROVALSTATUS.REJECTED) {
+                            <p-button icon="pi pi-times" severity="danger" rounded [disabled]="true" />
+                        }
+                        @if (transfer.stateHeadApproval.approvalStatus === APPROVALSTATUS.PENDING) {
+                            <p-button icon="pi pi-check" severity="primary" rounded 
+                               [disabled]="currentUserRole === USERGROUPS.DEPARTMENTHEAD" 
+                               (onClick)="clusterHeadApproval(transfer.transferId, 'Accepted')" />
+                            <p-button icon="pi pi-times" severity="danger" rounded 
+                                [disabled]="currentUserRole === USERGROUPS.DEPARTMENTHEAD" 
+                                (onClick)="clusterHeadApproval(transfer.transferId, 'Rejected')" />
+                        }
                     </td>
                     <td>
                         <div class="flex items-center justify-center gap-2">
-                            <p-button icon="pi pi-check" severity="primary" rounded />
-                            <p-button icon="pi pi-times" severity="danger" rounded />
+                            @if (transfer.departmentHeadApproval.approvalStatus === APPROVALSTATUS.ACCEPTED) {
+                                <p-button icon="pi pi-check" severity="primary" rounded [disabled]="true" />
+                            } @else if (transfer.departmentHeadApproval.approvalStatus === APPROVALSTATUS.REJECTED) {
+                                <p-button icon="pi pi-times" severity="danger" rounded [disabled]="true" />
+                            }
+                            @if (transfer.departmentHeadApproval.approvalStatus === APPROVALSTATUS.PENDING) {
+                                <p-button icon="pi pi-check" severity="primary" rounded 
+                                    [disabled]="currentUserRole === USERGROUPS.CLUSTERHEAD" 
+                                    (onClick)="departmentHeadApproval(transfer.transferId, 'Accepted')" />
+                                <p-button icon="pi pi-times" severity="danger" rounded 
+                                    [disabled]="currentUserRole === USERGROUPS.CLUSTERHEAD" 
+                                    (onClick)="departmentHeadApproval(transfer.transferId, 'Rejected')" />
+                            }
                         </div>
                     </td>
                 </tr>
@@ -58,3 +80,5 @@
         </p-table>
     </div>
 </div>
+
+<p-toast />

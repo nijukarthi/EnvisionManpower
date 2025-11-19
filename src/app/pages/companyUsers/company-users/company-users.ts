@@ -248,8 +248,10 @@ export class CompanyUsers implements OnInit {
       }
       else if(this.actionName == "Update"){
         this.companyUserForm.get('email')?.enable();
+        this.companyUserForm.get('userGroupId')?.enable();
         const data = { ...this.companyUserForm.value };
         this.companyUserForm.get('email')?.disable();
+        this.companyUserForm.get('userGroupId')?.disable();
 
         if(!data.userDepartments?.length && this.showDepartments){
           const existingDepartments = this.departmentsControl.value?.map((id: number) => ({departmentId: id}));
@@ -318,6 +320,9 @@ export class CompanyUsers implements OnInit {
   onDialogClose(){
     this.userId = null;
     this.companyUserForm.reset();
+    this.showDepartments = false;
+    this.companyUserForm.get('email')?.enable();
+    this.departmentsControl.reset();
   }
 }
 

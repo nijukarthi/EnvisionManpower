@@ -74,7 +74,6 @@ export class DemandFullfillment implements OnInit {
   }
 
   goToStep(demand: any){
-    console.log(status);
     const stepName = Number(this.getStepLabel(demand.fullfillmentStatus));
     console.log(stepName);
     this.stepService.setActiveStep(stepName);

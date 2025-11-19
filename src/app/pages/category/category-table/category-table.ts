@@ -14,11 +14,7 @@ import { Apiservice } from '@/service/apiservice/apiservice';
 export class CategoryTable implements OnInit {
   openNewCategoryPopup = false;
   categoryId: any;
-  /* private apiService = inject(Category);
-  private fb = inject(FormBuilder);
-  private router = inject(Router);
-  private confirmationService = inject(ConfirmationService);
-  private messageService = inject(MessageService); */
+
   categoryList: any;
   categoryForm: any;
   actionName: any = "Save";

@@ -88,7 +88,7 @@ export class AppMenu {
                             },
                             {
                                 label: 'Transfer',
-                                icon: 'pi pi-hourglass',
+                                icon: 'pi pi-file-export',
                                 routerLink: ['/home/transfer']
                             },
                             {

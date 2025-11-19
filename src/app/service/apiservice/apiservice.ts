@@ -431,4 +431,35 @@ export class Apiservice {
     return this.postMethod('candidate/siteperfomance', params);
   }
 
+  transferCandidateProject(params: any){
+    return this.postMethod('candidate/siteperfomance/transfer', params);
+  }
+
+  fetchTransferredEmployeeList(params: any): Observable<any>{
+    return this.postMethod('candidate/siteperfomance/transfer/requests', params);
+  }
+
+  approveTransferClusterHead(params: any){
+    return this.postMethod('candidate/siteperfomance/transfer/approve/statehead', params);
+  }
+
+  approveTransferDeptHead(params: any){
+    return this.postMethod('candidate/siteperfomance/transfer/approve/departmenthead', params);
+  }
+
+  employeeResignation(params: any){
+    return this.postMethod('candidate/siteperfomance/resignation', params);
+  }
+
+  fetchResignationList(params: any): Observable<any>{
+    return this.postMethod('candidate/siteperfomance/resignation/requests', params);
+  }
+
+  approveResignClusterHead(params: any){
+    return this.postMethod('candidate/siteperfomance/resignation/approve/statehead', params);
+  }
+
+  approveResignDeptHead(params: any){
+    return this.postMethod('candidate/siteperfomance/resignation/approve/departmenthead', params);
+  }
 }

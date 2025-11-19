@@ -51,8 +51,8 @@ export class Fullfillreq implements OnInit {
       this.apiService.assignRoleForDemand(data).subscribe({
         next: val => {
           console.log(val);
-          this.demandFullfillList = val.data.data;
-          this.demandFullfillListLength = val.data.length;
+          this.demandFullfillList = val?.data?.data;
+          this.demandFullfillListLength = val?.data?.length;
         },
         error: err => {
           console.log(err);

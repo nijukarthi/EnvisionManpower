@@ -1,38 +1,60 @@
 <div class="card">
     <h5>Resignation</h5>
-    <p-table [value]="terminateList" showGridlines [rowHover]="true" [tableStyle]="{'min-width': '100rem'}">
+    <p-table [value]="resignationList" showGridlines [rowHover]="true" [tableStyle]="{'min-width': '100rem'}">
         <ng-template #header>
             <tr>
                 <th>SI No</th>
                 <th>Employee Code</th>
                 <th>Employee Name</th>
                 <th>Project Code</th>
-                <th>Site</th>
-                <th>State</th>
+                <th>Site Name</th>
+                <th>Cluster Name</th>
                 <th>Role</th>
+                <th>NDC From Site Head</th>
+                <th>NDC From Consultancy</th>
                 <th>Cluster Head Approval</th>
                 <th>Department Head Approval</th>
             </tr>
         </ng-template>
-        <ng-template #body let-terminate let-i="rowIndex">
+        <ng-template #body let-resignation let-i="rowIndex">
             <tr>
                 <td>{{ i + 1 }}</td>
-                <td>{{ terminate.employeeCode }}</td>
-                <td>{{ terminate.employeeName }}</td>
-                <td>{{ terminate.pCode }}</td>
-                <td>{{ terminate.site }}</td>
-                <td>{{ terminate.state }}</td>
-                <td>{{ terminate.designation }}</td>
+                <td>{{ resignation.candidate.employeeCode }}</td>
+                <td>{{ resignation.candidate.candidateName }}</td>
+                <td>{{ resignation.employmentDetails.project.projectCode }}</td>
+                <td>{{ resignation.employmentDetails.project.siteName }}</td>
+                <td>{{ resignation.employmentDetails.cluster.clusterName }}</td>
+                <td>{{ resignation.employmentDetails.envisionRole.roleName }}</td>
+                <td>{{ resignation.ndcFromSiteHead === true ? 'Yes' : 'No' }}</td>
+                <td>{{ resignation.ndcFromConsultancy === true ? 'Yes' : 'No' }}</td>
                 <td>
                     <div class="flex items-center justify-center gap-2">
-                        <p-button icon="pi pi-check" severity="primary" rounded />
-                        <p-button icon="pi pi-times" severity="danger" rounded />
+                        @if (resignation.stateHeadApproval.approvalStatus === APPROVALSTATUS.ACCEPTED) {
+                            <p-button icon="pi pi-check" severity="primary" rounded [disabled]="true" />
+                        } @else if (resignation.stateHeadApproval.approvalStatus === APPROVALSTATUS.REJECTED) {
+                            <p-button icon="pi pi-times" severity="danger" rounded [disabled]="true" />
+                        }
+                        @if (resignation.stateHeadApproval.approvalStatus === APPROVALSTATUS.PENDING) {
+                            <p-button icon="pi pi-check" severity="primary" rounded 
+                               (onClick)="clusterHeadApproval(resignation.resignationId, 'Accepted')" />
+                            <p-button icon="pi pi-times" severity="danger" rounded
+                                (onClick)="clusterHeadApproval(resignation.resignationId, 'Rejected')" />
+                        }
                     </div>
                 </td>
                 <td>
                     <div class="flex items-center justify-center gap-2">
-                        <p-button icon="pi pi-check" severity="primary" rounded />
-                        <p-button icon="pi pi-times" severity="danger" rounded />
+                        @if (resignation.departmentHeadApproval.approvalStatus === APPROVALSTATUS.ACCEPTED) {
+                            <p-button icon="pi pi-check" severity="primary" rounded [disabled]="true" />
+                        } @else if (resignation.departmentHeadApproval.approvalStatus === APPROVALSTATUS.REJECTED) {
+                            <p-button icon="pi pi-times" severity="danger" rounded [disabled]="true" />
+                        }
+                        @if (resignation.departmentHeadApproval.approvalStatus === APPROVALSTATUS.PENDING) {
+                            <p-button icon="pi pi-check" severity="primary" rounded 
+                               (onClick)="departmentHeadApproval(resignation.resignationId, 'Accepted')" />
+                            <p-button icon="pi pi-times" severity="danger" rounded 
+                               (onClick)="departmentHeadApproval(resignation.resignationId, 'Rejected')" />
+                        }
                     </div>
                 </td>
             </tr>
@@ -46,3 +68,5 @@
         </ng-template>
     </p-table>
 </div>
+
+<p-toast />

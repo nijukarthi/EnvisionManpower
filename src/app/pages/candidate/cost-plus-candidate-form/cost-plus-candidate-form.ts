@@ -387,7 +387,7 @@ export class CostPlusCandidateForm implements OnInit {
     console.log(this.costPlusCandidateForm.getRawValue());
     const data = this.costPlusCandidateForm.getRawValue();
 
-    if (this.costPlusCandidateForm.get('costPlusSalaryDetails')?.valid) {
+    if (this.costPlusCandidateForm.get('costPlusSalaryDetails')?.dirty) {
       this.updateSalaryDetails();
     }
     else{

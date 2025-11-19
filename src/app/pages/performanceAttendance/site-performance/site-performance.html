@@ -1,15 +1,19 @@
 <div class="card">
     <div class="flex items-start justify-between">
         <h5>Site Performance</h5>
-        <p-splitbutton label="Actions" [model]="actionItems" />
+        <!-- <p-menu #menu [model]="actionItems" [popup]="true" />
+        <p-button (onClick)="menu.toggle($event)" label="Actions" icon="pi pi-angle-down" iconPos="right" /> -->
     </div>
     <div class="border border-[var(--p-surface-200)] rounded-lg overflow-hidden">
-        <p-table [value]="sitePerformancesList" stripedRows [rowHover]="true" [tableStyle]="{'min-width': '130rem'}">
+        <p-table [value]="sitePerformancesList" stripedRows [rowHover]="true" [paginator]="true"
+           [rows]="pageSize" [lazy]="true" [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true"
+           [first]="first" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+           [totalRecords]="sitePerformancesListLength" [tableStyle]="{'min-width': '130rem'}" (onPage)="pageChange($event)">
             <ng-template #header>
                 <tr>
-                    <th>
+                    <!-- <th>
                         <p-tableHeaderCheckbox />
-                    </th>
+                    </th> -->
                     <th>SL No</th>
                     <th>Employee Code</th>
                     <th>Employee Name</th>
@@ -21,13 +25,14 @@
                     <th>Actual DOJ</th>
                     <th>Contact Number</th>
                     <th>Emergency Contact Number</th>
+                    <th>Actions</th>
                 </tr>
             </ng-template>
             <ng-template #body let-performance let-i="rowIndex">
                 <tr>
-                    <td>
-                        <p-tableCheckbox [value]="performance" />
-                    </td>
+                    <!-- <td>
+                        <p-tableCheckbox [value]="performance" (click)="selectedEmployee(performance)" />
+                    </td> -->
                     <td>{{ i + 1 }}</td>
                     <td>{{ performance.employeeCode || '-' }}</td>
                     <td>{{ performance.candidateName || '-' }}</td>
@@ -39,6 +44,10 @@
                     <td>{{ performance.employmentDetails.joiningDate || '-' }}</td>
                     <td>{{ performance.phoneNumber || '-' }}</td>
                     <td>{{ performance.alternativeNumber || '-' }}</td>
+                    <td>
+                        <p-menu #menu [model]="getMenuItems(performance)" [popup]="true" appendTo="body" />
+                        <p-button (onClick)="menu.toggle($event)" icon="pi pi-ellipsis-v" rounded severity="secondary" />
+                    </td>
                 </tr>
             </ng-template>
             <ng-template #emptymessage>
@@ -54,28 +63,31 @@
 
 <p-dialog header="Resignation Acceptance" [(visible)]="openTerminateModal" [modal]="true" [draggable]="false"
     [style]="{width: '50rem'}">
-    <div class="grid grid-cols-2 gap-2">
-        <div class="col-span-1 gap-1 grid">
-            <label for="last-date">Last Working Date</label>
-            <p-datepicker [iconDisplay]="'input'" [showIcon]="true" inputId="last-date"
-                placeholder="Select Date" appendTo="body" />
+    <form [formGroup]="resignationRequestForm" (ngSubmit)="onSubmit()">
+        <div class="grid grid-cols-2 gap-2" formArrayName="resignationDetails">
+            @for (item of resignationDetails.controls; track $index; let i = $index) {
+                <ng-container [formGroupName]="i">
+                    <div class="col-span-1 col-start-1 gap-1 grid">
+                        <label for="no-due-clerance-sm">No Due Clearance from Site Manager</label>
+                        <p-select [options]="noDueClearanceList" formControlName="ndcFromSiteHead" 
+                            optionLabel="label" optionValue="value"
+                            inputId="no-due-clerance-sm" placeholder="Select Yes/No" appendTo="body" />
+                    </div>
+                    <div class="col-span-1 gap-1 grid">
+                        <label for="no-due-clerance-rm">No Due Clearance from Resource Pool Manager</label>
+                        <p-select [options]="noDueClearanceList" formControlName="ndcFromConsultancy" 
+                            optionLabel="label" optionValue="value"
+                            inputId="no-due-clerance-rm" placeholder="Select Yes/No" appendTo="body" />
+                    </div>
+                </ng-container>
+            }
         </div>
-        <div class="col-span-1 col-start-1 gap-1 grid">
-            <label for="no-due-clerance-sm">No Due Clearance from Site Manager</label>
-            <p-select [options]="noDueClearanceList" optionLabel="label" optionValue="value"
-                inputId="no-due-clerance-sm" placeholder="Select Yes/No" appendTo="body" />
+        <div class="flex justify-end mt-4">
+            <button pButton pRipple type="submit">
+                <span pButtonLabel>Submit</span>
+            </button>
         </div>
-        <div class="col-span-1 gap-1 grid">
-            <label for="no-due-clerance-rm">No Due Clearance from Resource Pool Manager</label>
-            <p-select [options]="noDueClearanceList" optionLabel="label" optionValue="value"
-                inputId="no-due-clerance-rm" placeholder="Select Yes/No" appendTo="body" />
-        </div>
-    </div>
-    <div class="flex justify-end mt-4">
-        <button pButton pRipple type="submit">
-            <span pButtonLabel>Submit</span>
-        </button>
-    </div>
+    </form>
 </p-dialog>
 
 <p-toast />

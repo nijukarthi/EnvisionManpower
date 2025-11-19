@@ -19,12 +19,6 @@ export class UsergroupTable implements OnInit {
 
   userGroupId: any;
 
-  /* private userGroupService = inject(Usergroup);
-  private fb = inject(FormBuilder);
-  private router = inject(Router);
-  private messageService = inject(MessageService);
-  private confirmationService = inject(ConfirmationService); */
-
   usergroupList: any;
 
   usergroupForm:any;

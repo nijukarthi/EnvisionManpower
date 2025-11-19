@@ -236,11 +236,11 @@ export class Steps implements OnInit {
     private datePipe: DatePipe, private stepService: StepStateService){}
 
   ngOnInit(): void {
+    this.fetchViewRequisition();
+    this.fetchInterviewerList();
     this.demandDetails = history.state;
 
     console.log('Received Requisition ID:', this.demandDetails);
-    this.fetchViewRequisition();
-    this.fetchInterviewerList();
 
     this.stepService.activeStep$.subscribe(step => {
       console.log(step);
@@ -248,6 +248,9 @@ export class Steps implements OnInit {
 
       if (this.activeStep === 2) {
         this.fetchCandidateByCategory(this.categoryId);
+      }
+      if (this.activeStep === 6) {
+        this.fetchFinalApprovalCandidateList();
       }
     })
     if (this.demandDetails.fullfillmentStatus !== FullFillmentStatus.STEP1 && this.activeStep === 1) {
@@ -268,6 +271,7 @@ export class Steps implements OnInit {
           console.log(val);
           this.categoryId = val.data.category.categoryId;
           this.fetchConsultancyByCategory(this.categoryId);
+          this.fetchCandidateByCategory(this.categoryId);
           console.log(this.activeStep);
         },
         error: err => {
@@ -282,6 +286,7 @@ export class Steps implements OnInit {
   stepChange(stepValue: any){
     this.activeStep = stepValue;
     console.log('Active Step:', this.activeStep);
+    this.fetchViewRequisition();
 
     if (this.activeStep === 2) {
       this.actionName = 'Submit';
@@ -976,6 +981,10 @@ export class Steps implements OnInit {
       this.apiService.joiningProcessCandidatesForm(data).subscribe({
         next: val => {
           console.log(val);
+          this.messageService.add({severity: 'success', summary: 'Success', detail: 'Joining Process Done Successfully'});
+          setTimeout(() => {
+            this.router.navigate(['/home/demand-fullfillment']);
+          }, 2000);
           this.fetchJoiningProcessCandidateList();
         },
         error: err => {
