@@ -1,0 +1,81 @@
+<div class="card">
+    <div class="flex items-baseline-last justify-between">
+        <h5>On-roll Employees</h5>
+        <p-button icon="pi pi-external-link" label="Export" (click)="dt.exportCSV()" />
+    </div>
+    <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
+        <p-table #dt [columns]="cols" [value]="onrollEmployeeList" [exportHeader]="'customExportHeader'" 
+            [rowHover]="true" [paginator]="true" [rows]="pageSize" [lazy]="true" stripedRows
+            [first]="first" [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true" [totalRecords]="onrollEmployeeListLength" 
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [tableStyle]="{'min-width': '130rem'}" (onPage)="pageChange($event)">
+            <ng-template #header let-columns>
+                <tr>
+                    <th>SL No</th>
+                    @for (col of columns; track $index) {
+                        <th>{{ col.header }}</th>
+                    }
+                    <th>PPE Details</th>
+
+                </tr>
+            </ng-template>
+            <ng-template #body let-onroll let-i="rowIndex" let-columns="columns">
+                <tr>
+                    <td>{{ i + 1 }}</td>
+                    @for (col of columns; track $index) {
+                        <td>{{ getNestedValue(onroll, col.field) }}</td>
+                    }
+                    <!-- <td>{{ onroll.candidateName }}</td>
+                    <td>{{ onroll.employmentDetails.project.projectCode }}</td>
+                    <td>{{ onroll.employmentDetails.project.siteName ?? '-' }}</td>
+                    <td>{{ onroll.employmentDetails.cluster.clusterName || '-' }}</td>
+                    <td>{{ onroll.employmentDetails.envisionRole.roleName || '-' }}</td>
+                    <td>{{ onroll.employmentDetails.expectedJoiningDate ?? '-' }}</td>
+                    <td>{{ onroll.employmentDetails.joiningDate ?? '-' }}</td>
+                    <td>{{ onroll.phoneNumber ?? '-' }}</td>
+                    <td>{{ onroll.alternativeNumber ?? '-' }}</td>
+                    <td>{{ onroll.uan ?? '-' }}</td>
+                    <td>{{ onroll.aadharNumber ?? '-' }}</td> -->
+                    <td>
+                        <p-button icon="pi pi-eye" rounded (onClick)="viewPpeDetails(onroll)" />
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template #emptymessage>
+                <tr>
+                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground);">
+                        No Records Found
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+<p-dialog header="View PPE Details" [(visible)]="openPpeDetails" [modal]="true" [style]="{width: '50rem'}">
+    <div class="ppe-table">
+        <p-table [value]="onrollPpeDetails" [rowHover]="true">
+            <ng-template #header>
+                <tr>
+                    <th>SL NO</th>
+                    <th>PPE Type</th>
+                    <th>Size</th>
+                </tr>
+            </ng-template>
+            <ng-template #body let-ppe let-i="rowIndex">
+                <tr>
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ ppe.ppeType }}</td>
+                    <td>{{ ppe.size || '-' }}</td>
+                </tr>
+            </ng-template>
+            <ng-template #emptymessage>
+                <tr>
+                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground);">
+                        No Records Found
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</p-dialog>

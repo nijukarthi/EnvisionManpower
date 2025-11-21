@@ -28,6 +28,14 @@ export class Apiservice {
     return this.postMethod('auth/user/verify-otp', params);
   }
 
+  sendInterviewerOtp(params: any){
+    return this.postMethod('auth/guestuser/send-otp', params);
+  }
+
+  verifyInterviewerOtp(params: any): Observable<any>{
+    return this.postMethod('auth/guestuser/verify-otp', params);
+  }
+
   createNewDepartment(params: any): Observable<any> {
     return this.postMethod('master/department/create', params);
   }
@@ -79,8 +87,15 @@ export class Apiservice {
    fetchActiveEnvRole(params: any): Observable<any> {
     return this.postMethod('master/env-role',params);
   }
+  fetchViewRole(params: any): Observable<any>{
+    return this.postMethod('master/env-role/view', params);
+  }
   deleteEnvRole(params: any): Observable<any> {
     return this.postMethod('master/env-role/delete',params);
+  }
+
+  fetchRoleInfoList(params: any): Observable<any>{
+    return this.postMethod('master/env-role/info', params);
   }
 
   createNewCluster(params: any): Observable<any> {
@@ -204,8 +219,20 @@ export class Apiservice {
     return this.postMethod('requesition/demand/resourcemanager/assign', params);
   }
 
+  assignRoleForDemand(params: any): Observable<any>{
+    return this.postMethod('requesition/demand/envisionrole', params);
+  }
+
   fetchDemandFullFill(params: any): Observable<any>{
     return this.postMethod('requesition/demand/fullfill', params);
+  }
+
+  fetchConsultancyByCategory(params: any): Observable<any>{
+    return this.postMethod('user/category/consultancy', params);
+  }
+
+  fetchInterviewerInfoList(params: any): Observable<any>{
+    return this.postMethod('user/active/list/guestuserinfo', params);
   }
 
   assignEnvisionRoles(params: any){
@@ -224,8 +251,215 @@ export class Apiservice {
     return this.postMethod('user/consultancy/view', params);
   }
 
+  updateConsultancy(params: any): Observable<any>{
+    return this.postMethod('user/consultancy/update', params);
+  }
+
   deleteConsultancy(params: any): Observable<any>{
     return this.postMethod('user/consultancy/remove', params);
   }
 
+  createFixedCostCandidate(params: any){
+    return this.postMethod('candidate/fixedcost/create', params);
+  }
+
+  fetchActiveFixedCostCandidates(params: any): Observable<any>{
+    return this.postMethod('candidate/fixedcost/active', params);
+  }
+
+  fetchActiveCostPlusCandidates(params: any): Observable<any>{
+    return this.postMethod('candidate/costplus/active', params);
+  }
+
+  createCostPlusCandidates(params: any){
+    return this.postMethod('candidate/costplus/create', params);
+  }
+
+  fetchViewCandidate(params: any): Observable<any>{
+    return this.postMethod('candidate/view', params);
+  }
+
+  updateFixedCostCandidate(params: any){
+    return this.postMethod('candidate/fixedcost/update', params);
+  }
+
+  fetchEmploymentStatus(params: any): Observable<any>{
+    return this.postMethod('candidate/employmentstatus', params);
+  }
+
+  updateEmploymentStatus(params: any): Observable<any>{
+    return this.postMethod('candidate/employmentdetail/status/update', params);
+  }
+
+  deleteCandidate(params: any){
+    return this.postMethod('candidate/remove', params);
+  }
+
+  updateCostPlusPersonalCandidate(params: any){
+    return this.postMethod('candidate/costplus/update', params);
+  }
+
+  updateMonthlyReimbursementCandidate(params: any){
+    return this.postMethod('candidate/monthlyreimbursement/update', params);
+  }
+
+  updateOneTimeReimbursementCandidate(params: any){
+    return this.postMethod('candidate/onetimereimbursement/update', params);
+  }
+
+  updateCostPlusSalaryDetails(params: any){
+    return this.postMethod('candidate/costplussalary/update', params);
+  }
+
+  fetchActiveInterviewers(params: any): Observable<any>{
+    return this.postMethod('user/active/guestuser', params);
+  }
+
+  createNewInterviewer(params: any){
+    return this.postMethod('user/guestuser/create', params);
+  }
+
+  fetchViewInterviewer(params: any): Observable<any>{
+    return this.postMethod('user/guestuser/view', params);
+  }
+
+  updateInterviewer(params: any){
+    return this.postMethod('user/guestuser/update', params);
+  }
+
+  deleteInterviewer(params: any){
+    return this.postMethod('user/guestuser/remove', params);
+  }
+
+  createFirstInterview(params: any){
+    return this.postMethod('requesition/demand/interview/first-round/create', params);
+  }
+
+  viewFirstInterview(params: any): Observable<any>{
+    return this.postMethod('requesition/demand/interview/first-round/view', params);
+  }
+
+  assignNewConsultancy(params: any){
+    return this.postMethod('requesition/demand/interview/consultancy/assign', params);
+  }
+
+  removeAssignedConsultancy(params: any){
+    return this.postMethod('requesition/demand/interview/consultancy/remove', params);
+  }
+
+  updateFirstInterviewDetails(params: any){
+    return this.postMethod('requesition/demand/interview/update', params);
+  }
+
+  fetchCandidateInfoList(params: any): Observable<any>{
+    return this.postMethod('candidate/infolist', params);
+  }
+
+  assignCandidatesFirstInterview(params: any){
+    return this.postMethod('requesition/demand/interview/first-round/candidate/assign', params);
+  }
+
+  viewAssignedCandidates(params: any): Observable<any>{
+    return this.postMethod('requesition/demand/interview/candidates', params);
+  }
+
+  assignMoreCandidates(params: any){
+    return this.postMethod('requesition/demand/interview/first-round/candidate/assign-more', params);
+  }
+
+  removeAssignedCandidates(params: any){
+    return this.postMethod('requesition/demand/interview/first-round/candidate/remove', params);
+  }
+
+  firstInterviewRoundStatus(params: any){
+    return this.postMethod('requesition/demand/interview/first-round/candidate/update', params);
+  }
+
+  viewFinalInterviewDetails(params: any): Observable<any>{
+    return this.postMethod('requesition/demand/interview/second-round/view', params);
+  }
+
+  updateFinalInterviewRound(params: any){
+    return this.postMethod('requesition/demand/interview/second-round/candidate/update', params);
+  }
+
+  finalApprovalCandidateList(params: any): Observable<any>{
+    return this.postMethod('requesition/demand/finalapproval/candidate', params);
+  }
+
+  finalApprovalRound(params: any){
+    return this.postMethod('requesition/demand/finalapproval/candidate/update', params);
+  }
+
+  joiningProcessCandidateList(params: any): Observable<any>{
+    return this.postMethod('requesition/demand/joiningprocess/candidate', params);
+  }
+
+  joiningProcessCandidatesForm(params: any): Observable<any>{
+    return this.postMethod('requesition/demand/joiningprocess/candidate/update', params);
+  }
+
+  fetchOnboardingCandidateList(params: any): Observable<any>{
+    return this.postMethod('candidate/onboarded', params);
+  }
+
+  fetchOnRollCandidates(params: any): Observable<any>{
+    return this.postMethod('candidate/onroll', params);
+  }
+
+  moveCandidatesToOnroll(params: any): Observable<any>{
+    return this.postMethod('candidate/move-to/onroll', params);
+  }
+
+  updateOnboardCandidates(params: any): Observable<any>{
+    return this.postMethod('candidate/onboarded/update', params);
+  }
+
+  fetchPpeDetails(params: any): Observable<any>{
+    return this.postMethod('candidate/onboarded/ppedetails/view', params);
+  }
+
+  updatePpeDetails(params: any){
+    return this.postMethod('candidate/onboarded/ppedetails/update', params);
+  }
+
+  updateGwoTraining(params: any): Observable<any>{
+    return this.postMethod('candidate/training/gwo/update', params);
+  }
+
+  fetchCandidateSitePerformance(params: any): Observable<any>{
+    return this.postMethod('candidate/siteperfomance', params);
+  }
+
+  transferCandidateProject(params: any){
+    return this.postMethod('candidate/siteperfomance/transfer', params);
+  }
+
+  fetchTransferredEmployeeList(params: any): Observable<any>{
+    return this.postMethod('candidate/siteperfomance/transfer/requests', params);
+  }
+
+  approveTransferClusterHead(params: any){
+    return this.postMethod('candidate/siteperfomance/transfer/approve/statehead', params);
+  }
+
+  approveTransferDeptHead(params: any){
+    return this.postMethod('candidate/siteperfomance/transfer/approve/departmenthead', params);
+  }
+
+  employeeResignation(params: any){
+    return this.postMethod('candidate/siteperfomance/resignation', params);
+  }
+
+  fetchResignationList(params: any): Observable<any>{
+    return this.postMethod('candidate/siteperfomance/resignation/requests', params);
+  }
+
+  approveResignClusterHead(params: any){
+    return this.postMethod('candidate/siteperfomance/resignation/approve/statehead', params);
+  }
+
+  approveResignDeptHead(params: any){
+    return this.postMethod('candidate/siteperfomance/resignation/approve/departmenthead', params);
+  }
 }

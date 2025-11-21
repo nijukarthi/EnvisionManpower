@@ -7,7 +7,6 @@ import { Login } from '@/pages/auth/login';
 import { Demand } from '@/pages/demand/demand';
 import { Approval } from '@/pages/approval/approval';
 import { Fullfillreq } from '@/pages/fullfillreq/fullfillreq';
-import { InterviewManagement } from '@/pages/interview-management/interview-management';
 import { Register } from '@/pages/auth/register';
 import { ConsultancyTable } from '@/pages/consultancy/consultancy-table/consultancy-table';
 import { SpnTable } from '@/pages/spn/spn-table/spn-table';
@@ -21,14 +20,29 @@ import { ResourceManagerAssign } from '@/pages/ResourceManagerAssign/resource-ma
 import { Loginpage } from '@/pages/loginpage/loginpage';
 import { Envisionroles } from '@/pages/envisionroles/envisionroles';
 import { Project } from '@/pages/project/project/project';
-import { AddEmployee } from '@/pages/add-employee/add-employee';
-import { ExistingEmployee } from '@/pages/existing-employee/existing-employee';
-import { NewCandidateFixedCost } from '@/pages/new-candidate-fixed-cost/new-candidate-fixed-cost';
-import { ExistingCandidateFixedCost } from '@/pages/existing-candidate-fixed-cost/existing-candidate-fixed-cost';
-import { NewCandidateCostPlus } from '@/pages/new-candidate-cost-plus/new-candidate-cost-plus';
+import { CandidateFixedCost } from '@/pages/candidate/candidate-fixed-cost/candidate-fixed-cost';
+import { CandidateCostPlus } from '@/pages/candidate/candidate-cost-plus/candidate-cost-plus';
 import { ConsultancyForm } from '@/pages/consultancy/consultancy-form/consultancy-form';
-import { ConsultancyPage } from '@/pages/consultancy-page/consultancy-page';
-import { GuestUserPage } from '@/pages/guest-user-page/guest-user-page';
+import { GuestUserPage } from '@/pages/fullFillProcess/guest-user-page/guest-user-page';
+import { Steps } from '@/pages/fullFillProcess/steps/steps';
+import { DemandFullfillment } from '@/pages/fullFillProcess/demand-fullfillment/demand-fullfillment';
+import { FixedCostCandidateForm } from '@/pages/candidate/fixed-cost-candidate-form/fixed-cost-candidate-form';
+import { CostPlusCandidateForm } from '@/pages/candidate/cost-plus-candidate-form/cost-plus-candidate-form';
+import { Interviewer } from '@/pages/interviewer/interviewer';
+import { OnboardingTable } from '@/pages/onboarding/onboarding-table/onboarding-table';
+import { TrainingTable } from '@/pages/training/training-table/training-table';
+import { SitePerformance } from '@/pages/performanceAttendance/site-performance/site-performance';
+import { InvoiceSubmission } from '@/pages/accounts-payable/invoice-submission/invoice-submission';
+import { InvoiceReceipt } from '@/pages/accounts-payable/invoice-receipt/invoice-receipt';
+import { InvoiceDisbursement } from '@/pages/accounts-payable/invoice-disbursement/invoice-disbursement';
+import { OnRollEmployees } from '@/pages/on-roll-employees/on-roll-employees';
+import { Transfer } from '@/pages/performanceAttendance/transfer/transfer';
+import { Terminate } from '@/pages/performanceAttendance/terminate/terminate';
+import { TransferForm } from '@/pages/performanceAttendance/transfer-form/transfer-form';
+import { InvoiceSubmissionForm } from '@/pages/accounts-payable/invoice-submission-form/invoice-submission-form';
+import { InvoiceReceiptForm } from '@/pages/accounts-payable/invoice-receipt-form/invoice-receipt-form';
+import { InvoiceDisbursementForm } from '@/pages/accounts-payable/invoice-disbursement-form/invoice-disbursement-form';
+import { AttendanceTable } from '@/pages/performanceAttendance/attendance-table/attendance-table';
 
 export const appRoutes: Routes = [
     {
@@ -53,8 +67,7 @@ export const appRoutes: Routes = [
                 component: Approval,
                 canActivate: [authGuard]
             },
-            { path: 'fullFill', component: Fullfillreq, canActivate: [authGuard]},
-            { path: 'interviewManagement', component: InterviewManagement, canActivate: [authGuard]},
+            { path: 'assign-role', component: Fullfillreq, canActivate: [authGuard]},
             { path: 'consultancies', component: ConsultancyTable, canActivate: [authGuard] },
             { path: 'consultancies/new', component: ConsultancyForm, canActivate: [authGuard] },
             { path: 'consultancies/:id', component: ConsultancyForm, canActivate: [authGuard] },
@@ -67,15 +80,32 @@ export const appRoutes: Routes = [
             { path: 'manager', component: ResourceManagerAssign, canActivate: [authGuard] },
             { path: 'projects', component: Project, canActivate: [authGuard]},
             { path: 'envisionRoles', component: Envisionroles, canActivate: [authGuard] },
+            { path: 'interviewers', component: Interviewer, canActivate: [authGuard] },
             { path: 'uikit', canActivate: [authGuard], loadChildren: () => import('./app/pages/uikit/uikit.routes') },
             { path: 'documentation', component: Documentation, canActivate: [authGuard] },
-            { path: 'addEmployee', component: AddEmployee, canActivate: [authGuard] },
-            { path: 'consultancyPage', component: ConsultancyPage, canActivate: [authGuard] },
             { path: 'guestUserPage', component: GuestUserPage, canActivate: [authGuard] },
-            { path: 'existingEmployee', component: ExistingEmployee, canActivate: [authGuard] },
-            { path: 'candidate/new/fixed-cost', component: NewCandidateFixedCost, canActivate: [authGuard] },
-            { path: 'candidate/new/cost-plus', component: NewCandidateCostPlus, canActivate: [authGuard] },
-            { path: 'candidate/existing/fixed-cost',component: ExistingCandidateFixedCost, canActivate: [authGuard] },
+            { path: 'demand-fullfillment', component: DemandFullfillment, canActivate: [authGuard] },
+            { path: 'demand-fullfillment/steps', component: Steps, canActivate: [authGuard] },
+            { path: 'onboarding', component: OnboardingTable, canActivate: [authGuard] },
+            { path: 'onroll-employees', component: OnRollEmployees, canActivate: [authGuard] },
+            { path: 'training', component: TrainingTable, canActivate: [authGuard] },
+            { path: 'attendance', component: AttendanceTable, canActivate: [authGuard] },
+            { path: 'site-performance', component: SitePerformance, canActivate: [authGuard] },
+            { path: 'transfer/update', component: TransferForm, canActivate: [authGuard] },
+            { path: 'transfer', component: Transfer, canActivate: [authGuard] },
+            { path: 'terminate', component: Terminate, canActivate: [authGuard]},
+            { path: 'invoice-submission', component: InvoiceSubmission, canActivate: [authGuard] },
+            { path: 'invoice-submission/new', component: InvoiceSubmissionForm, canActivate: [authGuard] },
+            { path: 'invoice-receipt', component: InvoiceReceipt, canActivate: [authGuard] },
+            { path: 'invoice-receipt/new', component:InvoiceReceiptForm, canActivate: [authGuard] },
+            { path: 'invoice-disbursement', component: InvoiceDisbursement, canActivate: [authGuard] },
+            { path: 'invoice-disbursement/new', component: InvoiceDisbursementForm, canActivate: [authGuard] },
+            { path: 'candidates/fixed-cost/new', component: FixedCostCandidateForm, canActivate: [authGuard] },
+            { path: 'candidates/fixed-cost/:id', component: FixedCostCandidateForm, canActivate: [authGuard] },
+            { path: 'candidates/cost-plus/new', component: CostPlusCandidateForm, canActivate: [authGuard] },
+            { path: 'candidates/cost-plus/:id', component: CostPlusCandidateForm, canActivate: [authGuard] },
+            { path: 'candidate/fixed-cost', component: CandidateFixedCost, canActivate: [authGuard] },
+            { path: 'candidate/cost-plus', component: CandidateCostPlus, canActivate: [authGuard] },
             { path: 'pages', canActivate: [authGuard], loadChildren: () => import('./app/pages/pages.routes') }
         ]
     },

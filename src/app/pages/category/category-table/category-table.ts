@@ -3,7 +3,6 @@ import { Shared } from "@/service/shared";
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { Observable } from 'rxjs';
 import { Apiservice } from '@/service/apiservice/apiservice';
 
 @Component({
@@ -15,11 +14,7 @@ import { Apiservice } from '@/service/apiservice/apiservice';
 export class CategoryTable implements OnInit {
   openNewCategoryPopup = false;
   categoryId: any;
-  /* private apiService = inject(Category);
-  private fb = inject(FormBuilder);
-  private router = inject(Router);
-  private confirmationService = inject(ConfirmationService);
-  private messageService = inject(MessageService); */
+
   categoryList: any;
   categoryForm: any;
   actionName: any = "Save";
@@ -43,11 +38,11 @@ export class CategoryTable implements OnInit {
         icon: 'pi pi-pencil',
         command: () => this.editCategory(category)
       },
-      {
-        label: 'Delete',
-        icon: 'pi pi-trash',
-        command: () => this.deleteCategory(category)
-      }
+      // {
+      //   label: 'Delete',
+      //   icon: 'pi pi-trash',
+      //   command: () => this.deleteCategory(category)
+      // }
     ]
   }
 

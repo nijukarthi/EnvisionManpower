@@ -1,30 +1,25 @@
 <p-fluid>
-        <div class="card">
+    <div class="card">
+        <h5>Assign Standard Role</h5>
+        <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
             <p-table [value]="demandFullfillList"  #dt
                 [tableStyle]="{ 'min-width': '110rem' }" [paginator]="true" [rowsPerPageOptions]="[5, 10, 20]" stripedRows
-                [rows]="10" [rowHover]="true" [showGridlines]="true" [showCurrentPageReport]="true"
-                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [paginator]="true"
-                responsiveLayout="scroll" [globalFilterFields]="['reqId','reqBy','pcode','state','spn','spnDesc','exp','qty','planDate','planrelease',]">
-                <ng-template #caption>
-                    <div class="flex justify-end">
-                    
-                    <span class="p-input-icon-left mb-2">
-                        <p-button label="Submit" icon="pi pi-save" severity="success" />
-                    </span>
-                </div>
-                </ng-template>
+                [rows]="pageSize" [rowHover]="true" [showCurrentPageReport]="true" [first]="first"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [lazy]="true"
+                responsiveLayout="scroll" (onPage)="pageChange($event)" [totalRecords]="demandFullfillListLength"
+                [globalFilterFields]="['reqId','reqBy','pcode','state','spn','spnDesc','exp','qty','planDate','planrelease',]">
                 <ng-template #header>
                     <tr>
                         <th>S.No</th>
+                        <th>View</th>
                         <th>Demand Code</th>
                         <th>SPN</th>
                         <th>SPN Description</th>
+                        <th>Experience</th>
                         <th>Quantity</th>
                         <th>Planned deployment date</th>
                         <th>Planned release date</th>
                         <th>Role</th>
-                        <th>Consultancy Name</th>
-                        <th>Name of HR</th>
                     </tr>
                     <tr>
                         <td></td>
@@ -45,27 +40,22 @@
                 <ng-template #body let-demand let-rowIndex="rowIndex">
                     <tr>
                         <td>{{ rowIndex + 1 }}</td>
+                        <td>
+                            <p-button icon="pi pi-eye" [rounded]="true" severity="warn" (click)="showDetailPopup(demand.requesitionId)" />
+                        </td>
                         <td>{{ demand.demandCode }}</td>
                         <td>{{ demand.spn.spnCode }}</td>
                         <td>{{ demand.spn.spnDescription }}</td>
+                        <td>{{ demand.spn.experience }}</td>
                         <td>{{ demand.quantity }}</td>
                         <td>{{ demand.plannedDeploymentDate }}</td>
                         <td>{{ demand.plannedReleaseDate }}</td>
                         <td>
-                            <p-select [options]="envisionRoleList" appendTo="body" optionLabel="roleName" optionValue="id"
+                            <p-select [options]="envisionRoleList" [ngModel]="demand.envisionRole ? demand.envisionRole.id : null" appendTo="body" optionLabel="roleName" optionValue="id"
                                 placeholder="Select Role" [filter]="true" filterBy="roleName" 
                                 class="w-full md:w-56" [disabled]="loggedUserGroupId !== UserGroups.RESOURCEMANAGER && loggedUserGroupId !== UserGroups.ADMIN"
                                 (onChange)="assignEnvisionRoles(demand.demandId, $event.value)" />
                         </td>
-                        <td>
-                            <p-select [options]="consultancyList" appendTo="body" optionLabel="label" optionValue="label"
-                                placeholder="Select Consultancy" [filter]="true" filterBy="label" class="w-full md:w-56" />
-                        </td>
-                        <td>
-                            <p-select [options]="manpowerList" appendTo="body" optionLabel="name" optionValue="name"
-                                placeholder="Select Manpower" [filter]="true" filterBy="name" class="w-full md:w-56" />
-                        </td>
-                        
                     </tr>
                 </ng-template>
                 <ng-template #emptymessage>
@@ -75,126 +65,65 @@
                 </ng-template>
             </p-table>         
         </div>
-        <form [formGroup]="demandForm" *ngIf="false">
-            <div class="card grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="flex flex-wrap gap-2 w-full">
-                    <label for="firstname2">Requision ID</label>
-                    <input pInputText id="firstname2" formControlName="requisitionId" type="text" />
-                </div>
-                <div class="flex flex-wrap gap-2 w-full">
-                    <label for="lastname2">P-code</label>
-                    <p-select appendTo="body" [options]="PCode" formControlName="pCode" optionLabel="name" optionValue="name" placeholder="Select PCode"
-                        [filter]="true" filterBy="name" class="w-full md:w-56" />
-                </div>
-                <div class="flex flex-wrap gap-2 w-full">
-                    <label for="lastname2">State</label>
-                    <p-select appendTo="body" [options]="states" formControlName="state" optionLabel="label" optionValue="label" placeholder="Select State"
-                        [filter]="true" filterBy="label" class="w-full md:w-56" />
-                </div>
-                <div class="flex flex-wrap gap-2 w-full">
-                    <label for="lastname2">Planed deployment date</label>
-                    <input pInputText id="firstname2" formControlName="plannedDate" type="text" />
-
-                    <!-- <p-datepicker appendTo="body" formControlName="plannedDate" placeholder="Select Date" class="w-full" /> -->
-                </div>
-                <div class="flex flex-wrap gap-2 w-full">
-                    <label for="lastname2">Actual deployment date</label>
-                    <input pInputText id="firstname2" formControlName="actualDate" type="text" />
-
-                    <!-- <p-datepicker appendTo="body" formControlName="actualDate" placeholder="Select Date" class="w-full" /> -->
-                </div>
-                <div class="flex flex-wrap gap-4 w-full">
-                    <label for="lastname2">Duration date</label>
-                    <input pInputText id="firstname2" formControlName="durationDate" type="text" />
-
-                    <!-- <p-datepicker appendTo="body" formControlName="durationDate" placeholder="Select Date" class="w-full" /> -->
-                </div>
-                <div class="flex flex-wrap gap-2 w-full">
-                    <label for="lastname2">Requested By</label>
-                    <input pInputText formControlName="requestedBy" type="text" class="w-full" />
-                </div>
-                <div class="flex flex-wrap gap-2 w-full">
-                    <label for="lastname2">Role</label>
-                    <input pInputText formControlName="role" type="text" class="w-full" />
-                </div>
-                 <div class="flex flex-wrap gap-2 w-full">
-                    <label for="lastname2">Manpower Service Manager Assignment</label>
-                    <input pInputText formControlName="assignment" type="text" class="w-full" />
-                </div>
-                <div class="flex flex-wrap gap-2 w-full">
-                    <label for="lastname2">Consultancy Name</label>
-                    <p-select appendTo="body" [options]="consultancyList" formControlName="consultancyName" optionLabel="label" optionValue="label" placeholder="Select Consultancy"
-                        [filter]="true" filterBy="label" class="w-full md:w-56" />
-                </div>
-                 <div class="flex flex-wrap gap-2 w-full">
-                    <label for="lastname2">TEMP Emlopyee ID</label>
-                    <input pInputText formControlName="tempEmpId" type="text" class="w-full" />
-                    
-                </div>
-                <div class="flex flex-wrap gap-2 w-full">
-                    <label for="lastname2">Candidate Name</label>
-                    <input pInputText formControlName="candidateName" type="text" class="w-full" />
-                </div>
-                <div class="flex flex-wrap gap-2 w-full">
-                    <label for="lastname2">Designation Applied</label>
-                    <input pInputText formControlName="designation" type="text" class="w-full" />
-                </div>
-                 <div class="flex flex-wrap gap-2 w-full">
-                    <label for="lastname2">Final Interview</label>
-                    <p-datepicker appendTo="body" formControlName="finalInterview" placeholder="Select Date" class="w-full" /> 
-                </div>
-                <div class="flex flex-wrap gap-2 w-full">
-                    <label for="lastname2">Interviwer</label>
-                    <input pInputText formControlName="interviwer" type="text" class="w-full" />
-                </div>
-                <div class="flex flex-wrap gap-2 w-full">
-                    <label for="lastname2">Comments</label>
-                    <textarea rows="2"cols="30" formControlName="comments" pTextarea [autoResize]="true"></textarea>
-                </div>
-                <div class="flex flex-wrap gap-2 w-full">
-                    <label for="lastname2">Status by Resource Manager </label>
-                    <p-select appendTo="body" [options]="statusList" formControlName="statusResource" optionLabel="label" optionValue="label" placeholder="Select Consultancy"
-                        [filter]="true" filterBy="label" class="w-full md:w-56" />
-                </div>
-                <div class="flex flex-wrap gap-2 w-full">
-                    <label for="lastname2">Candidate Acceptance </label>
-                    <p-select appendTo="body" [options]="acceptanceList" formControlName="candidateAcceptance" optionLabel="label" optionValue="label" placeholder="Select Consultancy"
-                        [filter]="true" filterBy="label" class="w-full md:w-56" />
-                </div>
-                 <div class="flex flex-wrap gap-2 w-full">
-                    <label for="lastname2">(if Y) Joining Date </label>
-                    <p-datepicker appendTo="body" formControlName="joiningDate" placeholder="Select Date" class="w-full" /> 
-                </div>
-                <div class="flex flex-wrap gap-2 w-full">
-                    <label for="lastname2">PR No</label>
-                    <input pInputText formControlName="PRNo" type="text" class="w-full" />
-                </div>
-                <div class="flex flex-wrap gap-2 w-full">
-                    <label for="lastname2">PR Date </label>
-                    <p-datepicker appendTo="body" formControlName="PRDate" placeholder="Select Date" class="w-full" /> 
-                </div>
-                <div class="flex flex-wrap gap-2 w-full">
-                    <label for="lastname2">PO Date </label>
-                    <p-datepicker appendTo="body" formControlName="PODate" placeholder="Select Date" class="w-full" /> 
-                </div>
-                <div class="flex flex-wrap gap-2 w-full">
-                    <label for="lastname2">PO Number</label>
-                    <input pInputText formControlName="PONumber" type="text" class="w-full" />
-                </div>
-                <div class="flex flex-wrap gap-2 w-full">
-                    <label for="lastname2">Resource Manager Approval on Joining </label>
-                    <p-datepicker appendTo="body" formControlName="resourceJoining" placeholder="Select Date" class="w-full" /> 
-                </div>
-
-                
-            </div>
-             <div class="flex justify-center items-center gap-4 mt-6">
-                <button pButton label="Submit" class="p-button-outlined" icon="pi pi-save"
-                    ></button>
-                <button pButton label="Reset" class="p-button-outlined" icon="pi pi-times"
-                    severity="danger"></button>
-            </div>
-        </form>
+    </div>
 </p-fluid>
+
+<p-dialog header="View Requisition" [resizable]="true" [draggable]="false" [modal]="true" [maximizable]="true"
+    appendTo="body" [(visible)]="openRequisition" [style]="{ width: '50rem' }" [contentStyle]="{ height: '320px' }">
+    <p-fluid>
+        <div class="grid grid-cols-2 gap-2">
+            <div class="grid col-span-1 gap-1">
+                <label for="requisition-code">Requisition Code</label>
+                <input type="text" pInputText [value]="requisitionDetails?.requesitionCode" id="requisition-code"
+                    [disabled]="true" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="requested-by">Requested By</label>
+                <input type="text" pInputText [value]="requisitionDetails?.requestedBy?.userName" id="requested-by"
+                    [disabled]="true" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="project-code">Project Code</label>
+                <input type="text" pInputText [value]="requisitionDetails?.project?.projectCode" id="project-code"
+                    [disabled]="true" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="cluster-name">Cluster Name</label>
+                <input type="text" pInputText [value]="requisitionDetails?.cluster?.clusterName" id="cluster-name"
+                    [disabled]="true" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="cluster-code">Cluster Code</label>
+                <input type="text" pInputText [value]="requisitionDetails?.cluster?.clusterCode" id="cluster-name"
+                    [disabled]="true" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="cluster-head">Cluster Head</label>
+                <input type="text" pInputText [value]="requisitionDetails?.clusterHead?.userName" id="cluster-head"
+                    [disabled]="true" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="site-incharge">Site Incharge</label>
+                <input type="text" pInputText [value]="requisitionDetails?.siteIncharge?.userName" id="site-incharge"
+                    [disabled]="true" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="department">Department</label>
+                <input type="text" pInputText [value]="requisitionDetails?.department?.departmentName" id="department"
+                    [disabled]="true" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="department-head">Department Head</label>
+                <input type="text" pInputText [value]="requisitionDetails?.departmentHead?.userName"
+                    id="department-head" [disabled]="true" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="category">Category</label>
+                <input type="text" pInputText [value]="requisitionDetails?.category?.categoryName" id="category"
+                    [disabled]="true" />
+            </div>
+        </div>
+    </p-fluid>
+</p-dialog>
 
 <p-toast />

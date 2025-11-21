@@ -2,19 +2,25 @@ import { Component, inject, OnInit } from '@angular/core';
 import { TableModule } from "primeng/table";
 import { ButtonModule } from "primeng/button";
 import { Shared } from '@/service/shared';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { Apiservice } from '@/service/apiservice/apiservice';
+import { FormFieldError } from '@/directives/form-field-error';
 
 @Component({
   selector: 'app-spn-table',
-  imports: [TableModule, ButtonModule, Shared, ReactiveFormsModule],
+  imports: [TableModule, ButtonModule, Shared, ReactiveFormsModule, FormFieldError],
   templateUrl: './spn-table.html',
   styleUrl: './spn-table.scss'
 })
 export class SpnTable implements OnInit {
   openSpn = false;
+
+  offSet = 0;
+  pageSize = 10;
+  first = 0;
+  spnListLength = 0;
 
   actionName = '';
 
@@ -33,9 +39,9 @@ export class SpnTable implements OnInit {
 
   spnForm = this.fb.group({
     spnId: [0],
-    spnCode: [''],
-    spnDescription: [''],
-    experience: ['']
+    spnCode: ['', Validators.required],
+    spnDescription: ['', Validators.required],
+    experience: ['', Validators.required]
   })
 
   ngOnInit(): void {
@@ -43,12 +49,24 @@ export class SpnTable implements OnInit {
   }
 
   experiences = [
-    { year: '0' },
-    { year: '3-5' },
-    { year: '5-8' },
-    { year: '6-8' },
-    { year: '8-10' },
+    { year: '0 year' },
+    { year: '3-5 years' },
+    { year: '5-8 years' },
+    { year: '6-8 years' },
+    { year: '8-10 years' },
   ]
+  
+  get spnCode(){
+    return this.spnForm.get('spnCode');
+  }
+
+  get spnDescription(){
+    return this.spnForm.get('spnDescription');
+  }
+
+  get experience(){
+    return this.spnForm.get('experience');
+  }
 
   getMenuItems(spn: any){
     return [
@@ -76,10 +94,15 @@ export class SpnTable implements OnInit {
 
   fetchActiveSpn(){
     try {
-      this.apiService.fetchActiveSpns('').subscribe({
+      const data = {
+        offSet: this.offSet,
+        pageSize: this.pageSize
+      }
+      this.apiService.fetchActiveSpns(data).subscribe({
         next: val => {
           console.log(val);
-          this.spnList = val?.data;
+          this.spnList = val?.data.data;
+          this.spnListLength = val?.data.length;
         }
       })
     } catch (error) {
@@ -201,6 +224,13 @@ export class SpnTable implements OnInit {
         }
       }
     })
+  }
+  
+  pageChange(event: any){
+    this.first = event.first;
+    this.offSet = event.first / event.rows;
+    this.pageSize = event.rows;
+    this.fetchActiveSpn();
   }
 
   onDialogClose(){

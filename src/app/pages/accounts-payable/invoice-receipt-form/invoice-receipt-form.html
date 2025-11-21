@@ -1,0 +1,90 @@
+<div class="card">
+    <h5>New Invoice Receipt</h5>
+    <div class="grid grid-cols-2 gap-2">
+        <div class="grid col-span-1 gap-1">
+            <label for="recepient">Recepient</label>
+            <input type="text" pInputText id="recepient" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="po-number">PO Number</label>
+            <input type="text" pInputText id="po-number" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="po-unit-price">PO Unit Price</label>
+            <input type="text" pInputText id="po-unit-price" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="po-unit-qty">PO Unit Quantity</label>
+            <input type="text" pInputText id="po-unit-qty" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="po-value">PO Value</label>
+            <input type="text" pInputText id="po-value" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="invoice-number">Invoice Number</label>
+            <input type="text" pInputText id="invoice-number" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="invoice-date">Invoice Date</label>
+            <p-datepicker [showIcon]="true" [iconDisplay]="'input'" inputId="invoice-date" placeholder="Select Date" appendTo="body" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="tax-rate">Tax Rate</label>
+            <input type="text" pInputText id="tax-rate" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="invoice-amount">Invoice Amount</label>
+            <input type="text" pInputText id="invoice-amount" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="grn-qty">GRN Qty</label>
+            <input type="text" pInputText id="grn-qty" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="location">Service Location</label>
+            <input type="text" pInputText id="location" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="description">Description</label>
+            <input type="text" pInputText id="description" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="conultancy-name">Consultancy Name</label>
+            <input type="text" pInputText id="conultancy-name" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="grn-number">GRN Number</label>
+            <input type="text" pInputText id="grn-number" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="grn-status">GRN Status</label>
+            <p-select inputId="grn-status" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="grn-date">GRN Done Date</label>
+            <p-datepicker [showIcon]="true" [iconDisplay]="'input'" inputId="grn-date" placeholder="Select Date" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="submitted-to">Submitted To</label>
+            <input type="text" pInputText id="submitted-to" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="submitted-date">Submitted Date</label>
+            <p-datepicker inputId="submitted-date" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="grn-reverse-number">GRN Reverse Number</label>
+            <input type="text" pInputText id="grn-reverse-number" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="grn-reverse-reason">GRN Reverse Reason</label>
+            <input type="text" pInputText id="grn-reverse-reason" />
+        </div>
+    </div>
+    <div class="flex justify-end mt-4">
+        <button pButton pRipple type="submit">
+            <span pButtonLabel>Submit</span>
+        </button>
+    </div>
+</div>

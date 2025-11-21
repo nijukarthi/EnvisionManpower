@@ -1,0 +1,131 @@
+<div class="card">
+    <h5>{{ candidateId ? 'Edit Candidate' : 'Add Candidate' }}</h5>
+    <form [formGroup]="fixedCostCandidateForm" (ngSubmit)="onSubmit()">
+        <div class="grid grid-cols-2 gap-2">
+            <div class="grid col-span-1 gap-1">
+                <label for="candidate-name">Candidate Name</label>
+                <input type="text" formControlName="candidateName" id="candidate-name" pInputText />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="position-applied">Position Applied</label>
+                <input type="text" formControlName="positionApplied" id="position-applied" pInputText />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="current-experience">Current Experience</label>
+                <p-inputNumber formControlName="currentExperience" inputId="currentExperience" 
+                    mode="decimal" [useGrouping]="false" [minFractionDigits]="1" [maxFractionDigits]="2" [min]="0" [max]="99.99" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="total-experience">Total Experience</label>
+                <p-inputNumber formControlName="totalExperience" inputId="totalExperience" mode="decimal" [useGrouping]="false"
+                    [minFractionDigits]="1" [maxFractionDigits]="2" [min]="0" [max]="99.99" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="highest-qualification">Highest Qualification</label>
+                <input type="text" formControlName="highestQualification" id="highest-qualification" pInputText />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="qualification">Qualification</label>
+                <input type="text" formControlName="qualification" id="qualification" pInputText />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="notice-period">Notice Period</label>
+                <p-inputNumber formControlName="noticePeriod" inputId="notice-period" [useGrouping]="false" />
+            </div>
+            <!-- @if (!(candidateId && loggedUserGroupId === 360 && fixedCostCandidateForm.get('workingCurrently')?.value === false)) {
+                <div class="col-start-1 flex items-center gap-3 mt-2">
+                    <label for="currently-working">Is This Candidate Currently Working in Envision?</label>
+                    <div class="flex items-center gap-3">
+                        <div class="flex items-center gap-1">
+                            <p-radiobutton formControlName="workingCurrently" [value]="true" inputId="yes" />
+                            <label for="yes">Yes</label>
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <p-radiobutton formControlName="workingCurrently" [value]="false" inputId="no" />
+                            <label for="no">No</label>
+                        </div>
+                    </div>
+                </div>
+            } -->
+        </div>
+        <div class="flex justify-end mt-3">
+            <button pButton pRipple>
+                <span pButtonLabel>{{ actionName }}</span>
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- @if (fixedCostCandidateForm.get('workingCurrently')?.value === true) {
+    <div class="card">
+        <h5>Current Employment Details</h5>
+        <form [formGroup]="fixedCostCandidateForm" (ngSubmit)="addExistingCandidate()">
+            <div class="grid grid-cols-2 gap-2" formGroupName="employmentDetails">
+                <div class="grid col-span-1 gap-1" formGroupName="project">
+                    <label for="project-code">Project Code</label>
+                    <p-select [options]="pCodeList" formControlName="projectId" id="project-code" optionLabel="projectCode" optionValue="projectId"
+                        [filter]="true" filterBy="projectCode" appendTo="body" [showClear]="true"
+                        placeholder="Select Project Code" (onChange)="selectedPCode($event.value)" />
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="cluster">Cluster</label>
+                    <input type="text" pInputText [value]="projectDetails?.cluster?.clusterName" id="cluster" [disabled]="true" />
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="site-incharge">Site Incharge</label>
+                    <input type="text" pInputText [value]="projectDetails?.siteIncharge?.userName" id="site-incharge" [disabled]="true" />
+                </div>
+                <div class="grid col-start-1 col-span-1 gap-1" formGroupName="spn">
+                    <label for="spn-code">SPN Code</label>
+                    <p-select [options]="spnInfoList" formControlName="spnId" id="spn-code" optionLabel="spnCode" optionValue="spnId"
+                        [filter]="true" filterBy="spnCode" placeholder="Select SPN Code" (onChange)="selectedSPN($event.value)"
+                        [showClear]="true" appendTo="body" />
+                </div>
+                <div class="grid col-span-1 gap-1" formGroupName="spn">
+                    <label for="spn-description">SPN Description</label>
+                    <p-select [options]="spnInfoList" formControlName="spnId" id="spn-description" optionValue="spnId"
+                        [filter]="true" filterBy="spnDescription" [showClear]="true" (onChange)="selectedSPN($event.value)"
+                        placeholder="Select SPN Description" appendTo="body"> 
+                        <ng-template #item let-item>
+                            {{ item.spnDescription }} - ({{ item.experience }})
+                        </ng-template> 
+                        <ng-template #selectedItem let-item>
+                            {{ item.spnDescription }} - ({{ item.experience }})
+                        </ng-template>
+                    </p-select>
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="experience">Experience</label>
+                    <input type="text" pInputText [value]="selectedSpn?.experience" id="experience" [disabled]="true" />
+                </div>
+                <div class="grid col-start-1 col-span-1 gap-1" formGroupName="envisionRole">
+                    <label for="role">Role</label>
+                    <p-select [options]="envisionRoleList" formControlName="id" id="role" optionLabel="roleName" optionValue="id"
+                        [filter]="true" filterBy="roleName" placeholder="Select Role" [showClear]="true" appendTo="body" />
+                </div>
+                <div class="grid col-start-1 col-span-1 gap-1">
+                    <label for="offer-release-date">Offer Release Date</label>
+                    <p-datepicker formControlName="offerReleaseDate" [iconDisplay]="'input'" [showIcon]="true" inputId="offer-release-date" 
+                        placeholder="Select Date" appendTo="body" />
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="joining-date">Joining Date</label>
+                    <p-datepicker formControlName="joiningDate" [iconDisplay]="'input'" [showIcon]="true" inputId="joining-date"
+                        placeholder="Select Date" appendTo="body" />
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="employment-status">Employment Status</label>
+                    <p-select [options]="employmentStatusList" formControlName="employmentStatus" id="employment-status"
+                        placeholder="Select Status" [showClear]="true" appendTo="body" />
+                </div>
+            </div>
+            <div class="flex justify-end mt-3">
+                <button pButton pRipple>
+                    <span pButtonLabel>{{ actionName }}</span>
+                </button>
+            </div>
+        </form>
+    </div>
+} -->
+
+<p-toast />

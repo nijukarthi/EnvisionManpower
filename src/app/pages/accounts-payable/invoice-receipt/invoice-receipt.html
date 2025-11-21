@@ -1,0 +1,69 @@
+<div class="card">
+    <h5>Invoice Receipt</h5>
+    <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
+        <p-table [value]="invoiceReceiptList" stripedRows [rowHover]="true" [tableStyle]="{'min-width': '230rem'}">
+            <!-- <ng-template #caption>
+                <div class="flex justify-end">
+                    <p-button label="Add Invoice Receipt" icon="pi pi-plus" routerLink="/home/invoice-receipt/new" />
+                </div>
+            </ng-template> -->
+            <ng-template #header>
+                <tr>
+                    <th>SL NO</th>
+                    <th>Recepient (Approved By)</th>
+                    <th>PO Number</th>
+                    <th>PO Unit Price</th>
+                    <th>PO Unit Qty</th>
+                    <th>PO Value</th>
+                    <th>Invoice Number</th>
+                    <th>Invoice Date</th>
+                    <th>Tax Rate</th>
+                    <th>Invoice Amount</th>
+                    <th>Invoice/Goods Receipt Note (GRN) Qty</th>
+                    <th>Service Location</th>
+                    <th>Description</th>
+                    <th>Consultancy Name</th>
+                    <th>GRN Number</th>
+                    <th>GRN Status</th>
+                    <th>GRN Done Date</th>
+                    <th>Submitted To</th>
+                    <th>Submitted Date</th>
+                    <th>GRN Reverse Number</th>
+                    <th>GRN Reverse Reason</th>
+                </tr>
+            </ng-template>
+            <ng-template #body let-receipt let-i="rowIndex">
+                <tr>
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ receipt.recipient }}</td>
+                    <td>{{ receipt.poNumber }}</td>
+                    <td>{{ receipt.poUnitPrice | currency:'INR' }}</td>
+                    <td>{{ receipt.poUnitQty }}</td>
+                    <td>{{ receipt.poValue | currency:'INR' }}</td>
+                    <td>{{ receipt.invoiceNumber }}</td>
+                    <td>{{ receipt.invoiceDate | date:'dd-MM-yyyy' }}</td>
+                    <td>{{ receipt.taxRate }}</td>
+                    <td>{{ receipt.invoiceAmount | currency:'INR' }}</td>
+                    <td>{{ receipt.grnQty }}</td>
+                    <td>{{ receipt.serviceLocation }}</td>
+                    <td>{{ receipt.description }}</td>
+                    <td>{{ receipt.consultancyName }}</td>
+                    <td>{{ receipt.grnNumber }}</td>
+                    <td>{{ receipt.grnStatus }}</td>
+                    <td>{{ receipt.grnDoneDate | date:'dd-MM-yyyy' }}</td>
+                    <td>{{ receipt.submittedTo }}</td>
+                    <td>{{ receipt.submittedDate | date:'dd-MM-yyyy' }}</td>
+                    <td>{{ receipt.grnReverseNumber }}</td>
+                    <td>{{ receipt.grnReverseReason }}</td>
+                </tr>
+            </ng-template>
+            <ng-template #emptymessage>
+                <tr>
+                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground);">
+                        No Records Found
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>

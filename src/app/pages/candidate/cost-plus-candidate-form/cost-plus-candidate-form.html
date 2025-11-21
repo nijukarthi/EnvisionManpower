@@ -1,0 +1,264 @@
+<div class="grid grid-cols-[2fr_1.4fr] gap-5 items-start">
+    <div class="card">
+        <h5>{{ candidateId ? 'Edit Candidate' : 'Add Candidate' }}</h5>
+        <form [formGroup]="costPlusCandidateForm" (ngSubmit)="updatePersonalDetails()">
+            <div class="grid grid-cols-2 gap-2">
+                <div class="grid col-span-1 gap-1">
+                    <label for="candidate-name">Candidate Name</label>
+                    <input type="text" formControlName="candidateName" id="candidate-name" pInputText fluid />
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="position-applied">Position Applied</label>
+                    <input type="text" formControlName="positionApplied" id="position-applied" pInputText fluid />
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="current-experience">Current Experience</label>
+                    <p-inputNumber formControlName="currentExperience" inputId="currentExperience" 
+                       mode="decimal" [useGrouping]="false" [minFractionDigits]="1" [maxFractionDigits]="2" [min]="0" [max]="99.99" fluid />
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="total-experience">Total Experience</label>
+                    <p-inputNumber formControlName="totalExperience" inputId="totalExperience" 
+                       mode="decimal" [useGrouping]="false" [minFractionDigits]="1" [maxFractionDigits]="2" [min]="0" [max]="99.99" fluid />
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="highest-qualification">Highest Qualification</label>
+                    <input type="text" formControlName="highestQualification" id="highest-qualification" pInputText fluid />
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="qualification">Qualification</label>
+                    <input type="text" formControlName="qualification" id="qualification" pInputText fluid />
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="notice-period">Notice Period (days)</label>
+                    <p-inputNumber formControlName="noticePeriod" inputId="notice-period" [useGrouping]="false" />
+                </div>
+            </div>
+            @if (candidateId) {
+                <div class="flex justify-end mt-4">
+                    <button pButton pRipple type="submit">
+                        <span pButtonLabel>Update</span>
+                    </button>
+                </div>
+            }
+        </form>
+    </div>
+
+    <div class="card">
+        <h5>Monthly Reimbursements</h5>
+        <form [formGroup]="costPlusCandidateForm" (ngSubmit)="updateMonthlyReimbursements()">
+            <div class="grid grid-cols-2 gap-2" formGroupName="monthlyReimbursements">
+                <div class="grid col-span-2 gap-1">
+                    <label for="gross-ctc">Gross CTC</label>
+                    <p-inputNumber formControlName="grossCTC" inputId="gross-ctc" [useGrouping]="false" mode="decimal" 
+                       [minFractionDigits]="1" [maxFractionDigits]="2" fluid />
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="margin">Margin</label>
+                    <p-inputNumber formControlName="margin" inputId="margin" [useGrouping]="false" mode="decimal" 
+                       [minFractionDigits]="1" [maxFractionDigits]="2" fluid />
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="laptop">Laptop</label>
+                    <p-inputNumber formControlName="laptop" inputId="laptop" [useGrouping]="false" mode="decimal" 
+                       [minFractionDigits]="1" [maxFractionDigits]="2" fluid />
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="total">Total</label>
+                    <p-inputNumber formControlName="total" inputId="total" [useGrouping]="false" 
+                       mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="2" fluid />
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="gst">GST</label>
+                    <p-inputNumber formControlName="gst" inputId="gst" [useGrouping]="false" 
+                       mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="2" fluid />
+                </div>
+                <div class="grid col-span-2 gap-1">
+                    <label for="grand-total">Grand Total</label>
+                    <p-inputNumber formControlName="grandTotal" inputId="grand-total" [useGrouping]="false" 
+                       mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="2" fluid />
+                </div>
+            </div>
+            @if (candidateId) {
+                <div class="flex justify-end mt-4">
+                    <button pButton pRipple type="submit">
+                        <span pButtonLabel>Update</span>
+                    </button>
+                </div>
+            }
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <h5>One Time Reimbursements</h5>
+    <form [formGroup]="costPlusCandidateForm" (ngSubmit)="onSubmit()">
+        <div class="grid grid-cols-2 gap-2" formGroupName="oneTimeReimbursements">
+            <div class="grid col-span-1 gap-1">
+                <label for="sourcing-fee">One Time Sourcing Fee</label>
+                <p-inputNumber formControlName="oneTimeSourcingFee" inputId="sourcing-fee" [useGrouping]="false"
+                    mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="2" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="bgv-cost">BGV Cost</label>
+                <p-inputNumber formControlName="bgvCost" inputId="bgv-cost" [useGrouping]="false"
+                    mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="2" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="total">Total</label>
+                <p-inputNumber formControlName="total" inputId="total" [useGrouping]="false"
+                   mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="2" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="gst">GST</label>
+                <p-inputNumber formControlName="gst" inputId="gst" [useGrouping]="false" 
+                   mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="2" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="grand-total">Grand Total</label>
+                <p-inputNumber formControlName="grandTotal" inputId="grand-total" [useGrouping]="false"
+                    mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="2" />
+            </div>
+        </div>
+        <!-- <div class="col-start-1 flex items-center gap-3 mt-5">
+            <label for="currently-working">Is This Candidate Currently Working in Envision?</label>
+            <div class="flex items-center gap-3">
+                <div class="flex items-center gap-1">
+                    <p-radiobutton formControlName="workingCurrently" [value]="true" inputId="yes" />
+                    <label for="yes">Yes</label>
+                </div>
+                <div class="flex items-center gap-1">
+                    <p-radiobutton formControlName="workingCurrently" [value]="false" inputId="no" />
+                    <label for="no">No</label>
+                </div>
+            </div>
+        </div> -->
+        <div class="flex justify-end mt-3">
+            <button pButton pRipple type="submit">
+                <span pButtonLabel>{{ actionName }}</span>
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- @if (costPlusCandidateForm.get('workingCurrently')?.value === true) {
+    <div class="card">
+        <h5>Current Employment Details</h5>
+        <form [formGroup]="costPlusCandidateForm">
+            <div class="grid grid-cols-2 gap-2" formGroupName="employmentDetails">
+                <div class="grid col-span-1 gap-1" formGroupName="project">
+                    <label for="project-code">Project Code</label>
+                    <p-select [options]="pCodeList" formControlName="projectId" id="project-code" optionLabel="projectCode" 
+                        optionValue="projectId" [filter]="true" filterBy="projectCode" [showClear]="true" 
+                        (onChange)="selectedPCode($event.value)" placeholder="Select Project Code" appendTo="body" />
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="cluster">Cluster</label>
+                    <input type="text" pInputText [value]="projectDetails?.cluster?.clusterName" id="cluster" [disabled]="true" />
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="site-incharge">Site Incharge</label>
+                    <input type="text" pInputText [value]="projectDetails?.siteIncharge?.userName" id="site-incharge" [disabled]="true" />
+                </div>
+                <div class="grid col-start-1 col-span-1 gap-1" formGroupName="spn">
+                    <label for="spn-code">SPN Code</label>
+                    <p-select [options]="spnInfoList" formControlName="spnId" id="spn-code" optionLabel="spnCode" optionValue="spnId" 
+                        [filter]="true" filterBy="spnCode" [showClear]="true" (onChange)="selectedSpnId($event.value)"
+                        placeholder="Select SPN Code" appendTo="body" />
+                </div>
+                <div class="grid col-span-1 gap-1" formGroupName="spn">
+                    <label for="spn-description">SPN Description</label>
+                    <p-select [options]="spnInfoList" formControlName="spnId" id="spn-description" optionLabel="spnDescription" optionValue="spnId"
+                        [filter]="true" filterBy="spnDescription" [showClear]="true" (onChange)="selectedSpnId($event.value)"
+                        placeholder="Select SPN Description" appendTo="body">
+                        <ng-template #item let-item>
+                            {{ item.spnDescription }} - ({{ item.experience }})
+                        </ng-template>
+                        <ng-template #selectedItem let-item>
+                            {{ item.spnDescription }} - ({{ item.experience }})
+                        </ng-template>
+                    </p-select>
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="experience">Experience</label>
+                    <input type="text" pInputText [value]="selectedSpn?.experience" id="experience" [disabled]="true" />
+                </div>
+                <div class="grid col-start-1 col-span-1 gap-1" formGroupName="envisionRole">
+                    <label for="role">Role</label>
+                    <p-select [options]="envisionRoleList" formControlName="id" id="role" optionLabel="roleName" optionValue="id"
+                        [filter]="true" filterBy="roleName" [showClear]="true" placeholder="Select Role" appendTo="body" />
+                </div>
+                <div class="grid col-start-1 col-span-1 gap-1">
+                    <label for="joining-date">Offer Release Date</label>
+                    <p-datepicker formControlName="offerReleaseDate" [iconDisplay]="'input'" [showIcon]="true"
+                       inputId="offer-release-date" placeholder="Select Date" appendTo="body" />
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="joining-date">Joining Date</label>
+                    <p-datepicker formControlName="joiningDate" [iconDisplay]="'input'" [showIcon]="true" 
+                       inputId="joining-date" placeholder="Select Date" appendTo="body" />
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="card">
+        <h5>Salary Details</h5>
+        <form [formGroup]="costPlusCandidateForm" (ngSubmit)="submitEmploymentDetails()">
+            <div class="grid grid-cols-2 gap-2" formGroupName="costPlusSalaryDetails">
+                <div class="grid col-span-1 gap-1">
+                    <label for="current-salary">Current Salary (NET)</label>
+                    <p-inputNumber formControlName="currentSalaryNet" inputId="current-salary" [useGrouping]="false" 
+                       [minFractionDigits]="1" [maxFractionDigits]="2" mode="decimal" />
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="expected-salary">Expected Salary (NET)</label>
+                    <p-inputNumber formControlName="expectedSalaryNet" inputId="expected-salary" [useGrouping]="false"
+                        mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="2" />
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="approved-hike">Approved Hike</label>
+                    <p-inputgroup>
+                        <p-inputNumber formControlName="approvedHike" inputId="approved-hike" [useGrouping]="false"
+                            mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="2" />
+                        <p-inputgroup-addon>%</p-inputgroup-addon>
+                    </p-inputgroup>
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="approved-salary">Approved Fixed Salary</label>
+                    <p-inputNumber formControlName="approvedFixedSalary" inputId="approved-salary" [useGrouping]="false"  
+                       mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="2" fluid />
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="percent-variable">10% Variable</label>
+                    <p-inputNumber formControlName="tenPercentVariable" inputId="percent-variable" [useGrouping]="false" 
+                       mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="2" fluid />
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="fixed-variable">Total Fixed + Variable</label>
+                    <p-inputNumber formControlName="totalFixedVariable" inputId="fixed-variable" [useGrouping]="false" 
+                       mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="2" fluid />
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="final-hike">Final Hike from Current</label>
+                    <p-inputgroup>
+                        <p-inputNumber formControlName="finalHikeFromCurrent" inputId="final-hike" [useGrouping]="false" 
+                           mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="2" fluid />
+                        <p-inputgroup-addon>%</p-inputgroup-addon>
+                    </p-inputgroup>
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="delta">Delta From Expected</label>
+                    <p-inputNumber formControlName="deltaFromExpected" inputId="delta" [useGrouping]="false" 
+                       mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="2" fluid />
+                </div>
+            </div>
+            <div class="flex justify-end mt-3">
+                <button pButton pRipple type="submit">
+                    <span pButtonLabel>{{ actionName }}</span>
+                </button>
+            </div>
+        </form>
+    </div>
+} -->
+
+<p-toast position="top-center" />

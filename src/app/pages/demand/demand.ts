@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Shared } from '@/service/shared';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, Validators } from '@angular/forms';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { UserGroups } from '@/models/usergroups/usergroups.enum';
 import { MessageService } from 'primeng/api';
@@ -14,15 +14,10 @@ import { MessageService } from 'primeng/api';
 export class Demand implements OnInit {
 
   selectedPCodes:any = "";
-
-  departmentList:any;
   PCodeList: any;
-  clusterList: any;
   categoryList: any;
-  clusterHeadList: any;
-  siteInchargeList: any;
-  departmentHeadList: any;
   spnInfoList: any;
+  projectDetails: any;
 
   minDate: Date | undefined;
   releaseMinDate: Date | undefined;
@@ -40,24 +35,11 @@ export class Demand implements OnInit {
   constructor(private apiService: Apiservice, private messageService: MessageService) {}
 
   demandForm = this.fb.group({
-    projectId: [null, Validators.required],
-    cluster: this.fb.group({
-      clusterId: [{ value: 0, disabled: true }]
-    }),
-    clusterHead: this.fb.group({
-      userId: [{ value: 0, disabled: true }]
-    }),
-    siteIncharge: this.fb.group({
-      userId: [{ value: 0, disabled: true }]
-    }),
-    departmentHead: this.fb.group({
-      userId: [{ value: 0, disabled: true }]
+    project: this.fb.group({
+      projectId: [null, Validators.required],
     }),
     category: this.fb.group({
       categoryId: [0]
-    }),
-    department: this.fb.group({
-      departmentId: [{ value: 0, disabled: true }]
     }),
     demandDetails: this.fb.array([this.createDemandDetails()]),
   });
@@ -76,12 +58,8 @@ export class Demand implements OnInit {
   }
 
   ngOnInit(): void {
-    this.fetchActiveDepartments();
     this.fetchPCodes();
-    this.fetchActiveClusters();
     this.fetchActiveCategory();
-    this.findUserGroup(UserGroups.SITEINCHARGE, 'siteIncharge');
-    this.findUserGroup(UserGroups.DEPARTMENTHEAD, 'departmentHead');
     this.fetchSpnInfo();
 
     const today = new Date();
@@ -103,24 +81,7 @@ export class Demand implements OnInit {
       this.apiService.viewProject(data).subscribe({
         next: val => {
           console.log(val);
-          this.fetchClusterHeadByCluster(val.data.cluster.clusterId);
-          this.demandForm.patchValue({
-            cluster: {
-              clusterId: val.data.cluster.clusterId
-            },
-            clusterHead: {
-              userId: val.data.clusterHead.userId
-            },
-            department: {
-              departmentId: val.data.department.departmentId
-            },
-            siteIncharge: {
-              userId: val.data.siteIncharge.userId
-            },
-            departmentHead: {
-              userId: val.data.departmentHead.userId
-            }
-          });      
+          this.projectDetails = val.data;     
         },
         error: err => {
           console.log(err);
@@ -147,88 +108,6 @@ export class Demand implements OnInit {
     }
   }
 
-  fetchActiveDepartments(){
-    try {    
-      this.apiService.fetchActiveDepartments('').subscribe({
-        next: val => {
-          console.log(val);
-          this.departmentList = val.data;
-        },
-        error: err => {
-          console.log(err);
-        }
-      })
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  fetchActiveClusters(){
-    try {   
-      this.apiService.getActiveClusters('').subscribe({
-        next: val => {
-          console.log(val);
-          this.clusterList = val.data;
-        },
-        error: err => {
-          console.log(err);
-        }
-      })
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  fetchClusterHeadByCluster(clusterId: number){
-    console.log(clusterId);
-    try {
-      const data = {
-        clusterId: clusterId
-      }
-      console.log(data);
-      this.apiService.fetchClusterHeadByCluster(data).subscribe({
-        next: val => {
-          console.log(val);
-          this.clusterHeadList = val.data ? [val.data] : [];
-        },
-        error: err => {
-          console.log(err);
-        }
-      })
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  findUserGroup(userGroupId: number, type: 'siteIncharge' | 'departmentHead'){
-    try {
-      this.loading = true;
-
-      const data = {
-        userGroupId: userGroupId
-      }
-      console.log(data);
-      this.apiService.findUserGroup(data).subscribe({
-        next: val => {
-          console.log(val);
-          if (type === 'siteIncharge') {
-            this.siteInchargeList = val?.data;
-            console.log("siteInchargeList:", this.siteInchargeList);
-          } else if (type === 'departmentHead') {
-            this.departmentHeadList = val?.data;
-            console.log("departmentHeadList", this.departmentHeadList);
-          }
-          this.loading = false;
-        },
-        error: err => {
-          console.log(err);
-          this.loading = false;
-        }
-      })
-    } catch (error) {
-      console.log(error);
-    }
-  }
 
   fetchActiveCategory(){
     try { 
@@ -293,7 +172,9 @@ export class Demand implements OnInit {
     console.log(event);
 
     this.demandDetails.at(rowIndex).patchValue({
-      spn: event,
+      spn: {
+        spnId: event
+      },
       experience: event
     })
   }
@@ -310,24 +191,11 @@ export class Demand implements OnInit {
     console.log(this.demandForm.value);
 
     const data = {
-      projectId: this.demandForm.get('projectId')?.value,
-      cluster: {
-        clusterId: this.demandForm.get('cluster.clusterId')?.value
-      },
-      clusterHead: {
-        userId: this.demandForm.get('clusterHead.userId')?.value
-      },
-      siteIncharge: {
-        userId: this.demandForm.get('siteIncharge.userId')?.value
-      },
-      departmentHead: {
-        userId: this.demandForm.get('departmentHead.userId')?.value
+      project: {
+        projectId: this.demandForm.get('project.projectId')?.value
       },
       category: {
         categoryId: this.demandForm.get('category.categoryId')?.value
-      },
-      department: {
-        departmentId: this.demandForm.get('department.departmentId')?.value
       },
       demandDetails: this.demandForm.get('demandDetails')?.value
     };
@@ -337,8 +205,11 @@ export class Demand implements OnInit {
     this.apiService.createRequesition(data).subscribe({
       next: val => {
         console.log(val);
-        this.messageService.add({severity: 'success', summary: 'Success', detail: 'Demand Request Created Successfully'});
+        this.messageService.add({severity: 'success', summary: 'Success', detail: 'Manpower Request Created Successfully'});
         this.demandForm.reset();
+        this.demandDetails.clear();
+        this.projectDetails = null;
+        this.addSpnRow();
       },
       error: err => {
         console.log(err);

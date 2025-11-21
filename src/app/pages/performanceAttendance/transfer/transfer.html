@@ -1,0 +1,104 @@
+<div class="card">
+    <h5>Transfer</h5>
+    <div class="flex">
+        <button class="custom-btn" pButton pRipple text (click)="setActiveTab('processing', 102)"
+            [ngClass]="{'active-tab': activeTab === 'processing'}">
+            <i pButtonIcon class="pi pi-stopwatch"></i>
+            <span pButtonLabel>Processing</span>
+        </button>
+        <button class="custom-btn" pButton pRipple text (click)="setActiveTab('accepted', 200)"
+            [ngClass]="{'active-tab': activeTab === 'accepted'}">
+            <i pButtonIcon class="pi pi-check-circle"></i>
+            <span pButtonLabel>Accepted</span>
+        </button>
+        <button class="custom-btn" pButton pRipple text (click)="setActiveTab('rejected', 406)"
+            [ngClass]="{'active-tab': activeTab === 'rejected'}">
+            <i pButtonIcon class="pi pi-times-circle"></i>
+            <span pButtonLabel>Rejected</span>
+        </button>
+    </div>
+    <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
+        <p-table [value]="transferredEmployeeList" showGridlines stripedRows [rowHover]="true" 
+            [paginator]="true" [rows]="pageSize" [lazy]="true" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10, 20, 30]" 
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [first]="first" 
+            [totalRecords]="transferredListLength" [tableStyle]="{'min-width': '120rem'}" (onPage)="pageChange($event)">
+            <ng-template #header>
+                <tr>
+                    <th rowspan="2">SL No</th>
+                    <th rowspan="2">Employee Code</th>
+                    <th rowspan="2">Employee Name</th>         
+                    <th colspan="4" style="text-align: center;">Transfer From</th>
+                    <th colspan="4" style="text-align: center;">Transfer To</th>
+                    <th rowspan="2">Cluster Head Approval</th>
+                    <th rowspan="2">Department Head Approval</th>
+                </tr>
+                <tr>
+                    <th>Project Code</th>
+                    <th>Site Name</th>
+                    <th>Cluster Name</th>
+                    <th>Role</th>
+                    <th>Project Code</th>
+                    <th>Site Name</th>
+                    <th>Cluster Name</th>
+                    <th>Role</th>
+                </tr>
+            </ng-template>
+            <ng-template #body let-transfer let-i="rowIndex">
+                <tr>
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ transfer.candidate.employeeCode }}</td>
+                    <td>{{ transfer.candidate.candidateName }}</td>
+                    <td>{{ transfer.transferFrom.project.projectCode }}</td>
+                    <td>{{ transfer.transferFrom.project.siteName }}</td>
+                    <td>{{ transfer.transferFrom.cluster.clusterName }}</td>
+                    <td>{{ transfer.transferFrom.envisionRole.roleName }}</td>
+                    <td>{{ transfer.transferTo.projectCode }}</td>
+                    <td>{{ transfer.transferTo.siteName }}</td>
+                    <td>{{ transfer.transferTo.cluster.clusterName }}</td>
+                    <td>{{ transfer.transferFrom.envisionRole.roleName }}</td>
+                    <td class="flex items-center justify-center gap-2">
+                        @if (transfer.stateHeadApproval.approvalStatus === APPROVALSTATUS.ACCEPTED) {
+                            <p-button icon="pi pi-check" severity="primary" rounded [disabled]="true" />
+                        } @else if (transfer.stateHeadApproval.approvalStatus === APPROVALSTATUS.REJECTED) {
+                            <p-button icon="pi pi-times" severity="danger" rounded [disabled]="true" />
+                        }
+                        @if (transfer.stateHeadApproval.approvalStatus === APPROVALSTATUS.PENDING) {
+                            <p-button icon="pi pi-check" severity="primary" rounded 
+                               [disabled]="currentUserRole === USERGROUPS.DEPARTMENTHEAD" 
+                               (onClick)="clusterHeadApproval(transfer.transferId, 'Accepted')" />
+                            <p-button icon="pi pi-times" severity="danger" rounded 
+                                [disabled]="currentUserRole === USERGROUPS.DEPARTMENTHEAD" 
+                                (onClick)="clusterHeadApproval(transfer.transferId, 'Rejected')" />
+                        }
+                    </td>
+                    <td>
+                        <div class="flex items-center justify-center gap-2">
+                            @if (transfer.departmentHeadApproval.approvalStatus === APPROVALSTATUS.ACCEPTED) {
+                                <p-button icon="pi pi-check" severity="primary" rounded [disabled]="true" />
+                            } @else if (transfer.departmentHeadApproval.approvalStatus === APPROVALSTATUS.REJECTED) {
+                                <p-button icon="pi pi-times" severity="danger" rounded [disabled]="true" />
+                            }
+                            @if (transfer.departmentHeadApproval.approvalStatus === APPROVALSTATUS.PENDING) {
+                                <p-button icon="pi pi-check" severity="primary" rounded 
+                                    [disabled]="currentUserRole === USERGROUPS.CLUSTERHEAD" 
+                                    (onClick)="departmentHeadApproval(transfer.transferId, 'Accepted')" />
+                                <p-button icon="pi pi-times" severity="danger" rounded 
+                                    [disabled]="currentUserRole === USERGROUPS.CLUSTERHEAD" 
+                                    (onClick)="departmentHeadApproval(transfer.transferId, 'Rejected')" />
+                            }
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template #emptymessage>
+                <tr>
+                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground);">
+                        No Records Found
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+<p-toast />

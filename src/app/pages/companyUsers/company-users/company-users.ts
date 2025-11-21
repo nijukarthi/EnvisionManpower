@@ -1,7 +1,5 @@
 import { Shared } from '@/service/shared';
 import { Component, inject, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { CompanyUsersService } from '@/service/masters/companyUsers/company-users';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -35,6 +33,7 @@ export class CompanyUsers implements OnInit {
   first = 0;
   offSet = 0;
   pageSize = 10;
+  companyUserListLength = 0;
 
   actionName = 'Add';
 
@@ -81,8 +80,8 @@ export class CompanyUsers implements OnInit {
 
   pageChange(event: any){
     console.log(event);
-
-    this.offSet = event.first;
+    this.first = event.first;
+    this.offSet = event.first / event.rows;
     this.pageSize = event.rows;
     this.fetchActiveCompanyUsers();
   }
@@ -97,6 +96,7 @@ export class CompanyUsers implements OnInit {
         next: val => {
           console.log(val);
           this.companyUserList = val.data.data;
+          this.companyUserListLength = val.data.length;
         },
         error: err => {
           console.log(err);
@@ -186,7 +186,7 @@ export class CompanyUsers implements OnInit {
       const data = {
         userId: this.userId
       }
-
+      console.log(data);
       this.apiService.viewCompanyUser(data).subscribe({
         next: val => {
           console.log(val);
@@ -247,9 +247,11 @@ export class CompanyUsers implements OnInit {
         })
       }
       else if(this.actionName == "Update"){
-        const data = {
-          ...this.companyUserForm.value
-        };
+        this.companyUserForm.get('email')?.enable();
+        this.companyUserForm.get('userGroupId')?.enable();
+        const data = { ...this.companyUserForm.value };
+        this.companyUserForm.get('email')?.disable();
+        this.companyUserForm.get('userGroupId')?.disable();
 
         if(!data.userDepartments?.length && this.showDepartments){
           const existingDepartments = this.departmentsControl.value?.map((id: number) => ({departmentId: id}));
@@ -318,6 +320,9 @@ export class CompanyUsers implements OnInit {
   onDialogClose(){
     this.userId = null;
     this.companyUserForm.reset();
+    this.showDepartments = false;
+    this.companyUserForm.get('email')?.enable();
+    this.departmentsControl.reset();
   }
 }
 

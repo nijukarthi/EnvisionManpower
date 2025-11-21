@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import {FormsModule,ReactiveFormsModule} from '@angular/forms';
 
 import { ButtonModule } from 'primeng/button';
@@ -39,6 +39,12 @@ import { ChartModule } from 'primeng/chart';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { RippleModule } from 'primeng/ripple';
 import { KeyFilterModule } from 'primeng/keyfilter';
+import { StepperModule } from 'primeng/stepper';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { SplitButtonModule } from 'primeng/splitbutton';
+import { TabsModule } from 'primeng/tabs';
+import { MessageModule } from 'primeng/message';
 
 @NgModule({
   declarations: [],
@@ -83,11 +89,18 @@ import { KeyFilterModule } from 'primeng/keyfilter';
     ChartModule,
     SelectButtonModule,
     RippleModule,
-    KeyFilterModule
+    KeyFilterModule,
+    StepperModule,
+    InputNumberModule,
+    RadioButtonModule,
+    SplitButtonModule,
+    TabsModule,
+    MessageModule
   ],
   providers:[
     MessageService,
-    ConfirmationService
+    ConfirmationService,
+    DatePipe
   ]
 })
 export class Shared { }

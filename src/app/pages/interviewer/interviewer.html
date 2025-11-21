@@ -1,0 +1,60 @@
+<div class="card">
+    <div class="flex items-baseline-last justify-between">
+        <h5>Interviewers</h5>
+        <p-button label="Add Interviewer" icon="pi pi-plus" (onClick)="addInterviewer()" />
+    </div>
+    <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
+        <p-table [value]="interviewerList" [rowHover]="true">
+            <ng-template #header>
+                <tr>
+                    <th>SI No</th>
+                    <th>Interviewer Name</th>
+                    <th>Contact Number</th>
+                    <th>Actions</th>
+                </tr>
+            </ng-template>
+            <ng-template #body let-interviewer let-i="rowIndex">
+                <tr>
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ interviewer.userName }}</td>
+                    <td>{{ interviewer.phoneNumber }}</td>
+                    <td>
+                        <p-menu #menu [model]="getMenuItems(interviewer)" [popup]="true" appendTo="body" />
+                        <p-button (onClick)="menu.toggle($event)" icon="pi pi-ellipsis-v" [rounded]="true" variant="text" />
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template #emptymessage>
+                <tr>
+                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground);">
+                        No Records Found
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+<p-dialog [header]="userId ? 'Edit Interviewer' : 'Add Interviewer'" [modal]="true" [(visible)]="openInterviewer"
+    [style]="{width: '50rem'}" (onHide)="onDialogClose()">
+    <form [formGroup]="interviewerForm" (ngSubmit)="onSubmit()">
+        <div class="grid grid-cols-2 gap-2">
+            <div class="grid col-span-1 gap-1">
+                <label for="interviewer-name">Interviewer Name</label>
+                <input type="text" formControlName="userName" pInputText id="interviewer-name" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="contact-number">Contact Number</label>
+                <input type="text" formControlName="phoneNumber" pInputText id="contact-number" maxlength="10" pKeyFilter="int" />
+            </div>
+        </div>
+        <div class="flex justify-end mt-4">
+            <button pButton pRipple type="submit">
+                <span pButtonLabel>{{ actionName }}</span>
+            </button>
+        </div>
+    </form>
+</p-dialog>
+
+<p-toast />
+<p-confirmdialog />

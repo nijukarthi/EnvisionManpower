@@ -1,0 +1,444 @@
+<div class="card">
+    <h5>Full Fill Process Steps</h5>
+    <p-stepper [(value)]="activeStep" (valueChange)="stepChange($event)">
+        <p-step-list>
+            <p-step [value]="1">
+                <ng-template #content let-activateCallback="activateCallback" let-value="value">
+                    <button class="cursor-pointer bg-transparent border-0 inline-flex items-center gap-2" 
+                        [disabled]="!canAccessStep(1)"
+                        (click)="canAccessStep(1) && activateCallback()">
+                        <span class="rounded-full border-2 border-gray-300 w-8 h-8 inline-flex items-center justify-center" 
+                            [ngClass]="{
+                            'bg-primary text-primary-contrast border-primary': value === activeStep,
+                            'cursor-not-allowed': !canAccessStep(1)
+                            }">
+                            {{ value }}
+                        </span>
+                        <span [ngClass]="{ 
+                            'font-semibold text-primary': value === activeStep,
+                            'cursor-not-allowed': !canAccessStep(1)
+                            }">
+                            Step 1
+                        </span>
+                    </button>
+                </ng-template>
+            </p-step>
+            <p-step [value]="2">
+                <ng-template #content let-activateCallback="activateCallback" let-value="value">
+                    <button class="cursor-pointer bg-transparent border-0 inline-flex items-center gap-2"
+                        [disabled]="!canAccessStep(2)" 
+                        (click)="canAccessStep(2) && activateCallback()">
+                        <span class="rounded-full border-2 border-gray-300 w-8 h-8 inline-flex items-center justify-center" 
+                            [ngClass]="{
+                                'bg-primary text-primary-contrast border-primary': value === activeStep,
+                                'cursor-not-allowed': !canAccessStep(2)
+                                }">
+                            {{ value }}
+                        </span>
+                        <span [ngClass]="{ 
+                            'font-semibold text-primary': value === activeStep,
+                             'cursor-not-allowed': !canAccessStep(2)
+                            }">
+                            Step 2
+                        </span>
+                    </button>
+                </ng-template>
+            </p-step>
+            <p-step [value]="3">
+                <ng-template #content let-activateCallback="activateCallback" let-value="value">
+                    <button class="cursor-pointer bg-transparent flex items-center gap-2" 
+                        [disabled]="!canAccessStep(3)"
+                        (click)="canAccessStep(3) && activateCallback()">
+                        <span class="rounded-full w-8 h-8 border-2 border-gray-300 flex items-center justify-center"
+                            [ngClass]="{
+                                'bg-primary text-primary-contrast border-primary': value === activeStep,
+                                'cursor-not-allowed': !canAccessStep(3)
+                            }">
+                            {{ value }}
+                        </span>
+                        <span [ngClass]="{
+                            'font-semibold text-primary': value === activeStep,
+                            'cursor-not-allowed': !canAccessStep(3)
+                            }">Step 3</span>
+                    </button>
+                </ng-template>
+            </p-step>
+            <p-step [value]="4">
+                <ng-template #content let-activateCallback="activateCallback" let-value="value">
+                    <button class="cursor-pointer flex items-center gap-2" 
+                        [disabled]="!canAccessStep(4)"
+                        (click)="canAccessStep(4) && activateCallback()">
+                        <span class="rounded-full w-8 h-8 border-2 border-gray-300 flex items-center justify-center"
+                            [ngClass]="{
+                                'bg-primary text-primary-contrast border-primary': value === activeStep,
+                                'cursor-not-allowed': !canAccessStep(4)
+                            }">{{ value }}</span>
+                        <span [ngClass]="{
+                            'font-semibold text-primary': value === activeStep,
+                            'cursor-not-allowed': !canAccessStep(4)
+                            }">Step 4</span>
+                    </button>
+                </ng-template>
+            </p-step>
+            <p-step [value]="5">
+                <ng-template #content let-activateCallback="activateCallback" let-value="value">
+                    <button class="cursor-pointer flex items-center gap-2"
+                        [disabled]="!canAccessStep(5)" 
+                        (click)="canAccessStep(5) && activateCallback()">
+                        <span class="border-2 border-gray-300 rounded-full w-8 h-8 flex items-center justify-center"
+                            [ngClass]="{
+                                'bg-primary text-primary-contrast border-primary': value === activeStep,
+                                'cursor-not-allowed': !canAccessStep(5)
+                            }">{{ value }}</span>
+                        <span [ngClass]="{
+                            'font-semibold text-primary': value === activeStep,
+                            'cursor-not-allowed': !canAccessStep(5)
+                            }">Step 5</span>
+                    </button>
+                </ng-template>
+            </p-step>
+            <p-step [value]="6">
+                <ng-template #content let-activateCallback="activateCallback" let-value="value">
+                    <button class="cursor-pointer flex items-center gap-2" 
+                        [disabled]="!canAccessStep(6)"
+                        (click)="canAccessStep(6) && activateCallback()">
+                        <span class="border-2 border-gray-300 rounded-full w-8 h-8 flex items-center justify-center"
+                            [ngClass]="{
+                                'bg-primary text-primary-contrast border-primary': value === activeStep,
+                                'cursor-not-allowed': !canAccessStep(6)
+                            }">{{ value }}</span>
+                        <span [ngClass]="{
+                            'font-semibold text-primary': value === activeStep,
+                            'cursor-not-allowed': !canAccessStep(6)
+                            }">Step 6</span>
+                    </button>
+                </ng-template>
+            </p-step>
+            <p-step [value]="7">
+                <ng-template #content let-activateCallback="activateCallback" let-value="value">
+                    <button class="cursor-pointer flex items-center gap-2" 
+                        [disabled]="!canAccessStep(7)"
+                        (click)="canAccessStep(7) && activateCallback()">
+                        <span class="border-2 border-gray-300 w-8 h-8 rounded-full flex items-center justify-center"
+                            [ngClass]="{
+                                'bg-primary text-primary-contrast border-primary': value === activeStep,
+                                'cursor-not-allowed': !canAccessStep(7)
+                            }">{{ value }}</span>
+                        <span [ngClass]="{
+                            'font-semibold text-primary': value === activeStep,
+                            'cursor-not-allowed': !canAccessStep(7)
+                            }">Step 7</span>
+                    </button>
+                </ng-template>
+            </p-step>
+        </p-step-list>
+        <p-step-panels>
+            <p-step-panel [value]="1">
+                <ng-template #content>
+                    <p class="text-primary text-lg font-semibold">Consultancy Assign</p>
+                    <form [formGroup]="firstInterviewScheduleForm" (ngSubmit)="submitFirstInterviewSchedule()">
+                        <div class="grid grid-cols-2 gap-2">
+                            <div class="grid col-span-1 gap-1">
+                                <label for="consultancy-name">Consultancy</label>
+                                <p-multiselect [options]="consultancyList" [formControl]="demandConsultancyControl" 
+                                    optionLabel="consultancyName" optionValue="userId" 
+                                    id="consultancy-name" [filter]="true" filterBy="consultancyName" display="chip" 
+                                    [maxSelectedLabels]="2" [showClear]="true" placeholder="Select Consultancy" 
+                                    (onChange)="selectedConsultancyId($event.value)" appendTo="body" fluid />
+                            </div>
+                            <div class="grid col-span-1 gap-1">
+                                <label for="hr-name">HR Name</label>
+                                <p-multiselect [options]="consultancyList" [formControl]="demandHrControl" 
+                                    optionLabel="userName" optionValue="userId"
+                                   id="hr-name" [filter]="true" filterBy="userName" display="chip" 
+                                   [maxSelectedLabels]="3" [showClear]="true" appendTo="body" />
+                            </div>
+                            <div class="grid col-span-1 gap-1">
+                                <label for="interview-date">Schedule Interview Date</label>
+                                <p-datepicker formControlName="interviewDate" placeholder="Select Date" 
+                                    [iconDisplay]="'input'" [showIcon]="true" inputId="interview-date" appendTo="body" />
+                            </div>
+                            <div class="grid col-span-1 gap-1">
+                                <label for="templatedisplay">Schedule Interview Time</label>
+                                <p-datepicker formControlName="interviewTime" placeholder="Select Time" [iconDisplay]="'input'" [showIcon]="true"
+                                    [timeOnly]="true" inputId="templatedisplay" appendTo="body">
+                                    <ng-template #inputicon let-clickCallBack="clickCallBack">
+                                        <i class="pi pi-clock" (click)="clickCallBack($event)"></i>
+                                    </ng-template>
+                                </p-datepicker>
+                            </div>
+                            <div class="grid col-span-1 gap-1" formGroupName="interviewer">
+                                <label for="interviewer">Interviewer</label>
+                                <p-select [options]="interviewerList" formControlName="userId" id="interviewer" optionLabel="userName" optionValue="userId"
+                                    [filter]="true" filterBy="userName" placeholder="Select Interviewer"
+                                    [showClear]="true" appendTo="body" />
+                            </div>
+                        </div>
+                        <div class="flex justify-end mt-4">
+                            <button pButton pRipple type="submit">
+                                <span pButtonLabel>{{ actionName }}</span>
+                            </button>
+                        </div>
+                    </form>
+                </ng-template>
+            </p-step-panel>
+            <p-step-panel [value]="2">
+                <ng-template #content>
+                    <p class="text-primary text-lg font-semibold">Candidate Addition</p>
+                    <form [formGroup]="assignCandidateFirstInterviewForm" (ngSubmit)="submitStep2Form()">
+                        <div class="grid grid-cols-2 gap-2">
+                            <div class="grid col-span-1 gap-1">
+                                <label for="candidate-name">Candidate Name</label>
+                                <p-multiselect [options]="candidateList" [formControl]="candidateInterviewControl" id="candidate-name" 
+                                    optionLabel="candidateName" optionValue="candidateId"
+                                    [filter]="true" filterBy="candidateName" display="chip" [maxSelectedLabels]="3" 
+                                    [showClear]="true" placeholder="Select Candidates" 
+                                    (onChange)="selectedCandidateIds($event.value)" appendTo="body" />
+                            </div>
+                            <div class="grid col-span-1 gap-1">
+                                <label for="emp-code">Temporary Employee Code</label>
+                                <p-multiselect [options]="candidateList" [formControl]="candidateCodeControl" id="emp-code" 
+                                    optionLabel="candidateCode" optionValue="candidateId"
+                                    [filter]="true" filterBy="candidateCode" display="chip" [maxSelectedLabels]="3" 
+                                    [showClear]="true" placeholder="Select Candidate Codes" 
+                                    (onChange)="selectedCandidateIds($event.value)" appendTo="body" />
+                            </div>
+                            <div class="grid col-span-1 gap-1">
+                                <label for="designation">Current Designation</label>
+                                <p-multiselect [options]="candidateList" [formControl]="candidateDesignationControl" id="designation" 
+                                    optionLabel="positionApplied" optionValue="candidateId"
+                                    [filter]="true" filterBy="positionApplied" display="chip" [maxSelectedLabels]="3" 
+                                    [showClear]="true" appendTo="body" />
+                            </div>
+                        </div>
+                        <div class="flex justify-end mt-4">
+                            <button pButton pRipple type="submit">
+                                <span pButtonLabel>{{ actionName }}</span>
+                            </button>
+                        </div>
+                    </form>
+                </ng-template>
+            </p-step-panel>
+            <p-step-panel [value]="3">
+                <ng-template #content>
+                    <p class="text-primary text-lg font-semibold">First Interview</p>
+                    <form [formGroup]="firstInterviewRoundForm" (ngSubmit)="submitStep3Form()">
+                        <p-table [value]="assignedCandidateList" showGridlines [rowHover]="true" 
+                            formArrayName="candidateInterviewMappings">
+                            <ng-template #header>
+                                <tr>
+                                    <th>SI No</th>
+                                    <th>Assigned Candidates Name</th>
+                                    <th>Accept/Reject</th>
+                                    <th>Feedback</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template #body let-candidate let-i="rowIndex">
+                                <tr [formGroupName]="i">
+                                    <td>{{ i + 1 }}</td>
+                                    <td>{{ candidate.candidate.candidateName }}</td>
+                                    <td>
+                                        <p-select [options]="performanceStatusList" formControlName="performanceStatus" id="accept-reject" 
+                                            optionLabel="label" optionValue="value"
+                                            placeholder="Select Status" appendTo="body" class="w-full" />
+                                    </td>
+                                    <td>
+                                        <textarea rows="3" formControlName="feedback" pTextarea id="feedback" class="w-full"></textarea>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                        <div class="flex justify-end mt-4">
+                            <button pButton pRipple type="submit">
+                                <span pButtonLabel>Submit</span>
+                            </button>
+                        </div>
+                    </form>
+
+                </ng-template>
+            </p-step-panel>
+            <p-step-panel [value]="4">
+                <ng-template #content>
+                    <p class="text-primary text-lg font-semibold">Interviewer Assign (Final)</p>
+
+                    <p-table [value]="assignedCandidateList" showGridlines [rowHover]="true">
+                        <ng-template #header>
+                            <tr>
+                                <th>SI No</th>
+                                <th>Candidates Name</th>
+                                <th>First Interview Feedback</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template #body let-candidate let-i="rowIndex">
+                            <tr>
+                                <td>{{ i + 1 }}</td>
+                                <td>{{ candidate.candidate.candidateName }}</td>
+                                <td>{{ candidate.feedback }}</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+
+                    <form class="mt-6" [formGroup]="finalInterviewerAssignForm" (ngSubmit)="submitStep4Form()">
+                        <div class="grid grid-cols-2 gap-2">
+                            <div class="grid col-span-1 gap-1">
+                                <label for="final-interview-date">Final Interview Schedule Date</label>
+                                <p-datepicker formControlName="interviewDate" [iconDisplay]="'input'" [showIcon]="true" 
+                                    inputId="final-interview-date" placeholder="Select Date" appendTo="body" />
+                            </div>
+                            <div class="grid col-span-1 gap-1">
+                                <label for="final-interview-time">Final Interview Schedule Time</label>
+                                <p-datepicker formControlName="interviewTime" inputId="final-interview-time" [showIcon]="true" [iconDisplay]="'input'" 
+                                    [timeOnly]="true" placeholder="Select Time" appendTo="body">
+                                    <ng-template #inputicon let-clickCallBack="clickCallBack">
+                                        <i class="pi pi-clock" (click)="clickCallBack($event)"></i>
+                                    </ng-template>
+                                </p-datepicker>
+                            </div>
+                            <div class="grid col-span-1 gap-1" formGroupName="interviewer">
+                                <label for="interviewer">Interviewer</label>
+                                <p-select [options]="interviewerList" formControlName="userId" id="interviewer"
+                                    optionLabel="userName" optionValue="userId" 
+                                    [filter]="true" filterBy="userName" [showClear]="true" 
+                                    placeholder="Select Interviewer" appendTo="body" />
+                            </div>
+                        </div>
+                        <div class="flex justify-end mt-4">
+                            <button pButton pRipple type="submit">
+                                <span pButtonLabel>Submit</span>
+                            </button>
+                        </div>
+                    </form>
+                </ng-template>
+            </p-step-panel>
+            <p-step-panel [value]="5">
+                <ng-template #content>
+                    <p class="text-primary text-lg font-semibold">Final Interview</p>
+                    <form [formGroup]="finalInterviewRoundForm" (ngSubmit)="submitStep5Form()">
+                        <p-table [value]="assignedFinalInterviewCandidateList" showGridlines [rowHover]="true" 
+                            formArrayName="candidateFinalInterviewMappings">
+                            <ng-template #header>
+                                <tr>
+                                    <th>SI No</th>
+                                    <th>Selected Candidates Name</th>
+                                    <th>Accept/Reject</th>
+                                    <th>Feedback</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template #body let-candidate let-i="rowIndex">
+                                <tr [formGroupName]="i">
+                                    <td>{{ i + 1 }}</td>
+                                    <td>{{ candidate.candidate.candidateName }}</td>
+                                    <td>
+                                        <p-select [options]="performanceStatusList" formControlName="performanceStatus" id="accept-reject"
+                                            optionLabel="label" optionValue="value"
+                                            placeholder="Select Status" appendTo="body" class="w-full" />
+                                    </td>
+                                    <td>
+                                        <textarea rows="3" formControlName="feedback" pTextarea 
+                                            id="feedback" class="w-full"></textarea>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                        <div class="flex justify-end mt-4">
+                            <button pButton pRipple type="submit">
+                                <span pButtonLabel>Submit</span>
+                            </button>
+                        </div>
+                    </form>
+
+
+                </ng-template>
+            </p-step-panel>
+            <p-step-panel [value]="6">
+                <ng-template #content>
+                    <p class="text-primary text-lg font-semibold">Final Approval</p>
+
+                    <form [formGroup]="finalApprovalCandidateForm" (ngSubmit)="submitStep6Form()">
+                        <p-table [value]="finalApprovalCandidateList" showGridlines [rowHover]="true"
+                            formArrayName="approvalCandidates">
+                            <ng-template #header>
+                                <tr>
+                                    <th>SI No</th>
+                                    <th>Selected Candidates Name</th>
+                                    <th>First Interview Feedback</th>
+                                    <th>Final Interview Feedback</th>
+                                    <th>Status By Resource Manager</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template #body let-candidate let-i="rowIndex">
+                                <tr [formGroupName]="i">
+                                    <td>{{ i + 1 }}</td>
+                                    <td>{{ candidate.candidate.candidateName }}</td>
+                                    <td>{{ candidate.firstInterviewFeedback }}</td>
+                                    <td>{{ candidate.finalInterviewFeedback }}</td>
+                                    <td>
+                                        <p-select [options]="resourceManagerStatusList" formControlName="statusByResourceManager" 
+                                            id="status" optionLabel="label" optionValue="value"
+                                            placeholder="Select Status" appendTo="body" class="w-full" />
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                        <div class="flex justify-end mt-4">
+                            <button pButton pRipple type="submit">
+                                <span pButtonLabel>Submit</span>
+                            </button>
+                        </div>
+                    </form>
+                </ng-template>
+            </p-step-panel>
+            <p-step-panel [value]="7">
+                <ng-template #content>
+                    <p class="text-primary text-lg font-semibold">Joining Process</p>
+
+                    <form [formGroup]="joiningProcessCandidateForm" (ngSubmit)="submitStep7Form()">
+                        <p-table [value]="joiningProcessCandidateList" showGridlines [rowHover]="true" 
+                            [tableStyle]="{'min-width': '90rem'}" formArrayName="joiningProcessCandidates">
+                            <ng-template #header>
+                                <tr>
+                                    <th>SI No</th>
+                                    <th>Selected Candidates Name</th>
+                                    <th>First Interview Feedback</th>
+                                    <th>Final Interview Feedback</th>
+                                    <th>Candidate Acceptance (Yes/No)</th>
+                                    @if (hasAcceptedCandidate) {
+                                        <th>Joining Date If Yes</th>
+                                    }
+                                </tr>
+                            </ng-template>
+                            <ng-template #body let-candidate let-i="rowIndex">
+                                <tr [formGroupName]="i">
+                                    <td>{{ i + 1 }}</td>
+                                    <td>{{ candidate.candidate.candidateName }}</td>
+                                    <td>{{ candidate.firstInterviewFeedback }}</td>
+                                    <td>{{ candidate.finalInterviewFeedback }}</td>
+                                    <td>
+                                        <p-select [options]="candidateAcceptanceList" formControlName="candidateAcceptance" 
+                                            id="candidate-status" optionLabel="label" optionValue="value"
+                                            placeholder="Select Status" appendTo="body" class="w-full" />
+                                    </td>
+                                    
+                                    @if (hasAcceptedCandidate) {
+                                        <td>
+                                            <p-datepicker formControlName="joiningDate" [iconDisplay]="'input'" [showIcon]="true" inputId="joining-date" 
+                                                placeholder="Select Joining Date" appendTo="body" class="w-full" />
+                                        </td>
+                                    }
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                        <div class="flex justify-end mt-4">
+                            <button pButton pRipple type="submit">
+                                <span pButtonLabel>Submit</span>
+                            </button>
+                        </div>
+                    </form>
+
+                </ng-template>
+            </p-step-panel>
+        </p-step-panels>
+    </p-stepper>
+</div>
+
+<p-toast />

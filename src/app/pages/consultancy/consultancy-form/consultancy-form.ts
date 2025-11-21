@@ -16,11 +16,14 @@ export class ConsultancyForm implements OnInit {
 
   userId = 0;
 
+  actionName = 'Submit';
+
   private fb = inject(FormBuilder);
 
   constructor(private apiService: Apiservice, private messageService: MessageService, private router: Router, private route: ActivatedRoute){}
 
   consultancyForm = this.fb.group({
+    userId: [0],
     consultancyName: [''],
     userName: [''],
     email: [''],
@@ -56,6 +59,7 @@ export class ConsultancyForm implements OnInit {
 
       if (id) {
         this.userId = Number(id);
+        this.actionName = 'Update';
         this.fetchViewConsultancy(this.userId);
       }
     })
@@ -68,6 +72,7 @@ export class ConsultancyForm implements OnInit {
       const data = {
         userId: userId
       }
+      console.log(data);
       this.apiService.fetchViewConsultancy(data).subscribe({
         next: val => {
           console.log(val);
@@ -109,20 +114,43 @@ export class ConsultancyForm implements OnInit {
   onSubmit(){
     try {   
       console.log(this.consultancyForm.value);
-      const data = this.consultancyForm.value;
-  
-      this.apiService.createConsultancy(data).subscribe({
-        next: val => {
-          console.log(val);
-          this.messageService.add({severity: 'success', summary: 'Success', detail: 'Consultancy Created Successfully'});
-          setTimeout(() => {    
-            this.router.navigate(['/home/consultancies']);
-          }, 2000);
-        },
-        error: err => {
-          console.log(err);
+      if (!this.userId) {      
+        const data = this.consultancyForm.value;
+    
+        this.apiService.createConsultancy(data).subscribe({
+          next: val => {
+            console.log(val);
+            this.messageService.add({severity: 'success', summary: 'Success', detail: 'Consultancy Created Successfully'});
+            setTimeout(() => {    
+              this.router.navigate(['/home/consultancies']);
+            }, 2000);
+          },
+          error: err => {
+            console.log(err);
+          }
+        })
+      } else {
+        const data = this.consultancyForm.value;
+        
+        if (!data.consultancyCategory?.length) {
+          const existingCategory = this.consultancyCategoryControl.value?.map((id: number) => ({categoryId: id}));
+          data.consultancyCategory = existingCategory;
         }
-      })
+        console.log(data);
+
+        this.apiService.updateConsultancy(data).subscribe({
+          next: val => {
+            console.log(val);
+            this.messageService.add({severity: 'success', summary: 'Success', detail: 'Consultancy Updated Successfully'});
+            setTimeout(() => {    
+              this.router.navigate(['/home/consultancies']);
+            }, 2000);
+          },
+          error: err => {
+            console.log(err);
+          }
+        })
+      }
     } catch (error) {
       console.log(error);
     }

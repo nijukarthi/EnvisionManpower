@@ -4,7 +4,9 @@ import { Auth } from '../auth/auth';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   if (req.url.includes('/api/auth/user/send-otp') || 
-      req.url.includes('/api/auth/user/verify-otp')
+      req.url.includes('/api/auth/user/verify-otp') || 
+      req.url.includes('/api/auth/guestuser/send-otp') ||
+      req.url.includes('/api/auth/guestuser/verify-otp')
     ) {
     return next(req);
   }

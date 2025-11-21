@@ -1,0 +1,51 @@
+<div class="card">
+    <div class="flex items-baseline-last justify-between">
+        <h5>Invoice Disbursement</h5>
+        <!-- <p-button label="Add Invoice Disbursement" icon="pi pi-plus" routerLink="/home/invoice-disbursement/new" /> -->
+    </div>
+    <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
+        <p-table [value]="invoiceDisbursementList" stripedRows [rowHover]="true" [tableStyle]="{'min-width': '150rem'}">
+            <ng-template #header>
+                <tr>
+                    <th>SL NO</th>
+                    <th>Consultancy Code</th>
+                    <th>GL Code</th>
+                    <th>WBS</th>
+                    <th>Cost/Profit Center</th>
+                    <th>State Location</th>
+                    <th>Bank Details</th>
+                    <th>PAN</th>
+                    <th>Due Date</th>
+                    <th>RCM/GST</th>
+                    <th>Booked On</th>
+                    <th>Payment Status</th>
+                    <th>Reason for Delay</th>
+                </tr>
+            </ng-template>
+            <ng-template #body let-disbursement let-i="rowIndex">
+                <tr>    
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ disbursement.consultancyCode }}</td>
+                    <td>{{ disbursement.giCode }}</td>
+                    <td>{{ disbursement.wbs }}</td>
+                    <td>{{ disbursement.costProfitCenter }}</td>
+                    <td>{{ disbursement.stateLocation }}</td>
+                    <td>{{ disbursement.bankDetails }}</td>
+                    <td>{{ disbursement.pan }}</td>
+                    <td>{{ disbursement.dueDate | date:'dd-MM-yyyy' }}</td>
+                    <td>{{ disbursement.gst }}</td>
+                    <td>{{ disbursement.bookedOn }}</td>
+                    <td>{{ disbursement.paymentStatus }}</td>
+                    <td>{{ disbursement.delay }}</td>
+                </tr>
+            </ng-template>  
+            <ng-template #emptymessage>
+                <tr>
+                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground);">
+                        No Records Found
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>

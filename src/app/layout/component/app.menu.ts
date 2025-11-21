@@ -18,89 +18,108 @@ import { AppMenuitem } from './app.menuitem';
 export class AppMenu {
     model: MenuItem[] = [];
 
+    loggedUserGroupId = Number(sessionStorage.getItem('userGroupId'));
+
     ngOnInit() {
         this.model = [
-           /*  {
-                label: 'Home',
-                items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] }]
-            }, */
-           /*  {
-                label: 'UI Components',
-                items: [
-                    { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', routerLink: ['/uikit/formlayout'] },
-                    { label: 'Input', icon: 'pi pi-fw pi-check-square', routerLink: ['/uikit/input'] },
-                    { label: 'Button', icon: 'pi pi-fw pi-mobile', class: 'rotated-icon', routerLink: ['/uikit/button'] },
-                    { label: 'Table', icon: 'pi pi-fw pi-table', routerLink: ['/uikit/table'] },
-                    { label: 'List', icon: 'pi pi-fw pi-list', routerLink: ['/uikit/list'] },
-                    { label: 'Tree', icon: 'pi pi-fw pi-share-alt', routerLink: ['/uikit/tree'] },
-                    { label: 'Panel', icon: 'pi pi-fw pi-tablet', routerLink: ['/uikit/panel'] },
-                    { label: 'Overlay', icon: 'pi pi-fw pi-clone', routerLink: ['/uikit/overlay'] },
-                    { label: 'Media', icon: 'pi pi-fw pi-image', routerLink: ['/uikit/media'] },
-                    { label: 'Menu', icon: 'pi pi-fw pi-bars', routerLink: ['/uikit/menu'] },
-                    { label: 'Message', icon: 'pi pi-fw pi-comment', routerLink: ['/uikit/message'] },
-                    { label: 'File', icon: 'pi pi-fw pi-file', routerLink: ['/uikit/file'] },
-                    { label: 'Chart', icon: 'pi pi-fw pi-chart-bar', routerLink: ['/uikit/charts'] },
-                    { label: 'Timeline', icon: 'pi pi-fw pi-calendar', routerLink: ['/uikit/timeline'] },
-                    { label: 'Misc', icon: 'pi pi-fw pi-circle', routerLink: ['/uikit/misc'] }
-                ]
-            }, */
             {
                 label: 'Pages',
                 icon: 'pi pi-fw pi-briefcase',
                 routerLink: ['/pages'],
                 items: [
                     {
-                        label: 'Demand Request',
+                        label: 'Manpower Request',
                         icon: 'pi pi-calendar',
                         routerLink: ['/home/demand']
                     },
                     {
-                        label: 'Demand Approval',
+                        label: 'Manpower Approval',
                         icon: 'pi pi-ticket',
                         routerLink: ['/home/approval']
-                       /*  items: [
+                    },
+                    {
+                        label: 'Manpower Management',
+                        icon: 'pi pi-briefcase',
+                        items: [
                             {
-                                label: 'Login',
-                                icon: 'pi pi-fw pi-sign-in',
-                                routerLink: ['/auth/login']
+                                label: 'Assign Resource Manager',
+                                icon: 'pi pi-address-book',
+                                routerLink: ['/home/manager']
                             },
                             {
-                                label: 'Error',
-                                icon: 'pi pi-fw pi-times-circle',
-                                routerLink: ['/auth/error']
+                                label: 'Assign Standard Role',
+                                icon: 'pi pi-address-book',
+                                routerLink: ['/home/assign-role']
                             },
                             {
-                                label: 'Access Denied',
-                                icon: 'pi pi-fw pi-lock',
-                                routerLink: ['/auth/access']
+                                label: 'Manpower Fulfillment',
+                                icon: 'pi pi-history',
+                                routerLink: ['/home/demand-fullfillment']
+                            },
+                            {
+                                label: 'Onboarding',
+                                icon: 'pi pi-graduation-cap',
+                                routerLink: ['/home/onboarding']
+                            },
+                            {
+                                label: 'On-roll Employees',
+                                icon: 'pi pi-user',
+                                routerLink: ['/home/onroll-employees']
+                            },
+                            {
+                                label: 'Training',
+                                icon: 'pi pi-warehouse',
+                                routerLink: ['/home/training']
                             }
-                        ] */
+                        ]
                     },
                     {
-                        label: 'Resource Manager Assign',
-                        icon: 'pi pi-address-book',
-                        routerLink: ['/home/manager']
-                    },
+                        label: 'Performance & Attendance',
+                        icon: 'pi pi-chart-bar',
+                        items: [
+                            {
+                                label: 'Attendance',
+                                icon: 'pi pi-book',
+                                routerLink: ['/home/attendance']
+                            },
+                            {
+                                label: 'Site Performance',
+                                icon: 'pi pi-map',
+                                routerLink: ['/home/site-performance']
+                            },
+                            {
+                                label: 'Transfer',
+                                icon: 'pi pi-file-export',
+                                routerLink: ['/home/transfer']
+                            },
+                            {
+                                label: 'Resignation',
+                                icon: 'pi pi-file-excel',
+                                routerLink: ['/home/terminate']
+                            }
+                        ]
+                    },  
                     {
-                        label: 'Full Fill Request',
-                        icon: 'pi pi-address-book',
-                        routerLink: ['/home/fullFill']
-                    },
-                     {
-                        label: 'Consultancy',
-                        icon: 'pi pi-credit-card',
-                        routerLink: ['/home/consultancyPage']
-                    },
-                    {
-                        label: 'Guest User',
-                        icon: 'pi pi-eraser',
-                        routerLink: ['/home/guestUserPage']
-                    },
-                    {
-                        label: 'Interview Management',
-                        icon: 'pi pi-eject',
-                        routerLink: ['/home/interviewManagement']
-                    },
+                        label: 'Accounts Payable',
+                        icon: 'pi pi-money-bill',
+                        items: [
+                            {
+                                label: 'Invoice Submission',
+                                icon: 'pi pi-check-circle',
+                                routerLink: ['/home/invoice-submission']
+                            },
+                            {
+                                label: 'Invoice Receipt',
+                                icon: 'pi pi-receipt',
+                                routerLink: ['/home/invoice-receipt']
+                            },
+                            {
+                                label: 'Invoice Disbursement',
+                                icon: 'pi pi-file-o',
+                                routerLink: ['/home/invoice-disbursement']
+                            }
+                        ]
+                    },        
                     {
                         label: 'Resource Pool',
                         icon: 'pi pi-server', 
@@ -115,35 +134,14 @@ export class AppMenu {
                                 icon: 'pi pi pi-user',
                                 items:[
                                     {
-                                        label: 'New Candidate',
-                                        icon: 'pi pi-file-plus',
-                                        items: [
-                                            {
-                                                label: 'Fixed Cost',
-                                                icon: 'pi pi-wallet',
-                                                routerLink: ['/home/candidate/new/fixed-cost']
-                                            },
-                                            {
-                                                label: 'Cost Plus',
-                                                icon: 'pi pi-receipt',
-                                                routerLink: ['/home/candidate/new/cost-plus']
-                                            }
-                                        ]
+                                        label: 'Fixed Cost',
+                                        icon: 'pi pi-wallet',
+                                        routerLink: ['/home/candidate/fixed-cost']
                                     },
                                     {
-                                        label: 'Existing Candidate',
-                                        icon: 'pi pi-folder-plus',
-                                        items: [
-                                            {
-                                                label: 'Fixed Cost',
-                                                icon: 'pi pi-wallet',
-                                                routerLink: ['/home/candidate/existing/fixed-cost']
-                                            },
-                                            {
-                                                label: 'Cost Plus',
-                                                icon: 'pi pi-receipt'
-                                            }
-                                        ]
+                                        label: 'Cost Plus',
+                                        icon: 'pi pi-receipt',
+                                        routerLink: ['/home/candidate/cost-plus']
                                     }
                                 ]
                             }
@@ -153,22 +151,6 @@ export class AppMenu {
                         label: 'Masters',
                         icon: 'pi pi-database',
                         items: [
-                            // {
-                            //     label: 'Add Employee',
-                            //     icon: 'pi pi-plus',
-                            //     items:[
-                            //         {
-                            //             label: 'New Candidate',
-                            //             icon: 'pi pi-file-plus',
-                            //             routerLink: ['/home/addEmployee']
-                            //         },
-                            //         {
-                            //             label: 'Existing Candidate',
-                            //             icon: 'pi pi-folder-plus',
-                            //             routerLink: ['/home/existingEmployee']
-                            //         }
-                            //     ]
-                            // },
                             {
                                 label: 'SPN',
                                 icon: 'pi pi-warehouse',
@@ -210,8 +192,9 @@ export class AppMenu {
                                 routerLink: ['/home/users']
                             },
                             {
-                                label: 'Guest Users',
-                                icon: "pi pi-address-book"
+                                label: 'Interviewer',
+                                icon: "pi pi-address-book",
+                                routerLink: ['/home/interviewers']
                             }
                         ]
                     },
@@ -223,23 +206,30 @@ export class AppMenu {
 
                 ]
             },
-        
-        /*    {
-                label: 'Get Started',
-                items: [
-                    {
-                        label: 'Documentation',
-                        icon: 'pi pi-fw pi-book',
-                        routerLink: ['/documentation']
-                    },
-                    {
-                        label: 'View Source',
-                        icon: 'pi pi-fw pi-github',
-                        url: 'https://github.com/primefaces/sakai-ng',
-                        target: '_blank'
-                    }
-                ]
-            } */
         ];
+
+        if (this.loggedUserGroupId === 360) {
+            this.model = this.model
+            .map(group => {
+                if (group && group.label === 'Pages' && group.items) {
+                    return {
+                        ...group,
+                        items: group.items.filter(
+                            item =>
+                                item?.label === 'Manpower Management' ||
+                                item?.label === 'Resource Pool' || 
+                                item.label === 'Performance & Attendance' ||
+                                item.label === 'Accounts Payable' ||
+                                item?.label === 'Logout'
+                        ),
+                    };
+                }
+                return group;
+            })
+            .filter((group): group is MenuItem => group !== null && group !== undefined);
+        } else {
+            this.model = this.model;
+        }
     }
+
 }

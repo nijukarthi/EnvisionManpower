@@ -1,157 +1,177 @@
-<p-fluid>
-        <div class="card">
-            <div class="flex items-center justify-between">
-                <h5>Demand Approval</h5>
-            </div>
-            <p-table [value]="demandProcessingList" #dt [(selection)]="selectedApprovalList" dataKey="id"
-                [tableStyle]="{ 'min-width': '110rem' }" [paginator]="true" [rowsPerPageOptions]="[10, 20, 30]" stripedRows
-                [rows]="10" [rowHover]="true" [showGridlines]="true" [showCurrentPageReport]="true"
-                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [paginator]="true"
-                responsiveLayout="scroll" [globalFilterFields]="['spn.spnCode','spn.spnDescription','spn.experience','quantity']" (onPage)="pageChange($event)">
-                <ng-template #header>
-                    <tr>
-                        <th style="width: 4rem"><p-tableHeaderCheckbox /></th>
-                        <th>View</th>
-                        <th>S.No</th>
-                        <th>Demand Code</th>
-                        <th>SPN</th>
-                        <th>SPN Description</th>
-                        <th>Experience</th>
-                        <th>Quantity</th>
-                        <th>Planned Deployment Date</th>
-                        <th>Planned Release Date</th>
-                        <th style="text-align: center;">Cluster Head Approval</th>
-                        <th style="text-align: center;">Department Head Approval</th> 
-                    </tr>
-                    <tr>
-                        <td colspan="4"></td>
-                        <td>
-                            <input #spn type="text"(input)="dt.filter(spn.value, 'spn.spnCode', 'contains')" placeholder="search..." style="width: 9rem;margin:5px" pInputText />
-                        </td>
-                        <td>
-                        <input #spnDesc type="text"(input)="dt.filter(spnDesc.value, 'spn.spnDescription', 'contains')" placeholder="search..." style="width: 9rem;margin:5px" pInputText />
-                        </td>
-                        <td>
-                        <input #exp type="text"(input)="dt.filter(exp.value, 'spn.experience', 'contains')" placeholder="search..." style="width: 9rem;margin:5px" pInputText />
-                        </td>
-                        <td>
-                        <input #qty type="text"(input)="dt.filter(qty.value, 'quantity', 'contains')" placeholder="search..." style="width: 9rem;margin:5px" pInputText />
-                        </td>
-                        <td colspan="100%"></td>
-                    </tr>
-                </ng-template>
-                <ng-template #body let-demand let-rowIndex="rowIndex">
-                    <tr>
-                        <td>
-                            <p-tableCheckbox [value]="demand" />
-                        </td>
-                        <td>
-                            <p-button icon="pi pi-eye" [rounded]="true" 
-                                class="w-full" severity="warn" (click)="showDetailPopup(demand.requesitionId)"/>
-                        </td>
-                        <td>{{ rowIndex + 1 }}</td>
-                        <td>{{ demand.demandCode }}</td>
-                        <td>{{ demand.spn.spnCode }}</td>
-                        <td>{{ demand.spn.spnDescription }}</td>
-                        <td>{{ demand.spn.experience }}</td>
-                        <td style="text-align: center;">
-                            <input type="text" pInputText [value]="demand.quantity" [(ngModel)]="demand.quantity" 
-                                (blur)="demandQtyChange(demand.demandId, demand.quantity)" />
-                        </td>
-                        <td>{{ demand.plannedDeploymentDate }}</td>
-                        <td>{{ demand.plannedReleaseDate }}</td>
-                        <td style="text-align: center;">
-                            @if (demand.stateHeadApproval.approvalStatus === APPROVALSTATUS.ACCEPTED) {
-                                <p-button icon="pi pi-check" [rounded]="true" [disabled]="true" />
-                            }
-                            @else if (demand.stateHeadApproval.approvalStatus === APPROVALSTATUS.REJECTED){
-                                <p-button icon="pi pi-times" [rounded]="true" [disabled]="true" severity="danger" />
-                            } 
-                            @else if (demand.stateHeadApproval.approvalStatus === APPROVALSTATUS.PENDING) {
-                                <p-button icon="pi pi-check" [rounded]="true" class="w-full mr-2" 
-                                  [disabled]="loggedUserGroupId === USERGROUPS.DEPARTMENTHEAD"  (onClick)="clusterHeadApproval(demand.demandId, 'Accepted')" />
-                                <p-button icon="pi pi-times" [rounded]="true" class="w-full" severity="danger" 
-                                  [disabled]="loggedUserGroupId === USERGROUPS.DEPARTMENTHEAD"  (onClick)="clusterHeadApproval(demand.demandId, 'Rejected')" />
-                            }
-                        </td>
-                        <td style="text-align: center;">
-                            @if (demand.departmentHeadApproval.approvalStatus === APPROVALSTATUS.ACCEPTED) {
-                                <p-button icon="pi pi-check" [rounded]="true" [disabled]="true" />
-                            }
-                            @else if(demand.departmentHeadApproval.approvalStatus === APPROVALSTATUS.REJECTED){
-                                <p-button icon="pi pi-times" [rounded]="true" [disabled]="true" severity="danger" />
-                            }
-                            @if (demand.departmentHeadApproval.approvalStatus === APPROVALSTATUS.PENDING) {
-                                <p-button icon="pi pi-check" [rounded]="true" class="w-full mr-2" 
-                                   [disabled]="loggedUserGroupId === USERGROUPS.CLUSTERHEAD" (onClick)="departmentHeadApproval(demand.demandId, 'Accepted')" />
-                                <p-button icon="pi pi-times" [rounded]="true" class="w-full" severity="danger" 
-                                   [disabled]="loggedUserGroupId === USERGROUPS.CLUSTERHEAD" (onClick)="departmentHeadApproval(demand.demandId, 'Rejected')" />
-                            }
-                        </td>
-                    </tr>
-                </ng-template>
-                <ng-template #emptymessage>
-                    <tr>
-                        <td colspan="100%" style="text-align:center">No Record Found!!</td>
-                    </tr>
-                </ng-template>
-            </p-table>  
-        </div>
-       
-    </p-fluid>
+<div class="card">
+    <h5>Manpower Approval</h5>
+    <div class="flex">
+        <button class="custom-btn" pButton pRipple text (click)="setActiveTab('processing', 102)"
+            [ngClass]="{'active-tab': activeTab === 'processing'}">
+            <i pButtonIcon class="pi pi-stopwatch"></i>
+            <span pButtonLabel>Processing</span>
+        </button>
+        <button class="custom-btn" pButton pRipple text (click)="setActiveTab('accepted', 200)"
+            [ngClass]="{'active-tab': activeTab === 'accepted'}">
+            <i pButtonIcon class="pi pi-check-circle"></i>
+            <span pButtonLabel>Accepted</span>
+        </button>
+        <button class="custom-btn" pButton pRipple text (click)="setActiveTab('rejected', 406)"
+            [ngClass]="{'active-tab': activeTab === 'rejected'}">
+            <i pButtonIcon class="pi pi-times-circle"></i>
+            <span pButtonLabel>Rejected</span>
+        </button>
+    </div>
+    <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
+        <p-table [value]="demandProcessingList" #dt [(selection)]="selectedApprovalList" dataKey="id" [lazy]="true"
+            [tableStyle]="{ 'min-width': '110rem' }" [paginator]="true" [rowsPerPageOptions]="[10, 20, 30]" stripedRows
+            [rows]="pageSize" [rowHover]="true" [showCurrentPageReport]="true" [first]="first"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [totalRecords]="demandProcessingListLength"
+            responsiveLayout="scroll" [globalFilterFields]="['spn.spnCode','spn.spnDescription','spn.experience','quantity']" 
+            (onPage)="pageChange($event)">
+            <ng-template #header>
+                <tr>
+                    <th style="width: 4rem">
+                        <p-tableHeaderCheckbox />
+                    </th>
+                    <th>View</th>
+                    <th>S.No</th>
+                    <th>Demand Code</th>
+                    <th>SPN</th>
+                    <th>SPN Description</th>
+                    <th>Experience</th>
+                    <th>Quantity</th>
+                    <th>Planned Deployment Date</th>
+                    <th>Planned Release Date</th>
+                    <th style="text-align: center;">Cluster Head Approval</th>
+                    <th style="text-align: center;">Department Head Approval</th> 
+                </tr>
+                <tr>
+                    <td colspan="4"></td>
+                    <td>
+                        <input #spn type="text"(input)="dt.filter(spn.value, 'spn.spnCode', 'contains')" placeholder="search..." style="width: 9rem;margin:5px" pInputText />
+                    </td>
+                    <td>
+                    <input #spnDesc type="text"(input)="dt.filter(spnDesc.value, 'spn.spnDescription', 'contains')" placeholder="search..." style="width: 9rem;margin:5px" pInputText />
+                    </td>
+                    <td>
+                    <input #exp type="text"(input)="dt.filter(exp.value, 'spn.experience', 'contains')" placeholder="search..." style="width: 9rem;margin:5px" pInputText />
+                    </td>
+                    <td>
+                    <input #qty type="text"(input)="dt.filter(qty.value, 'quantity', 'contains')" placeholder="search..." style="width: 9rem;margin:5px" pInputText />
+                    </td>
+                    <td colspan="100%"></td>
+                </tr>
+            </ng-template>
+            <ng-template #body let-demand let-rowIndex="rowIndex">
+                <tr>
+                    <td>
+                        <p-tableCheckbox [value]="demand" />
+                    </td>
+                    <td>
+                        <p-button icon="pi pi-eye" [rounded]="true" 
+                            class="w-full" severity="warn" (click)="showDetailPopup(demand.requesitionId)"/>
+                    </td>
+                    <td>{{ rowIndex + 1 }}</td>
+                    <td>{{ demand.demandCode }}</td>
+                    <td>{{ demand.spn.spnCode }}</td>
+                    <td>{{ demand.spn.spnDescription }}</td>
+                    <td>{{ demand.spn.experience }}</td>
+                    <td style="text-align: center;">
+                        <input type="text" pInputText [value]="demand.quantity" [(ngModel)]="demand.quantity" 
+                            (blur)="demandQtyChange(demand.demandId, demand.quantity)" />
+                    </td>
+                    <td>{{ demand.plannedDeploymentDate }}</td>
+                    <td>{{ demand.plannedReleaseDate }}</td>
+                    <td style="text-align: center;">
+                        @if (demand.stateHeadApproval.approvalStatus === APPROVALSTATUS.ACCEPTED) {
+                            <p-button icon="pi pi-check" [rounded]="true" [disabled]="true" />
+                        }
+                        @else if (demand.stateHeadApproval.approvalStatus === APPROVALSTATUS.REJECTED){
+                            <p-button icon="pi pi-times" [rounded]="true" [disabled]="true" severity="danger" />
+                        } 
+                        @else if (demand.stateHeadApproval.approvalStatus === APPROVALSTATUS.PENDING) {
+                            <p-button icon="pi pi-check" [rounded]="true" class="w-full mr-2" 
+                                [disabled]="loggedUserGroupId === USERGROUPS.DEPARTMENTHEAD"  (onClick)="clusterHeadApproval(demand.demandId, 'Accepted')" />
+                            <p-button icon="pi pi-times" [rounded]="true" class="w-full" severity="danger" 
+                                [disabled]="loggedUserGroupId === USERGROUPS.DEPARTMENTHEAD"  (onClick)="clusterHeadApproval(demand.demandId, 'Rejected')" />
+                        }
+                    </td>
+                    <td style="text-align: center;">
+                        @if (demand.departmentHeadApproval.approvalStatus === APPROVALSTATUS.ACCEPTED) {
+                            <p-button icon="pi pi-check" [rounded]="true" [disabled]="true" />
+                        }
+                        @else if(demand.departmentHeadApproval.approvalStatus === APPROVALSTATUS.REJECTED){
+                            <p-button icon="pi pi-times" [rounded]="true" [disabled]="true" severity="danger" />
+                        }
+                        @if (demand.departmentHeadApproval.approvalStatus === APPROVALSTATUS.PENDING) {
+                            <p-button icon="pi pi-check" [rounded]="true" class="w-full mr-2" 
+                                [disabled]="loggedUserGroupId === USERGROUPS.CLUSTERHEAD" (onClick)="departmentHeadApproval(demand.demandId, 'Accepted')" />
+                            <p-button icon="pi pi-times" [rounded]="true" class="w-full" severity="danger" 
+                                [disabled]="loggedUserGroupId === USERGROUPS.CLUSTERHEAD" (onClick)="departmentHeadApproval(demand.demandId, 'Rejected')" />
+                        }
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template #emptymessage>
+                <tr>
+                    <td colspan="100%" style="text-align:center">No Record Found!!</td>
+                </tr>
+            </ng-template>
+        </p-table>  
+    </div>
+</div>
 
-    <p-dialog header="View Requistion" [resizable]="true" [draggable]="false" [modal]="true" [maximizable]="true"
-    appendTo="body" [(visible)]="viewDetail" [style]="{ width: '90vw' }" [contentStyle]="{ height: '500px' }">
+
+<p-dialog header="View Requistion" [resizable]="true" [draggable]="false" [modal]="true" [maximizable]="true"
+        appendTo="body" [(visible)]="viewDetail" [style]="{ width: '50rem' }" [contentStyle]="{ height: '320px' }">
     <p-fluid>
-        <div class="card flex">
-            <form [formGroup]="demandForm">
-                <div class="card grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <div class="flex flex-wrap gap-2 w-full">
-                        <label for="firstname2">Requision ID</label>
-                        <input pInputText id="firstname2" formControlName="requesitionCode" type="text" />
-                    </div>
-                    <div class="flex flex-wrap gap-2 w-full">
-                        <label for="lastname2">P-code</label>
-                        <p-select [options]="PCodeList" formControlName="projectId" optionLabel="projectCode" optionValue="projectId"
-                            placeholder="Select Project Code" [filter]="true" filterBy="projectCode" class="w-full md:w-56" />
-                    </div>
-                    <div class="flex flex-wrap gap-2 w-full" formGroupName="cluster">
-                        <label for="lastname2">Cluster</label>
-                        <p-select [options]="clusterList" formControlName="clusterId" optionLabel="clusterName" optionValue="clusterId"
-                            placeholder="Select State" [filter]="true" filterBy="clusterName" class="w-full md:w-56" />
-                    </div>
-                    <div class="flex flex-wrap gap-2 w-full" formGroupName="clusterHead">
-                        <label for="lastname2">Cluster Head</label>
-                        <p-select [options]="clusterHeadList" formControlName="userId" optionLabel="userName" optionValue="userId"
-                            placeholder="Select State" [filter]="true" filterBy="userName" class="w-full md:w-56" />
-                    </div>
-                    <div class="flex flex-wrap gap-2 w-full" formGroupName="siteIncharge">
-                        <label for="lastname2">Site Incharge</label>
-                        <p-select [options]="siteInchargeList" formControlName="userId" optionLabel="userName" optionValue="userId"
-                            placeholder="Select State" [filter]="true" filterBy="userName" class="w-full md:w-56" />
-                    </div>
-                     <div class="flex flex-wrap gap-2 w-full" formGroupName="department">
-                        <label for="lastname2"> Department</label>
-                        <p-select [options]="departmentList" formControlName="departmentId" optionLabel="departmentName" optionValue="departmentId"
-                            placeholder="Select Department" [filter]="true" filterBy="departmentName" class="w-full md:w-56" />
-                    </div>
-                    <div class="flex flex-wrap gap-2 w-full" formGroupName="departmentHead">
-                        <label for="lastname2"> Department Head</label>
-                        <p-select [options]="departmentHeadList" formControlName="userId" optionLabel="userName"
-                            optionValue="userId" placeholder="Select Department" [filter]="true" filterBy="userName"
-                            class="w-full md:w-56" />
-                    </div>
-                     <div class="flex flex-wrap gap-2 w-full" formGroupName="category">
-                        <label for="lastname2">Category</label>
-                        <p-select [options]="categoryList" formControlName="categoryId" optionLabel="categoryName" optionValue="categoryId"
-                            placeholder="Select Category" [filter]="true" filterBy="categoryName" class="w-full md:w-56" />
-                    </div>
-                    <div class="flex flex-wrap gap-2 w-full" formGroupName="requestedBy">
-                        <label for="lastname2">Requested By</label>
-                        <input pInputText formControlName="userName" type="text" class="w-full" />
-                    </div>
-                </div>    
-            </form>
+        <div class="grid grid-cols-2 gap-2">
+            <div class="grid col-span-1 gap-1">
+                <label for="requisition-code">Requisition Code</label>
+                <input type="text" pInputText [value]="requisitionDetails?.requesitionCode" id="requisition-code"
+                    [disabled]="true" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="requested-by">Requested By</label>
+                <input type="text" pInputText [value]="requisitionDetails?.requestedBy?.userName" id="requested-by"
+                    [disabled]="true" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="project-code">Project Code</label>
+                <input type="text" pInputText [value]="requisitionDetails?.project?.projectCode" id="project-code"
+                    [disabled]="true" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="cluster-name">Cluster Name</label>
+                <input type="text" pInputText [value]="requisitionDetails?.cluster?.clusterName" id="cluster-name"
+                    [disabled]="true" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="cluster-code">Cluster Code</label>
+                <input type="text" pInputText [value]="requisitionDetails?.cluster?.clusterCode" id="cluster-name"
+                    [disabled]="true" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="cluster-head">Cluster Head</label>
+                <input type="text" pInputText [value]="requisitionDetails?.clusterHead?.userName" id="cluster-head"
+                    [disabled]="true" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="site-incharge">Site Incharge</label>
+                <input type="text" pInputText [value]="requisitionDetails?.siteIncharge?.userName" id="site-incharge"
+                    [disabled]="true" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="department">Department</label>
+                <input type="text" pInputText [value]="requisitionDetails?.department?.departmentName" id="department"
+                    [disabled]="true" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="department-head">Department Head</label>
+                <input type="text" pInputText [value]="requisitionDetails?.departmentHead?.userName" id="department-head"
+                    [disabled]="true" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="category">Category</label>
+                <input type="text" pInputText [value]="requisitionDetails?.category?.categoryName" id="category"
+                    [disabled]="true" />
+            </div>
         </div>
     </p-fluid>
 </p-dialog>

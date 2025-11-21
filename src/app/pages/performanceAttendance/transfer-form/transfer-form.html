@@ -1,0 +1,106 @@
+<div class="card">
+    <h5>Transfer Employee</h5>
+    <p class="text-lg font-semibold">Transfer From</p>
+    <div class="grid grid-cols-2 gap-2">
+        <div class="grid col-span-1 gap-1">
+            <label for="project-code">Project Code</label>
+            <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.project?.projectCode" [disabled]="true" id="project-code" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="site-name">Site Name</label>
+            <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.project?.siteName" [disabled]="true" id="site-name" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="cluster">Cluster</label>
+            <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.cluster?.clusterName" [disabled]="true" id="cluster" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="cluster-head">Cluster Head</label>
+            <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.clusterHead?.userName" [disabled]="true" id="cluster-head" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="site-incharge">Site Incharge</label>
+            <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.siteIncharge?.userName" 
+                id="site-incharge" [disabled]="true" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="department">Department</label>
+            <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.department?.departmentName" 
+               id="department" [disabled]="true" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="department-head">Department Head</label>
+            <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.departmentHead?.userName" 
+               id="department-head" [disabled]="true" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="spn-code">SPN Code</label>
+            <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.spn?.spnCode"
+                [disabled]="true" id="spn-code" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="spn-description">SPN Description</label>
+            <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.spn?.spnDescription"
+                [disabled]="true" id="spn-description" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="experience">Experience</label>
+            <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.spn?.experience"
+                [disabled]="true" id="experience" />
+        </div>
+    </div>
+</div>
+
+
+<div class="card">
+    <p class="text-lg font-semibold">Transfer To</p>
+    <form [formGroup]="transferForm" (ngSubmit)="onSubmit()">
+        <div class="grid grid-cols-2 gap-2" formArrayName="transferDetails">
+            @for (item of transferDetails.controls; track $index; let i = $index) {
+                <ng-container [formGroupName]="i">
+                    <div class="grid col-span-1 gap-1" formGroupName="transferTo">
+                        <label for="project-code">Project Code</label>
+                        <p-select [options]="pcodesList" formControlName="projectId" optionLabel="projectCode" optionValue="projectId"
+                            placeholder="Select Project Code" inputId="project-code" (onChange)="selectedPCode($event.value)" />
+                    </div>
+                    <div class="grid col-span-1 gap-1">
+                        <label for="site-name">Site Name</label>
+                        <input type="text" pInputText id="site-name" [value]="projectDetails?.siteName" [disabled]="true" />
+                    </div>
+                    <div class="grid col-span-1 gap-1">
+                        <label for="cluster">Cluster</label>
+                        <input type="text" pInputText id="cluster" [value]="projectDetails?.cluster?.clusterName" [disabled]="true" />
+                    </div>
+                    <div class="grid col-span-1 gap-1">
+                        <label for="cluster-head">Cluster Head</label>
+                        <input type="text" pInputText id="cluster-head" [value]="projectDetails?.clusterHead?.userName" [disabled]="true" />
+                    </div>
+                    <div class="grid col-span-1 gap-1">
+                        <label for="site-incharge">Site Incharge</label>
+                        <input type="text" pInputText id="site-incharge" [value]="projectDetails?.siteIncharge?.userName" [disabled]="true" />
+                    </div>
+                    <div class="grid col-span-1 gap-1">
+                        <label for="department">Department</label>
+                        <input type="text" pInputText id="department" [value]="projectDetails?.department?.departmentName" [disabled]="true" />
+                    </div>
+                    <div class="grid col-span-1 gap-1">
+                        <label for="department-head">Department Head</label>
+                        <input type="text" pInputText id="department-head" [value]="projectDetails?.departmentHead?.userName" [disabled]="true" />
+                    </div>
+                    <div class="grid col-span-1 gap-1">
+                        <label for="joining-date">Expected Joining Date</label>
+                        <p-datepicker formControlName="joiningDate" [iconDisplay]="'input'" [showIcon]="true" 
+                            placeholder="Select Date" appendTo="body" inputId="joining-date" />
+                    </div>
+                </ng-container>
+            }
+        </div>
+        <div class="flex justify-end mt-4">
+            <button pButton pRipple type="submit">
+                <span pButtonLabel>Submit</span>
+            </button>
+        </div>
+    </form>
+</div>
+
+<p-toast />

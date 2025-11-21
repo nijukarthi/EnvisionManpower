@@ -22,9 +22,11 @@ export class Project implements OnInit {
   first = 0;
   offSet = 0;
   pageSize = 10;
+  projectListLength = 0;
 
   actionName = '';
-
+  siteName = '';
+ 
   private fb = inject(FormBuilder);
 
   constructor(private apiService: Apiservice, private messageService: MessageService, private confirmationService: ConfirmationService){}
@@ -39,6 +41,7 @@ export class Project implements OnInit {
   projectForm = this.fb.group({
     projectId: [0],
     projectCode: [''],
+    siteName: [''],
     cluster: this.fb.group({
       clusterId: [0]
     }),
@@ -79,13 +82,14 @@ export class Project implements OnInit {
   fetchActiveProjects(){
     try {
       let data = {
-        offSet: 0,
-        pageSize: 10
+        offSet: this.offSet,
+        pageSize: this.pageSize
       }
       this.apiService.fetchActiveProjects(data).subscribe({
         next: val => {
           console.log(val);
           this.projectList = val?.data.data;
+          this.projectListLength = val?.data.length;
         }
       })
     } catch (error) {
@@ -212,9 +216,11 @@ export class Project implements OnInit {
       this.fetchClusterHeadByCluster(project.cluster.clusterId);
       this.findUserGroup(UserGroups.SITEINCHARGE, 'siteIncharge');
       this.findUserGroup(UserGroups.DEPARTMENTHEAD, 'departmentHead');
+      this.siteName = project.siteName;
       this.projectForm.patchValue({
         projectId: project.projectId,
         projectCode: project.projectCode,
+        siteName: project.siteName,
         cluster: {
           clusterId: project.cluster.clusterId
         },
@@ -243,6 +249,7 @@ export class Project implements OnInit {
         if (this.projectForm.valid) {
           const data = {
             projectCode: this.projectForm.get('projectCode')?.value,
+            siteName: this.projectForm.get('siteName')?.value,
             cluster: {
               clusterId: this.projectForm.get('cluster.clusterId')?.value
             },
@@ -277,6 +284,7 @@ export class Project implements OnInit {
           const data = {
             projectId: this.projectForm.get('projectId')?.value,
             projectCode: this.projectForm.get('projectCode')?.value,
+            siteName: this.projectForm.get('siteName')?.value,
             cluster: {
               clusterId: this.projectForm.get('cluster.clusterId')?.value
             },
@@ -348,6 +356,15 @@ export class Project implements OnInit {
         }
       }
     })
+  }
+
+  pageChange(event: any){
+    this.first = event.first;
+    this.offSet = event.first / event.rows;
+    this.pageSize = event.rows;
+    console.log(this.offSet);
+    console.log(this.pageSize);
+    this.fetchActiveProjects();
   }
 
   onDialogClose(){
