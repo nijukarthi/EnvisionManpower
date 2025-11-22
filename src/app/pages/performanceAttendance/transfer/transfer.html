@@ -52,10 +52,10 @@
                     <td>{{ transfer.transferFrom.project.siteName }}</td>
                     <td>{{ transfer.transferFrom.cluster.clusterName }}</td>
                     <td>{{ transfer.transferFrom.envisionRole.roleName }}</td>
-                    <td>{{ transfer.transferTo.projectCode }}</td>
-                    <td>{{ transfer.transferTo.siteName }}</td>
-                    <td>{{ transfer.transferTo.cluster.clusterName }}</td>
-                    <td>{{ transfer.transferFrom.envisionRole.roleName }}</td>
+                    <td>{{ transfer.project.projectCode }}</td>
+                    <td>{{ transfer.project.siteName }}</td>
+                    <td>{{ transfer.cluster.clusterName }}</td>
+                    <td>{{ transfer.envisionRole.roleName }}</td>
                     <td class="flex items-center justify-center gap-2">
                         @if (transfer.stateHeadApproval.approvalStatus === APPROVALSTATUS.ACCEPTED) {
                             <p-button icon="pi pi-check" severity="primary" rounded [disabled]="true" />

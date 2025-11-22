@@ -43,6 +43,8 @@ import { InvoiceSubmissionForm } from '@/pages/accounts-payable/invoice-submissi
 import { InvoiceReceiptForm } from '@/pages/accounts-payable/invoice-receipt-form/invoice-receipt-form';
 import { InvoiceDisbursementForm } from '@/pages/accounts-payable/invoice-disbursement-form/invoice-disbursement-form';
 import { AttendanceTable } from '@/pages/performanceAttendance/attendance-table/attendance-table';
+import { PoAssignTable } from '@/pages/po-assign-table/po-assign-table';
+import { PoAssignForm } from '@/pages/po-assign-form/po-assign-form';
 
 export const appRoutes: Routes = [
     {
@@ -86,6 +88,8 @@ export const appRoutes: Routes = [
             { path: 'guestUserPage', component: GuestUserPage, canActivate: [authGuard] },
             { path: 'demand-fullfillment', component: DemandFullfillment, canActivate: [authGuard] },
             { path: 'demand-fullfillment/steps', component: Steps, canActivate: [authGuard] },
+            { path: 'po-assign', component: PoAssignTable, canActivate: [authGuard] },
+            { path: 'po-assign/new', component: PoAssignForm, canActivate: [authGuard] },
             { path: 'onboarding', component: OnboardingTable, canActivate: [authGuard] },
             { path: 'onroll-employees', component: OnRollEmployees, canActivate: [authGuard] },
             { path: 'training', component: TrainingTable, canActivate: [authGuard] },

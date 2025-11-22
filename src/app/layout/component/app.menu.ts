@@ -57,6 +57,11 @@ export class AppMenu {
                                 routerLink: ['/home/demand-fullfillment']
                             },
                             {
+                                label: 'Demand Id vs PO Assign',
+                                icon: 'pi pi-file-import', 
+                                routerLink: ['/home/po-assign']
+                            },
+                            {
                                 label: 'Onboarding',
                                 icon: 'pi pi-graduation-cap',
                                 routerLink: ['/home/onboarding']

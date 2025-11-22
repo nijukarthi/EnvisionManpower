@@ -462,4 +462,8 @@ export class Apiservice {
   approveResignDeptHead(params: any){
     return this.postMethod('candidate/siteperfomance/resignation/approve/departmenthead', params);
   }
+
+  fetchDemandDetails(params: any): Observable<any>{
+    return this.postMethod('requesition/demand/byspn', params);
+  }
 }

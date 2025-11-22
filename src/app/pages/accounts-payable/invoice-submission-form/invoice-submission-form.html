@@ -2,6 +2,42 @@
     <h5>New Invoice Submission</h5>
     <div class="grid grid-cols-2 gap-2">
         <div class="grid col-span-1 gap-1">
+            <label for="po-number">PO Number</label>
+            <p-select appendTo="body" placeholder="Select PO Number" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="po-date">PO Date</label>
+            <input type="text" pInputText id="po-date" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="unit-price">Unit Price</label>
+            <input type="text" pInputText id="unit-price" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="po-value">PO Value</label>
+            <input type="text" pInputText id="po-value" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="tax-amount">Tax Amount</label>
+            <input type="text" pInputText id="tax-amount" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="total-amount">Total Amount</label>
+            <input type="text" pInputText id="total-amount" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="po-valid">PO Valid Till</label>
+            <input type="text" pInputText id="po-valid" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="duration">Duration</label>
+            <input type="text" pInputText id="duration" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="consultancy-name">Consultancy Name</label>
+            <input type="text" pInputText id="consultancy-name" />
+        </div>
+        <div class="grid col-start-1 col-span-1 gap-1">
             <label for="pod">POD</label>
             <input type="text" pInputText id="pod" />
         </div>
@@ -15,7 +51,8 @@
         </div>
         <div class="grid col-span-1 gap-1">
             <label for="po-copy">PO Copy Attached</label>
-            <p-select appendTo="body" inputId="po-copy" />
+            <p-select [options]="isPoCopyAttached" optionLabel="label" optionValue="value" 
+                appendTo="body" inputId="po-copy" placeholder="Select Yes/No" />
         </div>
         <div class="grid col-span-1 gap-1">
             <label for="invoice-number">Invoice Number</label>
@@ -33,6 +70,78 @@
             <label for="submitted-to">Submitted To</label>
             <input type="text" pInputText id="submitted-to" />
         </div>
+    </div>
+    
+    <h5>Line Items</h5>
+    <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden -mt-3">
+        <p-table [value]="poDemandList" stripedRows [rowHover]="true" editMode="row" [tableStyle]="{'min-width': '100rem'}">
+            <ng-template #header>
+                <tr>
+                    <th>SL NO</th>
+                    <th>Demand Code</th>
+                    <th>Employee Code</th>
+                    <th>SPN Code</th>
+                    <th>SPN Description</th>
+                    <th>Experience</th>
+                    <th>Planned Deployment Date</th>
+                    <th>Planned Release Date</th>
+                    <th>Unit Price</th>
+                    <th>Total Net</th>
+                    <th>Actions</th>
+                </tr>
+            </ng-template>
+            <ng-template #body let-po let-editing="editing" let-i="rowIndex">
+                <tr [pEditableRow]="po">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ po.demandCode }}</td>
+                    <td>{{ po.employeeCode }}</td>
+                    <td>{{ po.spnCode }}</td>
+                    <td>{{ po.spnDescription }}</td>
+                    <td>{{ po.experience }}</td>
+                    <td>{{ po.pdd }}</td>
+                    <td>{{ po.prd }}</td>
+                    <td #pEditableColumn>
+                        <p-cellEditor>
+                            <ng-template #input>
+                                <input type="text" pInputText />
+                            </ng-template>
+                            <ng-template #output>
+                                {{ po.price || '-' }}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <td #pEditableColumn>
+                        <p-cellEditor>
+                            <ng-template #input>
+                                <input type="text" pInputText />
+                            </ng-template>
+                            <ng-template #output>
+                                {{ po.netAmt || '-' }}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <td class="flex items-center justify-center gap-2">
+                        @if (!editing) {
+                            <button pButton pRipple type="button" icon="pi pi-pencil" 
+                                pInitEditableRow rounded severity="secondary"></button>
+                        }@else {
+                            <button pButton pRipple type="button" icon="pi pi-check" 
+                                pSaveEditableRow rounded severity="success">
+                            </button>
+                            <button pButton pRipple type="button" icon="pi pi-times" 
+                                pCancelEditableRow rounded severity="danger"></button>
+                        }
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template #emptymessage>
+                <tr>
+                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground);">
+                        No Records Found
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
     </div>
     <div class="flex justify-end mt-4">
         <button pButton pRipple type="submit">
