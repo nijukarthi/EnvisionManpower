@@ -3,3 +3,11 @@ tr th {
     color: #fff;
     font-weight: bold;
 }
+
+.custom-btn {
+    color: var(--surface-400);
+}
+
+.custom-btn.active-tab{
+    color: var(--primary-color);
+}

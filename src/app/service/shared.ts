@@ -43,6 +43,8 @@ import { StepperModule } from 'primeng/stepper';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { SplitButtonModule } from 'primeng/splitbutton';
+import { TabsModule } from 'primeng/tabs';
+import { MessageModule } from 'primeng/message';
 
 @NgModule({
   declarations: [],
@@ -91,7 +93,9 @@ import { SplitButtonModule } from 'primeng/splitbutton';
     StepperModule,
     InputNumberModule,
     RadioButtonModule,
-    SplitButtonModule
+    SplitButtonModule,
+    TabsModule,
+    MessageModule
   ],
   providers:[
     MessageService,

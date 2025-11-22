@@ -37,23 +37,24 @@ export class FixedCostCandidateForm implements OnInit {
     totalExperience: [0],
     highestQualification: [''],
     qualification: [''],
-    noticePeriod: [0],
-    workingCurrently: [false],
-    employmentDetails: this.fb.group({
-      project: this.fb.group({
-        projectId: [0]
-      }),
-      spn: this.fb.group({
-        spnId: [0]
-      }),
-      envisionRole: this.fb.group({
-        id: [0]
-      }),
-      joiningDate: [''],
-      offerReleaseDate: [''],
-      employmentStatus: ['ACTIVE']
-    })
+    noticePeriod: [0]
   })
+
+    //   workingCurrently: [false],
+    // employmentDetails: this.fb.group({
+    //   project: this.fb.group({
+    //     projectId: [0]
+    //   }),
+    //   spn: this.fb.group({
+    //     spnId: [0]
+    //   }),
+    //   envisionRole: this.fb.group({
+    //     id: [0]
+    //   }),
+    //   joiningDate: [''],
+    //   offerReleaseDate: [''],
+    //   employmentStatus: ['ACTIVE']
+    // })
 
   constructor(private apiService: Apiservice, private messageService: MessageService, private router: Router, private route: ActivatedRoute){}
 
@@ -112,7 +113,7 @@ export class FixedCostCandidateForm implements OnInit {
   onSubmit(){
     console.log(this.fixedCostCandidateForm.value);
 
-    let { employmentDetails, ...data } = this.fixedCostCandidateForm.value;
+    let data = this.fixedCostCandidateForm.value;
     console.log('Final data to send:', data);
     
     if (this.candidateId) {
@@ -171,7 +172,7 @@ export class FixedCostCandidateForm implements OnInit {
           const spnId = candidateData?.employmentDetails?.spn?.spnId;
           if (candidateData.employmentDetails) {    
             this.projectDetails = candidateData?.employmentDetails;
-            this.selectedSPN(spnId);
+            // this.selectedSPN(spnId);
           }
           this.fetchEmploymentStatus();
         },
@@ -270,15 +271,15 @@ export class FixedCostCandidateForm implements OnInit {
     }
   }
 
-  selectedSPN(spnId: number){
-    this.selectedSpn = this.spnInfoList.find((spn: any) => spn.spnId === spnId);
-    console.log(this.selectedSpn);
+  // selectedSPN(spnId: number){
+  //   this.selectedSpn = this.spnInfoList.find((spn: any) => spn.spnId === spnId);
+  //   console.log(this.selectedSpn);
 
-    const spnGroup = this.fixedCostCandidateForm.get('employmentDetails.spn');
-    spnGroup?.patchValue({
-      spnId: spnId
-    })
-  }
+  //   const spnGroup = this.fixedCostCandidateForm.get('employmentDetails.spn');
+  //   spnGroup?.patchValue({
+  //     spnId: spnId
+  //   })
+  // }
 
   updateEmploymentStatus(){
     try {
@@ -311,7 +312,7 @@ export class FixedCostCandidateForm implements OnInit {
     let data;
 
     if (this.candidateId) {
-      const {employmentDetails, ...payload} = formValue;
+      const payload = formValue;
       data = {
         ...payload,
         candidateId: this.candidateId

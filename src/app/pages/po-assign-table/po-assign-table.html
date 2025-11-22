@@ -1,0 +1,61 @@
+<div class="card">
+    <div class="flex items-baseline-laste3g  justify-between">
+        <h5>Demand Id vs PO Assign</h5>
+        <p-button label="Map New Demand" icon="pi pi-plus" routerLink="/home/po-assign/new" />
+    </div>
+    <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
+        <p-table [value]="poAssignData" stripedRows [rowHover]="true" [tableStyle]="{'min-width': '160rem'}">
+            <ng-template #header>
+                <tr>
+                    <th>SL No</th>
+                    <th>PO Number</th>
+                    <th>Consultancy Name</th>
+                    <th>Demand Code</th>
+                    <th>Project Code</th>
+                    <th>Site Name</th>
+                    <th>Candidate Code</th>
+                    <th>SPN Code</th>
+                    <th>SPN Description</th>
+                    <th>Experience</th>
+                    <th>Requested By</th>
+                    <th>PO Date</th>
+                    <th>Unit Price</th>
+                    <th>PO Value</th>
+                    <th>Tax Amount</th>
+                    <th>Total Amount</th>
+                    <th>PO Valid Till</th>
+                    <th>Duration</th>
+                </tr>
+            </ng-template>
+            <ng-template #body let-po let-i="rowIndex">
+                <tr>
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ po.poNumber }}</td>
+                    <td>{{ po.consultancy }}</td>
+                    <td>{{ po.demandCode }}</td>
+                    <td>{{ po.projectCode }}</td>
+                    <td>{{ po.siteName }}</td>
+                    <td>{{ po.candidateCode }}</td>
+                    <td>{{ po.spnCode }}</td>
+                    <td>{{ po.spnDescription }}</td>
+                    <td>{{ po.experience }}</td>
+                    <td>{{ po.requestedBy }}</td>
+                    <td>{{ po.poDate }}</td>
+                    <td>{{ po.unitPrice }}</td>
+                    <td>{{ po.poValue }}</td>
+                    <td>{{ po.taxAmount }}</td>
+                    <td>{{ po.totalAmount }}</td>
+                    <td>{{ po.poValidTill }}</td>
+                    <td>{{ po.duration }}</td>
+                </tr>
+            </ng-template>
+            <ng-template #emptymessage>
+                <tr>
+                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground);">
+                        No Records Found
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>

@@ -5,15 +5,11 @@
     </div>
     <p-table [value]="costPlusCandidateList" showGridlines [rowHover]="true" [paginator]="true" [rows]="pageSize" [lazy]="true"
        [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true" [first]="first" [totalRecords]="costPlusCandidateListLength"
-       currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [tableStyle]="{'min-width': '330rem'}"
+       currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [tableStyle]="{'min-width': '100rem'}"
        (onPage)="pageChange($event)">
-        <ng-template #caption>
-            <p-multiselect display="chip" [options]="viewOptions" optionLabel="label" optionValue="value" 
-                placeholder="Choose Columns" (onChange)="selectedView($event.value)" [style]="{'min-width': '200px'}" />
-        </ng-template>
         <ng-template #header>
             <tr>
-                <th>SI No</th>
+                <th>SL No</th>
                 <th>Candidate Code</th>
                 <th>Candidate Name</th>
                 <th>Position Applied</th>
@@ -22,33 +18,7 @@
                 <th>Highest Qualification</th>
                 <th>Qualification</th>
                 <th>Notice Period</th>
-                <th>Current Salary (NET)</th>
-                <th>Expected Salary (NET)</th>
-                <th>Approved Hike</th>
-                <th>Approved Fixed Salary</th>
-                <th>10% Variable</th>
-                <th>Total Fixed + Variable</th>
-                <th>Final Hike from Current</th>
-                <th>Delta from Expected</th>
-                <th>Gross CTC</th>
-                <th>Margin</th>
-                <th>Laptop</th>
-                <th>Total</th>
-                <th>GST</th>
-                <th>Grand Total</th>
-                <th>One-time Sourcing Fee</th>
-                <th>BGV Cost</th>
-                <th>Total</th>
-                <th>GST</th>
-                <th>Grand Total</th>
-                <th>Offer Release Date</th>
-                <th>Date of Joining</th>
-                <th>Project Code</th>
-                <th>Site Incharge</th>
-                <th>SPN Code</th>
-                <th>SPN Description</th>
-                <th>Experience</th>
-                <th>Role Name</th>
+                <th>Currently Working</th>
                 <th>Actions</th>
             </tr>
         </ng-template>
@@ -66,35 +36,7 @@
                 <td>{{ candidate.highestQualification }}</td>
                 <td>{{ candidate.qualification }}</td>
                 <td>{{ candidate.noticePeriod }}</td>
-                <td>{{ candidate.costPlusSalaryDetails ? candidate.costPlusSalaryDetails.currentSalaryNet : '-' }}</td>
-                <td>{{ candidate.costPlusSalaryDetails ? candidate.costPlusSalaryDetails.expectedSalaryNet : '-' }}</td>
-                <td>{{ candidate.costPlusSalaryDetails ? candidate.costPlusSalaryDetails.approvedHike : '-' }}</td>
-                <td>{{ candidate.costPlusSalaryDetails ? candidate.costPlusSalaryDetails.approvedFixedSalary : '-' }}</td>
-                <td>{{ candidate.costPlusSalaryDetails ? candidate.costPlusSalaryDetails.tenPercentVariable : '-' }}</td>
-                <td>{{ candidate.costPlusSalaryDetails ? candidate.costPlusSalaryDetails.totalFixedVariable ?? '-' : '-' }}</td>
-                <td>{{ candidate.costPlusSalaryDetails ? candidate.costPlusSalaryDetails.finalHikeFromCurrent ?? '-' : '-' }}</td>
-                <td>{{ candidate.costPlusSalaryDetails ? candidate.costPlusSalaryDetails.deltaFromExpected ?? '-' : '-' }}</td>
-                <td>{{ candidate.monthlyReimbursements ? candidate.monthlyReimbursements.grossCTC : '-' }}</td>
-                <td>{{ candidate.monthlyReimbursements ? candidate.monthlyReimbursements.margin : '-' }}</td>
-                <td>{{ candidate.monthlyReimbursements ? candidate.monthlyReimbursements.laptop : '-' }}</td>
-                <td>{{ candidate.monthlyReimbursements ? candidate.monthlyReimbursements.total : '-' }}</td>
-                <td>{{ candidate.monthlyReimbursements ? candidate.monthlyReimbursements.gst : '-' }}</td>
-                <td>{{ candidate.monthlyReimbursements ? candidate.monthlyReimbursements.grandTotal : '-'}}</td>
-                <td>{{ candidate?.oneTimeReimbursements?.oneTimeSourcingFee }}</td>
-                <td>{{ candidate.oneTimeReimbursements.bgvCost }}</td>
-                <td>{{ candidate.oneTimeReimbursements.total }}</td>
-                <td>{{ candidate.oneTimeReimbursements.gst }}</td>
-                <td>{{ candidate.oneTimeReimbursements.grandTotal }}</td>
-                <td>{{ candidate.employmentDetails ? candidate.employmentDetails.offerReleaseDate : '-' }}</td>
-                <td>{{ candidate.employmentDetails ? candidate.employmentDetails.joiningDate : '-' }}</td>
-                <td>
-                    {{ candidate.employmentDetails ? candidate.employmentDetails?.project?.projectCode : '-' }}
-                </td>
-                <td>{{ candidate.employmentDetails ? candidate.employmentDetails?.siteIncharge?.userName : '-' }}</td>
-                <td>{{ candidate.employmentDetails ? candidate.employmentDetails?.spn?.spnCode : '-' }}</td>
-                <td>{{ candidate.employmentDetails ? candidate.employmentDetails?.spn?.spnDescription : '-' }}</td>
-                <td>{{ candidate.employmentDetails ? candidate.employmentDetails?.spn?.experience : '-' }}</td>
-                <td>{{ candidate.employmentDetails ? candidate.employmentDetails?.envisionRole?.roleName : '-' }}</td>
+                <td>{{ candidate.workingCurrently ? 'Yes' : 'No' }}</td>
                 <td>
                     <p-menu #menu [model]="getMenuItems(candidate)" [popup]="true" appendTo="body" />
                     <p-button (onClick)="menu.toggle($event)" icon="pi pi-ellipsis-v" [rounded]="true" variant="text" />

@@ -14,6 +14,9 @@ import { MessageService } from 'primeng/api';
 export class Terminate implements OnInit {
   offSet = 0;
   pageSize = 10;
+  first = 0;
+  resignationListLength = 0;
+  activeTab = 'processing';
 
   resignationList: any;
 
@@ -23,15 +26,23 @@ export class Terminate implements OnInit {
   constructor(private apiService: Apiservice, private messageService: MessageService){}
 
   ngOnInit(): void {
-      this.fetchResignationList();
+      this.fetchResignationList(102);
   }
 
-  fetchResignationList(){
+  setActiveTab(tab: string, status: number) {
+    this.activeTab = tab;
+    console.log(this.activeTab);
+    this.fetchResignationList(status);
+  }
+
+
+  fetchResignationList(status: number){
     try {
+      console.log(status);
       const data = {
         offSet: this.offSet,
         pageSize: this.pageSize,
-        resignationStatus: 102
+        resignationStatus: status
       }
       console.log(data);
 
@@ -39,6 +50,7 @@ export class Terminate implements OnInit {
         next: val => {
           console.log(val);
           this.resignationList = val?.data?.data;
+          this.resignationListLength = val?.data?.length ?? 0; 
         },
         error: err => {
           console.log(err);
@@ -66,7 +78,7 @@ export class Terminate implements OnInit {
           } else {
             this.messageService.add({severity: 'error', summary: 'Error', detail: 'Resignation Request Rejected'});
           }
-          this.fetchResignationList();
+          this.fetchResignationList(102);
         },
         error: err => {
           console.log(err);
@@ -93,7 +105,7 @@ export class Terminate implements OnInit {
           } else {
             this.messageService.add({severity: 'error', summary: 'Error', detail: 'Resignation Request Rejected'});
           }
-          this.fetchResignationList();
+          this.fetchResignationList(102);
         },
         error: err => {
           console.log(err);
@@ -102,5 +114,12 @@ export class Terminate implements OnInit {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  pageChange(event: any){
+    this.first = event.first;
+    this.offSet = event.first / event.rows;
+    this.pageSize = event.rows;
+    this.fetchResignationList(102);
   }
 }

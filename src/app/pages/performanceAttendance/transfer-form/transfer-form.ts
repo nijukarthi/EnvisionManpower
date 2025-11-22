@@ -12,8 +12,8 @@ import { MessageService } from 'primeng/api';
   styleUrl: './transfer-form.scss'
 })
 export class TransferForm implements OnInit {
-  pcodesList: any;
-  projectDetails: any;
+  demandList: any[] = [];
+  demandDetails: any;
   employeeDetails: any;
 
   private fb = inject(FormBuilder);
@@ -30,48 +30,50 @@ export class TransferForm implements OnInit {
 
   transferEmployee(){
     return this.fb.group({
-      employmentId: [0],
+      transferFrom: this.fb.group({
+        employmentId: [0],
+      }),
       transferTo: this.fb.group({
-        projectId: [0]
+        demandId: [0]
       }),
       joiningDate: ['']
     })
   }
 
   ngOnInit(): void {
-    this.fetchProjectCodes();
-
     this.employeeDetails = history.state;
     console.log(this.employeeDetails);
+    this.fetchDemandDetails();
   }
 
-  fetchProjectCodes(){
-    this.apiService.fetchProjectCodes('').subscribe({
-      next: val => {
-        console.log(val);
-        this.pcodesList = val.data;
-      },
-      error: err => {
-        console.log(err);
+  fetchDemandDetails(){
+    try {
+      const data = {
+        spnId: this.employeeDetails.employeeDetails.spn.spnId
       }
-    })
-  }
+      console.log(data);
 
-  selectedPCode(projectId: number){
-    const data = {
-      projectId: projectId
+      this.apiService.fetchDemandDetails(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.demandList = val.data.filter((d: any) => d.demandStatus === 102 && 
+            d.departmentHeadApproval.approvalStatus === 200 && d.stateHeadApproval.approvalStatus === 200 &&
+            d.envisionRole);
+          console.log(this.demandList);
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
     }
-    console.log(data);
+  }
 
-    this.apiService.viewProject(data).subscribe({
-      next: val => {
-        console.log(val);
-        this.projectDetails = val.data;
-      },
-      error: err => {
-        console.log(err);
-      }
-    })
+  selectedDCode(demandId: number){
+    console.log(demandId);
+    this.demandDetails = this.demandList.find((d) => d.demandId === demandId);
+    console.log(this.demandDetails);
   }
 
   onSubmit(){
@@ -79,7 +81,9 @@ export class TransferForm implements OnInit {
       console.log(this.transferForm.value);
       this.transferDetails.at(0).patchValue({
         ...this.transferDetails.value,
-        employmentId: this.employeeDetails.employeeDetails.employmentId
+        transferFrom: {
+          employmentId: this.employeeDetails.employeeDetails.employmentId
+        }
       });
 
       const data = this.transferDetails.value;

@@ -1,0 +1,76 @@
+<div class="card">
+    <h5>PO Assign</h5>
+    <div class="grid grid-cols-2 gap-2">
+        <div class="grid col-span-1 gap-1">
+            <label for="po-number">PO Number</label>
+            <input type="text" pInputText id="po-number" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="demand-code">Demand Code</label>
+            <p-select [options]="demandCodeList" optionLabel="label" optionValue="value"
+                placeholder="Select Demand Code" appendTo="body" id="demand-code" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="project-code">Project Code</label>
+            <input type="text" pInputText id="project-code" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="site-name">Site Name</label>
+            <input type="text" pInputText id="site-name" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="spn-code">SPN Code</label>
+            <input type="text" pInputText id="spn-code" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="spn-description">SPN Description</label>
+            <input type="text" pInputText id="spn-description" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="experience">Experience</label>
+            <input type="text" pInputText id="experience" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="site-name">Requested By</label>
+            <input type="text" pInputText id="site-name" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="consultancy-name">Consultancy Name</label>
+            <p-select [options]="consultancyList" optionLabel="label" optionValue="value"
+                appendTo="body" placeholder="Select Consultancy" />
+        </div>        
+        <div class="grid col-span-1 gap-1">
+            <label for="po-date">PO Date</label>
+            <input type="text" pInputText id="po-date" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="unit-price">Unit Price</label>
+            <input type="text" pInputText id="unit-price" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="po-value">PO Value</label>
+            <input type="text" pInputText id="po-value" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="tax-amount">Tax Amount</label>
+            <input type="text" pInputText id="tax-amount" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="total-amount">Total Amount</label>
+            <input type="text" pInputText id="total-amount" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="po-valid">PO Valid Till</label>
+            <p-datepicker [showIcon]="true" [iconDisplay]="'input'" inputId="po-valid" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="duration">Duration</label>
+            <p-datepicker [showIcon]="true" [iconDisplay]="'input'" inputId="duration" />
+        </div>
+    </div>
+    <div class="mt-4 flex justify-end">
+        <button pButton pRipple type="submit">
+            <span pButtonLabel>Submit</span>
+        </button>
+    </div>
+</div>

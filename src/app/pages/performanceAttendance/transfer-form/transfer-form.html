@@ -4,31 +4,58 @@
     <div class="grid grid-cols-2 gap-2">
         <div class="grid col-span-1 gap-1">
             <label for="project-code">Project Code</label>
-            <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.project?.projectCode" [disabled]="true" id="project-code" />
+            <input type="text" pInputText 
+                [value]="employeeDetails?.employeeDetails?.project?.projectCode" [disabled]="true" id="project-code" />
         </div>
         <div class="grid col-span-1 gap-1">
             <label for="site-name">Site Name</label>
-            <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.project?.siteName" [disabled]="true" id="site-name" />
+            <input type="text" pInputText 
+                [value]="employeeDetails?.employeeDetails?.project?.siteName" [disabled]="true" id="site-name" />
         </div>
         <div class="grid col-span-1 gap-1">
             <label for="cluster">Cluster</label>
-            <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.cluster?.clusterName" [disabled]="true" id="cluster" />
+            <input type="text" pInputText 
+                [value]="employeeDetails?.employeeDetails?.cluster?.clusterName" [disabled]="true" id="cluster" />
         </div>
         <div class="grid col-span-1 gap-1">
             <label for="cluster-head">Cluster Head</label>
-            <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.clusterHead?.userName" [disabled]="true" id="cluster-head" />
+            <input type="text" pInputText 
+                [value]="employeeDetails?.employeeDetails?.clusterHead?.userName" [disabled]="true" id="cluster-head" />
         </div>
         <div class="grid col-span-1 gap-1">
-            <label for="">Site Incharge</label>
-            <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.siteIncharge?.userName" [disabled]="true" />
+            <label for="site-incharge">Site Incharge</label>
+            <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.siteIncharge?.userName" 
+                id="site-incharge" [disabled]="true" />
         </div>
         <div class="grid col-span-1 gap-1">
-            <label for="">Department</label>
-            <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.department?.departmentName" [disabled]="true" />
+            <label for="department">Department</label>
+            <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.department?.departmentName" 
+               id="department" [disabled]="true" />
         </div>
         <div class="grid col-span-1 gap-1">
-            <label for="">Department Head</label>
-            <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.departmentHead?.userName" [disabled]="true" />
+            <label for="department-head">Department Head</label>
+            <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.departmentHead?.userName" 
+               id="department-head" [disabled]="true" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="department-head">Role</label>
+            <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.envisionRole?.roleName"
+                id="department-head" [disabled]="true" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="spn-code">SPN Code</label>
+            <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.spn?.spnCode"
+                [disabled]="true" id="spn-code" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="spn-description">SPN Description</label>
+            <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.spn?.spnDescription"
+                [disabled]="true" id="spn-description" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="experience">Experience</label>
+            <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.spn?.experience"
+                [disabled]="true" id="experience" />
         </div>
     </div>
 </div>
@@ -41,33 +68,65 @@
             @for (item of transferDetails.controls; track $index; let i = $index) {
                 <ng-container [formGroupName]="i">
                     <div class="grid col-span-1 gap-1" formGroupName="transferTo">
+                        <label for="project-code">Demand Code</label>
+                        <p-select [options]="demandList" formControlName="demandId" optionLabel="demandCode" optionValue="demandId"
+                            [filter]="true" filterBy="demandCode" placeholder="Select Project Code" 
+                            inputId="project-code" (onChange)="selectedDCode($event.value)" />
+                    </div>
+                    <div class="grid col-span-1 gap-1">
                         <label for="project-code">Project Code</label>
-                        <p-select [options]="pcodesList" formControlName="projectId" optionLabel="projectCode" optionValue="projectId"
-                            placeholder="Select Project Code" inputId="project-code" (onChange)="selectedPCode($event.value)" />
+                        <input type="text" pInputText id="project-code" 
+                            [value]="demandDetails?.requesitionDetails.project.projectCode" [disabled]="true" />
                     </div>
                     <div class="grid col-span-1 gap-1">
                         <label for="site-name">Site Name</label>
-                        <input type="text" pInputText id="site-name" [value]="projectDetails?.siteName" [disabled]="true" />
+                        <input type="text" pInputText id="site-name" 
+                            [value]="demandDetails?.requesitionDetails.project.siteName" [disabled]="true" />
                     </div>
                     <div class="grid col-span-1 gap-1">
                         <label for="cluster">Cluster</label>
-                        <input type="text" pInputText id="cluster" [value]="projectDetails?.cluster?.clusterName" [disabled]="true" />
+                        <input type="text" pInputText id="cluster" 
+                            [value]="demandDetails?.requesitionDetails?.cluster?.clusterName" [disabled]="true" />
                     </div>
                     <div class="grid col-span-1 gap-1">
                         <label for="cluster-head">Cluster Head</label>
-                        <input type="text" pInputText id="cluster-head" [value]="projectDetails?.clusterHead?.userName" [disabled]="true" />
+                        <input type="text" pInputText id="cluster-head" 
+                            [value]="demandDetails?.requesitionDetails?.clusterHead?.userName" [disabled]="true" />
                     </div>
                     <div class="grid col-span-1 gap-1">
                         <label for="site-incharge">Site Incharge</label>
-                        <input type="text" pInputText id="site-incharge" [value]="projectDetails?.siteIncharge?.userName" [disabled]="true" />
+                        <input type="text" pInputText id="site-incharge" 
+                            [value]="demandDetails?.requesitionDetails?.siteIncharge?.userName" [disabled]="true" />
                     </div>
                     <div class="grid col-span-1 gap-1">
                         <label for="department">Department</label>
-                        <input type="text" pInputText id="department" [value]="projectDetails?.department?.departmentName" [disabled]="true" />
+                        <input type="text" pInputText id="department" 
+                            [value]="demandDetails?.requesitionDetails?.department?.departmentName" [disabled]="true" />
                     </div>
                     <div class="grid col-span-1 gap-1">
                         <label for="department-head">Department Head</label>
-                        <input type="text" pInputText id="department-head" [value]="projectDetails?.departmentHead?.userName" [disabled]="true" />
+                        <input type="text" pInputText id="department-head" 
+                            [value]="demandDetails?.requesitionDetails?.departmentHead?.userName" [disabled]="true" />
+                    </div>
+                    <div class="grid col-span-1 gap-1">
+                        <label for="role">Role</label>
+                        <input type="text" pInputText id="role"
+                            [value]="demandDetails?.envisionRole?.roleName" [disabled]="true" />
+                    </div>
+                    <div class="grid col-span-1 gap-1">
+                        <label for="spn-code">SPN Code</label>
+                        <input type="text" pInputText id="spn-code" 
+                            [value]="demandDetails?.spn?.spnCode" [disabled]="true" />
+                    </div>
+                    <div class="grid col-span-1 gap-1">
+                        <label for="spn-description">SPN Description</label>
+                        <input type="text" pInputText [value]="demandDetails?.spn?.spnDescription" [disabled]="true"
+                            id="spn-description" />
+                    </div>
+                    <div class="grid col-span-1 gap-1">
+                        <label for="experience">Experience</label>
+                        <input type="text" pInputText [value]="demandDetails?.spn?.experience" [disabled]="true"
+                            id="experience" />
                     </div>
                     <div class="grid col-span-1 gap-1">
                         <label for="joining-date">Expected Joining Date</label>

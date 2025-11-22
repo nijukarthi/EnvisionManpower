@@ -32,7 +32,7 @@
                 <label for="notice-period">Notice Period</label>
                 <p-inputNumber formControlName="noticePeriod" inputId="notice-period" [useGrouping]="false" />
             </div>
-            @if (!(candidateId && loggedUserGroupId === 360 && fixedCostCandidateForm.get('workingCurrently')?.value === false)) {
+            <!-- @if (!(candidateId && loggedUserGroupId === 360 && fixedCostCandidateForm.get('workingCurrently')?.value === false)) {
                 <div class="col-start-1 flex items-center gap-3 mt-2">
                     <label for="currently-working">Is This Candidate Currently Working in Envision?</label>
                     <div class="flex items-center gap-3">
@@ -46,19 +46,17 @@
                         </div>
                     </div>
                 </div>
-            }
+            } -->
         </div>
-        @if (fixedCostCandidateForm.get('workingCurrently')?.value === false) {
-            <div class="flex justify-end mt-3">
-                <button pButton pRipple>
-                    <span pButtonLabel>{{ actionName }}</span>
-                </button>
-            </div>
-        }
+        <div class="flex justify-end mt-3">
+            <button pButton pRipple>
+                <span pButtonLabel>{{ actionName }}</span>
+            </button>
+        </div>
     </form>
 </div>
 
-@if (fixedCostCandidateForm.get('workingCurrently')?.value === true) {
+<!-- @if (fixedCostCandidateForm.get('workingCurrently')?.value === true) {
     <div class="card">
         <h5>Current Employment Details</h5>
         <form [formGroup]="fixedCostCandidateForm" (ngSubmit)="addExistingCandidate()">
@@ -128,6 +126,10 @@
             </div>
         </form>
     </div>
+<<<<<<< HEAD
 }
+=======
+} -->
+>>>>>>> 1b7b0616061d7853c74350675924459d531fef0d
 
 <p-toast />

@@ -8,7 +8,7 @@
         <p-table [value]="sitePerformancesList" stripedRows [rowHover]="true" [paginator]="true"
            [rows]="pageSize" [lazy]="true" [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true"
            [first]="first" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-           [totalRecords]="sitePerformancesListLength" [tableStyle]="{'min-width': '130rem'}" (onPage)="pageChange($event)">
+           [totalRecords]="sitePerformancesListLength" [tableStyle]="{'min-width': '180rem'}" (onPage)="pageChange($event)">
             <ng-template #header>
                 <tr>
                     <!-- <th>
@@ -18,13 +18,24 @@
                     <th>Employee Code</th>
                     <th>Employee Name</th>
                     <th>Project Code</th>
-                    <th>Site</th>
+                    <th>Site Name</th>
                     <th>Cluster Name</th>
                     <th>Role</th>
-                    <th>Expected DOJ</th>
                     <th>Actual DOJ</th>
                     <th>Contact Number</th>
-                    <th>Emergency Contact Number</th>
+                    <th>Site Incharge</th>
+                    <th>Qualification</th>
+                    <th>Technical Skills</th>
+                    <th>Productivity</th>
+                    <th>On Time Delivery</th>
+                    <th>Quality of Work</th>
+                    <th>Problem Solving</th>
+                    <th>Communication Skill</th>
+                    <th>Safety at Work</th>
+                    <th>Soft Skill</th>
+                    <th>Compliance</th>
+                    <th>Total Sum</th>
+                    <th>Rating</th>
                     <th>Actions</th>
                 </tr>
             </ng-template>
@@ -40,10 +51,43 @@
                     <td>{{ performance.employmentDetails.project.siteName || '-' }}</td>
                     <td>{{ performance.employmentDetails.cluster.clusterName || '-' }}</td>
                     <td>{{ performance.employmentDetails.envisionRole.roleName || '-' }}</td>
-                    <td>{{ performance.employmentDetails.expectedJoiningDate || '-' }}</td>
                     <td>{{ performance.employmentDetails.joiningDate || '-' }}</td>
                     <td>{{ performance.phoneNumber || '-' }}</td>
-                    <td>{{ performance.alternativeNumber || '-' }}</td>
+                    <td>Mamitha</td>
+                    <td>Diploma</td>
+                    <td>
+                        <input type="text" pInputText />
+                    </td>
+                    <td>
+                        <input type="text" pInputText />
+                    </td>
+                    <td>
+                        <input type="text" pInputText />
+                    </td>
+                    <td>
+                        <input type="text" pInputText />
+                    </td>
+                    <td>
+                        <input type="text" pInputText />
+                    </td>
+                    <td>
+                        <input type="text" pInputText />
+                    </td>
+                    <td>
+                        <input type="text" pInputText />
+                    </td>
+                    <td>
+                        <input type="text" pInputText />
+                    </td>
+                    <td>
+                        <input type="text" pInputText />
+                    </td>
+                    <td>
+                        <input type="text" pInputText />
+                    </td>
+                    <td>
+                        <input type="text" pInputText />
+                    </td>
                     <td>
                         <p-menu #menu [model]="getMenuItems(performance)" [popup]="true" appendTo="body" />
                         <p-button (onClick)="menu.toggle($event)" icon="pi pi-ellipsis-v" rounded severity="secondary" />

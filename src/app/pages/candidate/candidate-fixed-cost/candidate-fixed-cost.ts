@@ -16,16 +16,10 @@ export class CandidateFixedCost implements OnInit {
   first = 0;
   fixedCostCandidateListLength = 0;
 
-  allFixedCostCandidates: any;
   fixedCostCandidateList: any;
 
   constructor(private apiService: Apiservice, private router: Router, private messageService: MessageService, 
     private confirmationService: ConfirmationService){}
-
-  viewOptions = [
-    { label: 'With Employment', value: 'with' },
-    { label: 'Without Employment', value: 'without' }
-  ]
 
   ngOnInit(): void {
     this.fetchActiveFixedCostCandidates();
@@ -55,35 +49,14 @@ export class CandidateFixedCost implements OnInit {
     this.apiService.fetchActiveFixedCostCandidates(data).subscribe({
       next: val => {
         console.log(val);
-        this.allFixedCostCandidates = val?.data?.data;
         this.fixedCostCandidateList = val?.data?.data;
-        this.fixedCostCandidateListLength = val?.data.length;
+        this.fixedCostCandidateListLength = val?.data.length ?? 0;
       },
       error: err => {
         console.log(err);
       }, 
       complete: () => console.log('Complete signal')
     })
-  }
-
-  selectedView(selected: string[]){
-    console.log(selected);
-    if(!selected || selected.length === 0){
-      this.fixedCostCandidateList = this.allFixedCostCandidates;
-      return;
-    }
-    if (selected.includes('with')) {
-      this.fixedCostCandidateList = this.allFixedCostCandidates.filter((candid: any) => candid.workingCurrently === true);
-      return;
-    } 
-    if (selected.includes('without')) {
-      this.fixedCostCandidateList = this.allFixedCostCandidates.filter((candid: any) => candid.workingCurrently === false);
-      return;
-    } 
-    if (selected.includes('with') && selected.includes('without')) {      
-      this.fixedCostCandidateList = this.allFixedCostCandidates;
-      return;
-    }
   }
 
   deleteFixedCostCandidate(candidate: any){

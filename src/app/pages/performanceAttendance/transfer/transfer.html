@@ -1,7 +1,27 @@
 <div class="card">
     <h5>Transfer</h5>
-    <div class="rounded-lg overflow-hidden">
-        <p-table [value]="transferredEmployeeList" showGridlines stripedRows [rowHover]="true" [tableStyle]="{'min-width': '120rem'}">
+    <div class="flex">
+        <button class="custom-btn" pButton pRipple text (click)="setActiveTab('processing', 102)"
+            [ngClass]="{'active-tab': activeTab === 'processing'}">
+            <i pButtonIcon class="pi pi-stopwatch"></i>
+            <span pButtonLabel>Processing</span>
+        </button>
+        <button class="custom-btn" pButton pRipple text (click)="setActiveTab('accepted', 200)"
+            [ngClass]="{'active-tab': activeTab === 'accepted'}">
+            <i pButtonIcon class="pi pi-check-circle"></i>
+            <span pButtonLabel>Accepted</span>
+        </button>
+        <button class="custom-btn" pButton pRipple text (click)="setActiveTab('rejected', 406)"
+            [ngClass]="{'active-tab': activeTab === 'rejected'}">
+            <i pButtonIcon class="pi pi-times-circle"></i>
+            <span pButtonLabel>Rejected</span>
+        </button>
+    </div>
+    <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
+        <p-table [value]="transferredEmployeeList" showGridlines stripedRows [rowHover]="true" 
+            [paginator]="true" [rows]="pageSize" [lazy]="true" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10, 20, 30]" 
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [first]="first" 
+            [totalRecords]="transferredListLength" [tableStyle]="{'min-width': '120rem'}" (onPage)="pageChange($event)">
             <ng-template #header>
                 <tr>
                     <th rowspan="2">SL No</th>
@@ -32,10 +52,10 @@
                     <td>{{ transfer.transferFrom.project.siteName }}</td>
                     <td>{{ transfer.transferFrom.cluster.clusterName }}</td>
                     <td>{{ transfer.transferFrom.envisionRole.roleName }}</td>
-                    <td>{{ transfer.transferTo.projectCode }}</td>
-                    <td>{{ transfer.transferTo.siteName }}</td>
-                    <td>{{ transfer.transferTo.cluster.clusterName }}</td>
-                    <td>{{ transfer.transferFrom.envisionRole.roleName }}</td>
+                    <td>{{ transfer.project.projectCode }}</td>
+                    <td>{{ transfer.project.siteName }}</td>
+                    <td>{{ transfer.cluster.clusterName }}</td>
+                    <td>{{ transfer.envisionRole.roleName }}</td>
                     <td class="flex items-center justify-center gap-2">
                         @if (transfer.stateHeadApproval.approvalStatus === APPROVALSTATUS.ACCEPTED) {
                             <p-button icon="pi pi-check" severity="primary" rounded [disabled]="true" />

@@ -16,16 +16,10 @@ export class CandidateCostPlus implements OnInit {
   first = 0;
   costPlusCandidateListLength = 0;
 
-  allCostPlusCandidates: any;
   costPlusCandidateList: any;
 
   constructor(private apiService: Apiservice, private messageService: MessageService, 
     private confirmationService: ConfirmationService, private router: Router){}
-
-  viewOptions = [
-    { label: 'With Employment', value: 'with' },
-    { label: 'Without Employment', value: 'without' }
-  ]
 
   ngOnInit(): void {
     this.fetchActiveCostPlusCandidates();
@@ -56,7 +50,6 @@ export class CandidateCostPlus implements OnInit {
       this.apiService.fetchActiveCostPlusCandidates(data).subscribe({
         next: val => {
           console.log(val);
-          this.allCostPlusCandidates = val?.data?.data;
           this.costPlusCandidateList = val?.data?.data;
           this.costPlusCandidateListLength = val?.data.length;
         }, 
@@ -67,28 +60,6 @@ export class CandidateCostPlus implements OnInit {
 
     } catch (error) {
       console.log(error);
-    }
-  }
-
-  selectedView(selected: string[]){
-    if (!selected || selected.length === 0) {
-      this.costPlusCandidateList = this.allCostPlusCandidates;
-      return;
-    }
-
-    if (selected.includes('with') && selected.includes('without')) {
-      this.costPlusCandidateList = this.allCostPlusCandidates;
-      return;
-    }
-
-    if (selected.includes('with')) {
-      this.costPlusCandidateList = this.allCostPlusCandidates.filter((candidate: any) => candidate.workingCurrently === true);
-      return;
-    }
-
-    if (selected.includes('without')) {
-      this.costPlusCandidateList = this.allCostPlusCandidates.filter((candidate: any) => candidate.workingCurrently === false);
-      return;
     }
   }
 

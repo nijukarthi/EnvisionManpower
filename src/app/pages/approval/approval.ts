@@ -28,13 +28,15 @@ export class Approval implements OnInit {
   first = 0;
   demandProcessingListLength = 0;
 
+  activeTab = 'processing';
+
   selectedApprovalList:any = [];
   viewDetail:boolean = false;
 
   constructor(private fb: FormBuilder, private apiService: Apiservice, private messageService: MessageService) {}
 
   ngOnInit(): void {
-    this.fetchDemandRequest();
+    this.fetchDemandRequest(102);
   }
 
   pageChange(event: any){
@@ -42,22 +44,29 @@ export class Approval implements OnInit {
     this.first = event.first;
     this.offSet = event.first / event.rows;
     this.pageSize = event.rows;
-    this.fetchDemandRequest();
+    this.fetchDemandRequest(102);
   }
 
-  fetchDemandRequest(){
+  setActiveTab(tab: string, status: number){
+    this.activeTab = tab;
+    this.fetchDemandRequest(status);
+  }
+
+  fetchDemandRequest(status: number){
     try {
       const data = {
-        demandStatus: DemandStatus.PROCESSING,
+        demandStatus: status,
         offSet: this.offSet,
         pageSize: this.pageSize
       }
+
+      console.log(data);
   
       this.apiService.fetchDemandRequest(data).subscribe({
         next: val => {
           console.log(val);
           this.demandProcessingList = val?.data?.data;
-          this.demandProcessingListLength = val?.data.length;
+          this.demandProcessingListLength = val?.data.length ?? 0;
         },
         error: err => {
           console.log(err);
@@ -80,8 +89,8 @@ export class Approval implements OnInit {
       this.apiService.editDemandQuantity(data).subscribe({
         next: val => {
           console.log(val);
-          this.messageService.add({severity: 'success', summary: 'Success', detail: 'Demand Quantity Updated Successfully'});
-          this.fetchDemandRequest();
+          this.messageService.add({severity: 'success', summary: 'Success', detail: 'Manpower Quantity Updated Successfully'});
+          this.fetchDemandRequest(102);
         },
         error: err => {
           console.log(err);
@@ -105,8 +114,8 @@ export class Approval implements OnInit {
         next: val => {
           console.log(val);
           this.messageService.add({severity: 'success', summary: 'Success', 
-            detail: type === 'Accepted' ? 'Demand Successfully Accepted' : 'Demand Rejected' });
-          this.fetchDemandRequest();
+            detail: type === 'Accepted' ? 'Manpower Successfully Accepted' : 'Manpower Rejected' });
+          this.fetchDemandRequest(102);
         },
         error: err => {
           console.log(err);
@@ -130,8 +139,8 @@ export class Approval implements OnInit {
         next: val => {
           console.log(val);
           this.messageService.add({severity: 'success', summary: 'Success', detail: type === 'Accepted' ? 
-            'Demand Successfully Accepted' : 'Demand Rejected'});
-          this.fetchDemandRequest();
+            'Manpower Successfully Accepted' : 'Manpower Rejected'});
+          this.fetchDemandRequest(102);
         },
         error: err => {
           console.log(err);

@@ -14,6 +14,9 @@ import { MessageService } from 'primeng/api';
 export class Transfer implements OnInit {
   offSet = 0;
   pageSize = 10;
+  first = 0;
+  transferredListLength = 0;
+  activeTab = 'processing';
 
   transferredEmployeeList: any;
 
@@ -25,20 +28,26 @@ export class Transfer implements OnInit {
   constructor(private apiService: Apiservice, private messageService: MessageService){}
 
   ngOnInit(): void {
-    this.fetchTransferedList();
+    this.fetchTransferedList(102);
   }
 
-  fetchTransferedList(){
+  setActiveTab(tab: string, status: number){
+    this.activeTab = tab;
+    this.fetchTransferedList(status);
+  }
+
+  fetchTransferedList(status: number){
     try {
       const data = {
         offSet: this.offSet,
         pageSize: this.pageSize,
-        transferStatus: 102
+        transferStatus: status
       }
       this.apiService.fetchTransferredEmployeeList(data).subscribe({
         next: val => {
           console.log(val);
-          this.transferredEmployeeList = val.data.data;
+          this.transferredEmployeeList = val?.data?.data;
+          this.transferredListLength = val?.data?.length ?? 0;
         },
         error: err => {
           console.log(err);
@@ -65,7 +74,7 @@ export class Transfer implements OnInit {
           } else {
             this.messageService.add({severity: 'error', summary: 'Error', detail: 'Transfer Request Rejected'});
           }
-          this.fetchTransferedList();
+          this.fetchTransferedList(102);
         },
         error: err => {
           console.log(err);
@@ -93,7 +102,7 @@ export class Transfer implements OnInit {
           } else {
             this.messageService.add({severity: 'error', summary: 'Error', detail: 'Transfer Request Rejected'});
           }
-          this.fetchTransferedList();
+          this.fetchTransferedList(102);
         },
         error: err => {
           console.log(err);
@@ -102,5 +111,12 @@ export class Transfer implements OnInit {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  pageChange(event: any){
+    this.first = event.first;
+    this.offSet = event.first / event.rows;
+    this.pageSize = event.rows;
+    this.fetchTransferedList(102);
   }
 }

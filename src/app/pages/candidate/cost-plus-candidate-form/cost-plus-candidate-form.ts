@@ -35,7 +35,6 @@ export class CostPlusCandidateForm implements OnInit {
     highestQualification: [''],
     qualification: [''],
     noticePeriod: [0],
-    workingCurrently: [false],
     monthlyReimbursements: this.fb.group({
       grossCTC: [0],
       margin: [{ value: 0, disabled: true }],
@@ -50,31 +49,33 @@ export class CostPlusCandidateForm implements OnInit {
       total: [{ value: 0, disabled: true }],
       gst: [{ value: 0, disabled: true }],
       grandTotal: [{ value: 0, disabled: true }]
-    }),
-    employmentDetails: this.fb.group({
-      project: this.fb.group({
-        projectId: [0]
-      }),
-      spn: this.fb.group({
-        spnId: [0]
-      }),
-      envisionRole: this.fb.group({
-        id: [0]
-      }),
-      offerReleaseDate: [''],
-      joiningDate: ['']
-    }),
-    costPlusSalaryDetails: this.fb.group({
-      currentSalaryNet: [0],
-      expectedSalaryNet: [0],
-      approvedHike: [0],
-      approvedFixedSalary: [{ value: 0, disabled: true }],
-      tenPercentVariable: [{ value: 0, disabled: true }],
-      totalFixedVariable: [{ value: 0, disabled: true }],
-      finalHikeFromCurrent: [{ value: 0, disabled: true }],
-      deltaFromExpected: [{ value: 0, disabled: true }]
     })
   })
+
+  // workingCurrently: [false],
+  // employmentDetails: this.fb.group({
+  //     project: this.fb.group({
+  //       projectId: [0]
+  //     }),
+  //     spn: this.fb.group({
+  //       spnId: [0]
+  //     }),
+  //     envisionRole: this.fb.group({
+  //       id: [0]
+  //     }),
+  //     offerReleaseDate: [''],
+  //     joiningDate: ['']
+  //   }),
+  //   costPlusSalaryDetails: this.fb.group({
+  //     currentSalaryNet: [0],
+  //     expectedSalaryNet: [0],
+  //     approvedHike: [0],
+  //     approvedFixedSalary: [{ value: 0, disabled: true }],
+  //     tenPercentVariable: [{ value: 0, disabled: true }],
+  //     totalFixedVariable: [{ value: 0, disabled: true }],
+  //     finalHikeFromCurrent: [{ value: 0, disabled: true }],
+  //     deltaFromExpected: [{ value: 0, disabled: true }]
+  //   })
 
   ngOnInit(): void {
     const form = this.costPlusCandidateForm;
@@ -85,9 +86,9 @@ export class CostPlusCandidateForm implements OnInit {
     form.get('oneTimeReimbursements.oneTimeSourcingFee')?.valueChanges.subscribe(() => this.updateOneTimeTotal());
     form.get('oneTimeReimbursements.bgvCost')?.valueChanges.subscribe(() => this.updateOneTimeTotal());
 
-    form.get('costPlusSalaryDetails.currentSalaryNet')?.valueChanges.subscribe(() => this.calculateSalaryDetails());
-    form.get('costPlusSalaryDetails.expectedSalaryNet')?.valueChanges.subscribe(() => this.calculateSalaryDetails());
-    form.get('costPlusSalaryDetails.approvedHike')?.valueChanges.subscribe(() => this.calculateSalaryDetails());
+    // form.get('costPlusSalaryDetails.currentSalaryNet')?.valueChanges.subscribe(() => this.calculateSalaryDetails());
+    // form.get('costPlusSalaryDetails.expectedSalaryNet')?.valueChanges.subscribe(() => this.calculateSalaryDetails());
+    // form.get('costPlusSalaryDetails.approvedHike')?.valueChanges.subscribe(() => this.calculateSalaryDetails());
 
     this.fetchPCodes();
     this.fetchSpnInfo();
@@ -154,33 +155,33 @@ export class CostPlusCandidateForm implements OnInit {
     this.costPlusCandidateForm.get('oneTimeReimbursements.grandTotal')?.setValue(grandTotal, { emitEvent: false });
   }
 
-  calculateSalaryDetails(){
-    const currentSalaryNet = this.costPlusCandidateForm.get('costPlusSalaryDetails.currentSalaryNet')?.value || 0;
-    const expectedSalaryNet = this.costPlusCandidateForm.get('costPlusSalaryDetails.expectedSalaryNet')?.value || 0;
-    const approvedHike = this.costPlusCandidateForm.get('costPlusSalaryDetails.approvedHike')?.value || 0;
+  // calculateSalaryDetails(){
+  //   const currentSalaryNet = this.costPlusCandidateForm.get('costPlusSalaryDetails.currentSalaryNet')?.value || 0;
+  //   const expectedSalaryNet = this.costPlusCandidateForm.get('costPlusSalaryDetails.expectedSalaryNet')?.value || 0;
+  //   const approvedHike = this.costPlusCandidateForm.get('costPlusSalaryDetails.approvedHike')?.value || 0;
 
-    const approvedHikePercent = approvedHike / 100;
+  //   const approvedHikePercent = approvedHike / 100;
 
-    const approvedFixedSalary = currentSalaryNet * (1 + approvedHikePercent);
-    this.costPlusCandidateForm.get('costPlusSalaryDetails.approvedFixedSalary')?.setValue(approvedFixedSalary, { emitEvent: false });
+  //   const approvedFixedSalary = currentSalaryNet * (1 + approvedHikePercent);
+  //   this.costPlusCandidateForm.get('costPlusSalaryDetails.approvedFixedSalary')?.setValue(approvedFixedSalary, { emitEvent: false });
 
-    const tenPercentVariable = approvedFixedSalary * 0.1;
-    this.costPlusCandidateForm.get('costPlusSalaryDetails.tenPercentVariable')?.setValue(tenPercentVariable, { emitEvent: false });
+  //   const tenPercentVariable = approvedFixedSalary * 0.1;
+  //   this.costPlusCandidateForm.get('costPlusSalaryDetails.tenPercentVariable')?.setValue(tenPercentVariable, { emitEvent: false });
 
-    const totalFixedVariable = approvedFixedSalary + tenPercentVariable;
-    this.costPlusCandidateForm.get('costPlusSalaryDetails.totalFixedVariable')?.setValue(totalFixedVariable, { emitEvent: false });
+  //   const totalFixedVariable = approvedFixedSalary + tenPercentVariable;
+  //   this.costPlusCandidateForm.get('costPlusSalaryDetails.totalFixedVariable')?.setValue(totalFixedVariable, { emitEvent: false });
 
-    const finalHikeFromCurrent = (totalFixedVariable - currentSalaryNet) / currentSalaryNet;
-    const finalHikeFromCurrentPercent = finalHikeFromCurrent * 100;
-    this.costPlusCandidateForm.get('costPlusSalaryDetails.finalHikeFromCurrent')?.setValue(finalHikeFromCurrentPercent, { emitEvent: false });
+  //   const finalHikeFromCurrent = (totalFixedVariable - currentSalaryNet) / currentSalaryNet;
+  //   const finalHikeFromCurrentPercent = finalHikeFromCurrent * 100;
+  //   this.costPlusCandidateForm.get('costPlusSalaryDetails.finalHikeFromCurrent')?.setValue(finalHikeFromCurrentPercent, { emitEvent: false });
 
-    const deltaFromExpected = totalFixedVariable - expectedSalaryNet;
-    this.costPlusCandidateForm.get('costPlusSalaryDetails.deltaFromExpected')?.setValue(deltaFromExpected, { emitEvent: false });
-  }
+  //   const deltaFromExpected = totalFixedVariable - expectedSalaryNet;
+  //   this.costPlusCandidateForm.get('costPlusSalaryDetails.deltaFromExpected')?.setValue(deltaFromExpected, { emitEvent: false });
+  // }
 
   updatePersonalDetails(){
     try {
-      const { monthlyReimbursements, oneTimeReimbursements, employmentDetails, costPlusSalaryDetails, ...data } = this.costPlusCandidateForm.value;
+      const { monthlyReimbursements, oneTimeReimbursements, ...data } = this.costPlusCandidateForm.value;
       console.log(data);
       this.apiService.updateCostPlusPersonalCandidate(data).subscribe({
         next: val => {
@@ -276,14 +277,14 @@ export class CostPlusCandidateForm implements OnInit {
     }
   }
 
-  selectedSpnId(spnId: number){
-    this.selectedSpn = this.spnInfoList.find((spn: any) => spn.spnId === spnId);
+  // selectedSpnId(spnId: number){
+  //   this.selectedSpn = this.spnInfoList.find((spn: any) => spn.spnId === spnId);
 
-    const spnGroup = this.costPlusCandidateForm.get('employmentDetails.spn');
-    spnGroup?.patchValue({
-      spnId: spnId
-    })
-  }
+  //   const spnGroup = this.costPlusCandidateForm.get('employmentDetails.spn');
+  //   spnGroup?.patchValue({
+  //     spnId: spnId
+  //   })
+  // }
 
   fetchEnvisionRolesInfoList(){
     try {
@@ -348,9 +349,9 @@ export class CostPlusCandidateForm implements OnInit {
         candidateId: this.candidateId,
         ...data
       }
+      console.log(data);
     } else {
-      const { employmentDetails, costPlusSalaryDetails, ...rest} = this.costPlusCandidateForm.getRawValue();
-      data = rest;
+      const data = this.costPlusCandidateForm.getRawValue();
       console.log('Final data to send:', data);
     }
     

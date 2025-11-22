@@ -1,3 +1,4 @@
+import { Column } from '@/models/table-column/table-column';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
 import { Component, OnInit } from '@angular/core';
@@ -13,6 +14,8 @@ export class OnRollEmployees implements OnInit {
   pageSize = 10;
   first = 0;
   onrollEmployeeListLength = 0;
+
+  cols!: Column[];
 
   openPpeDetails = false;
 
@@ -37,6 +40,21 @@ export class OnRollEmployees implements OnInit {
           console.log(val);
           this.onrollEmployeeList = val?.data.data;
           this.onrollEmployeeListLength = val?.data.length ?? 0;
+
+          this.cols = [
+            { field: 'employeeCode', header: 'Employee Code', customExportHeader: 'Employee Code' },
+            { field: 'candidateName', header: 'Employee Name' },
+            { field: 'employmentDetails.project.projectCode', header: 'Project Code' },
+            { field: 'employmentDetails.project.siteName', header: 'Site Name' },
+            { field: 'employmentDetails.cluster.clusterName', header: 'Cluster Name'},
+            { field: 'employmentDetails.envisionRole.roleName', header: 'Role'},
+            { field: 'employmentDetails.expectedJoiningDate', header: 'Expected DOJ' },
+            { field: 'employmentDetails.joiningDate', header: 'Actual DOJ' },
+            { field: 'phoneNumber', header: 'Contact Number'},
+            { field: 'alternativeNumber', header: 'Emergency Contact Number' },
+            { field: 'uan', header: 'UAN'},
+            { field: 'aadharNumber', header: 'Aadhar Number' },
+          ]
         },
         error: err => {
           console.log(err);
@@ -45,6 +63,10 @@ export class OnRollEmployees implements OnInit {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  getNestedValue(obj: any, path: string){
+    return path.split('.').reduce((acc, part) => acc && acc[part], obj) ?? '-';
   }
 
   viewPpeDetails(onroll: any){

@@ -10,6 +10,7 @@ import { Component } from '@angular/core';
 export class InvoiceSubmission {
   invoiceSubmissionList = [
     {
+      poNumber: "PO-2025-01004",
       entityName: 'Cloute Technologies Pvt. Ltd.',
       gstIn: '29AACCC1234F1Z5',
       address: '3rd Floor, Tech Park, Bengaluru, Karnataka - 560001',
@@ -23,6 +24,7 @@ export class InvoiceSubmission {
       submittedTo: 'Accounts Department'
     },
     {
+      poNumber: "PO-2025-01005",
       entityName: 'Win Enterprises Pvt. Ltd.',
       gstIn: '33AACCI5678K1Z8',
       address: 'No.12, Mount Road, Chennai, Tamil Nadu - 600002',
@@ -36,6 +38,7 @@ export class InvoiceSubmission {
       submittedTo: 'Finance Team'
     },
     {
+      poNumber: "PO-2025-01006",
       entityName: 'TechnoServe Consulting LLP',
       gstIn: '27AAACT7890G1Z2',
       address: '5th Avenue, Andheri East, Mumbai, Maharashtra - 400059',

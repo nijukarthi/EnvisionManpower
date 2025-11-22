@@ -2,14 +2,15 @@ import { Component, inject, OnInit } from '@angular/core';
 import { TableModule } from "primeng/table";
 import { ButtonModule } from "primeng/button";
 import { Shared } from '@/service/shared';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { Apiservice } from '@/service/apiservice/apiservice';
+import { FormFieldError } from '@/directives/form-field-error';
 
 @Component({
   selector: 'app-spn-table',
-  imports: [TableModule, ButtonModule, Shared, ReactiveFormsModule],
+  imports: [TableModule, ButtonModule, Shared, ReactiveFormsModule, FormFieldError],
   templateUrl: './spn-table.html',
   styleUrl: './spn-table.scss'
 })
@@ -38,9 +39,9 @@ export class SpnTable implements OnInit {
 
   spnForm = this.fb.group({
     spnId: [0],
-    spnCode: [''],
-    spnDescription: [''],
-    experience: ['']
+    spnCode: ['', Validators.required],
+    spnDescription: ['', Validators.required],
+    experience: ['', Validators.required]
   })
 
   ngOnInit(): void {
@@ -54,6 +55,18 @@ export class SpnTable implements OnInit {
     { year: '6-8 years' },
     { year: '8-10 years' },
   ]
+  
+  get spnCode(){
+    return this.spnForm.get('spnCode');
+  }
+
+  get spnDescription(){
+    return this.spnForm.get('spnDescription');
+  }
+
+  get experience(){
+    return this.spnForm.get('experience');
+  }
 
   getMenuItems(spn: any){
     return [

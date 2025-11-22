@@ -44,13 +44,22 @@
     [style]="{width: '50rem'}" (onHide)="onDialogClose()">
     <form [formGroup]="spnForm" (ngSubmit)="onSubmit()">
         <div class="grid grid-cols-2 gap-2">
-            <div class="grid col-span-1 gap-1">
+            <div class="col-span-1">
                 <label for="spn-code">SPN Code</label>
-                <input type="text" pInputText formControlName="spnCode" id="spn-code" />
+                <input type="text" pInputText formControlName="spnCode" id="spn-code" appFormFieldError
+                    class="block w-full" />
+
+                @if (spnCode?.invalid && (spnCode?.dirty || spnCode?.touched)) {
+                    @if (spnCode?.hasError('required')) {
+                        <p-message severity="error" variant="simple" size="small" styleClass="mt-1">
+                            SPN Code is required
+                        </p-message>
+                    }
+                }
             </div>
-            <div class="grid col-span-1 gap-1">
+            <div class="col-span-1">
                 <label for="spn-description">SPN Description</label>
-                <input type="text" pInputText formControlName="spnDescription" id="spn-description" />
+                <input type="text" pInputText formControlName="spnDescription" id="spn-description" class="block w-full" />
             </div>
             <div class="grid col-span-1 gap-1">
                 <label for="experience">Experience</label>

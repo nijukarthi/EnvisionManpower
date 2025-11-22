@@ -1,11 +1,26 @@
-<p-fluid>
-    <div class="card">
-        <div class="flex items-center justify-between">
-            <h5>Demand Approval</h5>
-        </div>
+<div class="card">
+    <h5>Manpower Approval</h5>
+    <div class="flex">
+        <button class="custom-btn" pButton pRipple text (click)="setActiveTab('processing', 102)"
+            [ngClass]="{'active-tab': activeTab === 'processing'}">
+            <i pButtonIcon class="pi pi-stopwatch"></i>
+            <span pButtonLabel>Processing</span>
+        </button>
+        <button class="custom-btn" pButton pRipple text (click)="setActiveTab('accepted', 200)"
+            [ngClass]="{'active-tab': activeTab === 'accepted'}">
+            <i pButtonIcon class="pi pi-check-circle"></i>
+            <span pButtonLabel>Completed</span>
+        </button>
+        <button class="custom-btn" pButton pRipple text (click)="setActiveTab('rejected', 406)"
+            [ngClass]="{'active-tab': activeTab === 'rejected'}">
+            <i pButtonIcon class="pi pi-times-circle"></i>
+            <span pButtonLabel>Rejected</span>
+        </button>
+    </div>
+    <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
         <p-table [value]="demandProcessingList" #dt [(selection)]="selectedApprovalList" dataKey="id" [lazy]="true"
             [tableStyle]="{ 'min-width': '110rem' }" [paginator]="true" [rowsPerPageOptions]="[10, 20, 30]" stripedRows
-            [rows]="pageSize" [rowHover]="true" [showGridlines]="true" [showCurrentPageReport]="true" [first]="first"
+            [rows]="pageSize" [rowHover]="true" [showCurrentPageReport]="true" [first]="first"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [totalRecords]="demandProcessingListLength"
             responsiveLayout="scroll" [globalFilterFields]="['spn.spnCode','spn.spnDescription','spn.experience','quantity']" 
             (onPage)="pageChange($event)">
@@ -100,8 +115,8 @@
             </ng-template>
         </p-table>  
     </div>
-       
-</p-fluid>
+</div>
+
 
 <p-dialog header="View Requistion" [resizable]="true" [draggable]="false" [modal]="true" [maximizable]="true"
         appendTo="body" [(visible)]="viewDetail" [style]="{ width: '50rem' }" [contentStyle]="{ height: '320px' }">

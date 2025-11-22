@@ -3,11 +3,12 @@
         <h5>Invoice Submission</h5>
         <p-button label="Add Invoice Submission" icon="pi pi-plus" routerLink="/home/invoice-submission/new" />
     </div>
-    <div class="border border-[var(--p-surface-200)] rounded-lg overflow-hidden">
-        <p-table [value]="invoiceSubmissionList" stripedRows [rowHover]="true" [tableStyle]="{'min-width': '130rem'}">
+    <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
+        <p-table [value]="invoiceSubmissionList" stripedRows [rowHover]="true" [tableStyle]="{'min-width': '150rem'}">
             <ng-template #header>
                 <tr>
                     <th>SL No</th>
+                    <th>PO Number</th>
                     <th>Name of the Entity</th>
                     <th>GST IN</th>
                     <th>Address</th>
@@ -24,6 +25,10 @@
             <ng-template #body let-submission let-i="rowIndex">
                 <tr>
                     <td>{{ i + 1 }}</td>
+<<<<<<< HEAD
+=======
+                    <td>{{ submission.poNumber }}</td>
+>>>>>>> 1b7b0616061d7853c74350675924459d531fef0d
                     <td>{{ submission.entityName }}</td>
                     <td>{{ submission.gstIn }}</td>
                     <td>{{ submission.address }}</td>

@@ -205,7 +205,7 @@ export class Demand implements OnInit {
     this.apiService.createRequesition(data).subscribe({
       next: val => {
         console.log(val);
-        this.messageService.add({severity: 'success', summary: 'Success', detail: 'Demand Request Created Successfully'});
+        this.messageService.add({severity: 'success', summary: 'Success', detail: 'Manpower Request Created Successfully'});
         this.demandForm.reset();
         this.demandDetails.clear();
         this.projectDetails = null;

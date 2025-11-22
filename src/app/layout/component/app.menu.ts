@@ -52,9 +52,14 @@ export class AppMenu {
                                 routerLink: ['/home/assign-role']
                             },
                             {
-                                label: 'Manpower Fullfillment',
+                                label: 'Manpower Fulfillment',
                                 icon: 'pi pi-history',
                                 routerLink: ['/home/demand-fullfillment']
+                            },
+                            {
+                                label: 'Demand Id vs PO Assign',
+                                icon: 'pi pi-file-import', 
+                                routerLink: ['/home/po-assign']
                             },
                             {
                                 label: 'Onboarding',
@@ -79,7 +84,8 @@ export class AppMenu {
                         items: [
                             {
                                 label: 'Attendance',
-                                icon: 'pi pi-book'
+                                icon: 'pi pi-book',
+                                routerLink: ['/home/attendance']
                             },
                             {
                                 label: 'Site Performance',
@@ -102,10 +108,6 @@ export class AppMenu {
                         label: 'Accounts Payable',
                         icon: 'pi pi-money-bill',
                         items: [
-                            {
-                                label: 'PO Creation',
-                                icon: 'pi pi-file-check'
-                            },
                             {
                                 label: 'Invoice Submission',
                                 icon: 'pi pi-check-circle',

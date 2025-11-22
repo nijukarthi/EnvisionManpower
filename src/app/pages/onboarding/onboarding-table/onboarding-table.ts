@@ -1,8 +1,10 @@
+import { Column } from '@/models/table-column/table-column';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder } from '@angular/forms';
 import { MessageService } from 'primeng/api';
+import { Table } from 'primeng/table';
 
 @Component({
   selector: 'app-onboarding-table',
@@ -11,11 +13,15 @@ import { MessageService } from 'primeng/api';
   styleUrl: './onboarding-table.scss'
 })
 export class OnboardingTable implements OnInit {
+  @ViewChild('dt') table!: Table;
+
   offSet = 0;
   pageSize = 10;
   onboardingListLength = 0;
   first = 0;
   candidateId: number | null = null;
+
+  cols!: Column[];
 
   loading = false;
   openPpeModal = false;
@@ -106,8 +112,23 @@ export class OnboardingTable implements OnInit {
                 joiningDate: onboarding.employmentDetails.joiningDate ? new Date(onboarding.employmentDetails.joiningDate) : null
               },
             }));
-            this.onboardingListLength = val?.data?.length || 0;
+            this.onboardingListLength = val?.data?.length ?? 0;
             this.loading = false;
+
+            this.cols = [
+              { field: 'employeeCode', header: 'Employee Code', customExportHeader: 'Employee Code' },
+              { field: 'candidateName', header: 'Employee Name' },
+              { field: 'employmentDetails.project.projectCode', header: 'Project Code' },
+              { field: 'employmentDetails.project.siteName', header: 'Site Name' },
+              { field: 'employmentDetails.cluster.clusterName', header: 'Cluster Name' },
+              { field: 'employmentDetails.envisionRole.roleName', header: 'Role' },
+              { field: 'employmentDetails.expectedJoiningDate', header: 'Expected DOJ' },
+              { field: 'employmentDetails.joiningDate', header: 'Actual DOJ' },
+              { field: 'phoneNumber', header: 'Contact Number' },
+              { field: 'alternativeNumber', header: 'Emergency Contact Number' },
+              { field: 'uan', header: 'UAN' },
+              { field: 'aadharNumber', header: 'Aadhar Number' }
+            ]
           },
           error: (err) => {
             console.error(err);
@@ -118,6 +139,22 @@ export class OnboardingTable implements OnInit {
       console.log(error);
     }
   }
+
+  getNestedValue(obj: any, path: string){
+    return path.split('.').reduce((acc, key) => acc?.[key], obj) ?? '';
+  }
+
+  exportToExcel(){
+    this.onboardingList.map((item: any) => {
+      const obj: any = {};
+      this.cols.forEach(col => {
+        obj[col.header] = this.getNestedValue(item, col.field);
+      });
+      return obj;
+    });
+    this.table.exportCSV({ selectionOnly: false });
+  }
+
 
   moveCandidateToOnroll(){
     const employmentIds = this.selectedCandidates.map((c: any) => c.employmentDetails.employmentId);

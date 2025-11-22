@@ -6,11 +6,7 @@
     <p-table [value]="fixedCostCandidateList" showGridlines [rowHover]="true" [paginator]="true" [lazy]="true" [first]="first"
         [rows]="pageSize" [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true" (onPage)="pageChange($event)"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [totalRecords]="fixedCostCandidateListLength"
-        [tableStyle]="{'min-width': '150rem'}">
-        <ng-template #caption>
-            <p-multiselect display="chip" [options]="viewOptions" optionLabel="label" optionValue="value" 
-                placeholder="Choose Columns" (onChange)="selectedView($event.value)" [style]="{ 'min-width': '200px' }" />
-        </ng-template>
+        [tableStyle]="{'min-width': '100rem'}">
         <ng-template #header>
             <tr>
                 <th>SI NO</th>
@@ -22,12 +18,7 @@
                 <th>Highest Qualification</th>
                 <th>Qualification</th>
                 <th>Notice Period</th>
-                <th>Project Code</th>
-                <th>Site Incharge</th>
-                <th>SPN Code</th>
-                <th>SPN Description</th>
-                <th>Experience</th>
-                <th>Role Name</th>
+                <th>Currently Working</th>
                 <th>Actions</th>
             </tr>
         </ng-template>
@@ -45,12 +36,7 @@
                 <td>{{ candidate.qualification }}</td>
                 <td>{{ candidate.highestQualification }}</td>
                 <td>{{ candidate.noticePeriod }}</td>
-                <td>{{ candidate.employmentDetails ? candidate.employmentDetails.project.projectCode : '-'}}</td>
-                <td>{{ candidate.employmentDetails ? candidate.employmentDetails.siteIncharge.userName : '-' }}</td>
-                <td>{{ candidate.employmentDetails ? candidate.employmentDetails.spn.spnCode : '-' }}</td>
-                <td>{{ candidate.employmentDetails ? candidate.employmentDetails.spn.spnDescription : '-' }}</td>
-                <td>{{ candidate.employmentDetails ? candidate.employmentDetails.spn.experience : '-' }}</td>
-                <td>{{ candidate.employmentDetails ? candidate.employmentDetails.envisionRole.roleName : '-' }}</td>
+                <td>{{ candidate.workingCurrently ? 'Yes' : 'No' }}</td>
                 <td>
                     <p-menu #menu [model]="getMenuItems(candidate)" [popup]="true" appendTo="body" />
                     <p-button (click)="menu.toggle($event)" icon="pi pi-ellipsis-v" [rounded]="true" variant="text" />
