@@ -32,12 +32,37 @@ export class Approval implements OnInit {
 
   selectedApprovalList:any = [];
   viewDetail:boolean = false;
+   loggedInUserDetails:any = "";
+  departmentUser:boolean = false;
+  clusterUser:boolean = false;
+
 
   constructor(private fb: FormBuilder, private apiService: Apiservice, private messageService: MessageService) {}
 
   ngOnInit(): void {
     this.fetchDemandRequest(102);
+    this.fetchUserProfile();
   }
+
+  fetchUserProfile(){
+            this.apiService.fetchUserProfile('').subscribe({
+                next: val => {
+                    console.log(val);
+                    this.loggedInUserDetails = val.data;
+                    if(this.loggedInUserDetails){
+                         if(this.loggedInUserDetails.userGroupId == 316 && this.loggedInUserDetails.userGroupName == 'Department Head'){
+                            this.departmentUser = true;
+                        }else if(this.loggedInUserDetails.userGroupId == 311 && this.loggedInUserDetails.userGroupName == 'Cluster Head'){
+                            this.clusterUser = true;
+                        }
+                    }
+                },
+                error: err => {
+                    console.log(err);
+                }
+            })
+        }
+
 
   pageChange(event: any){
     console.log(event);

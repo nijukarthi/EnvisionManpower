@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
 import { AppMenuitem } from './app.menuitem';
+import { Apiservice } from '@/service/apiservice/apiservice';
 
 @Component({
     selector: 'app-menu',
@@ -20,8 +21,53 @@ export class AppMenu {
 
     loggedUserGroupId = Number(sessionStorage.getItem('userGroupId'));
 
+    loggedInUserDetails:any = "";
+    adminUser:boolean = false;
+    departmentUser:boolean = false;
+    clusterUser:boolean = false;
+    siteInchargeUser:boolean = false;
+    projectManagerUser:boolean = false;
+    resourceManagerUser:boolean = false;
+
+    constructor(private apiService: Apiservice) { }
+
     ngOnInit() {
-        this.model = [
+       
+        this.fetchUserProfile();
+    }
+
+    fetchUserProfile(){
+            this.apiService.fetchUserProfile('').subscribe({
+                next: val => {
+                    console.log(val);
+                    this.loggedInUserDetails = val.data;
+                    if(this.loggedInUserDetails){
+                        if(this.loggedInUserDetails.userGroupId == 301 && this.loggedInUserDetails.userGroupName == 'Admin'){
+                            this.adminUser = true;
+                        } else if(this.loggedInUserDetails.userGroupId == 316 && this.loggedInUserDetails.userGroupName == 'Department Head'){
+                            this.departmentUser = true;
+                        }else if(this.loggedInUserDetails.userGroupId == 311 && this.loggedInUserDetails.userGroupName == 'Cluster Head'){
+                            this.clusterUser = true;
+                        }else if(this.loggedInUserDetails.userGroupId == 306 && this.loggedInUserDetails.userGroupName == 'Site Incharge'){
+                            this.siteInchargeUser = true;
+                        }else if(this.loggedInUserDetails.userGroupId == 321 && this.loggedInUserDetails.userGroupName == 'Project Manager'){
+                            this.projectManagerUser = true;
+                        }else if(this.loggedInUserDetails.userGroupId == 326 && this.loggedInUserDetails.userGroupName == 'Resource Manager'){
+                            this.resourceManagerUser = true;
+                        }
+                    }
+
+                    this.menuPage();
+                },
+                error: err => {
+                    console.log(err);
+                }
+            })
+        }
+
+        menuPage(){
+            try{
+                 this.model = [
             {
                 label: 'Pages',
                 icon: 'pi pi-fw pi-briefcase',
@@ -30,12 +76,14 @@ export class AppMenu {
                     {
                         label: 'Manpower Request',
                         icon: 'pi pi-calendar',
-                        routerLink: ['/home/demand']
+                        routerLink: ['/home/demand'],
+                        visible: !!this.adminUser || !!this.siteInchargeUser
                     },
                     {
                         label: 'Manpower Approval',
                         icon: 'pi pi-ticket',
-                        routerLink: ['/home/approval']
+                        routerLink: ['/home/approval'],
+                        visible: this.adminUser || this.departmentUser || this.clusterUser
                     },
                     {
                         label: 'Manpower Management',
@@ -76,7 +124,8 @@ export class AppMenu {
                                 icon: 'pi pi-warehouse',
                                 routerLink: ['/home/training']
                             }
-                        ]
+                        ],
+                         visible: this.adminUser
                     },
                     {
                         label: 'Performance & Attendance',
@@ -102,7 +151,8 @@ export class AppMenu {
                                 icon: 'pi pi-file-excel',
                                 routerLink: ['/home/terminate']
                             }
-                        ]
+                        ],
+                         visible: this.adminUser
                     },  
                     {
                         label: 'Accounts Payable',
@@ -123,7 +173,8 @@ export class AppMenu {
                                 icon: 'pi pi-file-o',
                                 routerLink: ['/home/invoice-disbursement']
                             }
-                        ]
+                        ],
+                         visible: this.adminUser
                     },        
                     {
                         label: 'Resource Pool',
@@ -150,7 +201,8 @@ export class AppMenu {
                                     }
                                 ]
                             }
-                        ]
+                        ],
+                         visible: this.adminUser
                     },
                     {
                         label: 'Masters',
@@ -201,7 +253,8 @@ export class AppMenu {
                                 icon: "pi pi-address-book",
                                 routerLink: ['/home/interviewers']
                             }
-                        ]
+                        ],
+                         visible: this.adminUser
                     },
                     {
                         label: 'Logout',
@@ -213,7 +266,7 @@ export class AppMenu {
             },
         ];
 
-        if (this.loggedUserGroupId === 360) {
+                if (this.loggedUserGroupId === 360) {
             this.model = this.model
             .map(group => {
                 if (group && group.label === 'Pages' && group.items) {
@@ -235,6 +288,10 @@ export class AppMenu {
         } else {
             this.model = this.model;
         }
-    }
+
+            }catch(e){
+
+            }
+        }
 
 }

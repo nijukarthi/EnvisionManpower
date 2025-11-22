@@ -38,8 +38,8 @@
                     <th>Quantity</th>
                     <th>Planned Deployment Date</th>
                     <th>Planned Release Date</th>
-                    <th style="text-align: center;">Cluster Head Approval</th>
-                    <th style="text-align: center;">Department Head Approval</th> 
+                    <th style="text-align: center;" *ngIf="clusterUser">Cluster Head Approval</th>
+                    <th style="text-align: center;" *ngIf="departmentUser">Department Head Approval</th> 
                 </tr>
                 <tr>
                     <td colspan="4"></td>
@@ -78,7 +78,7 @@
                     </td>
                     <td>{{ demand.plannedDeploymentDate }}</td>
                     <td>{{ demand.plannedReleaseDate }}</td>
-                    <td style="text-align: center;">
+                    <td style="text-align: center;" *ngIf="clusterUser">
                         @if (demand.stateHeadApproval.approvalStatus === APPROVALSTATUS.ACCEPTED) {
                             <p-button icon="pi pi-check" [rounded]="true" [disabled]="true" />
                         }
@@ -92,7 +92,7 @@
                                 [disabled]="loggedUserGroupId === USERGROUPS.DEPARTMENTHEAD"  (onClick)="clusterHeadApproval(demand.demandId, 'Rejected')" />
                         }
                     </td>
-                    <td style="text-align: center;">
+                    <td style="text-align: center;" *ngIf="departmentUser">
                         @if (demand.departmentHeadApproval.approvalStatus === APPROVALSTATUS.ACCEPTED) {
                             <p-button icon="pi pi-check" [rounded]="true" [disabled]="true" />
                         }
