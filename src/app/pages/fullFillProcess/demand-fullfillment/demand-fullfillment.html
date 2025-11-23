@@ -4,7 +4,7 @@
         <p-table [value]="demandFullfillmentList" [rowHover]="true" [paginator]="true" [lazy]="true" [first]="first"
             [rows]="pageSize" [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true" (onPage)="pageChange($event)"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" stripedRows 
-            [totalRecords]="demandFullfillmentListLength" [tableStyle]="{'min-width': '120rem'}">
+            [totalRecords]="demandFullfillmentListLength" [tableStyle]="{'min-width': '140rem'}">
             <ng-template #header>
                 <tr>
                     <th>SI No</th>
@@ -109,3 +109,5 @@
         </div>
     </div>
 </p-dialog>
+
+<p-toast />
