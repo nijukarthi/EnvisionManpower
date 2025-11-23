@@ -23,11 +23,11 @@ export class Steps implements OnInit {
   finalInterviewId = 0;
   categoryId = 0;
 
-  actionName = 'Submit';
-
   currentUserRole = Number(sessionStorage.getItem('userGroupId'));
 
   private fb = inject(FormBuilder);
+
+  fulFillmentStatus = FullFillmentStatus;
 
   consultancyList: any;
   demandDetails: any;
@@ -40,6 +40,9 @@ export class Steps implements OnInit {
   finalApprovalCandidateList: any;
   joiningProcessCandidateList: any;
   assignedFinalInterviewCandidateList: any;
+
+  constructor(private apiService: Apiservice, private router: Router, private messageService: MessageService, 
+    private datePipe: DatePipe, private stepService: StepStateService){}
 
   performanceStatusList = [
     {
@@ -232,15 +235,21 @@ export class Steps implements OnInit {
     )
   }
 
-  constructor(private apiService: Apiservice, private router: Router, private messageService: MessageService, 
-    private datePipe: DatePipe, private stepService: StepStateService){}
-
   ngOnInit(): void {
+    this.demandDetails = history.state;
+    console.log('Received Requisition ID:', this.demandDetails);
+
     this.fetchViewRequisition();
     this.fetchInterviewerList();
-    this.demandDetails = history.state;
 
-    console.log('Received Requisition ID:', this.demandDetails);
+    if (this.demandDetails.fullfillmentStatus !== FullFillmentStatus.STEP1) {
+      console.log('testing');      
+      this.fetchViewFirstInterview();
+    }
+
+    if (this.demandDetails.fullfillmentStatus !== FullFillmentStatus.STEP2) {
+      this.fetchViewAssignedCandidates();
+    }
 
     this.stepService.activeStep$.subscribe(step => {
       console.log(step);
@@ -249,38 +258,16 @@ export class Steps implements OnInit {
       if (this.activeStep === 2) {
         this.fetchCandidateByCategory(this.categoryId);
       }
+      if (this.activeStep === 4 || this.activeStep === 5) {
+        this.fetchFinalInterviewDetails();
+      }
       if (this.activeStep === 6) {
         this.fetchFinalApprovalCandidateList();
       }
-    })
-    if (this.demandDetails.fullfillmentStatus !== FullFillmentStatus.STEP1 && this.activeStep === 1) {
-      this.actionName = 'Update';
-      console.log('testing');      
-      this.fetchViewFirstInterview();
-    }
-  }
-
-  fetchViewRequisition(){
-    try {
-      const data = {
-        requesitionId: this.demandDetails.requesitionId
+      if (this.activeStep === 7) {
+        this.fetchJoiningProcessCandidateList();
       }
-
-      this.apiService.viewRequisition(data).subscribe({
-        next: val => {
-          console.log(val);
-          this.categoryId = val.data.category.categoryId;
-          this.fetchConsultancyByCategory(this.categoryId);
-          this.fetchCandidateByCategory(this.categoryId);
-          console.log(this.activeStep);
-        },
-        error: err => {
-          console.log(err);
-        }
-      })
-    } catch (error) {
-      console.log(error);
-    }
+    })
   }
 
   stepChange(stepValue: any){
@@ -289,7 +276,6 @@ export class Steps implements OnInit {
     this.fetchViewRequisition();
 
     if (this.activeStep === 2) {
-      this.actionName = 'Submit';
       this.fetchCandidateByCategory(this.categoryId);
     }
 
@@ -310,13 +296,38 @@ export class Steps implements OnInit {
     }
   }
 
+  fetchViewRequisition(){
+    try {
+      const data = {
+        requesitionId: this.demandDetails.requesitionId
+      }
+
+      this.apiService.viewRequisition(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.categoryId = val.data.category.categoryId;
+          this.fetchConsultancyByCategory(this.categoryId);
+          if (this.activeStep === 2) {           
+            this.fetchCandidateByCategory(this.categoryId);
+          }
+          console.log(this.activeStep);
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   fetchViewFirstInterview(){
     try {
       console.log('testing method');
       const data = {
         demandId: this.demandDetails.demandId
       }
-
+      console.log(data);
       this.apiService.viewFirstInterview(data).subscribe({
         next: val => {
           console.log(val);
@@ -328,6 +339,10 @@ export class Steps implements OnInit {
           
           const data = val.data;
           this.firstInterviewId = data.interviewId;
+
+          if (this.demandDetails.fullfillmentStatus !== FullFillmentStatus.STEP2) {
+            this.fetchViewAssignedCandidates();
+          }
 
           const interviewDate = data.interviewDate ? new Date(data.interviewDate) : null;
           let interviewTime = null;
@@ -344,7 +359,8 @@ export class Steps implements OnInit {
         },
         error: err => {
           console.log(err);
-        }
+        },
+        complete: () => console.log('complete api request')
       })
     } catch (error) {
       console.log(error);
@@ -584,6 +600,15 @@ export class Steps implements OnInit {
     }
   }
 
+  populateCandidateInterviewMappings(){
+    const formArray = this.candidateInterviewMappings;
+    formArray.clear();
+
+    this.assignedCandidateList.forEach((candidate: any) => {
+      formArray.push(this.takeFirstInterviewRound(candidate))
+    })
+  }
+
   selectedCandidateIds(selectedIds: any){
     console.log(selectedIds);
 
@@ -691,15 +716,6 @@ export class Steps implements OnInit {
     } catch (error) {
       console.log(error);
     }
-  }
-
-  populateCandidateInterviewMappings(){
-    const formArray = this.candidateInterviewMappings;
-    formArray.clear();
-
-    this.assignedCandidateList.forEach((candidate: any) => {
-      formArray.push(this.takeFirstInterviewRound(candidate))
-    })
   }
 
   submitStep3Form(){

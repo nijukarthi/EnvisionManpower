@@ -1,3 +1,4 @@
+import { STEP_ACCESS } from '@/constants/step-access.config';
 import { DemandStatus } from '@/models/demand-status/demand-status.enum';
 import { FullFillmentStatus } from '@/models/fullfillment-status/fullfillment-status.enum';
 import { Apiservice } from '@/service/apiservice/apiservice';
@@ -5,6 +6,7 @@ import { Shared } from '@/service/shared';
 import { StepStateService } from '@/service/step-service/step-state.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-resource-manager',
@@ -23,7 +25,11 @@ export class DemandFullfillment implements OnInit {
 
   openViewRequisition = false;
 
-  constructor(private apiService: Apiservice, private router: Router, private stepService: StepStateService){}
+  currentUserRole = Number(sessionStorage.getItem('userGroupId'));
+
+  constructor(private apiService: Apiservice, private router: Router, private stepService: StepStateService,
+      private messageService: MessageService
+  ){}
 
   ngOnInit(): void {
     this.fetchDemandFullfillment();
@@ -76,6 +82,13 @@ export class DemandFullfillment implements OnInit {
   goToStep(demand: any){
     const stepName = Number(this.getStepLabel(demand.fullfillmentStatus));
     console.log(stepName);
+
+    const allowedRoles = STEP_ACCESS[stepName];
+
+    if (!allowedRoles.includes(this.currentUserRole)) {
+      this.messageService.add({severity: 'error', summary: 'Error', detail: 'You are not allowed to access this step.'});
+      return;
+    }
     this.stepService.setActiveStep(stepName);
     this.router.navigate(['/home/demand-fullfillment/steps'],
       {
@@ -86,6 +99,11 @@ export class DemandFullfillment implements OnInit {
         }
       }
     );
+  }
+
+  canAccessStep(stepNumber: string){
+    const allowedRoles = STEP_ACCESS[Number(stepNumber)];
+    return allowedRoles.includes(this.currentUserRole) || false;
   }
 
   fetchDemandFullfillment(){
