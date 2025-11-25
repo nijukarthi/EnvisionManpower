@@ -226,34 +226,43 @@
                 <ng-template #content>
                     <p class="text-primary text-lg font-semibold">First Interview</p>
                     <form [formGroup]="firstInterviewRoundForm" (ngSubmit)="submitStep3Form()">
-                        <p-table [value]="assignedCandidateList" showGridlines [rowHover]="true" 
-                            formArrayName="candidateInterviewMappings">
-                            <ng-template #header>
-                                <tr>
-                                    <th>SI No</th>
-                                    <th>Assigned Candidates Name</th>
-                                    <th>Accept/Reject</th>
-                                    <th>Feedback</th>
-                                </tr>
-                            </ng-template>
-                            <ng-template #body let-candidate let-i="rowIndex">
-                                <tr [formGroupName]="i">
-                                    <td>{{ i + 1 }}</td>
-                                    <td>{{ candidate.candidate.candidateName }}</td>
-                                    <td>
-                                        <p-select [options]="performanceStatusList" formControlName="performanceStatus" id="accept-reject" 
-                                            optionLabel="label" optionValue="value"
-                                            placeholder="Select Status" appendTo="body" class="w-full" />
-                                    </td>
-                                    <td>
-                                        <textarea rows="3" formControlName="feedback" pTextarea id="feedback" class="w-full"></textarea>
-                                    </td>
-                                </tr>
-                            </ng-template>
-                        </p-table>
+                        <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
+                            <p-table [value]="assignedCandidateList" stripedRows [rowHover]="true" 
+                                formArrayName="candidateInterviewMappings">
+                                <ng-template #header>
+                                    <tr>
+                                        <th>SI No</th>
+                                        <th>Assigned Candidates Name</th>
+                                        <th>Accept/Reject</th>
+                                        <th>Feedback</th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template #body let-candidate let-i="rowIndex">
+                                    <tr [formGroupName]="i">
+                                        <td>{{ i + 1 }}</td>
+                                        <td>{{ candidate.candidate.candidateName }}</td>
+                                        <td>
+                                            <p-select [options]="performanceStatusList" formControlName="performanceStatus" id="accept-reject" 
+                                                optionLabel="label" optionValue="value"
+                                                placeholder="Select Status" appendTo="body" class="w-full" />
+                                        </td>
+                                        <td>
+                                            <textarea rows="3" formControlName="feedback" pTextarea id="feedback" class="w-full"></textarea>
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                                <ng-template #emptymessage>
+                                    <tr>
+                                        <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground);">
+                                            No Records Found
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                        </div>
                         <div class="flex justify-end mt-4">
                             <button pButton pRipple type="submit">
-                                <span pButtonLabel>{{ demandDetails.fullfillmentStatus === fulFillmentStatus.STEP3 
+                                <span pButtonLabel>{{ demandDetails.fullfillmentStatus <= fulFillmentStatus.STEP3 
                                     ? 'Submit' : 'Update' }}</span>
                             </button>
                         </div>
@@ -264,23 +273,31 @@
             <p-step-panel [value]="4">
                 <ng-template #content>
                     <p class="text-primary text-lg font-semibold">Interviewer Assign (Final)</p>
-
-                    <p-table [value]="assignedFinalInterviewCandidateList" showGridlines [rowHover]="true">
-                        <ng-template #header>
-                            <tr>
-                                <th>SI No</th>
-                                <th>Candidates Name</th>
-                                <th>First Interview Feedback</th>
-                            </tr>
-                        </ng-template>
-                        <ng-template #body let-candidate let-i="rowIndex">
-                            <tr>
-                                <td>{{ i + 1 }}</td>
-                                <td>{{ candidate.candidate.candidateName }}</td>
-                                <td>{{ candidate.feedback ?? '-' }}</td>
-                            </tr>
-                        </ng-template>
-                    </p-table>
+                    <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
+                        <p-table [value]="assignedFinalInterviewCandidateList" stripedRows [rowHover]="true">
+                            <ng-template #header>
+                                <tr>
+                                    <th>SI No</th>
+                                    <th>Candidates Name</th>
+                                    <th>First Interview Feedback</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template #body let-candidate let-i="rowIndex">
+                                <tr>
+                                    <td>{{ i + 1 }}</td>
+                                    <td>{{ candidate.candidate.candidateName }}</td>
+                                    <td>{{ candidate.feedback ?? '-' }}</td>
+                                </tr>
+                            </ng-template>
+                            <ng-template #emptymessage>
+                                <tr>
+                                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground);">
+                                        No Records Found
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
 
                     <form class="mt-6" [formGroup]="finalInterviewerAssignForm" (ngSubmit)="submitStep4Form()">
                         <div class="grid grid-cols-2 gap-2">
@@ -308,7 +325,7 @@
                         </div>
                         <div class="flex justify-end mt-4">
                             <button pButton pRipple type="submit">
-                                <span pButtonLabel>{{ demandDetails.fullfillmentStatus === fulFillmentStatus.STEP4
+                                <span pButtonLabel>{{ demandDetails.fullfillmentStatus <= fulFillmentStatus.STEP4
                                 ? 'Submit' : 'Update' }}</span>
                             </button>
                         </div>
@@ -319,35 +336,44 @@
                 <ng-template #content>
                     <p class="text-primary text-lg font-semibold">Final Interview</p>
                     <form [formGroup]="finalInterviewRoundForm" (ngSubmit)="submitStep5Form()">
-                        <p-table [value]="assignedFinalInterviewCandidateList" showGridlines [rowHover]="true" 
-                            formArrayName="candidateFinalInterviewMappings">
-                            <ng-template #header>
-                                <tr>
-                                    <th>SI No</th>
-                                    <th>Selected Candidates Name</th>
-                                    <th>Accept/Reject</th>
-                                    <th>Feedback</th>
-                                </tr>
-                            </ng-template>
-                            <ng-template #body let-candidate let-i="rowIndex">
-                                <tr [formGroupName]="i">
-                                    <td>{{ i + 1 }}</td>
-                                    <td>{{ candidate.candidate.candidateName }}</td>
-                                    <td>
-                                        <p-select [options]="performanceStatusList" formControlName="performanceStatus" id="accept-reject"
-                                            optionLabel="label" optionValue="value"
-                                            placeholder="Select Status" appendTo="body" class="w-full" />
-                                    </td>
-                                    <td>
-                                        <textarea rows="3" formControlName="feedback" pTextarea 
-                                            id="feedback" class="w-full"></textarea>
-                                    </td>
-                                </tr>
-                            </ng-template>
-                        </p-table>
+                        <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
+                            <p-table [value]="assignedFinalInterviewCandidateList" stripedRows [rowHover]="true" 
+                                formArrayName="candidateFinalInterviewMappings">
+                                <ng-template #header>
+                                    <tr>
+                                        <th>SI No</th>
+                                        <th>Selected Candidates Name</th>
+                                        <th>Accept/Reject</th>
+                                        <th>Feedback</th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template #body let-candidate let-i="rowIndex">
+                                    <tr [formGroupName]="i">
+                                        <td>{{ i + 1 }}</td>
+                                        <td>{{ candidate.candidate.candidateName }}</td>
+                                        <td>
+                                            <p-select [options]="performanceStatusList" formControlName="performanceStatus" id="accept-reject"
+                                                optionLabel="label" optionValue="value"
+                                                placeholder="Select Status" appendTo="body" class="w-full" />
+                                        </td>
+                                        <td>
+                                            <textarea rows="3" formControlName="feedback" pTextarea 
+                                                id="feedback" class="w-full"></textarea>
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                                <ng-template #emptymessage>
+                                    <tr>
+                                        <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground);">
+                                            No Records Found
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                        </div>
                         <div class="flex justify-end mt-4">
                             <button pButton pRipple type="submit">
-                                <span pButtonLabel>{{ demandDetails.fullfillmentStatus === fulFillmentStatus.STEP5
+                                <span pButtonLabel>{{ demandDetails.fullfillmentStatus <= fulFillmentStatus.STEP5
                                 ? 'Submit' : 'Update' }}</span>
                             </button>
                         </div>
@@ -359,36 +385,45 @@
             <p-step-panel [value]="6">
                 <ng-template #content>
                     <p class="text-primary text-lg font-semibold">Final Approval</p>
-
+                    
                     <form [formGroup]="finalApprovalCandidateForm" (ngSubmit)="submitStep6Form()">
-                        <p-table [value]="finalApprovalCandidateList" showGridlines [rowHover]="true"
-                            formArrayName="approvalCandidates">
-                            <ng-template #header>
-                                <tr>
-                                    <th>SI No</th>
-                                    <th>Selected Candidates Name</th>
-                                    <th>First Interview Feedback</th>
-                                    <th>Final Interview Feedback</th>
-                                    <th>Status By Resource Manager</th>
-                                </tr>
-                            </ng-template>
-                            <ng-template #body let-candidate let-i="rowIndex">
-                                <tr [formGroupName]="i">
-                                    <td>{{ i + 1 }}</td>
-                                    <td>{{ candidate.candidate.candidateName }}</td>
-                                    <td>{{ candidate.firstInterviewFeedback }}</td>
-                                    <td>{{ candidate.finalInterviewFeedback }}</td>
-                                    <td>
-                                        <p-select [options]="resourceManagerStatusList" formControlName="statusByResourceManager" 
-                                            id="status" optionLabel="label" optionValue="value"
-                                            placeholder="Select Status" appendTo="body" class="w-full" />
-                                    </td>
-                                </tr>
-                            </ng-template>
-                        </p-table>
+                        <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
+                            <p-table [value]="finalApprovalCandidateList" stripedRows [rowHover]="true"
+                                formArrayName="approvalCandidates">
+                                <ng-template #header>
+                                    <tr>
+                                        <th>SI No</th>
+                                        <th>Selected Candidates Name</th>
+                                        <th>First Interview Feedback</th>
+                                        <th>Final Interview Feedback</th>
+                                        <th>Status By Resource Manager</th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template #body let-candidate let-i="rowIndex">
+                                    <tr [formGroupName]="i">
+                                        <td>{{ i + 1 }}</td>
+                                        <td>{{ candidate.candidate.candidateName }}</td>
+                                        <td>{{ candidate.firstInterviewFeedback }}</td>
+                                        <td>{{ candidate.finalInterviewFeedback }}</td>
+                                        <td>
+                                            <p-select [options]="resourceManagerStatusList" formControlName="statusByResourceManager" 
+                                                id="status" optionLabel="label" optionValue="value"
+                                                placeholder="Select Status" appendTo="body" class="w-full" />
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                                <ng-template #emptymessage>
+                                    <tr>
+                                        <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground);">
+                                            No Records Found
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                        </div>
                         <div class="flex justify-end mt-4">
                             <button pButton pRipple type="submit">
-                                <span pButtonLabel>{{ demandDetails.fullfillmentStatus === fulFillmentStatus.STEP6
+                                <span pButtonLabel>{{ demandDetails.fullfillmentStatus <= fulFillmentStatus.STEP6
                                 ? 'Submit' : 'Update' }}</span>
                             </button>
                         </div>
@@ -400,46 +435,57 @@
                     <p class="text-primary text-lg font-semibold">Joining Process</p>
 
                     <form [formGroup]="joiningProcessCandidateForm" (ngSubmit)="submitStep7Form()">
-                        <p-table [value]="joiningProcessCandidateList" showGridlines [rowHover]="true" 
-                            [tableStyle]="{'min-width': '90rem'}" formArrayName="joiningProcessCandidates">
-                            <ng-template #header>
-                                <tr>
-                                    <th>SI No</th>
-                                    <th>Selected Candidates Name</th>
-                                    <th>First Interview Feedback</th>
-                                    <th>Final Interview Feedback</th>
-                                    <th>Candidate Acceptance (Yes/No)</th>
-                                    @if (hasAcceptedCandidate) {
-                                        <th>Joining Date If Yes</th>
-                                    }
-                                </tr>
-                            </ng-template>
-                            <ng-template #body let-candidate let-i="rowIndex">
-                                <tr [formGroupName]="i">
-                                    <td>{{ i + 1 }}</td>
-                                    <td>{{ candidate.candidate.candidateName }}</td>
-                                    <td>{{ candidate.firstInterviewFeedback }}</td>
-                                    <td>{{ candidate.finalInterviewFeedback }}</td>
-                                    <td>
-                                        <p-select [options]="candidateAcceptanceList" formControlName="candidateAcceptance" 
-                                            id="candidate-status" optionLabel="label" optionValue="value"
-                                            placeholder="Select Status" appendTo="body" class="w-full" />
-                                    </td>
-                                    
-                                    @if (hasAcceptedCandidate) {
+                        <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
+                            <p-table [value]="joiningProcessCandidateList" [rowHover]="true" 
+                                [tableStyle]="{'min-width': '90rem'}" formArrayName="joiningProcessCandidates">
+                                <ng-template #header>
+                                    <tr>
+                                        <th>SI No</th>
+                                        <th>Selected Candidates Name</th>
+                                        <th>First Interview Feedback</th>
+                                        <th>Final Interview Feedback</th>
+                                        <th>Candidate Acceptance (Yes/No)</th>
+                                        @if (hasAcceptedCandidate) {
+                                            <th>Joining Date If Yes</th>
+                                        }
+                                    </tr>
+                                </ng-template>
+                                <ng-template #body let-candidate let-i="rowIndex">
+                                    <tr [formGroupName]="i">
+                                        <td>{{ i + 1 }}</td>
+                                        <td>{{ candidate.candidate.candidateName }}</td>
+                                        <td>{{ candidate.firstInterviewFeedback }}</td>
+                                        <td>{{ candidate.finalInterviewFeedback }}</td>
                                         <td>
-                                            <p-datepicker formControlName="joiningDate" [iconDisplay]="'input'" [showIcon]="true" inputId="joining-date" 
-                                                placeholder="Select Joining Date" appendTo="body" class="w-full" />
+                                            <p-select [options]="candidateAcceptanceList" formControlName="candidateAcceptance" 
+                                                id="candidate-status" optionLabel="label" optionValue="value"
+                                                placeholder="Select Status" appendTo="body" class="w-full" />
                                         </td>
-                                    }
-                                </tr>
-                            </ng-template>
-                        </p-table>
-                        <div class="flex justify-end mt-4">
-                            <button pButton pRipple type="submit" [disabled]="!joiningProcessCandidateForm.dirty">
-                                <span pButtonLabel>Submit</span>
-                            </button>
+                                        
+                                        @if (hasAcceptedCandidate) {
+                                            <td>
+                                                <p-datepicker formControlName="joiningDate" [iconDisplay]="'input'" [showIcon]="true" inputId="joining-date" 
+                                                    placeholder="Select Joining Date" appendTo="body" class="w-full" />
+                                            </td>
+                                        }
+                                    </tr>
+                                </ng-template>
+                                <ng-template #emptymessage>
+                                    <tr>
+                                        <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground);">
+                                            No Records Found
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
                         </div>
+                        @if (currentUserRole === USERGROUPS.CONSULTANCY) {
+                            <div class="flex justify-end mt-4">
+                                <button pButton pRipple type="submit" [disabled]="!joiningProcessCandidateForm.dirty">
+                                    <span pButtonLabel>Submit</span>
+                                </button>
+                            </div>
+                        }
                     </form>
 
                 </ng-template>

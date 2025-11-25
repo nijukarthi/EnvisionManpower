@@ -1,5 +1,6 @@
 import { STEP_ACCESS } from '@/constants/step-access.config';
 import { FullFillmentStatus } from '@/models/fullfillment-status/fullfillment-status.enum';
+import { UserGroups } from '@/models/usergroups/usergroups.enum';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
 import { StepStateService } from '@/service/step-service/step-state.service';
@@ -28,6 +29,7 @@ export class Steps implements OnInit {
   private fb = inject(FormBuilder);
 
   fulFillmentStatus = FullFillmentStatus;
+  USERGROUPS = UserGroups;
 
   consultancyList: any;
   demandDetails: any;
@@ -256,7 +258,7 @@ export class Steps implements OnInit {
       this.activeStep = step;
 
       if (this.activeStep === 2) {
-        this.fetchCandidateByCategory(this.categoryId);
+        this.fetchCandidateByCategory(this.demandDetails.categoryId);
       }
       if (this.activeStep === 4 || this.activeStep === 5) {
         this.fetchFinalInterviewDetails();
@@ -276,7 +278,7 @@ export class Steps implements OnInit {
     this.fetchViewRequisition();
 
     if (this.activeStep === 2) {
-      this.fetchCandidateByCategory(this.categoryId);
+      this.fetchCandidateByCategory(this.demandDetails.categoryId);
     }
 
     if (this.demandDetails.fullfillmentStatus !== FullFillmentStatus.STEP2) {
@@ -298,24 +300,10 @@ export class Steps implements OnInit {
 
   fetchViewRequisition(){
     try {
-      const data = {
-        requesitionId: this.demandDetails.requesitionId
+      this.fetchConsultancyByCategory(this.demandDetails.categoryId);
+      if (this.activeStep === 2) {           
+        this.fetchCandidateByCategory(this.demandDetails.categoryId);
       }
-
-      this.apiService.viewRequisition(data).subscribe({
-        next: val => {
-          console.log(val);
-          this.categoryId = val.data.category.categoryId;
-          this.fetchConsultancyByCategory(this.categoryId);
-          if (this.activeStep === 2) {           
-            this.fetchCandidateByCategory(this.categoryId);
-          }
-          console.log(this.activeStep);
-        },
-        error: err => {
-          console.log(err);
-        }
-      })
     } catch (error) {
       console.log(error);
     }
@@ -333,8 +321,8 @@ export class Steps implements OnInit {
           console.log(val);
           const consultancyIds = val.data.demandConsultancyMap.map((c: any) => c.consultancy.userId);
           this.consultancyArray = consultancyIds;
-          this.demandConsultancyControl.patchValue(consultancyIds);
-          this.demandHrControl.patchValue(consultancyIds);
+          this.demandConsultancyControl.patchValue(consultancyIds, { emitEvent: false });
+          this.demandHrControl.patchValue(consultancyIds, { emitEvent: false });
 
           
           const data = val.data;
@@ -355,7 +343,7 @@ export class Steps implements OnInit {
             ...data,
             interviewDate: interviewDate,
             interviewTime: interviewTime
-          })
+          }, { emitEvent: false })
         },
         error: err => {
           console.log(err);
@@ -574,6 +562,11 @@ export class Steps implements OnInit {
   fetchViewAssignedCandidates(){
     console.log('checking');
     try {
+      if (!this.firstInterviewId || this.firstInterviewId === 0) {
+        console.log("Interview ID not ready. Skipping API call...");
+        return;
+      }
+      console.log('firstInterviewId:', this.firstInterviewId);
       const data = {
         interviewId: this.firstInterviewId
       }
@@ -581,18 +574,22 @@ export class Steps implements OnInit {
 
       this.apiService.viewAssignedCandidates(data).subscribe({
         next: val => {
-          console.log(val);
+          console.log("SUCCESS", val);
           this.assignedCandidateList = val.data.candidateInterviewMappings;
           this.populateCandidateInterviewMappings();
+
+          if (this.activeStep === 4 || this.activeStep === 5) {
+            this.fetchFinalInterviewDetails();
+          }
           
           this.candidateArray = val.data.candidateInterviewMappings.map((c: any) => c.candidate.candidateId);
-          this.candidateInterviewControl.patchValue(this.candidateArray);
-          this.candidateCodeControl.patchValue(this.candidateArray);
-          this.candidateDesignationControl.patchValue(this.candidateArray);
-          this.firstInterviewRoundForm.patchValue(val.data);
+          this.candidateInterviewControl.patchValue(this.candidateArray, { emitEvent: false });
+          this.candidateCodeControl.patchValue(this.candidateArray, { emitEvent: false });
+          this.candidateDesignationControl.patchValue(this.candidateArray, { emitEvent: false });
+          this.firstInterviewRoundForm.patchValue(val.data, { emitEvent: false });
         },
         error: err => {
-          console.log(err);
+          console.log("ERROR", err);
         }
       })
     } catch (error) {
@@ -767,6 +764,16 @@ export class Steps implements OnInit {
           console.log(val);
           const data = val.data;
           this.assignedFinalInterviewCandidateList = data.candidateInterviewMappings;
+          const finalList = this.assignedFinalInterviewCandidateList;
+          console.log(finalList);
+          finalList.forEach((finalItem: any) => {
+            console.log(this.assignedCandidateList);
+            const match = this.assignedCandidateList?.find((c: any) => c.candidate.candidateId === finalItem.candidate.candidateId)
+            console.log(match);
+            if(match){
+              finalItem.feedback = match.feedback;
+            }
+          })
           this.populateCandidateFinalInterviewMapping();
           this.finalInterviewId = data.interviewId;
 

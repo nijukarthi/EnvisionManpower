@@ -1,6 +1,7 @@
 import { STEP_ACCESS } from '@/constants/step-access.config';
 import { DemandStatus } from '@/models/demand-status/demand-status.enum';
 import { FullFillmentStatus } from '@/models/fullfillment-status/fullfillment-status.enum';
+import { UserGroups } from '@/models/usergroups/usergroups.enum';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
 import { StepStateService } from '@/service/step-service/step-state.service';
@@ -24,6 +25,8 @@ export class DemandFullfillment implements OnInit {
   requisitionDetails: any;
 
   openViewRequisition = false;
+
+  UserGroups = UserGroups;
 
   currentUserRole = Number(sessionStorage.getItem('userGroupId'));
 
@@ -50,7 +53,8 @@ export class DemandFullfillment implements OnInit {
             state: {
               requesitionId: demand.requesitionId,
               demandId: demand.demandId,
-              fullfillmentStatus: demand.fullfillmentStatus
+              fullfillmentStatus: demand.fullfillmentStatus,
+              categoryId: demand.requesitionDetails?.category?.categoryId
             }
           }
         )
@@ -95,7 +99,8 @@ export class DemandFullfillment implements OnInit {
         state: {
           requesitionId: demand.requesitionId,
           demandId: demand.demandId,
-          fullfillmentStatus: demand.fullfillmentStatus
+          fullfillmentStatus: demand.fullfillmentStatus,
+          categoryId: demand.requesitionDetails?.category?.categoryId
         }
       }
     );
@@ -132,19 +137,7 @@ export class DemandFullfillment implements OnInit {
   viewRequisition(demand: any){
     try {
       this.openViewRequisition = true;
-      const data = {
-        requesitionId: demand.requesitionId
-      }
-
-      this.apiService.viewRequisition(data).subscribe({
-        next: val => {
-          console.log(val);
-          this.requisitionDetails = val.data;
-        },
-        error: err => {
-          console.log(err);
-        }
-      })
+      this.requisitionDetails = demand?.requesitionDetails;
     } catch (error) {
       console.log(error);
     }

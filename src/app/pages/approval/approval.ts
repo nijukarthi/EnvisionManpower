@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Shared } from '@/service/shared';
 import { FormBuilder } from '@angular/forms';
 import { Apiservice } from '@/service/apiservice/apiservice';
@@ -6,6 +6,7 @@ import { DemandStatus } from '@/models/demand-status/demand-status.enum';
 import { ApprovalStatus } from '@/models/approval-status/approval-status.enum';
 import { UserGroups } from '@/models/usergroups/usergroups.enum';
 import { MessageService } from 'primeng/api';
+import { Table } from 'primeng/table';
 
 @Component({
   selector: 'app-approval',
@@ -14,7 +15,7 @@ import { MessageService } from 'primeng/api';
   styleUrl: './approval.scss'
 })
 export class Approval implements OnInit {
-  demandProcessingList: any;
+  demandProcessingList: any[] = [];
   requisitionDetails: any;
 
   USERGROUPS = UserGroups;
@@ -27,6 +28,7 @@ export class Approval implements OnInit {
   pageSize = 10;
   first = 0;
   demandProcessingListLength = 0;
+  filteredList: any[] = [];
 
   activeTab = 'processing';
 
@@ -91,7 +93,7 @@ export class Approval implements OnInit {
         next: val => {
           console.log(val);
           this.demandProcessingList = val?.data?.data;
-          this.demandProcessingListLength = val?.data.length ?? 0;
+          this.demandProcessingListLength = val?.data?.length ?? 0;
         },
         error: err => {
           console.log(err);
@@ -198,4 +200,15 @@ export class Approval implements OnInit {
       console.log(error);
     }
   }
+
+  @ViewChild('dt') dt!: Table;
+
+searchText = "";
+searchSpn = '';
+
+applyFilter() {
+  this.dt.filter(this.searchText, 'demandCode', 'contains');
+  this.dt.filter(this.searchSpn, 'spn.spnCode', 'contains');
+}
+
 }

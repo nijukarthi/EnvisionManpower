@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { MenuItem, MessageService } from 'primeng/api';
 import { AppMenuitem } from './app.menuitem';
 import { Apiservice } from '@/service/apiservice/apiservice';
+import { UserGroups } from '@/models/usergroups/usergroups.enum';
 
 @Component({
     selector: 'app-menu',
@@ -28,6 +29,7 @@ export class AppMenu {
     siteInchargeUser:boolean = false;
     projectManagerUser:boolean = false;
     resourceManagerUser:boolean = false;
+    consultancyUser = false;
 
     constructor(private apiService: Apiservice) { }
 
@@ -54,6 +56,8 @@ export class AppMenu {
                             this.projectManagerUser = true;
                         }else if(this.loggedInUserDetails.userGroupId == 326 && this.loggedInUserDetails.userGroupName == 'Resource Manager'){
                             this.resourceManagerUser = true;
+                        }else if (this.loggedInUserDetails.userGroupId === UserGroups.CONSULTANCY) {
+                            this.consultancyUser = true
                         }
                     }
 
@@ -102,10 +106,11 @@ export class AppMenu {
                             {
                                 label: 'Manpower Fulfillment',
                                 icon: 'pi pi-history',
-                                routerLink: ['/home/demand-fullfillment']
+                                routerLink: ['/home/demand-fullfillment'],
+                                visible: this.consultancyUser || this.adminUser
                             },
                             {
-                                label: 'Demand Id vs PO Assign',
+                                label: 'PO & Demand Map',
                                 icon: 'pi pi-file-import', 
                                 routerLink: ['/home/po-assign']
                             },
@@ -125,7 +130,7 @@ export class AppMenu {
                                 routerLink: ['/home/training']
                             }
                         ],
-                         visible: this.adminUser
+                        visible: this.adminUser || this.consultancyUser
                     },
                     {
                         label: 'Performance & Attendance',
