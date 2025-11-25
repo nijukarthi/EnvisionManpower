@@ -13,8 +13,9 @@
                     <th>Role</th>
                     <th>Total No. of Working Days</th>
                     <th>Present Days</th>
+                    <th>Week Off</th>
                     <th>Paid Leave</th>
-                    <th>Absent Days</th>
+                    <th>Unpaid Leave</th>
                 </tr>
             </ng-template>
             <ng-template #body let-attendance let-i="rowIndex">
@@ -27,7 +28,8 @@
                     <td>{{ attendance.employmentDetails.cluster.clusterName || '-' }}</td>               
                     <td>{{ attendance.employmentDetails.envisionRole.roleName || '-' }}</td>    
                     <td>30</td>                          
-                    <td>26</td>                          
+                    <td>26</td>
+                    <td>2</td>                          
                     <td>2</td>                   
                     <td>2</td>       
                 </tr>

@@ -18,7 +18,9 @@
                     <th>Planned Deployment Date</th>
                     <th>Planned Release Date</th>
                     <th>Role</th>
-                    <th>Actions</th>
+                    @if (currentUserRole !== UserGroups.CONSULTANCY) {
+                        <th>Actions</th>
+                    }
                 </tr>
             </ng-template>
             <ng-template #body let-demand let-i="rowIndex">
@@ -29,8 +31,12 @@
                             (onClick)="goToStep(demand)" />
                     </td>
                     <td>
-                        <p-menu #menu [model]="getMenuItems(demand)" [popup]="true" appendTo="body" />
-                        <p-button (onClick)="menu.toggle($event)" [label]="demand.demandCode" variant="text" link />
+                        @if (currentUserRole !== UserGroups.CONSULTANCY) {
+                            <p-menu #menu [model]="getMenuItems(demand)" [popup]="true" appendTo="body" />
+                            <p-button (onClick)="menu.toggle($event)" [label]="demand.demandCode" variant="text" link />
+                        }@else {
+                            {{ demand.demandCode }}
+                        }
                     </td>
                     <td>{{ demand.spn.spnCode }}</td>
                     <td>{{ demand.spn.spnDescription }}</td>
@@ -42,10 +48,12 @@
                     <td>
                         {{ demand?.envisionRole?.roleName ?? '-' }}
                     </td>
-                    <td>
-                        <p-menu #menu [model]="getMenuItems(demand)" [popup]="true" appendTo="body" />
-                        <p-button (onClick)="menu.toggle($event)" icon="pi pi-ellipsis-v" [rounded]="true" variant="text"  />
-                    </td>
+                    @if (currentUserRole !== UserGroups.CONSULTANCY) {
+                        <td>
+                            <p-menu #menu [model]="getMenuItems(demand)" [popup]="true" appendTo="body" />
+                            <p-button (onClick)="menu.toggle($event)" icon="pi pi-ellipsis-v" [rounded]="true" variant="text"  />
+                        </td>
+                    }
                 </tr>
             </ng-template>
             <ng-template #emptymessage>
