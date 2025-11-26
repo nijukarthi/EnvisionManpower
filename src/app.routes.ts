@@ -23,7 +23,6 @@ import { Project } from '@/pages/project/project/project';
 import { CandidateFixedCost } from '@/pages/candidate/candidate-fixed-cost/candidate-fixed-cost';
 import { CandidateCostPlus } from '@/pages/candidate/candidate-cost-plus/candidate-cost-plus';
 import { ConsultancyForm } from '@/pages/consultancy/consultancy-form/consultancy-form';
-import { GuestUserPage } from '@/pages/fullFillProcess/guest-user-page/guest-user-page';
 import { Steps } from '@/pages/fullFillProcess/steps/steps';
 import { DemandFullfillment } from '@/pages/fullFillProcess/demand-fullfillment/demand-fullfillment';
 import { FixedCostCandidateForm } from '@/pages/candidate/fixed-cost-candidate-form/fixed-cost-candidate-form';
@@ -85,7 +84,6 @@ export const appRoutes: Routes = [
             { path: 'interviewers', component: Interviewer, canActivate: [authGuard] },
             { path: 'uikit', canActivate: [authGuard], loadChildren: () => import('./app/pages/uikit/uikit.routes') },
             { path: 'documentation', component: Documentation, canActivate: [authGuard] },
-            { path: 'guestUserPage', component: GuestUserPage, canActivate: [authGuard] },
             { path: 'demand-fullfillment', component: DemandFullfillment, canActivate: [authGuard] },
             { path: 'demand-fullfillment/steps', component: Steps, canActivate: [authGuard] },
             { path: 'po-assign', component: PoAssignTable, canActivate: [authGuard] },
