@@ -19,9 +19,13 @@ export class SitePerformance implements OnInit {
   first = 0;
   sitePerformancesListLength = 0;
   employmentId = 0;
+  month: number | null = null;
+  year: number | null = null;
 
   sitePerformancesList: any;
   employeeDetails: any[] = [];
+
+  date: Date = new Date();
 
   private fb = inject(FormBuilder);
   private router = inject(Router);
@@ -80,20 +84,78 @@ export class SitePerformance implements OnInit {
 
   fetchCandidateSitePerformance(){
     try {
+      this.month = this.date ? this.date.getMonth() + 1 : null;
+      this.year = this.date ? this.date.getFullYear() : null;
+
       const data = {
         offSet: this.offSet,
-        pageSize: this.pageSize
+        pageSize: this.pageSize,
+        month: this.month,
+        year: this.year
       }
       console.log(data);
 
       this.apiService.fetchCandidateSitePerformance(data).subscribe({
         next: val => {
           console.log(val);
-          this.sitePerformancesList = val.data.data;
-          this.sitePerformancesListLength = val.data.length ?? 0;
+          this.sitePerformancesList = val?.data?.data;
+          this.sitePerformancesListLength = val?.data?.length ?? 0;
         },
         error: err => {
           console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  getSeverity(status: string){
+    switch(status){
+      case 'ACTIVE':
+        return 'primary';
+      case 'TRANSFERRED':
+        return 'warn';
+      case 'RESIGNED':
+        return 'danger';
+      default: 
+        return 'info';
+    }
+  }
+
+  calculateTotalScore(performance: any){
+    const detail = performance.employeePerformance.performanceDetails;
+
+    performance.employeePerformance.totalScore = detail.reduce((sum: number, item: any) => sum + item.score, 0);
+  }
+
+  submitPerformanceForm(performance: any){
+    try {
+      console.log(performance);
+
+      const data = {
+        employmentId: performance.employmentDetails.employmentId,
+        year: this.year,
+        month: this.month,
+        totalScore: performance.employeePerformance.totalScore,
+        remarks: performance.employeePerformance.remarks,
+        performanceDetails: performance.employeePerformance.performanceDetails
+      }
+
+      console.log(data);
+
+      this.apiService.updateSitePerformanceDetails(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.messageService.add({severity: 'success', summary: 'Success', detail: 'Successfully Updated Site Performance Details'});
+          this.fetchCandidateSitePerformance();
+        },
+        error: err => {
+          console.log(err);
+
+          if (err.status === 400) {
+            this.messageService.add({severity: 'error', summary: 'Error', detail: err.error.detail});
+          }
         }
       })
     } catch (error) {
