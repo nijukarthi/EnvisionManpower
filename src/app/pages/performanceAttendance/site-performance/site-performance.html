@@ -1,14 +1,17 @@
 <div class="card">
     <div class="flex items-start justify-between">
         <h5>Site Performance</h5>
+        <p-datepicker view="month" [(ngModel)]="date" dateFormat="mm/yy" [readonlyInput]="true" 
+            placeholder="Pick a month" (onSelect)="fetchCandidateSitePerformance()" />
         <!-- <p-menu #menu [model]="actionItems" [popup]="true" />
         <p-button (onClick)="menu.toggle($event)" label="Actions" icon="pi pi-angle-down" iconPos="right" /> -->
     </div>
     <div class="border border-[var(--p-surface-200)] rounded-lg overflow-hidden">
-        <p-table [value]="sitePerformancesList" stripedRows [rowHover]="true" [paginator]="true"
+        <p-table [value]="sitePerformancesList" stripedRows [rowHover]="true" [paginator]="true" editMode="row"
            [rows]="pageSize" [lazy]="true" [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true"
            [first]="first" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-           [totalRecords]="sitePerformancesListLength" [tableStyle]="{'min-width': '180rem'}" (onPage)="pageChange($event)">
+           [scrollable]="true" scrollHeight="500px" [totalRecords]="sitePerformancesListLength" 
+           [tableStyle]="{'min-width': '200rem'}" (onPage)="pageChange($event)">
             <ng-template #header>
                 <tr>
                     <!-- <th>
@@ -21,6 +24,7 @@
                     <th>Site Name</th>
                     <th>Cluster Name</th>
                     <th>Role</th>
+                    <th>Status</th>
                     <th>Actual DOJ</th>
                     <th>Contact Number</th>
                     <th>Site Incharge</th>
@@ -39,58 +43,87 @@
                     <th>Actions</th>
                 </tr>
             </ng-template>
-            <ng-template #body let-performance let-i="rowIndex">
-                <tr>
+            <ng-template #body let-performance let-editing="editing" let-i="rowIndex">
+                <tr [pEditableRow]="performance">
                     <!-- <td>
                         <p-tableCheckbox [value]="performance" (click)="selectedEmployee(performance)" />
                     </td> -->
                     <td>{{ i + 1 }}</td>
-                    <td>{{ performance.employeeCode || '-' }}</td>
-                    <td>{{ performance.candidateName || '-' }}</td>
+                    <td>{{ performance.candidate?.employeeCode || '-' }}</td>
+                    <td>{{ performance.candidate?.candidateName || '-' }}</td>
                     <td>{{ performance.employmentDetails.project.projectCode || '-' }}</td>
                     <td>{{ performance.employmentDetails.project.siteName || '-' }}</td>
                     <td>{{ performance.employmentDetails.cluster.clusterName || '-' }}</td>
                     <td>{{ performance.employmentDetails.envisionRole.roleName || '-' }}</td>
+                    <td>
+                        <p-tag [value]="performance.employmentDetails.employmentStatus"
+                            [severity]="getSeverity(performance.employmentDetails.employmentStatus)" />
+                    </td>
                     <td>{{ performance.employmentDetails.joiningDate || '-' }}</td>
-                    <td>{{ performance.phoneNumber || '-' }}</td>
-                    <td>Mamitha</td>
-                    <td>Diploma</td>
-                    <td>
-                        <input type="text" pInputText />
+                    <td>{{ performance.candidate?.phoneNumber || '-' }}</td>
+                    <td>{{ performance.employmentDetails.siteIncharge.userName }}</td>
+                    <td>{{ performance.candidate.qualification }}</td>
+                    @for (detail of performance.employeePerformance.performanceDetails; track $index) {
+                        <td #pEditableColumn>
+                            <p-cellEditor>
+                                <ng-template #input>
+                                    @if (performance.employmentDetails.employmentStatus === 'ACTIVE') {
+                                        <p-inputnumber [(ngModel)]="detail.score" (ngModelChange)="calculateTotalScore(performance)"
+                                            [useGrouping]="false" [min]="0" [max]="10" />
+                                    }@else {
+                                        <span>{{ detail.score }}</span>
+                                    }
+                                </ng-template>
+                                <ng-template #output>
+                                    {{ detail.score }}
+                                </ng-template>
+                            </p-cellEditor>
+                        </td>
+                    }
+                    <td #pEditableColumn>
+                        <p-cellEditor>
+                            <ng-template #input>
+                                @if (performance.employmentDetails.employmentStatus === 'ACTIVE') {
+                                    <p-inputnumber [(ngModel)]="performance.employeePerformance.totalScore"
+                                        [disabled]="true" />
+                                } @else {
+                                    <span>{{ performance.employeePerformance.totalScore }}</span>
+                                }
+                            </ng-template>
+                            <ng-template #output>
+                                {{ performance.employeePerformance.totalScore }}
+                            </ng-template>
+                        </p-cellEditor>
                     </td>
-                    <td>
-                        <input type="text" pInputText />
+                    <td #pEditableColumn>
+                        <p-cellEditor>
+                            <ng-template #input>
+                                @if (performance.employmentDetails.employmentStatus === 'ACTIVE') {
+                                    <input type="text" pInputText [(ngModel)]="performance.employeePerformance.remarks" />
+                                } @else {
+                                    <span>{{ performance.employeePerformance.remarks ?? '-' }}</span>
+                                }
+                            </ng-template>
+                            <ng-template #output>
+                                {{ performance.employeePerformance.remarks ?? '-' }}
+                            </ng-template>
+                        </p-cellEditor>
                     </td>
-                    <td>
-                        <input type="text" pInputText />
-                    </td>
-                    <td>
-                        <input type="text" pInputText />
-                    </td>
-                    <td>
-                        <input type="text" pInputText />
-                    </td>
-                    <td>
-                        <input type="text" pInputText />
-                    </td>
-                    <td>
-                        <input type="text" pInputText />
-                    </td>
-                    <td>
-                        <input type="text" pInputText />
-                    </td>
-                    <td>
-                        <input type="text" pInputText />
-                    </td>
-                    <td>
-                        <input type="text" pInputText />
-                    </td>
-                    <td>
-                        <input type="text" pInputText />
-                    </td>
-                    <td>
-                        <p-menu #menu [model]="getMenuItems(performance)" [popup]="true" appendTo="body" />
-                        <p-button (onClick)="menu.toggle($event)" icon="pi pi-ellipsis-v" rounded severity="secondary" />
+                    <td class="flex items-center justify-center gap-2">
+                        @if (!editing) {
+                            <button pButton pRipple type="button" icon="pi pi-pencil"
+                                pInitEditableRow rounded severity="secondary"
+                                [disabled]="performance.employmentDetails.employmentStatus !== 'ACTIVE'"></button>
+                        }@else {
+                            <button pButton pRipple type="submit" icon="pi pi-check"
+                                pSaveEditableRow rounded severity="primary" (click)="submitPerformanceForm(performance)"
+                                [disabled]="performance.employmentDetails.employmentStatus !== 'ACTIVE'"></button>
+                            <button pButton pRipple type="button" icon="pi pi-times"
+                                pCancelEditableRow rounded severity="danger"
+                                [disabled]="performance.employmentDetails.employmentStatus !== 'ACTIVE'"></button>
+                        }
+                        <!-- <p-menu #menu [model]="getMenuItems(performance)" [popup]="true" appendTo="body" />
+                        <p-button (onClick)="menu.toggle($event)" icon="pi pi-ellipsis-v" rounded severity="secondary" /> -->
                     </td>
                 </tr>
             </ng-template>

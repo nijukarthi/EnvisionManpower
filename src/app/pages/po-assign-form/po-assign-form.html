@@ -1,74 +1,180 @@
 <div class="card">
     <h5>PO Assign</h5>
+    <h6>PO Details</h6>
     <div class="grid grid-cols-2 gap-2">
+        <div class="grid col-span-1 gap-1">
+            <label for="consultancy-name">Consultancy Name</label>
+            <p-select [options]="consultancyList" optionLabel="label" optionValue="value" appendTo="body"
+                placeholder="Select Consultancy" />
+        </div>
         <div class="grid col-span-1 gap-1">
             <label for="po-number">PO Number</label>
             <input type="text" pInputText id="po-number" />
-        </div>
-        <div class="grid col-span-1 gap-1">
-            <label for="demand-code">Demand Code</label>
-            <p-select [options]="demandCodeList" optionLabel="label" optionValue="value"
-                placeholder="Select Demand Code" appendTo="body" id="demand-code" />
-        </div>
-        <div class="grid col-span-1 gap-1">
-            <label for="project-code">Project Code</label>
-            <input type="text" pInputText id="project-code" />
-        </div>
-        <div class="grid col-span-1 gap-1">
-            <label for="site-name">Site Name</label>
-            <input type="text" pInputText id="site-name" />
-        </div>
-        <div class="grid col-span-1 gap-1">
-            <label for="spn-code">SPN Code</label>
-            <input type="text" pInputText id="spn-code" />
-        </div>
-        <div class="grid col-span-1 gap-1">
-            <label for="spn-description">SPN Description</label>
-            <input type="text" pInputText id="spn-description" />
-        </div>
-        <div class="grid col-span-1 gap-1">
-            <label for="experience">Experience</label>
-            <input type="text" pInputText id="experience" />
-        </div>
-        <div class="grid col-span-1 gap-1">
-            <label for="site-name">Requested By</label>
-            <input type="text" pInputText id="site-name" />
-        </div>
-        <div class="grid col-span-1 gap-1">
-            <label for="consultancy-name">Consultancy Name</label>
-            <p-select [options]="consultancyList" optionLabel="label" optionValue="value"
-                appendTo="body" placeholder="Select Consultancy" />
-        </div>        
+        </div>     
         <div class="grid col-span-1 gap-1">
             <label for="po-date">PO Date</label>
-            <input type="text" pInputText id="po-date" />
+            <p-datepicker [showIcon]="true" [iconDisplay]="'input'" inputId="po-date" />
         </div>
         <div class="grid col-span-1 gap-1">
-            <label for="unit-price">Unit Price</label>
-            <input type="text" pInputText id="unit-price" />
-        </div>
-        <div class="grid col-span-1 gap-1">
-            <label for="po-value">PO Value</label>
-            <input type="text" pInputText id="po-value" />
-        </div>
-        <div class="grid col-span-1 gap-1">
-            <label for="tax-amount">Tax Amount</label>
-            <input type="text" pInputText id="tax-amount" />
-        </div>
-        <div class="grid col-span-1 gap-1">
-            <label for="total-amount">Total Amount</label>
-            <input type="text" pInputText id="total-amount" />
+            <label for="po-startdate">PO Start Date</label>
+            <p-datepicker [showIcon]="true" [iconDisplay]="'input'" inputId="po-startdate" />
         </div>
         <div class="grid col-span-1 gap-1">
             <label for="po-valid">PO Valid Till</label>
             <p-datepicker [showIcon]="true" [iconDisplay]="'input'" inputId="po-valid" />
         </div>
         <div class="grid col-span-1 gap-1">
-            <label for="duration">Duration</label>
-            <p-datepicker [showIcon]="true" [iconDisplay]="'input'" inputId="duration" />
+            <label for="duration">Duration (In Months)</label>
+            <input type="text" pInputText id="duration" [disabled]="true" />
+        </div>
+        <div class="grid col-span-1 gap-1">
+            <label for="po-value">PO Total Value</label>
+            <input type="text" pInputText id="po-value" />
         </div>
     </div>
-    <div class="mt-4 flex justify-end">
+</div>
+
+<div class="card">
+    <h5>Demand details</h5>
+    <p-accordion value="0">
+        <p-accordion-panel value="0">
+            <p-accordion-header>New Employee</p-accordion-header>
+            <p-accordion-content>
+                <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
+                    <div class="flex justify-end p-3">
+                        <p-button label="Add Line Item" icon="pi pi-plus" />
+                    </div>
+                    <p-accordion value="0">
+                        <p-accordion-panel value="0">
+                            <p-accordion-header>Line Items</p-accordion-header>
+                            <p-accordion-content>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div class="grid col-span-1 gap-1">
+                                        <label for="">Demand Code</label>
+                                        <p-select />
+                                    </div>
+                                    <div class="grid col-span-1 gap-1">
+                                        <label for="">SPN Code</label>
+                                        <p-select />
+                                    </div>
+                                    <div class="grid col-span-1 gap-1">
+                                        <label for="">SPN Description</label>
+                                        <p-select />
+                                    </div>
+                                    <div class="grid col-span-1 gap-1">
+                                        <label for="">Experience</label>
+                                        <p-select />
+                                    </div>
+                                    <div class="grid col-span-1 gap-1">
+                                        <label for="">Quantity</label>
+                                        <input type="text" pInputText />
+                                    </div>
+                                    <div class="grid col-span-1 gap-1">
+                                        <label for="">Add Employee</label>
+                                        <p-button icon="pi pi-plus" rounded />
+                                    </div>
+                                </div>
+                
+                                <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden mt-4">
+                                    <p-table [value]="newEmployeeList" stripedRows [rowHover]="true">
+                                        <ng-template #header>
+                                            <tr>
+                                                <th>SL NO</th>
+                                                <th>Employee Code</th>
+                                                <th>Employee Name</th>
+                                                <th>Duration (In Months)</th>
+                                                <th>Unit Price</th>
+                                                <th>Tax Rate</th>
+                                                <th>Amount</th>
+                                                <th>Total Value</th>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template #body let-new let-i="rowIndex">
+                                            <tr>
+                                                <td>{{ i + 1 }}</td>
+                                                <td>{{ new.employeeCode }}</td>
+                                                <td>{{ new.employeeName }}</td>
+                                                <td>{{ new.duration }}</td>
+                                                <td>{{ new.unitPrice }}</td>
+                                                <td>{{ new.taxRate }}</td>
+                                                <td>{{ new.amount }}</td>
+                                                <td>{{ new.totalValue }}</td>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template emptymessage></ng-template>
+                                    </p-table>
+                                </div>
+                            </p-accordion-content>
+                        </p-accordion-panel>
+                    </p-accordion>
+                </div>
+            </p-accordion-content>
+        </p-accordion-panel>
+        <p-accordion-panel value="1">
+            <p-accordion-header>
+                <div class="flex items-center gap-2">
+                    <h6>Existing Employee</h6>
+                    <p-button icon="pi pi-plus" rounded />
+                </div>
+            </p-accordion-header>
+            <p-accordion-content>
+                <h6>Line Items</h6>
+                <div class="grid grid-cols-2 gap-2">
+                    <div class="grid col-span-1 gap-1">
+                        <label for="">SPN Code</label>
+                        <p-select />
+                    </div>
+                    <div class="grid col-span-1 gap-1">
+                        <label for="">SPN Description</label>
+                        <p-select />
+                    </div>
+                    <div class="grid col-span-1 gap-1">
+                        <label for="">Experience</label>
+                        <p-select />
+                    </div>
+                    <div class="grid col-span-1 gap-1">
+                        <label for="">Quantity</label>
+                        <input type="text" pInputText />
+                    </div>
+                    <div class="grid col-span-1 gap-1">
+                        <label for="">Add Employee</label>
+                        <p-button icon="pi pi-plus" rounded />
+                    </div>
+                </div>
+                <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden mt-4">
+                    <p-table [value]="existingEmployeeList" stripedRows [rowHover]="true">
+                        <ng-template #header>
+                            <tr>
+                                <th>SL NO</th>
+                                <th>Employee Code</th>
+                                <th>Employee Name</th>
+                                <th>Duration (In Months)</th>
+                                <th>Unit Price</th>
+                                <th>Tax Rate</th>
+                                <th>Amount</th>
+                                <th>Total Value</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template #body let-new let-i="rowIndex">
+                            <tr>
+                                <td>{{ i + 1 }}</td>
+                                <td>{{ new.employeeCode }}</td>
+                                <td>{{ new.employeeName }}</td>
+                                <td>{{ new.duration }}</td>
+                                <td>{{ new.unitPrice }}</td>
+                                <td>{{ new.taxRate }}</td>
+                                <td>{{ new.amount }}</td>
+                                <td>{{ new.totalValue }}</td>
+                            </tr>
+                        </ng-template>
+                        <ng-template emptymessage></ng-template>
+                    </p-table>
+                </div>
+            </p-accordion-content>
+        </p-accordion-panel>
+    </p-accordion>
+
+    <div class="flex justify-end mt-4">
         <button pButton pRipple type="submit">
             <span pButtonLabel>Submit</span>
         </button>

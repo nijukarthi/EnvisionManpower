@@ -1,7 +1,14 @@
 <div class="card">
-    <h5>Attendance</h5>
+    <div class="flex items-baseline-last justify-between">
+        <h5>Attendance</h5>
+        <p-datepicker view="month" [(ngModel)]="date" dateFormat="mm/yy" [readonlyInput]="true" 
+            placeholder="Pick a month" (onSelect)="fetchAttendanceList()" />
+    </div>
     <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
-        <p-table [value]="attendanceList" stripedRows [rowHover]="true" [tableStyle]="{'min-width': '100rem'}">
+        <p-table [value]="attendanceList" stripedRows [rowHover]="true" [paginator]="true" [first]="first" editMode="row"
+            [rows]="pageSize" [lazy]="true" [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true"
+            [scrollable]="true" scrollHeight="500px" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" 
+            [totalRecords]="totalRecords" [tableStyle]="{'min-width': '130rem'}" (onPage)="pageChange($event)">
             <ng-template #header>
                 <tr>
                     <th>SL NO</th>
@@ -11,27 +18,113 @@
                     <th>Site Name</th>
                     <th>Cluster Name</th>
                     <th>Role</th>
+                    <th>Status</th>
                     <th>Total No. of Working Days</th>
                     <th>Present Days</th>
                     <th>Week Off</th>
                     <th>Paid Leave</th>
                     <th>Unpaid Leave</th>
+                    <th>Actions</th>
                 </tr>
             </ng-template>
-            <ng-template #body let-attendance let-i="rowIndex">
-                <tr>
+            <ng-template #body let-attendance let-editing="editing" let-i="rowIndex">
+                <tr [pEditableRow]="attendance">
                     <td>{{ i + 1 }}</td>
-                    <td>{{ attendance.employeeCode || '-' }}</td>
-                    <td>{{ attendance.candidateName || '-' }}</td>
+                    <td>{{ attendance.candidate?.employeeCode || '-' }}</td>
+                    <td>{{ attendance.candidate?.candidateName || '-' }}</td>
                     <td>{{ attendance.employmentDetails.project.projectCode || '-' }}</td>               
                     <td>{{ attendance.employmentDetails.project.siteName || '-' }}</td>               
                     <td>{{ attendance.employmentDetails.cluster.clusterName || '-' }}</td>               
-                    <td>{{ attendance.employmentDetails.envisionRole.roleName || '-' }}</td>    
-                    <td>30</td>                          
-                    <td>26</td>
-                    <td>2</td>                          
-                    <td>2</td>                   
-                    <td>2</td>       
+                    <td>{{ attendance.employmentDetails.envisionRole.roleName || '-' }}</td>   
+                    <td>
+                        <p-tag [value]="attendance.employmentDetails.employmentStatus" 
+                        [severity]="getSeverity(attendance.employmentDetails.employmentStatus)" />
+                    </td> 
+                    <td #pEditableColumn>
+                        <p-cellEditor>
+                            <ng-template #input>
+                                @if (attendance.employmentDetails.employmentStatus === 'ACTIVE') {
+                                    <p-inputnumber [(ngModel)]="attendance.totalWorkingDays" [useGrouping]="false" />
+                                }@else {
+                                    <span>{{ attendance.totalWorkingDays }}</span>
+                                }
+                            </ng-template>
+                            <ng-template #output>
+                                {{ attendance.totalWorkingDays }}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>                          
+                    <td #pEditableColumn>
+                        <p-cellEditor>
+                            <ng-template #input>
+                                @if (attendance.employmentDetails.employmentStatus === 'ACTIVE') {
+                                    <p-inputnumber [(ngModel)]="attendance.presentDays" [useGrouping]="false" />
+                                }@else {
+                                    <span>{{ attendance.presentDays }}</span>
+                                }
+                            </ng-template>
+                            <ng-template #output>
+                                {{ attendance.presentDays }}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <td #pEditableColumn>
+                        <p-cellEditor>
+                            <ng-template #input>
+                                @if (attendance.employmentDetails.employmentStatus === 'ACTIVE') {
+                                    <p-inputnumber [(ngModel)]="attendance.weekOff" [useGrouping]="false" />
+                                }@else {
+                                    <span>{{ attendance.weekOff }}</span>
+                                }
+                            </ng-template>
+                            <ng-template #output>
+                                {{ attendance.weekOff }}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>                          
+                    <td #pEditableColumn>
+                        <p-cellEditor>
+                            <ng-template #input>
+                                @if (attendance.employmentDetails.employmentStatus === 'ACTIVE') {
+                                    <p-inputnumber [(ngModel)]="attendance.paidLeaves" [useGrouping]="false" />
+                                }@else {
+                                    <span>{{ attendance.paidLeaves }}</span>
+                                }
+                            </ng-template>
+                            <ng-template #output>      
+                                {{ attendance.paidLeaves }}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>                   
+                    <td #pEditableColumn>
+                        <p-cellEditor>
+                            <ng-template #input>
+                                @if (attendance.employmentDetails.employmentStatus === 'ACTIVE') {
+                                    <p-inputnumber [(ngModel)]="attendance.absentDays" [useGrouping]="false" />
+                                }@else {
+                                    <span>{{ attendance.absentDays }}</span>
+                                }
+                            </ng-template>
+                            <ng-template #output>
+                                {{ attendance.absentDays }}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>  
+                    <td class="flex items-center justify-center gap-2">
+                        @if (!editing) {
+                            <button pButton pRipple type="button" icon="pi pi-pencil"
+                                pInitEditableRow rounded severity="secondary"
+                                [disabled]="attendance.employmentDetails.employmentStatus !== 'ACTIVE'"></button>
+                        } @else {
+                            <button pButton pRipple type="submit" icon="pi pi-check"
+                                pSaveEditableRow rounded severity="primary" (click)="submitAttendanceForm(attendance)"
+                                [disabled]="attendance.employmentDetails.employmentStatus !== 'ACTIVE'">
+                            </button>
+                            <button pButton pRipple type="button" icon="pi pi-times"
+                                pCancelEditableRow rounded severity="danger"
+                                [disabled]="attendance.employmentDetails.employmentStatus !== 'ACTIVE'"></button>
+                        }
+                    </td>     
                 </tr>
             </ng-template>
             <ng-template #emptymessage>
@@ -44,3 +137,5 @@
         </p-table>
     </div>
 </div>
+
+<p-toast />

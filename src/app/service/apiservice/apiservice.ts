@@ -466,4 +466,16 @@ export class Apiservice {
   fetchDemandDetails(params: any): Observable<any>{
     return this.postMethod('requesition/demand/byspn', params);
   }
+
+  fetchAttendanceList(params: any): Observable<any>{
+    return this.postMethod('candidate/siteattendance', params);
+  }
+
+  updateAttendanceDetails(params: any){
+    return this.postMethod('candidate/siteattendance/update', params);
+  }
+
+  updateSitePerformanceDetails(params: any){
+    return this.postMethod('candidate/siteperfomance/update', params);
+  }
 }

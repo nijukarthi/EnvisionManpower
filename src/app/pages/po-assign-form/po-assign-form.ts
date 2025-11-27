@@ -45,4 +45,50 @@ export class PoAssignForm {
       value: 4
     }
   ]
+
+  newEmployeeList = [
+    {
+      id: 1,
+      employeeCode: 'EC-0005',
+      employeeName: 'Praveen',
+      duration: 5,
+      unitPrice: 1000,
+      taxRate: 4000,
+      amount: 10000,
+      totalValue: 50000
+    },
+    {
+      id: 2,
+      employeeCode: 'EC-0006',
+      employeeName: 'Kayal',
+      duration: 6,
+      unitPrice: 2000,
+      taxRate: 4000,
+      amount: 15000,
+      totalValue: 550000
+    }
+  ]
+
+    existingEmployeeList = [
+    {
+      id: 1,
+      employeeCode: 'EC-0007',
+      employeeName: 'Kumar',
+      duration: 5,
+      unitPrice: 1000,
+      taxRate: 4000,
+      amount: 10000,
+      totalValue: 50000
+    },
+    {
+      id: 2,
+      employeeCode: 'EC-0008',
+      employeeName: 'Sandhya',
+      duration: 6,
+      unitPrice: 2000,
+      taxRate: 4000,
+      amount: 15000,
+      totalValue: 550000
+    }
+  ]
 }
