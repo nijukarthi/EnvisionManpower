@@ -1,49 +1,19 @@
 <div class="card">
     <h5>New Invoice Submission</h5>
+    <h6>Invoice Details</h6>
     <div class="grid grid-cols-2 gap-2">
         <div class="grid col-span-1 gap-1">
-            <label for="po-number">PO Number</label>
-            <p-select appendTo="body" placeholder="Select PO Number" />
+            <label for="invoice-number">Invoice Number</label>
+            <input type="text" pInputText id="invoice-number" />
         </div>
         <div class="grid col-span-1 gap-1">
-            <label for="po-date">PO Date</label>
-            <input type="text" pInputText id="po-date" />
-        </div>
-        <div class="grid col-span-1 gap-1">
-            <label for="unit-price">Unit Price</label>
-            <input type="text" pInputText id="unit-price" />
-        </div>
-        <div class="grid col-span-1 gap-1">
-            <label for="po-value">PO Value</label>
-            <input type="text" pInputText id="po-value" />
-        </div>
-        <div class="grid col-span-1 gap-1">
-            <label for="tax-amount">Tax Amount</label>
-            <input type="text" pInputText id="tax-amount" />
-        </div>
-        <div class="grid col-span-1 gap-1">
-            <label for="total-amount">Total Amount</label>
-            <input type="text" pInputText id="total-amount" />
-        </div>
-        <div class="grid col-span-1 gap-1">
-            <label for="po-valid">PO Valid Till</label>
-            <input type="text" pInputText id="po-valid" />
-        </div>
-        <div class="grid col-span-1 gap-1">
-            <label for="duration">Duration</label>
-            <input type="text" pInputText id="duration" />
-        </div>
-        <div class="grid col-span-1 gap-1">
-            <label for="consultancy-name">Consultancy Name</label>
-            <input type="text" pInputText id="consultancy-name" />
+            <label for="invoice-date">Invoice Date</label>
+            <p-datepicker [showIcon]="true" [iconDisplay]="'input'" appendTo="body" placeholder="Select Date"
+                inputId="invoice-date" />
         </div>
         <div class="grid col-start-1 col-span-1 gap-1">
             <label for="pod">POD</label>
             <input type="text" pInputText id="pod" />
-        </div>
-        <div class="grid col-span-1 gap-1">
-            <label for="hsn-code">HSN/SAC Code</label>
-            <input type="text" pInputText id="hsn-code" />
         </div>
         <div class="grid col-span-1 gap-1">
             <label for="seal-date">Seal and Sign Date By Consultancy</label>
@@ -55,14 +25,6 @@
                 appendTo="body" inputId="po-copy" placeholder="Select Yes/No" />
         </div>
         <div class="grid col-span-1 gap-1">
-            <label for="invoice-number">Invoice Number</label>
-            <input type="text" pInputText id="invoice-number" />
-        </div>
-        <div class="grid col-span-1 gap-1">
-            <label for="invoice-date">Invoice Date</label>
-            <p-datepicker [showIcon]="true" [iconDisplay]="'input'" appendTo="body" placeholder="Select Date" inputId="invoice-date" />
-        </div>
-        <div class="grid col-span-1 gap-1">
             <label for="submitted-date">Submitted Date</label>
             <p-datepicker [showIcon]="true" [iconDisplay]="'input'" appendTo="body" placeholder="Select Date" inputId="submitted-date" />
         </div>
@@ -71,78 +33,134 @@
             <input type="text" pInputText id="submitted-to" />
         </div>
     </div>
-    
-    <h5>Line Items</h5>
-    <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden -mt-3">
-        <p-table [value]="poDemandList" stripedRows [rowHover]="true" editMode="row" [tableStyle]="{'min-width': '100rem'}">
-            <ng-template #header>
-                <tr>
-                    <th>SL NO</th>
-                    <th>Demand Code</th>
-                    <th>Employee Code</th>
-                    <th>SPN Code</th>
-                    <th>SPN Description</th>
-                    <th>Experience</th>
-                    <th>Planned Deployment Date</th>
-                    <th>Planned Release Date</th>
-                    <th>Unit Price</th>
-                    <th>Total Net</th>
-                    <th>Actions</th>
-                </tr>
-            </ng-template>
-            <ng-template #body let-po let-editing="editing" let-i="rowIndex">
-                <tr [pEditableRow]="po">
-                    <td>{{ i + 1 }}</td>
-                    <td>{{ po.demandCode }}</td>
-                    <td>{{ po.employeeCode }}</td>
-                    <td>{{ po.spnCode }}</td>
-                    <td>{{ po.spnDescription }}</td>
-                    <td>{{ po.experience }}</td>
-                    <td>{{ po.pdd }}</td>
-                    <td>{{ po.prd }}</td>
-                    <td #pEditableColumn>
-                        <p-cellEditor>
-                            <ng-template #input>
-                                <input type="text" pInputText />
-                            </ng-template>
-                            <ng-template #output>
-                                {{ po.price || '-' }}
-                            </ng-template>
-                        </p-cellEditor>
-                    </td>
-                    <td #pEditableColumn>
-                        <p-cellEditor>
-                            <ng-template #input>
-                                <input type="text" pInputText />
-                            </ng-template>
-                            <ng-template #output>
-                                {{ po.netAmt || '-' }}
-                            </ng-template>
-                        </p-cellEditor>
-                    </td>
-                    <td class="flex items-center justify-center gap-2">
-                        @if (!editing) {
-                            <button pButton pRipple type="button" icon="pi pi-pencil" 
-                                pInitEditableRow rounded severity="secondary"></button>
-                        }@else {
-                            <button pButton pRipple type="button" icon="pi pi-check" 
-                                pSaveEditableRow rounded severity="success">
-                            </button>
-                            <button pButton pRipple type="button" icon="pi pi-times" 
-                                pCancelEditableRow rounded severity="danger"></button>
-                        }
-                    </td>
-                </tr>
-            </ng-template>
-            <ng-template #emptymessage>
-                <tr>
-                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground);">
-                        No Records Found
-                    </td>
-                </tr>
-            </ng-template>
-        </p-table>
-    </div>
+</div>
+
+<div class="card">
+    <h6>PO Details</h6>
+    <p-accordion value="0">
+        <p-accordion-panel value="0">
+            <p-accordion-header>Purchase Order 1</p-accordion-header>
+            <p-accordion-content>
+                <div class="grid grid-cols-2 gap-2">
+                    <div class="grid col-span-1 gap-1">
+                        <label for="po-number">PO Number</label>
+                        <p-select appendTo="body" placeholder="Select PO Number" />
+                    </div>
+                    <div class="grid col-span-1 gap-1">
+                        <label for="po-date">PO Date</label>
+                        <input type="text" pInputText id="po-date" />
+                    </div>
+                    <div class="grid col-span-1 gap-1">
+                        <label for="unit-price">Unit Price</label>
+                        <input type="text" pInputText id="unit-price" />
+                    </div>
+                    <div class="grid col-span-1 gap-1">
+                        <label for="po-value">PO Value</label>
+                        <input type="text" pInputText id="po-value" />
+                    </div>
+                    <div class="grid col-span-1 gap-1">
+                        <label for="tax-amount">Tax Amount</label>
+                        <input type="text" pInputText id="tax-amount" />
+                    </div>
+                    <div class="grid col-span-1 gap-1">
+                        <label for="total-amount">Total Amount</label>
+                        <input type="text" pInputText id="total-amount" />
+                    </div>
+                    <div class="grid col-span-1 gap-1">
+                        <label for="po-valid">PO Valid Till</label>
+                        <input type="text" pInputText id="po-valid" />
+                    </div>
+                    <div class="grid col-span-1 gap-1">
+                        <label for="duration">Duration (In Months)</label>
+                        <input type="text" pInputText id="duration" />
+                    </div>
+                </div>
+            
+                <h6>Line Items</h6>
+                <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden -mt-3">
+                    <p-table [value]="poDemandList" showGridlines stripedRows [rowHover]="true" editMode="row" 
+                        [tableStyle]="{'min-width': '130rem'}">
+                        <ng-template #header>
+                            <tr>
+                                <th rowspan="2"><p-tableHeaderCheckbox /></th>
+                                <th rowspan="2">SL NO</th>
+                                <th rowspan="2">Employee Code</th>
+                                <th rowspan="2">Employee Name</th>
+                                <th rowspan="2">SPN Code</th>
+                                <th rowspan="2">SPN Description</th>
+                                <th rowspan="2">Experience</th>
+                                <th rowspan="2">SAC Code</th>
+                                <th rowspan="2">Site Name</th>
+                                <th rowspan="2">Unit Price</th>
+                                <th colspan="4" style="text-align: center;">No. of Days</th>
+                                <th rowspan="2">Days Worked</th>
+                                <th rowspan="2">Total Net Price As Actual Days</th>
+                                <th rowspan="2">Actions</th>
+                            </tr>
+                            <tr>
+                                <th>Present Days</th>
+                                <th>Week Off</th>
+                                <th>Paid Leave</th>
+                                <th>Unpaid Leave</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template #body let-po let-editing="editing" let-i="rowIndex">
+                            <tr [pEditableRow]="po">
+                                <td>
+                                    <p-tableCheckbox />
+                                </td>
+                                <td>{{ i + 1 }}</td>
+                                <td>{{ po.employeeCode }}</td>
+                                <td>{{ po.employeeName }}</td>
+                                <td>{{ po.spnCode }}</td>
+                                <td>{{ po.spnDescription }}</td>
+                                <td>{{ po.experience }}</td>
+                                <td>{{ po.sacCode }}</td>
+                                <td>{{ po.siteName }}</td>
+                                <td>{{ po.unitPrice }}</td>
+                                <td>{{ po.present }}</td>
+                                <td>{{ po.weekOff }}</td>
+                                <td>{{ po.paidLeave }}</td>
+                                <td>{{ po.unpaidLeave }}</td>
+                                <td>{{ po.daysWorked }}</td>
+                                <td #pEditableColumn>
+                                    <p-cellEditor>
+                                        <ng-template #input>
+                                            <input type="text" pInputText />
+                                        </ng-template>
+                                        <ng-template #output>
+                                            {{ po.totalNet || '-' }}
+                                        </ng-template>
+                                    </p-cellEditor>
+                                </td>
+                                <td class="flex items-center justify-center gap-2">
+                                    @if (!editing) {
+                                    <button pButton pRipple type="button" icon="pi pi-pencil" pInitEditableRow rounded
+                                        severity="secondary"></button>
+                                    }@else {
+                                    <button pButton pRipple type="button" icon="pi pi-check" pSaveEditableRow rounded
+                                        severity="success">
+                                    </button>
+                                    <button pButton pRipple type="button" icon="pi pi-times" pCancelEditableRow rounded
+                                        severity="danger"></button>
+                                    }
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template #emptymessage>
+                            <tr>
+                                <td colspan="100%"
+                                    style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground);">
+                                    No Records Found
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </p-accordion-content>
+        </p-accordion-panel>
+    </p-accordion>
+
     <div class="flex justify-end mt-4">
         <button pButton pRipple type="submit">
             <span pButtonLabel>Submit</span>

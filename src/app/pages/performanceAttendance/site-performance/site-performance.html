@@ -1,22 +1,24 @@
 <div class="card">
     <div class="flex items-start justify-between">
         <h5>Site Performance</h5>
-        <p-datepicker view="month" [(ngModel)]="date" dateFormat="mm/yy" [readonlyInput]="true" 
-            placeholder="Pick a month" (onSelect)="fetchCandidateSitePerformance()" />
-        <!-- <p-menu #menu [model]="actionItems" [popup]="true" />
-        <p-button (onClick)="menu.toggle($event)" label="Actions" icon="pi pi-angle-down" iconPos="right" /> -->
+        <div class="flex justify-end gap-1">
+            <p-datepicker view="month" [(ngModel)]="date" dateFormat="mm/yy" [readonlyInput]="true" 
+                placeholder="Pick a month" (onSelect)="fetchCandidateSitePerformance()" />
+            <p-menu #menu [model]="getMenuItems()" [popup]="true" />
+            <p-button (onClick)="menu.toggle($event)" label="Actions" icon="pi pi-angle-down" iconPos="right" />
+        </div>
     </div>
     <div class="border border-[var(--p-surface-200)] rounded-lg overflow-hidden">
         <p-table [value]="sitePerformancesList" stripedRows [rowHover]="true" [paginator]="true" editMode="row"
            [rows]="pageSize" [lazy]="true" [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true"
            [first]="first" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
            [scrollable]="true" scrollHeight="500px" [totalRecords]="sitePerformancesListLength" 
-           [tableStyle]="{'min-width': '200rem'}" (onPage)="pageChange($event)">
+           [tableStyle]="{'min-width': '220rem'}" (onPage)="pageChange($event)">
             <ng-template #header>
                 <tr>
-                    <!-- <th>
+                    <th>
                         <p-tableHeaderCheckbox />
-                    </th> -->
+                    </th>
                     <th>SL No</th>
                     <th>Employee Code</th>
                     <th>Employee Name</th>
@@ -45,9 +47,9 @@
             </ng-template>
             <ng-template #body let-performance let-editing="editing" let-i="rowIndex">
                 <tr [pEditableRow]="performance">
-                    <!-- <td>
+                    <td>
                         <p-tableCheckbox [value]="performance" (click)="selectedEmployee(performance)" />
-                    </td> -->
+                    </td>
                     <td>{{ i + 1 }}</td>
                     <td>{{ performance.candidate?.employeeCode || '-' }}</td>
                     <td>{{ performance.candidate?.candidateName || '-' }}</td>
