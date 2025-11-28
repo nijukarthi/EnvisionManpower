@@ -23,7 +23,7 @@ export class SitePerformance implements OnInit {
   year: number | null = null;
 
   sitePerformancesList: any;
-  employeeDetails: any[] = [];
+  employeeDetails: any;
 
   date: Date = new Date();
 
@@ -48,21 +48,21 @@ export class SitePerformance implements OnInit {
   
   constructor(private apiService: Apiservice, private messageService: MessageService){}
 
-  getMenuItems(performance: any){
+  getMenuItems(){
     return [
       {
         label: 'Transfer',
         icon: 'pi pi-file-export',
         command: () => this.router.navigate(['/home/transfer/update'], {
           state: {
-            employeeDetails: performance.employmentDetails
+            employeeDetails: this.employeeDetails
           }
         })
       },
       {
         label: 'Resignation',
         icon: 'pi pi-file-excel',
-        command: () => this.resignateEmployee(performance)
+        command: () => this.resignateEmployee()
       }
     ]
   }
@@ -163,10 +163,10 @@ export class SitePerformance implements OnInit {
     }
   }
 
-  resignateEmployee(performance: any){
+  resignateEmployee(){
     try {
       this.openTerminateModal = true;
-      this.employmentId = performance.employmentDetails.employmentId
+      this.employmentId = this.employeeDetails.employmentId
     } catch (error) {
       console.log(error);
     }
@@ -174,10 +174,7 @@ export class SitePerformance implements OnInit {
 
   selectedEmployee(performance: any){
     console.log(performance);
-    this.employeeDetails.push({
-      employmentId: performance.employmentDetails.employmentId,
-      projectId: performance.employmentDetails.project.projectId
-    })
+    this.employeeDetails = performance.employmentDetails;
     console.log(this.employeeDetails);
   }
 

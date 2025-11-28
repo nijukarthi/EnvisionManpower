@@ -59,13 +59,31 @@
             </div>
             <div class="col-span-1">
                 <label for="spn-description">SPN Description</label>
-                <input type="text" pInputText formControlName="spnDescription" id="spn-description" class="block w-full" />
+                <input type="text" pInputText formControlName="spnDescription" id="spn-description" appFormFieldError
+                    class="block w-full" />
+
+                @if (spnDescription?.invalid && (spnDescription?.dirty || spnDescription?.touched)) {
+                    @if (spnDescription?.hasError('required')) {
+                        <p-message severity="error" variant="simple" size="small" styleClass="mt-1">
+                            SPN Description is required
+                        </p-message>
+                    }
+                }
             </div>
             <div class="grid col-span-1 gap-1">
                 <label for="experience">Experience</label>
                 <p-select [options]="experiences" formControlName="experience" id="experience" 
-                    optionLabel="year" optionValue="year" [filter]="true" filterBy="year" [showClear]="true" placeholder="Select Experience"
+                    optionLabel="year" optionValue="year" [filter]="true" filterBy="year" 
+                    [showClear]="true" placeholder="Select Experience" appFormFieldError
                     appendTo="body" />
+
+                @if (experience?.invalid && (experience?.dirty || experience?.touched)) {
+                    @if (experience?.hasError('required')) {
+                        <p-message severity="error" variant="simple" size="small" styleClass="mt-1">
+                            Experience is required
+                        </p-message>
+                    }
+                }
             </div>
         </div>
         <div class="flex justify-end mt-4">

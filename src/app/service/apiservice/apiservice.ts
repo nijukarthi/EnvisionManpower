@@ -478,4 +478,20 @@ export class Apiservice {
   updateSitePerformanceDetails(params: any){
     return this.postMethod('candidate/siteperfomance/update', params);
   }
+
+  fetchConsultancyInfoList(params: any): Observable<any>{
+    return this.postMethod('user/active/consultancy-info', params);
+  }
+
+  fetchDemandCandidates(params: any){
+    return this.postMethod('candidate/employment/active/demand', params);
+  }
+
+  fetchSpnCandidates(params: any){
+    return this.postMethod('candidate/employment/active/spn', params);
+  }
+
+  fetchPOList(params: any): Observable<any>{
+    return this.postMethod('purchaseorder/list', params);
+  }
 }

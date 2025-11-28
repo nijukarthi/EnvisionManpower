@@ -1,5 +1,6 @@
+import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-po-assign-table',
@@ -7,7 +8,41 @@ import { Component } from '@angular/core';
   templateUrl: './po-assign-table.html',
   styleUrl: './po-assign-table.scss'
 })
-export class PoAssignTable {
+export class PoAssignTable implements OnInit {
+  poList: any; 
+
+  offSet = 0;
+  pageSize = 10;
+
+  constructor(private apiService: Apiservice){}
+
+  ngOnInit(): void {
+    this.fetchPOList();
+  }
+
+  fetchPOList(){
+    try {
+      const data = {
+        offSet: this.offSet,
+        pageSize: this.pageSize
+      }
+
+      console.log(data);
+
+      this.apiService.fetchPOList(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.poList = val.data.data;
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   poAssignData = [
     {
       slNo: 1,
