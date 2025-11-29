@@ -483,15 +483,19 @@ export class Apiservice {
     return this.postMethod('user/active/consultancy-info', params);
   }
 
-  fetchDemandCandidates(params: any){
+  fetchDemandCandidates(params: any): Observable<any>{
     return this.postMethod('candidate/employment/active/demand', params);
   }
 
-  fetchSpnCandidates(params: any){
+  fetchSpnCandidates(params: any): Observable<any>{
     return this.postMethod('candidate/employment/active/spn', params);
   }
 
   fetchPOList(params: any): Observable<any>{
-    return this.postMethod('purchaseorder/list', params);
+    return this.postMethod('requesition/purchaseorder/list', params);
+  }
+
+  mapNewPurchaseOrder(params: any){
+    return this.postMethod('requesition/purchaseorder/mapnew', params);
   }
 }

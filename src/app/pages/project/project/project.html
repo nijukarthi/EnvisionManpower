@@ -51,13 +51,41 @@
     [style]="{width: '50rem'}" (onHide)="onDialogClose()">
     <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
         <div class="grid grid-cols-2 gap-2">
-            <div class="grid col-span-1 gap-1">
+            <div class="col-span-1">
                 <label for="project-code">Project Code</label>
-                <input type="text" pInputText formControlName="projectCode" id="project-code" />
+                <input type="text" pInputText formControlName="projectCode" appFormFieldError
+                    id="project-code" class="block w-full" />
+
+                @if (projectCode?.invalid && (projectCode?.dirty || projectCode?.touched)) {
+                    @if (projectCode?.hasError('required')) {
+                        <p-message severity="error" variant="simple" size="small" styleClass="mt-1">
+                            Project Code is required
+                        </p-message>
+                    }
+                    @if (projectCode?.hasError('maxlength')) {
+                        <p-message severity="error" variant="simple" size="small" styleClass="mt-1">
+                            Project Code cannot exceed 20 characters
+                        </p-message>
+                    }
+                }
             </div>
-            <div class="grid col-span-1 gap-1">
+            <div class="col-span-1">
                 <label for="site-name">Site Name</label>
-                <input type="text" pInputText formControlName="siteName" id="site-name" />
+                <input type="text" pInputText formControlName="siteName" id="site-name" appFormFieldError
+                    class="block w-full" />
+
+                @if (site?.invalid && (site?.dirty || site?.touched)) {
+                    @if (site?.hasError('required')) {
+                        <p-message severity="error" variant="simple" size="small" styleClass="mt-1">
+                            Site Name is required
+                        </p-message>
+                    }
+                    @if (site?.hasError('maxlength')) {
+                        <p-message severity="error" variant="simple" size="small" styleClass="mt-1">
+                            Site Name cannot exceed 50 characters
+                        </p-message>
+                    }
+                }
             </div>
             <div class="grid col-span-1 gap-1" formGroupName="cluster">
                 <label for="project-code">Cluster</label>

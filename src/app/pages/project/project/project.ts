@@ -2,12 +2,13 @@ import { UserGroups } from '@/models/usergroups/usergroups.enum';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
 import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { FormFieldError } from '@/directives/form-field-error';
 
 @Component({
   selector: 'app-project',
-  imports: [Shared],
+  imports: [Shared, FormFieldError],
   templateUrl: './project.html',
   styleUrl: './project.scss'
 })
@@ -40,24 +41,52 @@ export class Project implements OnInit {
 
   projectForm = this.fb.group({
     projectId: [0],
-    projectCode: [''],
-    siteName: [''],
+    projectCode: ['', [Validators.required, Validators.maxLength(20)]],
+    siteName: ['', [Validators.required, Validators.maxLength(50)]],
     cluster: this.fb.group({
-      clusterId: [0]
+      clusterId: [0, Validators.required]
     }),
     siteIncharge: this.fb.group({
-      userId: [0]
+      userId: [0, Validators.required]
     }),
     clusterHead: this.fb.group({
-      userId: [0]
+      userId: [0, Validators.required]
     }),
     department: this.fb.group({
-      departmentId: [0]
+      departmentId: [0, Validators.required]
     }),
     departmentHead: this.fb.group({
-      userId: [0]
+      userId: [0, Validators.required]
     })
   })
+
+  get projectCode(){
+    return this.projectForm.get('projectCode');
+  }
+
+  get site(){
+    return this.projectForm.get('siteName');
+  }
+
+  get cluster(){
+    return this.projectForm.get('cluster.clusterId');
+  }
+
+  get siteIncharge(){
+    return this.projectForm.get('siteIncharge.userId');
+  }
+
+  get clusterHead(){
+    return this.projectForm.get('clusterHead.userId');
+  }
+
+  get department(){
+    return this.projectForm.get('department.departmentId');
+  }
+
+  get departmentHead(){
+    return this.projectForm.get('departmentHead.userId');
+  }
 
   ngOnInit(): void {
     this.fetchActiveProjects();
