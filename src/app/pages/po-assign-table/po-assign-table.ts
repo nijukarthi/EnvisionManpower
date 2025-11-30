@@ -20,6 +20,19 @@ export class PoAssignTable implements OnInit {
     this.fetchPOList();
   }
 
+  getMenuItems(po: any){
+    return [
+      {
+        label: 'Edit',
+        icon: 'pi pi-pencil'
+      },
+      {
+        label: 'Delete',
+        icon: 'pi pi-trash'
+      }
+    ]
+  }
+
   fetchPOList(){
     try {
       const data = {

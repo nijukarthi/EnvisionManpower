@@ -209,7 +209,8 @@ export class Steps implements OnInit {
   takeJoiningProcess(candidateId: number): FormGroup{
     const group = this.fb.group({
       candidate: this.fb.group({
-        candidateId: [candidateId]
+        candidateId: [candidateId],
+        candidateCode: [{value: '', disabled: true}]
       }),
       candidateAcceptance: [false],
       joiningDate: [{value: '', disabled: true}]
@@ -217,11 +218,14 @@ export class Steps implements OnInit {
 
     group.get('candidateAcceptance')?.valueChanges.subscribe(isAccepted => {
       const joiningDateControl = group.get('joiningDate');
+      const candidateCodeControl = group.get('candidate.candidateCode');
 
       if (isAccepted) {
         joiningDateControl?.enable();
+        candidateCodeControl?.enable();
       } else {
         joiningDateControl?.disable();
+        candidateCodeControl?.disable();
       }
     })
     return group;
@@ -1012,6 +1016,10 @@ export class Steps implements OnInit {
         },
         error: err => {
           console.log(err);
+
+          if (err.status === 400) {
+            this.messageService.add({severity: 'error', summary: 'Error', detail: err.error.detail});
+          }
         }
       })      
     } catch (error) {

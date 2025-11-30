@@ -133,6 +133,12 @@
                         <p-datepicker formControlName="joiningDate" [iconDisplay]="'input'" [showIcon]="true" 
                             placeholder="Select Date" appendTo="body" inputId="joining-date" />
                     </div>
+                    <div class="grid col-span-1 gap-1">
+                        <label for="replace">Replacement Required?</label>
+                        <p-select [options]="isReplacement" formControlName="isReplacementRequired" 
+                            optionLabel="label" optionValue="value" 
+                            inputId="replace" placeholder="Select Yes/No" />
+                    </div>
                 </ng-container>
             }
         </div>

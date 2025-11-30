@@ -36,9 +36,21 @@ export class TransferForm implements OnInit {
       transferTo: this.fb.group({
         demandId: [0]
       }),
-      joiningDate: ['']
+      joiningDate: [''],
+      isReplacementRequired: [false]
     })
   }
+
+  isReplacement = [
+    {
+      label: 'Yes',
+      value: true
+    },
+    {
+      label: 'No',
+      value: false
+    }
+  ]
 
   ngOnInit(): void {
     this.employeeDetails = history.state;

@@ -179,20 +179,23 @@ export class AppMenu {
                                 {
                                     label: 'Invoice Submission',
                                     icon: 'pi pi-check-circle',
-                                    routerLink: ['/home/invoice-submission']
+                                    routerLink: ['/home/invoice-submission'],
+                                    visible: this.adminUser || this.consultancyUser
                                 },
                                 {
                                     label: 'Invoice Receipt',
                                     icon: 'pi pi-receipt',
-                                    routerLink: ['/home/invoice-receipt']
+                                    routerLink: ['/home/invoice-receipt'],
+                                    visible: this.adminUser 
                                 },
                                 {
                                     label: 'Invoice Disbursement',
                                     icon: 'pi pi-file-o',
-                                    routerLink: ['/home/invoice-disbursement']
+                                    routerLink: ['/home/invoice-disbursement'],
+                                    visible: this.adminUser
                                 }
                             ],
-                                visible: this.adminUser
+                                visible: this.adminUser || this.consultancyUser
                         },        
                         {
                             label: 'Resource Pool',
