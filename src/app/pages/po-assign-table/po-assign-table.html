@@ -28,7 +28,10 @@
                     <td>{{ po.validTo }}</td>
                     <td>{{ po.duration }}</td>
                     <td>{{ po.totalValue }}</td>
-                    <td></td>
+                    <td>
+                        <p-menu #menu [model]="getMenuItems(po)" [popup]="true" appendTo="body" />
+                        <p-button (onClick)="menu.toggle($event)" icon="pi pi-ellipsis-v" rounded variant="text" />
+                    </td>
                 </tr>
             </ng-template>
             <ng-template #emptymessage>

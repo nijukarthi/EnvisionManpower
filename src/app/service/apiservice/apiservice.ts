@@ -498,4 +498,16 @@ export class Apiservice {
   mapNewPurchaseOrder(params: any){
     return this.postMethod('requesition/purchaseorder/mapnew', params);
   }
+
+  fetchInvoiceSubmissionList(params: any): Observable<any>{
+    return this.postMethod('requesition/invoice/list', params);
+  }
+
+  fetchPODetails(params: any): Observable<any>{
+    return this.postMethod('requesition/invoice/po-candidates', params);
+  }
+
+  createInvoice(params: any): Observable<any>{
+    return this.postMethod('requesition/invoice/submit', params);
+  }
 }
