@@ -510,4 +510,8 @@ export class Apiservice {
   createInvoice(params: any): Observable<any>{
     return this.postMethod('requesition/invoice/submit', params);
   }
+
+  invoiceGRNList(params: any): Observable<any>{
+    return this.postMethod('requesition/invoice/grn/list', params);
+  }
 }

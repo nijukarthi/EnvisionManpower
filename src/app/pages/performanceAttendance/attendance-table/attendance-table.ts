@@ -44,10 +44,17 @@ export class AttendanceTable implements OnInit {
         next: val => {
           console.log(val);
           this.attendanceList = val?.data?.data;
-          this.totalRecords = val?.data?.length;
+          this.totalRecords = val?.data?.length ?? 0;
         },
         error: err => {
           console.log(err);
+
+          if (err.status === 400) {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
+
+            this.attendanceList = [];
+            this.totalRecords = 0;
+          }
         }
       })
     } catch (error) {

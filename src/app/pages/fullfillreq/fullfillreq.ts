@@ -19,7 +19,7 @@ export class Fullfillreq implements OnInit {
  offSet = 0;
  pageSize = 10;
  first = 0;
- demandFullfillListLength = 0;
+ totalRecords = 0;
 
  UserGroups = UserGroups;
 
@@ -52,7 +52,7 @@ export class Fullfillreq implements OnInit {
         next: val => {
           console.log(val);
           this.demandFullfillList = val?.data?.data;
-          this.demandFullfillListLength = val?.data?.length;
+          this.totalRecords = val?.data?.length ?? 0;
         },
         error: err => {
           console.log(err);

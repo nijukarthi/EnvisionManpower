@@ -12,7 +12,7 @@
         <p-table [value]="sitePerformancesList" stripedRows [rowHover]="true" [paginator]="true" editMode="row"
            [rows]="pageSize" [lazy]="true" [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true"
            [first]="first" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-           [scrollable]="true" scrollHeight="500px" [totalRecords]="sitePerformancesListLength" 
+           [scrollable]="true" scrollHeight="500px" [totalRecords]="totalRecords" 
            [tableStyle]="{'min-width': '220rem'}" (onPage)="pageChange($event)">
             <ng-template #header>
                 <tr>

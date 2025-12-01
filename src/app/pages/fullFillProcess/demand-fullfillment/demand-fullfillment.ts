@@ -38,7 +38,10 @@ export class DemandFullfillment implements OnInit {
     this.fetchDemandFullfillment();
   }
 
+
   getMenuItems(demand: any){
+    const stepName = Number(this.getStepLabel(demand.fullfillmentStatus));
+
     return [
       {
         label: 'View Requisition',
@@ -48,7 +51,9 @@ export class DemandFullfillment implements OnInit {
       {
         label: 'View Steps',
         icon: 'pi pi-eye',
-        command: () => this.router.navigate(['/home/demand-fullfillment/steps'], 
+        command: () => { 
+          this.stepService.setActiveStep(stepName);
+          this.router.navigate(['/home/demand-fullfillment/steps'], 
           {
             state: {
               requesitionId: demand.requesitionId,
@@ -56,8 +61,8 @@ export class DemandFullfillment implements OnInit {
               fullfillmentStatus: demand.fullfillmentStatus,
               categoryId: demand.requesitionDetails?.category?.categoryId
             }
-          }
-        )
+          })
+        }
       }
     ]
   }

@@ -96,7 +96,7 @@ export class Steps implements OnInit {
       userId: [0]
     }),
     interviewDate: [''],
-    interviewTime: [''],
+    interviewTime: [new Date()],
     demandConsultancyMap: this.fb.array([])
   })
 
@@ -138,7 +138,7 @@ export class Steps implements OnInit {
   })
 
   takeFirstInterviewRound(candidate: any): FormGroup {
-    const isDisabled = candidate.performanceStatus !== 9;
+    const isDisabled = this.demandDetails.fullfillmentStatus === FullFillmentStatus.STEP6;
     return this.fb.group({
       candidate: this.fb.group({
         candidateId: [candidate.candidate.candidateId]
@@ -167,7 +167,7 @@ export class Steps implements OnInit {
   })
 
   takeFinalInterviewRound(candidate: any): FormGroup{
-    const isDisabled = candidate.performanceStatus !== 9;
+    const isDisabled = this.demandDetails.fulFillmentStatus === FullFillmentStatus.STEP7;
     return this.fb.group({
       candidate: this.fb.group({
         candidateId: [candidate.candidate.candidateId],
@@ -187,7 +187,7 @@ export class Steps implements OnInit {
   })
 
   takeFinalApproval(candidate: any): FormGroup{
-    const isDisabled = candidate.statusByResourceManager !== 89;
+    const isDisabled = this.demandDetails.fulFillmentStatus === FullFillmentStatus.STEP7;
 
     return this.fb.group({
       candidate: this.fb.group({
@@ -206,28 +206,43 @@ export class Steps implements OnInit {
     joiningProcessCandidates: this.fb.array([])
   })
 
-  takeJoiningProcess(candidateId: number): FormGroup{
+  takeJoiningProcess(candidate: any): FormGroup{
     const group = this.fb.group({
       candidate: this.fb.group({
-        candidateId: [candidateId],
-        candidateCode: [{value: '', disabled: true}]
+        candidateId: [candidate.candidate.candidateId],
+        candidateCode: ['']
       }),
-      candidateAcceptance: [false],
-      joiningDate: [{value: '', disabled: true}]
+      candidateAcceptance: [candidate.candidateAcceptance ?? false],
+      joiningDate: ['']
     })
 
-    group.get('candidateAcceptance')?.valueChanges.subscribe(isAccepted => {
-      const joiningDateControl = group.get('joiningDate');
-      const candidateCodeControl = group.get('candidate.candidateCode');
+    const acceptanceCtrl = group.get('candidateAcceptance');
+    const joiningDateCtrl = group.get('joiningDate');
+    const codeCtrl = group.get('candidate.candidateCode');
 
+    const fromAPI = candidate.candidateAcceptance === true;
+
+    if (fromAPI) {
+      acceptanceCtrl?.disable();
+      joiningDateCtrl?.disable();
+      codeCtrl?.disable();
+      return group;
+    }
+
+    if (!acceptanceCtrl?.value) {
+      joiningDateCtrl?.disable();
+      codeCtrl?.disable();
+    }
+
+    acceptanceCtrl?.valueChanges.subscribe(isAccepted => {
       if (isAccepted) {
-        joiningDateControl?.enable();
-        candidateCodeControl?.enable();
+        joiningDateCtrl?.enable();
+        codeCtrl?.enable();
       } else {
-        joiningDateControl?.disable();
-        candidateCodeControl?.disable();
+        joiningDateCtrl?.disable();
+        joiningDateCtrl?.disable();
       }
-    })
+    });
     return group;
   }
 
@@ -504,9 +519,9 @@ export class Steps implements OnInit {
           next: val => {
             console.log(val);
             this.messageService.add({severity: 'success', summary: 'Success', detail: 'Consultancy Assigned Successfully'});
-            setTimeout(() => {
-              this.router.navigate(['/home/demand-fullfillment']);
-            }, 2000);
+            // setTimeout(() => {
+            //   this.router.navigate(['/home/demand-fullfillment']);
+            // }, 2000);
           },
           error: err => {
             console.log(err);
@@ -526,9 +541,9 @@ export class Steps implements OnInit {
             console.log(val);
             this.messageService.add({severity: 'success', summary: 'Success', detail: 'Interview Details Updated Successfully'});
             this.fetchViewFirstInterview();
-            setTimeout(() => {
-              this.router.navigate(['/home/demand-fullfillment']);
-            }, 2000);
+            // setTimeout(() => {
+            //   this.router.navigate(['/home/demand-fullfillment']);
+            // }, 2000);
           },
           error: err => {
             console.log(err);
@@ -702,9 +717,9 @@ export class Steps implements OnInit {
         next: val => {
           console.log(val);
           this.messageService.add({severity: 'success', summary: 'Success', detail: 'Candidates Assigned Successfully For First Interview'});
-          setTimeout(() => {
-            this.router.navigate(['/home/demand-fullfillment']);
-          }, 2000);
+          // setTimeout(() => {
+          //   this.router.navigate(['/home/demand-fullfillment']);
+          // }, 2000);
         },
         error: err => {
           console.log(err);
@@ -739,9 +754,9 @@ export class Steps implements OnInit {
           console.log(val);
           this.messageService.add({severity: 'success', summary: 'Success', detail: 'First Interview Conducted Successfully' });
           this.fetchViewAssignedCandidates();
-          setTimeout(() => {
-            this.router.navigate(['/home/demand-fullfillment']);
-          }, 2000);
+          // setTimeout(() => {
+          //   this.router.navigate(['/home/demand-fullfillment']);
+          // }, 2000);
         },
         error: err => {
           console.log(err);
@@ -821,9 +836,9 @@ export class Steps implements OnInit {
         next: val => {
           console.log(val);
           this.messageService.add({severity: 'success', summary: 'Success', detail: 'Successfully Scheduled For Final Interview'});
-          setTimeout(() => {
-            this.router.navigate(['/home/demand-fullfillment']);
-          }, 2000);
+          // setTimeout(() => {
+          //   this.router.navigate(['/home/demand-fullfillment']);
+          // }, 2000);
         },
         error: err => {
           console.log(err);
@@ -863,9 +878,9 @@ export class Steps implements OnInit {
           console.log(val);
           this.messageService.add({severity: 'success', summary: 'Success', detail: 'Final Interview Conducted Successfully' });
           this.fetchFinalInterviewDetails();
-          setTimeout(() => {
-            this.router.navigate(['/home/demand-fullfillment']);
-          }, 2000);
+          // setTimeout(() => {
+          //   this.router.navigate(['/home/demand-fullfillment']);
+          // }, 2000);
         },
         error: err => {
           console.log(err);
@@ -933,9 +948,9 @@ export class Steps implements OnInit {
           console.log(val);
           this.messageService.add({severity: 'success', summary: 'Success', detail: 'Final Approval Done Successfully' });
           this.fetchFinalApprovalCandidateList();
-          setTimeout(() => {
-            this.router.navigate(['/home/demand-fullfillment']);
-          }, 2000);
+          // setTimeout(() => {
+          //   this.router.navigate(['/home/demand-fullfillment']);
+          // }, 2000);
         },
         error: err => {
           console.log(err);
@@ -982,7 +997,7 @@ export class Steps implements OnInit {
     formArray.clear();
 
     this.joiningProcessCandidateList.forEach((candidate: any) => {
-      formArray.push(this.takeJoiningProcess(candidate.candidate.candidateId))
+      formArray.push(this.takeJoiningProcess(candidate))
     })
   }
 
@@ -1009,9 +1024,9 @@ export class Steps implements OnInit {
         next: val => {
           console.log(val);
           this.messageService.add({severity: 'success', summary: 'Success', detail: 'Joining Process Done Successfully'});
-          setTimeout(() => {
-            this.router.navigate(['/home/demand-fullfillment']);
-          }, 2000);
+          // setTimeout(() => {
+          //   this.router.navigate(['/home/demand-fullfillment']);
+          // }, 2000);
           this.fetchJoiningProcessCandidateList();
         },
         error: err => {

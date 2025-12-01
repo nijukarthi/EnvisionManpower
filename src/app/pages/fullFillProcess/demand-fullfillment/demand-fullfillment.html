@@ -31,12 +31,8 @@
                             (onClick)="goToStep(demand)" />
                     </td>
                     <td>
-                        @if (currentUserRole !== UserGroups.CONSULTANCY) {
-                            <p-menu #menu [model]="getMenuItems(demand)" [popup]="true" appendTo="body" />
-                            <p-button (onClick)="menu.toggle($event)" [label]="demand.demandCode" variant="text" link />
-                        }@else {
-                            {{ demand.demandCode }}
-                        }
+                        <p-menu #menu [model]="getMenuItems(demand)" [popup]="true" appendTo="body" />
+                        <p-button (onClick)="menu.toggle($event)" [label]="demand.demandCode" variant="text" link />
                     </td>
                     <td>{{ demand.spn.spnCode }}</td>
                     <td>{{ demand.spn.spnDescription }}</td>

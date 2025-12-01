@@ -3,10 +3,10 @@
         <h5>Assign Standard Role</h5>
         <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
             <p-table [value]="demandFullfillList"  #dt
-                [tableStyle]="{ 'min-width': '110rem' }" [paginator]="true" [rowsPerPageOptions]="[5, 10, 20]" stripedRows
+                [tableStyle]="{ 'min-width': '110rem' }" [paginator]="true" [rowsPerPageOptions]="[10, 20, 30]" stripedRows
                 [rows]="pageSize" [rowHover]="true" [showCurrentPageReport]="true" [first]="first"
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [lazy]="true"
-                responsiveLayout="scroll" (onPage)="pageChange($event)" [totalRecords]="demandFullfillListLength"
+                responsiveLayout="scroll" (onPage)="pageChange($event)" [totalRecords]="totalRecords"
                 [globalFilterFields]="['reqId','reqBy','pcode','state','spn','spnDesc','exp','qty','planDate','planrelease',]">
                 <ng-template #header>
                     <tr>

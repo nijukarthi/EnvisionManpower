@@ -78,7 +78,17 @@ export class InvoiceSubmissionForm implements OnInit {
       this.apiService.fetchPOList(data).subscribe({
         next: val => {
           console.log(val);
-          this.poList = val.data.data;
+          this.poList = val.data.data.map((po: any) => {
+            const start = new Date(po.validFrom);
+            const end = new Date(po.validTo);
+
+            const months = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() + end.getMonth());
+
+            return {
+              ...po,
+              duration: months
+            }
+          });
         },
         error: err => {
           console.log(err);

@@ -51,6 +51,9 @@
 <div class="card">
     <h6>PO Details</h6>
     <form [formGroup]="invoiceForm" (ngSubmit)="onSubmit()">
+        <div class="flex justify-end">
+            <p-button label="Add Purchase Order" icon="pi pi-plus" />
+        </div>
         <p-accordion value="0">
             <p-accordion-panel value="0">
                 <p-accordion-header>Purchase Order 1</p-accordion-header>
@@ -80,7 +83,7 @@
                         </div>
                         <div class="grid col-span-1 gap-1">
                             <label for="duration">Duration (In Months)</label>
-                            <input type="text" pInputText id="duration" [disabled]="true" />
+                            <input type="text" pInputText id="duration" [value]="poDetails?.duration" [disabled]="true" />
                         </div>
                     </div>
                 
@@ -88,7 +91,7 @@
                     <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden -mt-3">
                         <p-table [value]="poEmployeeList" showGridlines stripedRows [rowHover]="true" 
                             (onRowSelect)="selectedPOEmployee($event.data)" (onRowUnselect)="unSelectedEmployee($event.data)"
-                            [tableStyle]="{'min-width': '130rem'}" formArrayName="items">
+                            [tableStyle]="{'min-width': '150rem'}" formArrayName="items">
                             <ng-template #header>
                                 <tr>
                                     <th rowspan="2"><p-tableHeaderCheckbox /></th>
@@ -98,9 +101,11 @@
                                     <th rowspan="2">SPN Code</th>
                                     <th rowspan="2">SPN Description</th>
                                     <th rowspan="2">Experience</th>
+                                    <th rowspan="2">Joining Date</th>
                                     <th rowspan="2">SAC Code</th>
                                     <th rowspan="2">Site Name</th>
                                     <th rowspan="2">Unit Price</th>
+                                    <th rowspan="2">Tax Rate %</th>
                                     <th colspan="5" style="text-align: center;">No. of Days</th>
                                     <th rowspan="2">Quantity</th>
                                     <th rowspan="2">Total Net Price As Actual Days</th>
@@ -119,7 +124,9 @@
                                     <td>
                                         @if (po.eligible) {
                                             <p-tableCheckbox [value]="po" />
-                                        }
+                                        } @else{
+                                            <i class="pi pi-info-circle" [pTooltip]="po.reasonNotEligible"></i>
+                                        }   
                                     </td>
                                     <td>{{ i + 1 }}</td>
                                     <td>{{ po.candidate.employeeCode }}</td>
@@ -127,11 +134,13 @@
                                     <td>{{ po.employmentDetails.spn.spnCode }}</td>
                                     <td>{{ po.employmentDetails.spn.spnDescription }}</td>
                                     <td>{{ po.employmentDetails.spn.experience }}</td>
+                                    <td>{{ po.employmentDetails.joiningDate }}</td>
                                     <td>
                                         <input type="text" pInputText formControlName="sacCode" />
                                     </td>
                                     <td>{{ po.employmentDetails.project.siteName }}</td>
                                     <td>{{ po.unitRate }}</td>
+                                    <td>{{ po.taxRate }} %</td>
                                     <td>{{ po.totalWorkingDays || '-' }}</td>
                                     <td>{{ po.presentDays || '-' }}</td>
                                     <td>{{ po.weekOff || '-' }}</td>

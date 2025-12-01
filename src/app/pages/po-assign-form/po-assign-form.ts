@@ -133,7 +133,7 @@ export class PoAssignForm implements OnInit {
       const taxRate = val.taxRate;
       console.log(months, unitPrice, taxRate);
 
-      const taxAmount = (unitPrice * (taxRate / 100) + 100);
+      const taxAmount = (unitPrice * (taxRate / 100)) + unitPrice;
       const itemTotal = months * taxAmount;
       item.patchValue({
         taxAmount: taxAmount,
@@ -232,6 +232,7 @@ export class PoAssignForm implements OnInit {
 
           if (err.status === 400) {
             this.messageService.add({severity: 'error', summary: 'Error', detail: err.error.detail});
+            this.newEmployeeList = [];
           }
         }
       })
@@ -285,13 +286,17 @@ export class PoAssignForm implements OnInit {
     }
   }
 
-  removeNewEmployee(index: number){
+  removeNewEmployee(index: number, candidateId: number){
+    this.newEmployeeList = this.newEmployeeList.filter((e: any) => e.candidateId !== candidateId);
     this.newEmployeeItems.removeAt(index);
   }
 
-  removeExistingEmployee(index: number){
+  removeExistingEmployee(index: number, candidateId: number){
+    this.existingEmployeeList = this.existingEmployeeList.filter((e: any) => e.candidateId !== candidateId);
+    console.log(this.existingEmployeeItems.value);
     console.log(index);
     this.existingEmployeeItems.removeAt(index);
+    console.log(this.existingEmployeeItems.value);
   }
 
   mapItems(list: any[]){

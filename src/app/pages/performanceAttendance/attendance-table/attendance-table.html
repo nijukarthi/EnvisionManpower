@@ -18,6 +18,7 @@
                     <th>Site Name</th>
                     <th>Cluster Name</th>
                     <th>Role</th>
+                    <th>Joining Date</th>
                     <th>Status</th>
                     <th>Total No. of Working Days</th>
                     <th>Present Days</th>
@@ -36,6 +37,7 @@
                     <td>{{ attendance.employmentDetails.project.siteName || '-' }}</td>               
                     <td>{{ attendance.employmentDetails.cluster.clusterName || '-' }}</td>               
                     <td>{{ attendance.employmentDetails.envisionRole.roleName || '-' }}</td>   
+                    <td>{{ attendance.employmentDetails.joiningDate || '-' }}</td>
                     <td>
                         <p-tag [value]="attendance.employmentDetails.employmentStatus" 
                         [severity]="getSeverity(attendance.employmentDetails.employmentStatus)" />

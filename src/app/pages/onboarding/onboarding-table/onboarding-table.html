@@ -22,6 +22,9 @@
                     <th>Project Code</th>
                     <th>Site Name</th>
                     <th>Cluster Name</th>
+                    <th>SPN Code</th>
+                    <th>SPN Description</th>
+                    <th>Experience</th>
                     <th>Role</th>
                     <th>Expected DOJ</th>
                     <th>Actual DOJ</th>
@@ -42,6 +45,9 @@
                     <td>{{ onboarding.employmentDetails.project.projectCode }}</td>
                     <td>{{ onboarding.employmentDetails.project.siteName ?? '-' }}</td>
                     <td>{{ onboarding.employmentDetails.cluster.clusterName || '-' }}</td>
+                    <td>{{ onboarding.employmentDetails.spn.spnCode || '-' }}</td>
+                    <td>{{ onboarding.employmentDetails.spn.spnDescription || '-' }}</td>
+                    <td>{{ onboarding.employmentDetails.spn.experience || '-' }}</td>
                     <td>{{ onboarding.employmentDetails.envisionRole.roleName || '-' }}</td>
                     <td #pEditableColumn>
                         <p-cellEditor>

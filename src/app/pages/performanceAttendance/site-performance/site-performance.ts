@@ -17,7 +17,7 @@ export class SitePerformance implements OnInit {
   offSet = 0;
   pageSize = 10;
   first = 0;
-  sitePerformancesListLength = 0;
+  totalRecords = 0;
   employmentId = 0;
   month: number | null = null;
   year: number | null = null;
@@ -99,10 +99,16 @@ export class SitePerformance implements OnInit {
         next: val => {
           console.log(val);
           this.sitePerformancesList = val?.data?.data;
-          this.sitePerformancesListLength = val?.data?.length ?? 0;
+          this.totalRecords = val?.data?.length ?? 0;
         },
         error: err => {
           console.log(err);
+
+          if (err.status === 400) {
+            this.messageService.add({severity: 'error', summary: 'Error', detail: err.error.detail});
+            this.sitePerformancesList = [];
+            this.totalRecords = 0;
+          }
         }
       })
     } catch (error) {
