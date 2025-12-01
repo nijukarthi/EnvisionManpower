@@ -1,10 +1,17 @@
 <div class="card">
-    <div class="flex items-baseline-laste3g  justify-between">
+    <div class="flex items-baseline-last justify-between">
         <h5>PO & Demand Map</h5>
-        <p-button label="Map New Demand" icon="pi pi-plus" routerLink="/home/po-assign/new" />
+        <div class="flex justify-end gap-1">
+            <p-button label="Actions" (onClick)="menu.toggle($event)" />
+            <p-tieredmenu #menu [model]="items" [popup]="true" appendTo="body" />
+            <p-button label="Map New Demand" icon="pi pi-plus" routerLink="/home/po-assign/new" />
+        </div>
     </div>
     <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
-        <p-table [value]="poList" stripedRows [rowHover]="true" [tableStyle]="{'min-width': '80rem'}">
+        <p-table [value]="poList" stripedRows [rowHover]="true" [paginator]="true" [rows]="pageSize" [first]="first"
+            [rowsPerPageOptions]="[10, 20, 30]" [lazy]="true" [totalRecords]="totalRecords"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true"
+            [tableStyle]="{'min-width': '80rem'}" (onPage)="pageChange($event)">
             <ng-template #header>
                 <tr>
                     <th>SL No</th>
@@ -15,6 +22,7 @@
                     <th>PO Valid Till</th>
                     <th>Duration</th>
                     <th>PO Value</th>
+                    <th>Status</th>
                     <th>Actions</th>
                 </tr>
             </ng-template>
@@ -28,6 +36,9 @@
                     <td>{{ po.validTo }}</td>
                     <td>{{ po.duration }}</td>
                     <td>{{ po.totalValue }}</td>
+                    <td>
+                        <p-tag [value]="po.poStatus" [severity]="getSeverity(po.poStatus)" />
+                    </td>
                     <td>
                         <p-menu #menu [model]="getMenuItems(po)" [popup]="true" appendTo="body" />
                         <p-button (onClick)="menu.toggle($event)" icon="pi pi-ellipsis-v" rounded variant="text" />

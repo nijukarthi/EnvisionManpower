@@ -213,6 +213,10 @@ export class Demand implements OnInit {
       },
       error: err => {
         console.log(err);
+
+        if (err.status === 400) {
+          this.messageService.add({severity: 'error', summary: 'Error', detail: err.error.detail});
+        }
       }
     })
   }

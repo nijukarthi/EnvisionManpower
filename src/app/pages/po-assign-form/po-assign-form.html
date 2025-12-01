@@ -100,8 +100,8 @@
                                             
                                             
                                             <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden mt-4">
-                                                <p-table [value]="newEmployeeList" stripedRows [rowHover]="true"
-                                                    formArrayName="newEmployeeItems">
+                                                <p-table [value]="newEmployeeList" stripedRows [rowHover]="true" dataKey="candidateId"
+                                                    formArrayName="newEmployeeItems" [tableStyle]="{'min-width': '90rem'}">
                                                     <ng-template #header>
                                                         <tr>
                                                             <th>SL NO</th>
@@ -137,7 +137,7 @@
                                                                 <td>{{ newEmployeeItems.controls[i].get('itemTotal')?.value || 0 }}</td>
                                                                 <td>
                                                                     <p-button icon="pi pi-trash" severity="danger" rounded
-                                                                        (onClick)="removeNewEmployee(i)" />
+                                                                        (onClick)="removeNewEmployee(i, newEmployee.candidateId)" />
                                                                 </td>
                                                             </tr>
                                                         }
@@ -207,8 +207,9 @@
                                                 </div>
                                             </div>
                                             <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden mt-4">
-                                                <p-table [value]="existingEmployeeList" stripedRows [rowHover]="true"
-                                                    formArrayName="existingEmployeeItems">
+                                                <p-table [value]="existingEmployeeList" stripedRows [rowHover]="true" 
+                                                    dataKey="candidateId" formArrayName="existingEmployeeItems" 
+                                                    [tableStyle]="{'min-width': '90rem'}">
                                                     <ng-template #header>
                                                         <tr>
                                                             <th>SL NO</th>
@@ -232,19 +233,20 @@
                                                                     <p-inputnumber formControlName="monthsAllowed" [useGrouping]="false" />
                                                                 </td>
                                                                 <td>
-                                                                    <p-inputnumber formControlName="unitRate" [useGrouping]="false" />
+                                                                    <p-inputnumber formControlName="unitRate" [useGrouping]="false"
+                                                                        [minFractionDigits]="1" [maxFractionDigits]="2" />
                                                                 </td>
                                                                 <td>
-                                                                    <p-inputgroup fluid>
-                                                                        <p-inputnumber formControlName="taxRate" [useGrouping]="false" fluid />
+                                                                    <p-inputgroup>
+                                                                        <p-inputnumber formControlName="taxRate" [useGrouping]="false" />
                                                                         <p-inputgroup-addon>%</p-inputgroup-addon>
                                                                     </p-inputgroup>
                                                                 </td>
-                                                                <td>{{ existingEmployeeItems.controls[i].get('taxAmount')?.value || 0 }}</td>
-                                                                <td>{{ existingEmployeeItems.controls[i].get('itemTotal')?.value || 0 }}</td>
+                                                                <td>{{ (existingEmployeeItems.controls[i].get('taxAmount')?.value ?? 0) | number:'1.2-2' }}</td>
+                                                                <td>{{ (existingEmployeeItems.controls[i].get('itemTotal')?.value ?? 0) | number:'1.2-2' }}</td>
                                                                 <td>
                                                                     <p-button icon="pi pi-trash" severity="danger" rounded 
-                                                                        (onClick)="removeExistingEmployee(i)" />
+                                                                        (onClick)="removeExistingEmployee(i, existingEmployee.candidateId)" />
                                                                 </td>
                                                             </tr>
                                                         }

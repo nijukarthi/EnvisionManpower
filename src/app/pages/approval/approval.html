@@ -18,10 +18,10 @@
         </button>
     </div>
     <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
-        <p-table [value]="demandProcessingList" #dt [(selection)]="selectedApprovalList" dataKey="id" [lazy]="false"
+        <p-table [value]="demandProcessingList" #dt [(selection)]="selectedApprovalList" dataKey="id" [lazy]="true"
             [tableStyle]="{ 'min-width': '110rem' }" [paginator]="true" [rowsPerPageOptions]="[10, 20, 30]" stripedRows
             [rows]="pageSize" [rowHover]="true" [showCurrentPageReport]="true" [first]="first"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [totalRecords]="demandProcessingListLength"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [totalRecords]="totalRecords"
             responsiveLayout="scroll" (onPage)="pageChange($event)"
             [globalFilterFields]="['demandCode', 'spn.spnCode','spn.spnDescription','spn.experience','quantity']">
             <ng-template #header>
@@ -80,7 +80,9 @@
                     <td>{{ demand.spn.experience }}</td>
                     <td style="text-align: center;">
                         <input type="text" pInputText [value]="demand.quantity" [(ngModel)]="demand.quantity" 
-                            (blur)="demandQtyChange(demand.demandId, demand.quantity)" />
+                            (blur)="demandQtyChange(demand.demandId, demand.quantity)" 
+                            [disabled]="demand.stateHeadApproval.approvalStatus === APPROVALSTATUS.ACCEPTED ||
+                                demand.departmentHeadApproval.approvalStatus === APPROVALSTATUS.ACCEPTED" />
                     </td>
                     <td>{{ demand.plannedDeploymentDate }}</td>
                     <td>{{ demand.plannedReleaseDate }}</td>

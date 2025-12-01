@@ -45,6 +45,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { TabsModule } from 'primeng/tabs';
 import { MessageModule } from 'primeng/message';
+import { TieredMenuModule } from 'primeng/tieredmenu';
 
 @NgModule({
   declarations: [],
@@ -95,7 +96,8 @@ import { MessageModule } from 'primeng/message';
     RadioButtonModule,
     SplitButtonModule,
     TabsModule,
-    MessageModule
+    MessageModule,
+    TieredMenuModule
   ],
   providers:[
     MessageService,

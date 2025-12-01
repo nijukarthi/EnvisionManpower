@@ -1,5 +1,6 @@
+import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-invoice-receipt',
@@ -7,7 +8,44 @@ import { Component } from '@angular/core';
   templateUrl: './invoice-receipt.html',
   styleUrl: './invoice-receipt.scss'
 })
-export class InvoiceReceipt {
+export class InvoiceReceipt implements OnInit {
+  offSet = 0;
+  pageSize = 10;
+  first = 0;
+  totalRecords = 0;
+
+  invoiceGRNList: any;
+
+  constructor(private apiService: Apiservice){}
+
+  ngOnInit(): void {
+    this.fetchInvoiceGRNList();
+  }
+
+  fetchInvoiceGRNList(){
+    try {
+      const data = {
+        offSet: this.offSet,
+        pageSize: this.pageSize
+      }
+
+      console.log(data);
+
+      this.apiService.invoiceGRNList(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.invoiceGRNList = val?.data?.data;
+          this.totalRecords = val?.data?.length ?? 0;
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   invoiceReceiptList = [
     {
       recipient: 'Anuja Sharma',
@@ -76,5 +114,13 @@ export class InvoiceReceipt {
       grnReverseReason: 'Incorrect PO Mapping'
     }
   ];
+
+  pageChange(event: any){
+    this.first = event.first;
+    this.offSet = event.first / event.rows;
+    this.pageSize = event.rows;
+
+    this.fetchInvoiceGRNList();
+  }
 
 }

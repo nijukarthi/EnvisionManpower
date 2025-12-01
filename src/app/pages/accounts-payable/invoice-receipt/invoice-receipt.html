@@ -1,7 +1,10 @@
 <div class="card">
     <h5>Invoice Receipt</h5>
     <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
-        <p-table [value]="invoiceReceiptList" stripedRows [rowHover]="true" [tableStyle]="{'min-width': '230rem'}">
+        <p-table [value]="invoiceGRNList" stripedRows [rowHover]="true" [paginator]="true" [rows]="pageSize"
+            [first]="first" [rowsPerPageOptions]="[10, 20, 30]" [lazy]="true" [totalRecords]="totalRecords"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true"
+            [tableStyle]="{'min-width': '230rem'}" (onPage)="pageChange($event)">
             <!-- <ng-template #caption>
                 <div class="flex justify-end">
                     <p-button label="Add Invoice Receipt" icon="pi pi-plus" routerLink="/home/invoice-receipt/new" />

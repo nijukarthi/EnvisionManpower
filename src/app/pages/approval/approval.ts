@@ -27,7 +27,7 @@ export class Approval implements OnInit {
   offSet = 0;
   pageSize = 10;
   first = 0;
-  demandProcessingListLength = 0;
+  totalRecords = 0;
   filteredList: any[] = [];
 
   activeTab = 'processing';
@@ -93,7 +93,7 @@ export class Approval implements OnInit {
         next: val => {
           console.log(val);
           this.demandProcessingList = val?.data?.data;
-          this.demandProcessingListLength = val?.data?.length ?? 0;
+          this.totalRecords = val?.data?.length ?? 0;
         },
         error: err => {
           console.log(err);
