@@ -1,6 +1,6 @@
 export const environment = {
     production: false,
-    baseUrl: 'http://172.28.66.34:6060/api/'
+    baseUrl: 'https://d1fd0biuqahtd7.cloudfront.net/api/'
 };
 
 // 'https://d1fd0biuqahtd7.cloudfront.net/api/'

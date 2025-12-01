@@ -70,7 +70,7 @@ export class InvoiceSubmissionForm implements OnInit {
       const data = {
         offSet: this.offSet,
         pageSize: this.pageSize,
-        poStatus: PurchaseOrderStatus.DRAFT //  Remember
+        poStatus: PurchaseOrderStatus.ACTIVE
       }
 
       console.log(data);
@@ -209,6 +209,10 @@ export class InvoiceSubmissionForm implements OnInit {
           }, 2000);
         }, error: err => {
           console.log(err);
+
+          if (err.status === 400) {
+            this.messageService.add({severity: 'error', summary: 'Error', detail: err.error.detail});
+          }
         }
       })
     } catch (error) {

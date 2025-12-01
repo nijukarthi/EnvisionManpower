@@ -13,35 +13,35 @@
             <ng-template #header>
                 <tr>
                     <th>SL No</th>
-                    <th>PO Number</th>
-                    <th>Name of the Entity</th>
-                    <th>GST IN</th>
-                    <th>Address</th>
-                    <th>POD</th>
-                    <th>HSN/SAC Code</th>
-                    <th>Seal and Sign Date by Consultancy</th>
-                    <th>PO Copy Attached</th>
                     <th>Invoice Number</th>
                     <th>Invoice Date</th>
+                    <th>Invoice Status</th>
+                    <th>POD</th>
+                    <th>Seal and Sign Date by Consultancy</th>
                     <th>Submitted Date</th>
                     <th>Submitted To</th>
+                    <th>Month</th>
+                    <th>Year</th>
+                    <th>Invoice Quantity</th>
+                    <th>Grand Total</th>
                 </tr>
             </ng-template>
             <ng-template #body let-submission let-i="rowIndex">
                 <tr>
                     <td>{{ i + 1 }}</td>
-                    <td>{{ submission.poNumber }}</td>
-                    <td>{{ submission.entityName }}</td>
-                    <td>{{ submission.gstIn }}</td>
-                    <td>{{ submission.address }}</td>
-                    <td>{{ submission.pod }}</td>
-                    <td>{{ submission.hsnSacCode }}</td>
-                    <td>{{ submission.sealAndSign }}</td>
-                    <td>{{ submission.poCopy }}</td>
-                    <td>{{ submission.invoiceNo }}</td>
+                    <td>{{ submission.invoiceNumber }}</td>
                     <td>{{ submission.invoiceDate }}</td>
-                    <td>{{ submission.submittedDate }}</td>
+                    <td>
+                        <p-tag [value]="submission.invoiceStatus" [severity]="getSeverity(submission.invoiceStatus)" />
+                    </td>
+                    <td>{{ submission.pod }}</td>
+                    <td>{{ submission.sealAndSignDate }}</td>
+                    <td>{{ submission.submittedOn }}</td>
                     <td>{{ submission.submittedTo }}</td>
+                    <td>{{ submission.month }}</td>
+                    <td>{{ submission.year }}</td>
+                    <td>{{ submission.invoiceQty }}</td>
+                    <td>{{ submission.grandTotal }}</td>
                 </tr>
             </ng-template>
             <ng-template #emptymessage>

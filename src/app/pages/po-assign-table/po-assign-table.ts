@@ -2,7 +2,7 @@ import { PurchaseOrderStatus } from '@/models/purchase-order-status/purchase-ord
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
 import { Component, OnInit } from '@angular/core';
-import { MenuItem } from 'primeng/api';
+import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-po-assign-table',
@@ -12,11 +12,15 @@ import { MenuItem } from 'primeng/api';
 })
 export class PoAssignTable implements OnInit {
   poList: any; 
+  selectedPO: any;
 
   offSet = 0;
   pageSize = 10;
   first = 0;
   totalRecords = 0;
+  selectedPOId = 0;
+
+  poStatus = '';
 
   items = [
     {
@@ -24,25 +28,30 @@ export class PoAssignTable implements OnInit {
       icon: 'pi pi-exclamation-circle',
       items: [
         {
-          label: PurchaseOrderStatus.ACTIVE
+          label: PurchaseOrderStatus.ACTIVE,
+          command: () => this.confirmPOStatus(PurchaseOrderStatus.ACTIVE)
         },
         {
-          label: PurchaseOrderStatus.UTILIZED
+          label: PurchaseOrderStatus.UTILIZED,
+          command: () => this.confirmPOStatus(PurchaseOrderStatus.UTILIZED)
         },
         {
-          label: PurchaseOrderStatus.SUSPENDED
+          label: PurchaseOrderStatus.SUSPENDED,
+          command: () => this.confirmPOStatus(PurchaseOrderStatus.SUSPENDED)
         },
         {
-          label: PurchaseOrderStatus.EXPIRED
+          label: PurchaseOrderStatus.EXPIRED,
+          command: () => this.confirmPOStatus(PurchaseOrderStatus.EXPIRED)
         },
         {
-          label: PurchaseOrderStatus.CANCELLED
+          label: PurchaseOrderStatus.CANCELLED,
+          command: () => this.confirmPOStatus(PurchaseOrderStatus.CANCELLED)
         },
       ]
     }
   ];
 
-  constructor(private apiService: Apiservice){}
+  constructor(private apiService: Apiservice, private messageService: MessageService, private confirmationService: ConfirmationService){}
 
   ngOnInit(): void {
     this.fetchPOList();
@@ -107,6 +116,51 @@ export class PoAssignTable implements OnInit {
         },
         error: err => {
           console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  selectedPOEmployee(po: any){
+    console.log(po);
+    this.selectedPOId = po.poId;
+  }
+
+  unSelectedEmployee(){
+    // console.log(po);
+    this.selectedPOId = 0;
+  }
+
+  confirmPOStatus(status: string){
+    this.poStatus = status;
+    this.confirmationService.confirm({
+            header: 'Are you sure?',
+            message: 'Please confirm to proceed.',
+            accept: () => this.updatePOStatus(this.poStatus)
+        });
+  }
+
+  updatePOStatus(status: string){
+    try {
+      const data = {
+        poId: this.selectedPOId,
+        poStatus: status
+      }
+
+      this.apiService.updatePOStatus(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.messageService.add({severity: 'success', summary: 'Success', detail: `Purchase Order Moved to '${this.poStatus}' Successfully`});
+          this.fetchPOList();
+        },
+        error: err => {
+          console.log(err);
+
+          if (err.status === 400) {
+            this.messageService.add({severity: 'error', summary: 'Error', detail: err.error.detail});
+          }
         }
       })
     } catch (error) {
