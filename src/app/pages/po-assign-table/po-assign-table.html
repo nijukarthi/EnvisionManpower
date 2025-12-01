@@ -2,18 +2,22 @@
     <div class="flex items-baseline-last justify-between">
         <h5>PO & Demand Map</h5>
         <div class="flex justify-end gap-1">
-            <p-button label="Actions" (onClick)="menu.toggle($event)" />
+            <p-button label="Actions" (onClick)="menu.toggle($event)" pTooltip="Select One Purchase Order" tooltipPosition="top"
+                [disabled]="!selectedPOId" />
             <p-tieredmenu #menu [model]="items" [popup]="true" appendTo="body" />
             <p-button label="Map New Demand" icon="pi pi-plus" routerLink="/home/po-assign/new" />
         </div>
     </div>
     <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
         <p-table [value]="poList" stripedRows [rowHover]="true" [paginator]="true" [rows]="pageSize" [first]="first"
-            [rowsPerPageOptions]="[10, 20, 30]" [lazy]="true" [totalRecords]="totalRecords"
+            [rowsPerPageOptions]="[10, 20, 30]" [lazy]="true" [totalRecords]="totalRecords" selectionMode="single"
+            [(selection)]="selectedPO" dataKey="poId"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true"
+            (onRowSelect)="selectedPOEmployee($event.data)" (onRowUnselect)="unSelectedEmployee()"
             [tableStyle]="{'min-width': '80rem'}" (onPage)="pageChange($event)">
             <ng-template #header>
                 <tr>
+                    <!-- <th><p-tableHeaderCheckbox /></th> -->
                     <th>SL No</th>
                     <th>PO Number</th>
                     <th>Consultancy Name</th>
@@ -27,7 +31,8 @@
                 </tr>
             </ng-template>
             <ng-template #body let-po let-i="rowIndex">
-                <tr>
+                <tr [pSelectableRow]="po">
+                    <!-- <td><p-tableCheckbox [value]="po" /></td> -->
                     <td>{{ i + 1 }}</td>
                     <td>{{ po.poNumber }}</td>
                     <td>{{ po.consultancy.consultancyName }}</td>
@@ -55,3 +60,21 @@
         </p-table>
     </div>
 </div>
+
+<p-toast />
+<p-confirmdialog>
+    <ng-template #headless let-message let-onAccept="onAccept" let-onReject="onReject">
+        <div class="flex flex-col items-center p-8 bg-surface-0 dark:bg-surface-900 rounded">
+            <div
+                class="rounded-full bg-primary text-primary-contrast inline-flex justify-center items-center h-24 w-24 -mt-20">
+                <i class="pi pi-question !text-5xl"></i>
+            </div>
+            <span class="font-bold text-2xl block mb-2 mt-6">{{ message.header }}</span>
+            <p class="mb-0">{{ message.message }}</p>
+            <div class="flex items-center gap-2 mt-6">
+                <p-button label="Save" (onClick)="onAccept()" styleClass="w-32"></p-button>
+                <p-button label="Cancel" [outlined]="true" (onClick)="onReject()" styleClass="w-32"></p-button>
+            </div>
+        </div>
+    </ng-template>
+</p-confirmdialog>

@@ -514,4 +514,8 @@ export class Apiservice {
   invoiceGRNList(params: any): Observable<any>{
     return this.postMethod('requesition/invoice/grn/list', params);
   }
+
+  updatePOStatus(params: any){
+    return this.postMethod('requesition/purchaseorder/status/update', params);
+  }
 }

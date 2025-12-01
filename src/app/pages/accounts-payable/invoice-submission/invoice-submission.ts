@@ -49,6 +49,33 @@ export class InvoiceSubmission implements OnInit {
     }
   }
 
+  getSeverity(status: string){
+    switch(status){
+      case 'SUBMITTED':
+        return 'primary';
+      case 'GRN_IN_PROCESS':
+        return 'primary';
+      case 'GRN_COMPLETED':
+        return 'success';
+      case 'GRN_REVERSED':
+        return 'warn';
+      case 'UNDER_DISBURSEMENT_REVIEW':
+        return 'info';
+      case 'DISBURSEMENT_IN_PROGRESS':
+        return 'primary';
+      case 'RETURNED_TO_GRN':
+        return 'info';
+      case 'REJECTED':
+        return 'danger';
+      case 'PAYMENT_APPROVED':
+        return 'success';
+      case 'PAID':
+        return 'success';
+      default:
+        return 'primary';
+    }
+  }
+
   pageChange(event: any){
     this.first = event.first;
     this.offSet = event.first / event.rows;
