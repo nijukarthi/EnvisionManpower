@@ -113,6 +113,16 @@ export class AttendanceTable implements OnInit {
     }
   }
 
+  isEditDisabled(attendance: any, date: Date): boolean{
+    const status = attendance?.employmentDetails?.employmentStatus;
+    const last = attendance?.employmentDetails?.lastWorkingDate 
+      ? new Date(attendance?.employmentDetails?.lastWorkingDate)
+      : null;
+
+    if (!last) return status !== 'ACTIVE';
+    return status !== 'ACTIVE' && date > last;
+  } 
+
   pageChange(event: any){
     this.first = event.first;
     this.offSet = event.first / event.rows;

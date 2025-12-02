@@ -518,4 +518,20 @@ export class Apiservice {
   updatePOStatus(params: any){
     return this.postMethod('requesition/purchaseorder/status/update', params);
   }
+
+  startGRNProcess(params: any){
+    return this.postMethod('requesition/invoice/grn/start', params);
+  }
+
+  completeGRNProcess(params: any){
+    return this.postMethod('requesition/invoice/grn/complete', params);
+  }
+
+  makeGRNReverse(params: any){
+    return this.postMethod('requesition/invoice/grn/reverse', params);
+  }
+
+  fetchDisbursementList(params: any): Observable<any>{
+    return this.postMethod('requesition/invoice/disbursement/list', params);
+  }
 }

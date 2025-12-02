@@ -70,7 +70,7 @@
                     <div class="grid col-span-1 gap-1" formGroupName="transferTo">
                         <label for="project-code">Demand Code</label>
                         <p-select [options]="demandList" formControlName="demandId" optionLabel="demandCode" optionValue="demandId"
-                            [filter]="true" filterBy="demandCode" placeholder="Select Project Code" 
+                            [filter]="true" filterBy="demandCode" placeholder="Select Demand Code" 
                             inputId="project-code" (onChange)="selectedDCode($event.value)" />
                     </div>
                     <div class="grid col-span-1 gap-1">
@@ -129,7 +129,7 @@
                             id="experience" />
                     </div>
                     <div class="grid col-span-1 gap-1">
-                        <label for="joining-date">Expected Joining Date</label>
+                        <label for="joining-date">Joining Date</label>
                         <p-datepicker formControlName="joiningDate" [iconDisplay]="'input'" [showIcon]="true" 
                             placeholder="Select Date" appendTo="body" inputId="joining-date" />
                     </div>

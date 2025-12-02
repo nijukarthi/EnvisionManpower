@@ -15,6 +15,7 @@ import { MessageService } from 'primeng/api';
 export class InvoiceSubmissionForm implements OnInit {
   offSet = 0;
   pageSize = 100;
+  poId = 0;
 
   poList: any;
   poDetails: any;
@@ -28,6 +29,7 @@ export class InvoiceSubmissionForm implements OnInit {
 
   invoiceForm = this.fb.group({
     invoiceNumber: [0],
+    poId: [0],
     year: [null as Date | null],
     sealAndSignDate: [''],
     isPoCopyAttached: [false],
@@ -82,7 +84,7 @@ export class InvoiceSubmissionForm implements OnInit {
             const start = new Date(po.validFrom);
             const end = new Date(po.validTo);
 
-            const months = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() + end.getMonth());
+            const months = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - end.getMonth());
 
             return {
               ...po,
@@ -121,6 +123,7 @@ export class InvoiceSubmissionForm implements OnInit {
   selectedPOId(poId: number){
     try {
       console.log(poId);
+      this.poId = poId;
       this.poDetails = this.poList.find((po: any) => po.poId === poId);
       console.log(this.poDetails);
 
@@ -194,7 +197,8 @@ export class InvoiceSubmissionForm implements OnInit {
         submittedOn: this.formatDate(formValue.submittedOn),
         month: monthYear?.month,
         year: monthYear?.year,
-        items: filteredItems
+        items: filteredItems,
+        poId: this.poId
       }
 
       console.log(data);

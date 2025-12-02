@@ -32,7 +32,7 @@
                     <td>{{ i + 1 }}</td>
                     <td>{{ receipt.invoiceHeader.consultancy.consultancyName }}</td>
                     <td>
-                        <p-button [label]="receipt.invoiceHeader.invoiceNumber" link />
+                        <p-button [label]="receipt.invoiceHeader.invoiceNumber" link (onClick)="openGRN(receipt.invoiceHeader.invoiceId)" />
                     </td>
                     <td>{{ receipt.invoiceHeader.invoiceDate | date:'dd-MM-yyyy' }}</td>
                     <td>
@@ -65,6 +65,69 @@
 </div>
 
 <p-toast />
-<p-dialog header="Update GRN Process" [modal]="true" [(visible)]="openGRNModal" [style]="{ width: '25rem' }">
-    
+<p-dialog header="Update GRN Process" [modal]="true" [(visible)]="openGRNModal" [style]="{ width: '35rem' }">
+    <p-tabs value="0">
+        <p-tablist>
+            <p-tab value="0">Start GRN Process</p-tab>
+            <p-tab value="1">Complete GRN</p-tab>
+            <p-tab value="2">GRN Reverse</p-tab>
+        </p-tablist>
+        <p-tabpanels>
+            <p-tabpanel value="0">
+                <form [formGroup]="GRNProcessForm" (ngSubmit)="submitGRNProcess()">
+                    <div class="grid grid-cols-1 gap-1">
+                        <div class="grid col-span-1 gap-1">
+                            <label for="recipient">Recipient</label>
+                            <input type="text" pInputText formControlName="recipient" id="recipient" />
+                        </div>
+                    </div>
+                    <div class="flex justify-end mt-4">
+                        <button pButton pRipple type="submit">
+                            <span pButtonLabel>Submit</span>
+                        </button>
+                    </div>
+                </form>
+            </p-tabpanel>
+            <p-tabpanel value="1">
+                <form [formGroup]="completeGRNForm" (ngSubmit)="submitCompleteGRN()">
+                    <div class="grid grid-cols-1 gap-2">
+                        <div class="grid col-span-1 gap-1">
+                            <label for="grn-number">GRN Number</label>
+                            <input type="text" pInputText formControlName="grnNumber" id="grn-number" />
+                        </div>
+                        <div class="grid col-span-1 gap-1">
+                            <label for="done-date">GRN Done Date</label>
+                            <p-datepicker formControlName="grnDoneDate" [showIcon]="true" [iconDisplay]="'input'" 
+                                inputId="done-date" placeholder="Select Date" appendTo="body" />
+                        </div>
+                    </div>
+                    <div class="flex justify-end mt-4">
+                        <button pButton pRipple type="submit">
+                            <span pButtonLabel>Submit</span>
+                        </button>
+                    </div>
+                </form>
+            </p-tabpanel>
+            <p-tabpanel value="2">
+                <form [formGroup]="grnReverseForm" (ngSubmit)="submitGRNReverse()">
+                    <div class="grid grid-cols-1 gap-2">
+                        <div class="grid col-span-1 gap-1">
+                            <label for="reverse-number">GRN Reverse Number</label>
+                            <input type="text" pInputText formControlName="grnReverseNumber" id="reverse-number" />
+                        </div>
+                        <div class="grid col-span-1 gap-1">
+                            <label for="reverse-reason">GRN Reverse Reason</label>
+                            <textarea rows="5" cols="30" pTextarea formControlName="reverseReason"
+                                id="reverse-reason"></textarea>
+                        </div>
+                    </div>
+                    <div class="flex justify-end mt-4">
+                        <button pButton pRipple type="submit">
+                            <span pButtonLabel>Submit</span>
+                        </button>
+                    </div>
+                </form>
+            </p-tabpanel>
+        </p-tabpanels>
+    </p-tabs>
 </p-dialog>

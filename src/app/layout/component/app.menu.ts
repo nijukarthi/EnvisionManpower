@@ -180,7 +180,7 @@ export class AppMenu {
                                     label: 'Invoice Submission',
                                     icon: 'pi pi-check-circle',
                                     routerLink: ['/home/invoice-submission'],
-                                    visible: this.adminUser || this.consultancyUser
+                                    visible: this.consultancyUser
                                 },
                                 {
                                     label: 'Invoice Receipt',

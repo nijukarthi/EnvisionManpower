@@ -22,12 +22,15 @@
                     <th>SL No</th>
                     <th>Employee Code</th>
                     <th>Employee Name</th>
+                    <th>SPN Code</th>
+                    <th>SPN Description</th>
                     <th>Project Code</th>
                     <th>Site Name</th>
                     <th>Cluster Name</th>
                     <th>Role</th>
                     <th>Status</th>
                     <th>Actual DOJ</th>
+                    <th>Last Working Date</th>
                     <th>Contact Number</th>
                     <th>Site Incharge</th>
                     <th>Qualification</th>
@@ -53,6 +56,8 @@
                     <td>{{ i + 1 }}</td>
                     <td>{{ performance.candidate?.employeeCode || '-' }}</td>
                     <td>{{ performance.candidate?.candidateName || '-' }}</td>
+                    <td>{{ performance.employmentDetails?.spn?.spnCode || '-' }}</td>
+                    <td>{{ performance.employmentDetails?.spn?.spnDescription }} ({{ performance.employmentDetails?.spn?.experience }})</td>
                     <td>{{ performance.employmentDetails.project.projectCode || '-' }}</td>
                     <td>{{ performance.employmentDetails.project.siteName || '-' }}</td>
                     <td>{{ performance.employmentDetails.cluster.clusterName || '-' }}</td>
@@ -62,6 +67,7 @@
                             [severity]="getSeverity(performance.employmentDetails.employmentStatus)" />
                     </td>
                     <td>{{ performance.employmentDetails.joiningDate || '-' }}</td>
+                    <td>{{ performance.employmentDetails.lastWorkingDate || '-' }}</td>
                     <td>{{ performance.candidate?.phoneNumber || '-' }}</td>
                     <td>{{ performance.employmentDetails.siteIncharge.userName }}</td>
                     <td>{{ performance.candidate.qualification }}</td>
@@ -69,12 +75,8 @@
                         <td #pEditableColumn>
                             <p-cellEditor>
                                 <ng-template #input>
-                                    @if (performance.employmentDetails.employmentStatus === 'ACTIVE') {
-                                        <p-inputnumber [(ngModel)]="detail.score" (ngModelChange)="calculateTotalScore(performance)"
-                                            [useGrouping]="false" [min]="0" [max]="10" />
-                                    }@else {
-                                        <span>{{ detail.score }}</span>
-                                    }
+                                    <p-inputnumber [(ngModel)]="detail.score" (ngModelChange)="calculateTotalScore(performance)"
+                                        [useGrouping]="false" [min]="0" [max]="10" />
                                 </ng-template>
                                 <ng-template #output>
                                     {{ detail.score }}
@@ -85,12 +87,8 @@
                     <td #pEditableColumn>
                         <p-cellEditor>
                             <ng-template #input>
-                                @if (performance.employmentDetails.employmentStatus === 'ACTIVE') {
-                                    <p-inputnumber [(ngModel)]="performance.employeePerformance.totalScore"
-                                        [disabled]="true" />
-                                } @else {
-                                    <span>{{ performance.employeePerformance.totalScore }}</span>
-                                }
+                                <p-inputnumber [(ngModel)]="performance.employeePerformance.totalScore"
+                                    [disabled]="true" />
                             </ng-template>
                             <ng-template #output>
                                 {{ performance.employeePerformance.totalScore }}
@@ -100,11 +98,7 @@
                     <td #pEditableColumn>
                         <p-cellEditor>
                             <ng-template #input>
-                                @if (performance.employmentDetails.employmentStatus === 'ACTIVE') {
-                                    <input type="text" pInputText [(ngModel)]="performance.employeePerformance.remarks" />
-                                } @else {
-                                    <span>{{ performance.employeePerformance.remarks ?? '-' }}</span>
-                                }
+                                <input type="text" pInputText [(ngModel)]="performance.employeePerformance.remarks" />
                             </ng-template>
                             <ng-template #output>
                                 {{ performance.employeePerformance.remarks ?? '-' }}
@@ -115,14 +109,17 @@
                         @if (!editing) {
                             <button pButton pRipple type="button" icon="pi pi-pencil"
                                 pInitEditableRow rounded severity="secondary"
-                                [disabled]="performance.employmentDetails.employmentStatus !== 'ACTIVE'"></button>
+                                [disabled]="isEditDisabled(performance, date)"
+                                ></button>
                         }@else {
                             <button pButton pRipple type="submit" icon="pi pi-check"
                                 pSaveEditableRow rounded severity="primary" (click)="submitPerformanceForm(performance)"
-                                [disabled]="performance.employmentDetails.employmentStatus !== 'ACTIVE'"></button>
+                                [disabled]="isEditDisabled(performance, date)"
+                                ></button>
                             <button pButton pRipple type="button" icon="pi pi-times"
                                 pCancelEditableRow rounded severity="danger"
-                                [disabled]="performance.employmentDetails.employmentStatus !== 'ACTIVE'"></button>
+                                [disabled]="isEditDisabled(performance, date)"
+                                ></button>
                         }
                         <!-- <p-menu #menu [model]="getMenuItems(performance)" [popup]="true" appendTo="body" />
                         <p-button (onClick)="menu.toggle($event)" icon="pi pi-ellipsis-v" rounded severity="secondary" /> -->
