@@ -217,6 +217,17 @@ export class SitePerformance implements OnInit {
     }
   }
 
+  isEditDisabled(performance: any, date: Date): boolean {
+    const status = performance?.employmentDetails?.employmentStatus;
+    const last = performance?.employmentDetails?.lastWorkingDate
+      ? new Date(performance.employmentDetails.lastWorkingDate)
+      : null;
+
+    if (!last) return status !== 'ACTIVE';
+
+    return status !== 'ACTIVE' && date > last;
+  }
+
   pageChange(event: any){
     console.log("Event:", event);
     this.first = event.first;

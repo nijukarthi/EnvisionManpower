@@ -4,11 +4,22 @@
         <!-- <p-button label="Add Invoice Disbursement" icon="pi pi-plus" routerLink="/home/invoice-disbursement/new" /> -->
     </div>
     <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
-        <p-table [value]="invoiceDisbursementList" stripedRows [rowHover]="true" [tableStyle]="{'min-width': '150rem'}">
+        <p-table [value]="invoiceDisbursementList" stripedRows [rowHover]="true" [tableStyle]="{'min-width': '160rem'}">
             <ng-template #header>
                 <tr>
                     <th>SL NO</th>
                     <th>Consultancy Code</th>
+                    <th>Consultancy Name</th>
+                    <th>Invoice Number</th>
+                    <th>Invoice Date</th>
+                    <th>Invoice Status</th>
+                    <th>POD</th>
+                    <th>Seal and Sign Date by Consultancy</th>
+                    <th>Submitted Date</th>
+                    <th>Submitted To</th>
+                    <th>Month</th>
+                    <th>Year</th>
+                    <th>Grand Total</th>
                     <th>GL Code</th>
                     <th>WBS</th>
                     <th>Cost/Profit Center</th>
@@ -25,7 +36,21 @@
             <ng-template #body let-disbursement let-i="rowIndex">
                 <tr>    
                     <td>{{ i + 1 }}</td>
-                    <td>{{ disbursement.consultancyCode }}</td>
+                    <td>{{ disbursement.consultancyCode || '-' }}</td>
+                    <td>{{ disbursement.invoiceHeader.consultancy.consultancyName || '-' }}</td>
+                    <td>{{ disbursement.invoiceHeader.invoiceNumber || '-' }}</td>
+                    <td>{{ disbursement.invoiceHeader.invoiceDate || '-' }}</td>
+                    <td>
+                        <p-tag [value]="disbursement.invoiceHeader.invoiceStatus" 
+                            [severity]="getSeverity(disbursement.invoiceHeader.invoiceStatus)" />
+                    </td>
+                    <td>{{ disbursement.invoiceHeader.pod }}</td>
+                    <td>{{ disbursement.invoiceHeader.sealAndSignDate | date:'dd-MM-yyyy' }}</td>
+                    <td>{{ disbursement.invoiceHeader.submittedOn }}</td>
+                    <td>{{ disbursement.invoiceHeader.submittedTo }}</td>
+                    <td>{{ disbursement.invoiceHeader.month }}</td>
+                    <td>{{ disbursement.invoiceHeader.year }}</td>
+                    <td>{{ disbursement.invoiceHeader.grandTotal }}</td>
                     <td>{{ disbursement.giCode }}</td>
                     <td>{{ disbursement.wbs }}</td>
                     <td>{{ disbursement.costProfitCenter }}</td>

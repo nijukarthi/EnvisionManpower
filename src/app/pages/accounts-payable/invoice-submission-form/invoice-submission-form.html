@@ -51,133 +51,122 @@
 <div class="card">
     <h6>PO Details</h6>
     <form [formGroup]="invoiceForm" (ngSubmit)="onSubmit()">
-        <div class="flex justify-end">
-            <p-button label="Add Purchase Order" icon="pi pi-plus" />
+        <div class="grid grid-cols-2 gap-2">
+            <div class="grid col-span-1 gap-1">
+                <label for="po-number">PO Number</label>
+                <p-select [options]="poList" optionLabel="poNumber" optionValue="poId"
+                    [filter]="true" filterBy="poNumber"
+                    appendTo="body" placeholder="Select PO Number" (onChange)="selectedPOId($event.value)" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="po-date">PO Date</label>
+                <input type="text" pInputText [value]="poDetails?.poDate" id="po-date" [disabled]="true" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="po-value">PO Value</label>
+                <input type="text" pInputText [value]="poDetails?.totalValue" id="po-value" [disabled]="true" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="start-date">PO Start Date</label>
+                <input type="text" pInputText id="start-date" [value]="poDetails?.validFrom" [disabled]="true" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="po-valid">PO Valid Till</label>
+                <input type="text" pInputText id="po-valid" [value]="poDetails?.validTo" [disabled]="true" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="duration">Duration (In Months)</label>
+                <input type="text" pInputText id="duration" [value]="poDetails?.duration" [disabled]="true" />
+            </div>
         </div>
-        <p-accordion value="0">
-            <p-accordion-panel value="0">
-                <p-accordion-header>Purchase Order 1</p-accordion-header>
-                <p-accordion-content>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div class="grid col-span-1 gap-1">
-                            <label for="po-number">PO Number</label>
-                            <p-select [options]="poList" optionLabel="poNumber" optionValue="poId"
-                                [filter]="true" filterBy="poNumber"
-                                appendTo="body" placeholder="Select PO Number" (onChange)="selectedPOId($event.value)" />
-                        </div>
-                        <div class="grid col-span-1 gap-1">
-                            <label for="po-date">PO Date</label>
-                            <input type="text" pInputText [value]="poDetails?.poDate" id="po-date" [disabled]="true" />
-                        </div>
-                        <div class="grid col-span-1 gap-1">
-                            <label for="po-value">PO Value</label>
-                            <input type="text" pInputText [value]="poDetails?.totalValue" id="po-value" [disabled]="true" />
-                        </div>
-                        <div class="grid col-span-1 gap-1">
-                            <label for="start-date">PO Start Date</label>
-                            <input type="text" pInputText id="start-date" [value]="poDetails?.validFrom" [disabled]="true" />
-                        </div>
-                        <div class="grid col-span-1 gap-1">
-                            <label for="po-valid">PO Valid Till</label>
-                            <input type="text" pInputText id="po-valid" [value]="poDetails?.validTo" [disabled]="true" />
-                        </div>
-                        <div class="grid col-span-1 gap-1">
-                            <label for="duration">Duration (In Months)</label>
-                            <input type="text" pInputText id="duration" [value]="poDetails?.duration" [disabled]="true" />
-                        </div>
-                    </div>
-                
-                    <h6>Line Items</h6>
-                    <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden -mt-3">
-                        <p-table [value]="poEmployeeList" showGridlines stripedRows [rowHover]="true" 
-                            (onRowSelect)="selectedPOEmployee($event.data)" (onRowUnselect)="unSelectedEmployee($event.data)"
-                            [tableStyle]="{'min-width': '150rem'}" formArrayName="items">
-                            <ng-template #header>
-                                <tr>
-                                    <th rowspan="2"><p-tableHeaderCheckbox /></th>
-                                    <th rowspan="2">SL NO</th>
-                                    <th rowspan="2">Employee Code</th>
-                                    <th rowspan="2">Employee Name</th>
-                                    <th rowspan="2">SPN Code</th>
-                                    <th rowspan="2">SPN Description</th>
-                                    <th rowspan="2">Experience</th>
-                                    <th rowspan="2">Joining Date</th>
-                                    <th rowspan="2">SAC Code</th>
-                                    <th rowspan="2">Site Name</th>
-                                    <th rowspan="2">Unit Price</th>
-                                    <th rowspan="2">Tax Rate %</th>
-                                    <th colspan="5" style="text-align: center;">No. of Days</th>
-                                    <th rowspan="2">Quantity</th>
-                                    <th rowspan="2">Total Net Price As Actual Days</th>
-                                    <!-- <th rowspan="2">Actions</th> -->
-                                </tr>
-                                <tr>
-                                    <th>No. of Working Days</th>
-                                    <th>Present Days</th>
-                                    <th>Week Off</th>
-                                    <th>Paid Leave</th>
-                                    <th>Unpaid Leave</th>
-                                </tr>
-                            </ng-template>
-                            <ng-template #body let-po let-i="rowIndex">
-                                <tr [formGroupName]="i">
-                                    <td>
-                                        @if (po.eligible) {
-                                            <p-tableCheckbox [value]="po" />
-                                        } @else{
-                                            <i class="pi pi-info-circle" [pTooltip]="po.reasonNotEligible"></i>
-                                        }   
-                                    </td>
-                                    <td>{{ i + 1 }}</td>
-                                    <td>{{ po.candidate.employeeCode }}</td>
-                                    <td>{{ po.candidate.candidateName }}</td>
-                                    <td>{{ po.employmentDetails.spn.spnCode }}</td>
-                                    <td>{{ po.employmentDetails.spn.spnDescription }}</td>
-                                    <td>{{ po.employmentDetails.spn.experience }}</td>
-                                    <td>{{ po.employmentDetails.joiningDate }}</td>
-                                    <td>
-                                        <input type="text" pInputText formControlName="sacCode" />
-                                    </td>
-                                    <td>{{ po.employmentDetails.project.siteName }}</td>
-                                    <td>{{ po.unitRate }}</td>
-                                    <td>{{ po.taxRate }} %</td>
-                                    <td>{{ po.totalWorkingDays || '-' }}</td>
-                                    <td>{{ po.presentDays || '-' }}</td>
-                                    <td>{{ po.weekOff || '-' }}</td>
-                                    <td>{{ po.paidLeaves || '-' }}</td>
-                                    <td>{{ po.absentDays || '-' }}</td>
-                                    <td>{{ po.quantity || '-' }}</td>
-                                    <td>
-                                        {{ po.lineTotal || '-' }}
-                                    </td>
-                                    <!-- <td class="flex items-center justify-center gap-2">
-                                        @if (!editing) {
-                                        <button pButton pRipple type="button" icon="pi pi-pencil" pInitEditableRow rounded
-                                            severity="secondary"></button>
-                                        }@else {
-                                        <button pButton pRipple type="button" icon="pi pi-check" pSaveEditableRow rounded
-                                            severity="success">
-                                        </button>
-                                        <button pButton pRipple type="button" icon="pi pi-times" pCancelEditableRow rounded
-                                            severity="danger"></button>
-                                        }
-                                    </td> -->
-                                </tr>
-                            </ng-template>
-                            <ng-template #emptymessage>
-                                <tr>
-                                    <td colspan="100%"
-                                        style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground);">
-                                        No Records Found
-                                    </td>
-                                </tr>
-                            </ng-template>
-                        </p-table>
-                    </div>
-                </p-accordion-content>
-            </p-accordion-panel>
-        </p-accordion>
     
+        <h6>Line Items</h6>
+        <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden -mt-3">
+            <p-table [value]="poEmployeeList" showGridlines stripedRows [rowHover]="true" 
+                (onRowSelect)="selectedPOEmployee($event.data)" (onRowUnselect)="unSelectedEmployee($event.data)"
+                [tableStyle]="{'min-width': '150rem'}" formArrayName="items">
+                <ng-template #header>
+                    <tr>
+                        <th rowspan="2"><p-tableHeaderCheckbox /></th>
+                        <th rowspan="2">SL NO</th>
+                        <th rowspan="2">Employee Code</th>
+                        <th rowspan="2">Employee Name</th>
+                        <th rowspan="2">SPN Code</th>
+                        <th rowspan="2">SPN Description</th>
+                        <th rowspan="2">Experience</th>
+                        <th rowspan="2">Joining Date</th>
+                        <th rowspan="2">SAC Code</th>
+                        <th rowspan="2">Site Name</th>
+                        <th rowspan="2">Unit Price</th>
+                        <th rowspan="2">Tax Rate %</th>
+                        <th colspan="5" style="text-align: center;">No. of Days</th>
+                        <th rowspan="2">Quantity</th>
+                        <th rowspan="2">Total Net Price As Actual Days</th>
+                        <!-- <th rowspan="2">Actions</th> -->
+                    </tr>
+                    <tr>
+                        <th>No. of Working Days</th>
+                        <th>Present Days</th>
+                        <th>Week Off</th>
+                        <th>Paid Leave</th>
+                        <th>Unpaid Leave</th>
+                    </tr>
+                </ng-template>
+                <ng-template #body let-po let-i="rowIndex">
+                    <tr [formGroupName]="i">
+                        <td>
+                            @if (po.eligible) {
+                                <p-tableCheckbox [value]="po" />
+                            } @else{
+                                <i class="pi pi-info-circle" [pTooltip]="po.reasonNotEligible"></i>
+                            }   
+                        </td>
+                        <td>{{ i + 1 }}</td>
+                        <td>{{ po.candidate.employeeCode }}</td>
+                        <td>{{ po.candidate.candidateName }}</td>
+                        <td>{{ po.employmentDetails.spn.spnCode }}</td>
+                        <td>{{ po.employmentDetails.spn.spnDescription }}</td>
+                        <td>{{ po.employmentDetails.spn.experience }}</td>
+                        <td>{{ po.employmentDetails.joiningDate }}</td>
+                        <td>
+                            <input type="text" pInputText formControlName="sacCode" />
+                        </td>
+                        <td>{{ po.employmentDetails.project.siteName }}</td>
+                        <td>{{ po.unitRate }}</td>
+                        <td>{{ po.taxRate }} %</td>
+                        <td>{{ po.totalWorkingDays || '-' }}</td>
+                        <td>{{ po.presentDays || '-' }}</td>
+                        <td>{{ po.weekOff || '-' }}</td>
+                        <td>{{ po.paidLeaves || '-' }}</td>
+                        <td>{{ po.absentDays || '-' }}</td>
+                        <td>{{ po.quantity || '-' }}</td>
+                        <td>
+                            {{ po.lineTotal || '-' }}
+                        </td>
+                        <!-- <td class="flex items-center justify-center gap-2">
+                            @if (!editing) {
+                            <button pButton pRipple type="button" icon="pi pi-pencil" pInitEditableRow rounded
+                                severity="secondary"></button>
+                            }@else {
+                            <button pButton pRipple type="button" icon="pi pi-check" pSaveEditableRow rounded
+                                severity="success">
+                            </button>
+                            <button pButton pRipple type="button" icon="pi pi-times" pCancelEditableRow rounded
+                                severity="danger"></button>
+                            }
+                        </td> -->
+                    </tr>
+                </ng-template>
+                <ng-template #emptymessage>
+                    <tr>
+                        <td colspan="100%"
+                            style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground);">
+                            No Records Found
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>    
         <div class="flex justify-end mt-4">
             <button pButton pRipple type="submit">
                 <span pButtonLabel>Submit</span>

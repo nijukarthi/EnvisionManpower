@@ -1,6 +1,8 @@
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-invoice-receipt',
@@ -13,12 +15,32 @@ export class InvoiceReceipt implements OnInit {
   pageSize = 10;
   first = 0;
   totalRecords = 0;
+  invoiceId = 0;
 
   openGRNModal = false;
 
   invoiceGRNList: any;
 
-  constructor(private apiService: Apiservice){}
+  private fb = inject(FormBuilder);
+
+  GRNProcessForm = this.fb.group({
+    invoiceId: [0],
+    recipient: ['']
+  })
+
+  completeGRNForm = this.fb.group({
+    invoiceId: [0],
+    grnNumber: [''],
+    grnDoneDate: ['']
+  })
+
+  grnReverseForm = this.fb.group({
+    invoiceId: [0],
+    grnReverseNumber: [''],
+    reverseReason: ['']
+  })
+
+  constructor(private apiService: Apiservice, private messageService: MessageService){}
 
   ngOnInit(): void {
     this.fetchInvoiceGRNList();
@@ -41,6 +63,101 @@ export class InvoiceReceipt implements OnInit {
         },
         error: err => {
           console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  openGRN(invoiceId: number){
+    try {
+      this.openGRNModal = true;
+      this.invoiceId = invoiceId;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  submitGRNProcess(){
+    try {
+      const data = {
+        ...this.GRNProcessForm.value,
+        invoiceId: this.invoiceId
+      }
+      console.log(data);
+
+      this.apiService.startGRNProcess(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.messageService.add({severity: 'success', summary: 'Success', detail: 'GRN Process Started Successfully'});
+          this.openGRNModal = false;
+          this.fetchInvoiceGRNList();
+        },
+        error: err => { 
+          console.log(err);
+
+          if (err.status == 400) {
+            this.messageService.add({severity: 'error', summary: 'Error', detail: err.error.detail});
+          }
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  submitCompleteGRN(){
+    try {
+      const data = {
+        ...this.completeGRNForm.value,
+        invoiceId: this.invoiceId
+      }
+
+      console.log(data);
+
+      this.apiService.completeGRNProcess(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.messageService.add({severity: 'success', summary: 'Success', detail: 'GRN Process Completed Successfully'});
+          this.openGRNModal = false;
+          this.fetchInvoiceGRNList();
+        },
+        error: err => {
+          console.log(err);
+
+          if (err.status == 400) {
+            this.messageService.add({severity: 'error', summary: 'Error', detail: err.error.detail});
+          }
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  submitGRNReverse(){
+    try {
+      const data = {
+        ...this.grnReverseForm.value,
+        invoiceId: this.invoiceId
+      }
+
+      console.log(data);
+
+      this.apiService.makeGRNReverse(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.messageService.add({severity: 'success', summary: 'Success', detail: 'GRN Process Reversed Successfully'});
+          this.openGRNModal = false;
+          this.fetchInvoiceGRNList();
+        },
+        error: err => {
+          console.log(err);
+
+          if (err.status == 400) {
+            this.messageService.add({severity: 'error', summary: 'Error', detail: err.error.detail});
+          }
         }
       })
     } catch (error) {

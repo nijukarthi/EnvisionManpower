@@ -14,11 +14,14 @@
                     <th>SL NO</th>
                     <th>Employee Code</th>
                     <th>Employee Name</th>
+                    <th>SPN Code</th>
+                    <th>SPN Description</th>
                     <th>Project Code</th>
                     <th>Site Name</th>
                     <th>Cluster Name</th>
                     <th>Role</th>
                     <th>Joining Date</th>
+                    <th>Last Working Date</th>
                     <th>Status</th>
                     <th>Total No. of Working Days</th>
                     <th>Present Days</th>
@@ -33,11 +36,14 @@
                     <td>{{ i + 1 }}</td>
                     <td>{{ attendance.candidate?.employeeCode || '-' }}</td>
                     <td>{{ attendance.candidate?.candidateName || '-' }}</td>
+                    <td>{{ attendance.employmentDetails?.spn?.spnCode || '-' }}</td>
+                    <td>{{ attendance.employmentDetails?.spn?.spnDescription }} ({{ attendance.employmentDetails?.spn?.experience }})</td>
                     <td>{{ attendance.employmentDetails.project.projectCode || '-' }}</td>               
                     <td>{{ attendance.employmentDetails.project.siteName || '-' }}</td>               
                     <td>{{ attendance.employmentDetails.cluster.clusterName || '-' }}</td>               
                     <td>{{ attendance.employmentDetails.envisionRole.roleName || '-' }}</td>   
                     <td>{{ attendance.employmentDetails.joiningDate || '-' }}</td>
+                    <td>{{ attendance.employmentDetails.lastWorkingDate || '-' }}</td>
                     <td>
                         <p-tag [value]="attendance.employmentDetails.employmentStatus" 
                         [severity]="getSeverity(attendance.employmentDetails.employmentStatus)" />
@@ -45,11 +51,7 @@
                     <td #pEditableColumn>
                         <p-cellEditor>
                             <ng-template #input>
-                                @if (attendance.employmentDetails.employmentStatus === 'ACTIVE') {
-                                    <p-inputnumber [(ngModel)]="attendance.totalWorkingDays" [useGrouping]="false" />
-                                }@else {
-                                    <span>{{ attendance.totalWorkingDays }}</span>
-                                }
+                                <p-inputnumber [(ngModel)]="attendance.totalWorkingDays" [useGrouping]="false" />
                             </ng-template>
                             <ng-template #output>
                                 {{ attendance.totalWorkingDays }}
@@ -59,11 +61,7 @@
                     <td #pEditableColumn>
                         <p-cellEditor>
                             <ng-template #input>
-                                @if (attendance.employmentDetails.employmentStatus === 'ACTIVE') {
-                                    <p-inputnumber [(ngModel)]="attendance.presentDays" [useGrouping]="false" />
-                                }@else {
-                                    <span>{{ attendance.presentDays }}</span>
-                                }
+                                <p-inputnumber [(ngModel)]="attendance.presentDays" [useGrouping]="false" />
                             </ng-template>
                             <ng-template #output>
                                 {{ attendance.presentDays }}
@@ -73,11 +71,7 @@
                     <td #pEditableColumn>
                         <p-cellEditor>
                             <ng-template #input>
-                                @if (attendance.employmentDetails.employmentStatus === 'ACTIVE') {
-                                    <p-inputnumber [(ngModel)]="attendance.weekOff" [useGrouping]="false" />
-                                }@else {
-                                    <span>{{ attendance.weekOff }}</span>
-                                }
+                                <p-inputnumber [(ngModel)]="attendance.weekOff" [useGrouping]="false" />
                             </ng-template>
                             <ng-template #output>
                                 {{ attendance.weekOff }}
@@ -87,11 +81,7 @@
                     <td #pEditableColumn>
                         <p-cellEditor>
                             <ng-template #input>
-                                @if (attendance.employmentDetails.employmentStatus === 'ACTIVE') {
-                                    <p-inputnumber [(ngModel)]="attendance.paidLeaves" [useGrouping]="false" />
-                                }@else {
-                                    <span>{{ attendance.paidLeaves }}</span>
-                                }
+                                <p-inputnumber [(ngModel)]="attendance.paidLeaves" [useGrouping]="false" />
                             </ng-template>
                             <ng-template #output>      
                                 {{ attendance.paidLeaves }}
@@ -101,11 +91,7 @@
                     <td #pEditableColumn>
                         <p-cellEditor>
                             <ng-template #input>
-                                @if (attendance.employmentDetails.employmentStatus === 'ACTIVE') {
-                                    <p-inputnumber [(ngModel)]="attendance.absentDays" [useGrouping]="false" />
-                                }@else {
-                                    <span>{{ attendance.absentDays }}</span>
-                                }
+                                <p-inputnumber [(ngModel)]="attendance.absentDays" [useGrouping]="false" />
                             </ng-template>
                             <ng-template #output>
                                 {{ attendance.absentDays }}
@@ -116,15 +102,15 @@
                         @if (!editing) {
                             <button pButton pRipple type="button" icon="pi pi-pencil"
                                 pInitEditableRow rounded severity="secondary"
-                                [disabled]="attendance.employmentDetails.employmentStatus !== 'ACTIVE'"></button>
+                                [disabled]="isEditDisabled(attendance, date)"></button>
                         } @else {
                             <button pButton pRipple type="submit" icon="pi pi-check"
                                 pSaveEditableRow rounded severity="primary" (click)="submitAttendanceForm(attendance)"
-                                [disabled]="attendance.employmentDetails.employmentStatus !== 'ACTIVE'">
+                                [disabled]="isEditDisabled(attendance, date)">
                             </button>
                             <button pButton pRipple type="button" icon="pi pi-times"
                                 pCancelEditableRow rounded severity="danger"
-                                [disabled]="attendance.employmentDetails.employmentStatus !== 'ACTIVE'"></button>
+                                [disabled]="isEditDisabled(attendance, date)"></button>
                         }
                     </td>     
                 </tr>

@@ -1,7 +1,9 @@
 import { Column } from '@/models/table-column/table-column';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { FormArray, FormBuilder } from '@angular/forms';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-on-roll-employees',
@@ -14,6 +16,7 @@ export class OnRollEmployees implements OnInit {
   pageSize = 10;
   first = 0;
   onrollEmployeeListLength = 0;
+  candidateId: number | null = null;
 
   cols!: Column[];
 
@@ -22,7 +25,52 @@ export class OnRollEmployees implements OnInit {
   onrollEmployeeList: any;
   onrollPpeDetails: any;
 
-  constructor(private apiService: Apiservice) {}
+  private fb = inject(FormBuilder);
+
+  ppeDetailsForm = this.fb.group({
+    candidateId: [0],
+    ppeDetails: this.fb.array([])
+  })
+
+  get ppeDetails(){
+    return this.ppeDetailsForm.get('ppeDetails') as FormArray;
+  }
+
+  updatePpeDetails(ppe: any){
+    return this.fb.group({
+      ppeType: [ppe.ppeType],
+      size: [ppe.size]
+    })
+  }
+
+  constructor(private apiService: Apiservice, private messageService: MessageService) {}
+
+  ppeTypeList = [
+    {
+      label: 'Safety Helmet',
+      value: 'Safety Helmet'
+    },
+    {
+      label: 'Safety Shoes',
+      value: 'Safety Shoes'
+    },
+    {
+      label: 'Safety harness belt',
+      value: 'Safety harness belt'
+    },
+    {
+      label: 'Uniform Tshirt',
+      value: 'Uniform Tshirt'
+    },
+    {
+      label: 'Uniform Pants',
+      value: 'Uniform Pants'
+    },
+    {
+      label: 'Reflective vest',
+      value: 'Reflective vest'
+    },
+  ]
 
   ngOnInit(): void {
     this.fetchActiveOnrollEmployees();
@@ -72,13 +120,93 @@ export class OnRollEmployees implements OnInit {
     return path.split('.').reduce((acc, part) => acc && acc[part], obj) ?? '-';
   }
 
-  viewPpeDetails(onroll: any){
+  populatePpeDetails(){
+    this.ppeDetails.clear();
+
+    this.onrollPpeDetails.forEach((ppe: any) => {
+      this.ppeDetails.push(this.updatePpeDetails(ppe))
+    })
+  }
+
+  fetchPpeDetails(){
     try {
-      this.openPpeDetails = true;
-      this.onrollPpeDetails = onroll.ppeDetails;
+      const data = {
+        candidateId: this.candidateId
+      }
+      console.log(data);
+
+      this.apiService.fetchPpeDetails(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.onrollPpeDetails = val?.data;
+          this.populatePpeDetails();
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
     } catch (error) {
       console.log(error);
     }
+  }
+
+  ppeDetailsModal(onroll: any){
+    try {
+      this.openPpeDetails = true;
+      this.candidateId = onroll.candidateId;
+
+      if (onroll.ppeDetails.length > 0) {
+        this.fetchPpeDetails();
+      } else {
+        this.ppeDetails.push(
+          this.fb.group({
+            ppeType: [''],
+            size: ['']
+          })
+        )
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  addPpe(){
+    console.log('checking');
+    const newPpeGroup = this.fb.group({
+      ppeType: [''],
+      size: ['']
+    })
+
+    this.ppeDetails.push(newPpeGroup);
+  }
+
+  submitPpeDetails(){
+    try {
+      const data = {
+        candidateId: this.candidateId,
+        ppeDetails: this.ppeDetails.value
+      }
+
+      console.log(data);
+
+      this.apiService.updatePpeDetails(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.messageService.add({severity: 'success', summary: 'Success', detail: 'Successfully Updated PPE Details'});
+          this.openPpeDetails = false;
+          this.fetchActiveOnrollEmployees();
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  removePpeDetails(index: number){
+    this.ppeDetails.removeAt(index);
   }
 
   pageChange(event: any){
@@ -86,5 +214,12 @@ export class OnRollEmployees implements OnInit {
     this.offSet = event.first / event.rows;
     this.pageSize = event.rows;
     this.fetchActiveOnrollEmployees();
+  }
+
+  onDialogClose(){
+    this.candidateId = null;
+    this.ppeDetailsForm.reset();
+    this.ppeDetails.clear();
+    this.onrollPpeDetails = [];
   }
 }
