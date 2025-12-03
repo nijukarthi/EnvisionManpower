@@ -59,7 +59,7 @@
                                                 <div class="grid col-span-1 gap-1">
                                                     <label for="spn-code">SPN Code</label>
                                                     <p-select [options]="spnInfoList" optionLabel="spnCode" optionValue="spnId"
-                                                        [(ngModel)]="selectedSpnId" [filter]="true" filterBy="spnCode"
+                                                        [(ngModel)]="item.selectedSpnId" [filter]="true" filterBy="spnCode"
                                                         [ngModelOptions]="{ standalone: true }"
                                                         inputId="spn-code" placeholder="Select SPN Code" [showClear]="true" 
                                                         (onChange)="selectedSpnCode($event.value)" appendTo="body" />
@@ -67,7 +67,7 @@
                                                 <div class="grid col-span-1 gap-1">
                                                     <label for="spn-description">SPN Description</label>
                                                     <p-select [options]="spnInfoList" optionValue="spnId"
-                                                        [(ngModel)]="selectedSpnId" [filter]="true" filterBy="spnDescription"
+                                                        [(ngModel)]="item.selectedSpnId" [filter]="true" filterBy="spnDescription"
                                                         [ngModelOptions]="{ standalone: true }"
                                                         inputId="spn-description" appendTo="body" [showClear]="true" 
                                                         (onChange)="selectedSpnCode($event.value)" placeholder="Select SPN Description">
@@ -81,7 +81,7 @@
                                                 </div>
                                                 <div class="grid col-span-1 gap-1">
                                                     <label for="experience">Experience</label>
-                                                    <input type="text" pInputText [value]="selectedSpn?.experience ?? 0" id="experience"
+                                                    <input type="text" pInputText [value]="item.selectedSpn?.experience ?? 0" id="experience"
                                                         [disabled]="true" />
                                                 </div>
                                                 <div class="grid col-span-1 gap-1">
@@ -89,67 +89,77 @@
                                                     <p-select [options]="demandList" optionLabel="demandCode" optionValue="demandId"
                                                         inputId="demand-code" appendTo="body" placeholder="Select Demand Code"
                                                         [filter]="true" filterBy="demandCode" [showClear]="true"
-                                                        (onChange)="selectedDemand($event.value)" />
+                                                        (onChange)="selectedDemand($event.value,i)" />
                                                 </div>
                                                 <div class="grid col-span-1 gap-1">
                                                     <label for="quantity">Quantity</label>
-                                                    <input type="text" pInputText [value]="newEmployeeList?.length" 
+                                                    <input type="text" pInputText [value]="item.newEmployeeList?.length" 
                                                         id="quantity" [disabled]="true" />
                                                 </div>
                                             </div>
                                             
                                             
                                             <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden mt-4">
-                                                <p-table [value]="newEmployeeList" stripedRows [rowHover]="true" dataKey="candidateId"
-                                                    formArrayName="newEmployeeItems" [tableStyle]="{'min-width': '90rem'}">
-                                                    <ng-template #header>
-                                                        <tr>
-                                                            <th>SL NO</th>
-                                                            <th>Employee Code</th>
-                                                            <th>Employee Name</th>
-                                                            <th>Duration Allowed</th>
-                                                            <th>Unit Price</th>
-                                                            <th>Tax Rate %</th>
-                                                            <th>Tax Amount</th>
-                                                            <th>Item Total</th>
-                                                            <th>Actions</th>
-                                                        </tr>
-                                                    </ng-template>
-                                                    <ng-template #body let-newEmployee let-i="rowIndex">
-                                                        @if (newEmployeeItems.controls[i]) {
-                                                            <tr [formGroupName]="i">
-                                                                <td>{{ i + 1 }}</td>
-                                                                <td>{{ newEmployee.employeeCode }}</td>
-                                                                <td>{{ newEmployee.candidateName }}</td>
-                                                                <td>
-                                                                    <p-inputnumber formControlName="monthsAllowed" [useGrouping]="false" />
-                                                                </td>
-                                                                <td>
-                                                                    <p-inputnumber formControlName="unitRate" [useGrouping]="false" />
-                                                                </td>
-                                                                <td>
-                                                                    <p-inputgroup>
-                                                                        <p-inputnumber formControlName="taxRate" [useGrouping]="false" />
-                                                                        <p-inputgroup-addon>%</p-inputgroup-addon>
-                                                                    </p-inputgroup>
-                                                                </td>
-                                                                <td>{{ newEmployeeItems.controls[i].get('taxAmount')?.value || 0 }}</td>
-                                                                <td>{{ newEmployeeItems.controls[i].get('itemTotal')?.value || 0 }}</td>
-                                                                <td>
-                                                                    <p-button icon="pi pi-trash" severity="danger" rounded
-                                                                        (onClick)="removeNewEmployee(i, newEmployee.candidateId)" />
-                                                                </td>
-                                                            </tr>
-                                                        }
-                                                    </ng-template>
-                                                    <ng-template #emptymessage>
-                                                        <tr>
-                                                            <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground);">
-                                                                No Records Found
-                                                            </td>
-                                                        </tr>
-                                                    </ng-template>
-                                                </p-table>
+                                            <p-table [value]="item.newEmployeeList" [rowHover]="true" stripedRows dataKey="candidateId"
+                                                [tableStyle]="{'min-width': '90rem'}">
+                                            
+                                                <ng-template #header>
+                                                    <tr>
+                                                        <th>SL NO</th>
+                                                        <th>Employee Code</th>
+                                                        <th>Employee Name</th>
+                                                        <th>Duration Allowed</th>
+                                                        <th>Unit Price</th>
+                                                        <th>Tax %</th>
+                                                        <th>Tax Amount</th>
+                                                        <th>Item Total</th>
+                                                        <th>Actions</th>
+                                                    </tr>
+                                                </ng-template>
+                                            
+                                                <ng-template #body let-row let-rowIndex="rowIndex">
+                                                    @if (item.newEmployeeItems.controls[rowIndex]) {
+                                            
+                                                    <tr [formGroup]="item.newEmployeeItems.controls[rowIndex]">
+                                                        <td>{{ rowIndex + 1 }}</td>
+                                                        <td>{{ row.employeeCode }}</td>
+                                                        <td>{{ row.candidateName }}</td>
+                                            
+                                                        <td>
+                                                            <p-inputnumber formControlName="monthsAllowed"></p-inputnumber>
+                                                        </td>
+                                            
+                                                        <td>
+                                                            <p-inputnumber formControlName="unitRate"></p-inputnumber>
+                                                        </td>
+                                            
+                                                        <td>
+                                                            <p-inputgroup>
+                                                                <p-inputnumber formControlName="taxRate"></p-inputnumber>
+                                                                <p-inputgroup-addon>%</p-inputgroup-addon>
+                                                            </p-inputgroup>
+                                                        </td>
+                                            
+                                                        <td>{{ item.newEmployeeItems.controls[rowIndex].get('taxAmount')?.value }}</td>
+                                                        <td>{{ item.newEmployeeItems.controls[rowIndex].get('itemTotal')?.value }}</td>
+                                            
+                                                        <td>
+                                                            <p-button icon="pi pi-trash" severity="danger" rounded
+                                                                (onClick)="removeNewEmployee(rowIndex, row.candidateId)">
+                                                            </p-button>
+                                                        </td>
+                                                    </tr>
+                                            
+                                                    }
+                                                </ng-template>
+                                            
+                                                <ng-template #emptymessage>
+                                                    <tr>
+                                                        <td colspan="100%" class="text-center p-2">No Records Found</td>
+                                                    </tr>
+                                                </ng-template>
+                                            
+                                            </p-table>
                                             </div>
                                         </p-accordion-content>
                                     </p-accordion-panel>

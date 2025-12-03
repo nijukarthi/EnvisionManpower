@@ -12,7 +12,7 @@ import { MessageService } from 'primeng/api';
   styleUrl: './po-assign-form.scss'
 })
 export class PoAssignForm implements OnInit {
-  private fb = inject(FormBuilder);
+  //private fb = inject(FormBuilder);
 
   selectedSpnId = 0;
   selectedExistingSpnId = 0;
@@ -30,21 +30,26 @@ export class PoAssignForm implements OnInit {
 
   newEmployeeLineItems: any[] = [];
   existingEmployeeLineItems: any[] = [];
-
-  constructor(private apiService: Apiservice, private messageService: MessageService, private router: Router){}
-
-  mapPOForm = this.fb.group({
-    poNumber: [0],
-    consultancy: this.fb.group({
-      userId: [0]
-    }),
-    poDate: [''],
-    validFrom: [''],
-    validTo: [''],
-    totalValue: [0],
-    newEmployeeItems: this.fb.array([]),
-    existingEmployeeItems: this.fb.array([])
-  })
+  mapPOForm!: FormGroup;
+ constructor(
+    private apiService: Apiservice,
+    private messageService: MessageService,
+    private router: Router,
+    private fb: FormBuilder
+  ) {
+    this.mapPOForm = this.fb.group({
+      poNumber: [0],
+      consultancy: this.fb.group({
+        userId: [0]
+      }),
+      poDate: [''],
+      validFrom: [''],
+      validTo: [''],
+      totalValue: [0],
+      newEmployeeItems: this.fb.array([]),
+      existingEmployeeItems: this.fb.array([])
+    });
+  }
 
   get newEmployeeItems(){
     return this.mapPOForm.get('newEmployeeItems') as FormArray;
@@ -112,13 +117,18 @@ export class PoAssignForm implements OnInit {
       this.duration = 0;
     }
   }
-
+createEmptyLineItem() {
+  return {
+    selectedSpnId: null,
+    selectedSpn: null,
+    demandId: null,
+    experience: null,
+    newEmployeeList: [],
+    newEmployeeItems: this.fb.array([])   // empty form array
+  };
+}
   addNewEmployeeLineItems(){
-    const newItem = this.newEmployeeLineItems[0];
-    this.newEmployeeLineItems.push(newItem);
-    // this.newEmployeeList = [];
-    // this.selectedSpnId = 0;
-    // this.selectedSpn = [];
+    this.newEmployeeLineItems.push(this.createEmptyLineItem());
   } 
 
   addExistingEmployeeLineItems(){
@@ -196,21 +206,27 @@ export class PoAssignForm implements OnInit {
     }
   }
 
-  populateNewEmployeeList(){
-    this.newEmployeeItems.clear();
-
+  populateNewEmployeeList(lineItem:any){
+    /* this.newEmployeeItems.clear();
     this.newEmployeeList.forEach((emp: any) => {
       this.newEmployeeItems.push(this.addLineItems(emp));
     });
 
     this.newEmployeeItems.controls.forEach((item, index) => {
       this.subscribeToItemChanges(item as FormGroup)
-    });
+    }); */ 
+    if (!lineItem.newEmployeeList) return;
+
+  lineItem.newEmployeeItems.clear();
+
+  lineItem.newEmployeeList.forEach((emp: any) => {
+    lineItem.newEmployeeItems.push(this.addLineItems(emp));
+  });
   }
 
-  selectedDemand(demandId: number){
+  selectedDemand(demandId: number, lineIndex: number){
     try {
-      const data = {
+    /*   const data = {
         demandId: demandId
       }
       console.log(data);
@@ -235,7 +251,35 @@ export class PoAssignForm implements OnInit {
             this.newEmployeeList = [];
           }
         }
-      })
+      }) */
+      const lineItem = this.newEmployeeLineItems[lineIndex];
+
+  this.apiService.fetchDemandCandidates({ demandId }).subscribe({
+    next: (val) => {
+      const employees = val.data;
+      const consultancyId = this.mapPOForm.get('consultancy.userId')?.value;
+
+      // Store inside THIS line item only
+      lineItem.newEmployeeList = employees.filter(
+        (e: any) => e.consultancyId === consultancyId
+      );
+
+      // Create a NEW formArray for this line
+      lineItem.newEmployeeItems = this.fb.array([]);
+
+      // Populate controls
+      lineItem.newEmployeeList.forEach((emp: any) => {
+        lineItem.newEmployeeItems.push(this.addLineItems(emp));
+      });
+
+      console.log("LINE ITEM employees:", lineItem.newEmployeeList);
+    },
+
+    error: (err) => {
+      lineItem.newEmployeeList = [];
+      lineItem.newEmployeeItems = this.fb.array([]);
+    }
+  });
     } catch (error) {
       console.log(error);
     }
