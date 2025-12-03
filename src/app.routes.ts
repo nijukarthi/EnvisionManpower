@@ -44,6 +44,7 @@ import { InvoiceDisbursementForm } from '@/pages/accounts-payable/invoice-disbur
 import { AttendanceTable } from '@/pages/performanceAttendance/attendance-table/attendance-table';
 import { PoAssignTable } from '@/pages/po-assign-table/po-assign-table';
 import { PoAssignForm } from '@/pages/po-assign-form/po-assign-form';
+import { PoAssignEditForm } from '@/pages/po-assign-edit-form/po-assign-edit-form';
 
 export const appRoutes: Routes = [
     {
@@ -88,6 +89,7 @@ export const appRoutes: Routes = [
             { path: 'demand-fullfillment/steps', component: Steps, canActivate: [authGuard] },
             { path: 'po-assign', component: PoAssignTable, canActivate: [authGuard] },
             { path: 'po-assign/new', component: PoAssignForm, canActivate: [authGuard] },
+            { path: 'po-assign/:id', component: PoAssignEditForm, canActivate: [authGuard] },
             { path: 'onboarding', component: OnboardingTable, canActivate: [authGuard] },
             { path: 'onroll-employees', component: OnRollEmployees, canActivate: [authGuard] },
             { path: 'training', component: TrainingTable, canActivate: [authGuard] },

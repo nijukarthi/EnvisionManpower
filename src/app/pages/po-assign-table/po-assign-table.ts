@@ -2,6 +2,7 @@ import { PurchaseOrderStatus } from '@/models/purchase-order-status/purchase-ord
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 
 @Component({
@@ -51,7 +52,8 @@ export class PoAssignTable implements OnInit {
     }
   ];
 
-  constructor(private apiService: Apiservice, private messageService: MessageService, private confirmationService: ConfirmationService){}
+  constructor(private apiService: Apiservice, private messageService: MessageService, 
+    private confirmationService: ConfirmationService, private router: Router){}
 
   ngOnInit(): void {
     this.fetchPOList();
@@ -61,7 +63,8 @@ export class PoAssignTable implements OnInit {
     return [
       {
         label: 'Edit',
-        icon: 'pi pi-pencil'
+        icon: 'pi pi-pencil',
+        command: () => this.router.navigate(['/home/po-assign', po.poId])
       },
       {
         label: 'Delete',

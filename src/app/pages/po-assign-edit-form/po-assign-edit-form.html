@@ -1,0 +1,110 @@
+<div class="card">
+    <div class="flex items-center gap-2">
+        <h5>Edit PO Details</h5>
+        <p-tag [value]="poDetails?.poStatus" [severity]="poDetails?.poStatus" styleClass="-mt-4" />
+    </div>
+    <form [formGroup]="updatePOForm" (ngSubmit)="onSubmit()">
+        <div class="grid grid-cols-2 gap-2">
+            <div class="grid col-span-1 gap-1" formGroupName="consultancy">
+                <label for="consultancy-name">Consultancy Name</label>
+                <input type="text" pInputText [value]="poDetails?.consultancy?.consultancyName" 
+                    id="consultancy-name" [disabled]="true" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="po-number">PO Number</label>
+                <input type="text" pInputText formControlName="poNumber" id="po-number" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="po-date">PO Date</label>
+                <p-datepicker formControlName="poDate" [showIcon]="true" [iconDisplay]="'input'" 
+                    inputId="po-date" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="po-start-date">PO Start Date</label>
+                <p-datepicker formControlName="validFrom" [showIcon]="true" [iconDisplay]="'input'" 
+                    inputId="po-start-date" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="po-valid-to">PO Valid Till</label>
+                <p-datepicker formControlName="validTo" [showIcon]="true" [iconDisplay]="'input'" 
+                    inputId="po-valid-to" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="duration">Duration</label>
+                <input type="text" pInputText [value]="duration" id="duration" [disabled]="true" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="total-value">PO Total Value</label>
+                <input type="text" [value]="poDetails?.totalValue" pInputText id="total-value" [disabled]="true" />
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="card">
+    <h5>Line Items</h5>
+    <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
+        <p-table [value]="poLineItemsList" stripedRows [rowHover]="true">
+            <ng-template #header>
+                <tr>
+                    <th>SL NO</th>
+                    <th>Employee Code</th>
+                    <th>Employee Name</th>
+                    <th>Duration Allowed</th>
+                    <th>Unit Price</th>
+                    <th>Tax Rate %</th>
+                    <th>Tax Amount</th>
+                    <th>Item Total</th>
+                    <th>Actions</th>
+                </tr>
+            </ng-template>
+            <ng-template #body let-item let-editing="editing" let-i="rowIndex">
+                <tr>
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ item.candidate.employeeCode }}</td>
+                    <td>{{ item.candidate.candidateName }}</td>
+                    <td [pEditableColumn]="item.monthsAllowed" pEditableColumnField="monthsAllowed">
+                        <p-cellEditor>
+                            <ng-template #input>
+                                <input type="text" pInputText [(ngModel)]="item.monthsAllowed" fluid />
+                            </ng-template>
+                            <ng-template #output>
+                                {{ item.monthsAllowed }}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <td [pEditableColumn]="item.unitRate" pEditableColumnField="unitRate">
+                        <p-cellEditor>
+                            <ng-template #input>
+                                <input type="text" pInputText [(ngModel)]="item.unitRate"
+                                    (ngModelChange)="calculateTax(item)" fluid />
+                            </ng-template>
+                            <ng-template #output>
+                                {{ item.unitRate }}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <td [pEditableColumn]="item.taxRate" pEditableColumnField="taxRate">
+                        <p-cellEditor>
+                            <ng-template #input>
+                                <input type="text" pInputText [(ngModel)]="item.taxRate"
+                                    (ngModelChange)="calculateTax(item)" fluid />
+                            </ng-template>
+                            <ng-template #output>
+                                {{ item.taxRate }}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <td>{{ item.taxAmount }}</td>
+                    <td>{{ item.lineTotal }}</td>
+                    <td>
+                        <p-button icon="pi pi-trash" severity="danger" rounded />
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template #emptymessage>
+                <tr></tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
