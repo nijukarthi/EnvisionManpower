@@ -46,7 +46,6 @@ import { SplitButtonModule } from 'primeng/splitbutton';
 import { TabsModule } from 'primeng/tabs';
 import { MessageModule } from 'primeng/message';
 import { TieredMenuModule } from 'primeng/tieredmenu';
-
 @NgModule({
   declarations: [],
   imports: [
