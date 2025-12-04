@@ -2,6 +2,7 @@ import { UserGroups } from '@/models/usergroups/usergroups.enum';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-invoice-submission',
@@ -21,7 +22,7 @@ export class InvoiceSubmission implements OnInit {
 
   currentUserRole = Number(sessionStorage.getItem('userGroupId'));
 
-  constructor(private apiService: Apiservice){}
+  constructor(private apiService: Apiservice, private router: Router){}
 
   ngOnInit(): void {
     this.fetchInvoiceSubmissionList();
@@ -47,6 +48,20 @@ export class InvoiceSubmission implements OnInit {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  getMenuItems(submission: any){
+    return [
+      {
+        label: 'Edit',
+        icon: 'pi pi-pencil',
+        command: () => this.router.navigate(['/home/invoice-submission', submission.invoiceId])
+      },
+      {
+        label: 'Delete',
+        icon: 'pi pi-trash'
+      }
+    ]
   }
 
   getSeverity(status: string){

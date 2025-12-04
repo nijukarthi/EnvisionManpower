@@ -3,7 +3,7 @@ import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 
 @Component({
@@ -15,7 +15,7 @@ import { MessageService } from 'primeng/api';
 export class InvoiceSubmissionForm implements OnInit {
   offSet = 0;
   pageSize = 100;
-  poId = 0;
+  invoiceId = 0;
 
   poList: any;
   poDetails: any;
@@ -25,7 +25,8 @@ export class InvoiceSubmissionForm implements OnInit {
 
   private fb = inject(FormBuilder);
 
-  constructor(private apiService: Apiservice, private messageService: MessageService, private router: Router){}
+  constructor(private apiService: Apiservice, private messageService: MessageService, 
+    private router: Router, private route: ActivatedRoute){}
 
   invoiceForm = this.fb.group({
     invoiceNumber: [0],
@@ -48,7 +49,7 @@ export class InvoiceSubmissionForm implements OnInit {
   poEmployeeDetails(emp: any){
     return this.fb.group({
       employmentId: [emp.employmentDetails.employmentId],
-      sacCode: ['']
+      sacCode: [emp.sacCode ?? '']
     })
   }
 
@@ -65,6 +66,15 @@ export class InvoiceSubmissionForm implements OnInit {
 
   ngOnInit(): void {
     this.fetchPOList();
+
+    this.route.paramMap.subscribe(param => {
+      const id = param.get('id');
+
+      if (id) {
+        this.invoiceId = Number(id);
+        this.fetchViewInvoice();
+      }
+    })
   }
 
   fetchPOList(){
@@ -101,13 +111,52 @@ export class InvoiceSubmissionForm implements OnInit {
     }
   }
 
+  fetchViewInvoice(){
+    try {
+      const data = {
+        invoiceId: this.invoiceId
+      }
+
+      console.log(data);
+
+      this.apiService.fetchViewInvoice(data).subscribe({
+        next: val => {
+          console.log(val);
+          const invoiceData = val?.data?.header;
+
+          this.invoiceForm.patchValue({
+            ...invoiceData,
+            invoiceDate: new Date(invoiceData?.invoiceDate),
+            sealAndSignDate: new Date(invoiceData.sealAndSignDate),
+            month: new Date(invoiceData.year, invoiceData.month - 1, 1),
+            year: new Date(invoiceData.year, 0, 1),
+            submittedOn: new Date(invoiceData.submittedOn)
+          });
+          this.poEmployeeList = val?.data?.items;
+          this.poDetails = this.poList.find((po: any) => po.poId === val?.data?.header?.poId);
+          console.log(this.poDetails);
+
+          this.items.clear();
+          this.poEmployeeList.forEach((emp: any) => {
+            this.items.push(this.poEmployeeDetails(emp));
+          });
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   convertMonthAndYear(){
     const selectedMonth = this.invoiceForm.get('month')?.value;
     if (!selectedMonth) {
       this.messageService.add({severity: 'error', summary: 'Error', detail: "Month not selected"});
       return;
     }
-    const month = selectedMonth.getMonth() + 1;
+    const month = selectedMonth?.getMonth() + 1;
 
     const selectedYear = this.invoiceForm.get('year')?.value;
     if (!selectedYear) {
@@ -123,7 +172,6 @@ export class InvoiceSubmissionForm implements OnInit {
   selectedPOId(poId: number){
     try {
       console.log(poId);
-      this.poId = poId;
       this.poDetails = this.poList.find((po: any) => po.poId === poId);
       console.log(this.poDetails);
 
@@ -177,7 +225,10 @@ export class InvoiceSubmissionForm implements OnInit {
   formatDate(date: Date | null | string | undefined): string | null{
     if (!date) return null;
     const d = new Date(date);
-    return d.toISOString().split('T')[0];
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
   onSubmit(){
@@ -198,7 +249,6 @@ export class InvoiceSubmissionForm implements OnInit {
         month: monthYear?.month,
         year: monthYear?.year,
         items: filteredItems,
-        poId: this.poId
       }
 
       console.log(data);

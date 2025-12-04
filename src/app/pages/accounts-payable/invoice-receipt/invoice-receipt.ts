@@ -17,6 +17,9 @@ export class InvoiceReceipt implements OnInit {
   totalRecords = 0;
   invoiceId = 0;
 
+  invoiceStatus = '';
+  activeTab = '0';
+
   openGRNModal = false;
 
   invoiceGRNList: any;
@@ -70,10 +73,22 @@ export class InvoiceReceipt implements OnInit {
     }
   }
 
-  openGRN(invoiceId: number){
+  openGRN(receipt: any){
     try {
       this.openGRNModal = true;
-      this.invoiceId = invoiceId;
+      this.invoiceId = receipt.invoiceHeader.invoiceId;
+      this.invoiceStatus = receipt.invoiceHeader.invoiceStatus;
+
+      if (this.invoiceStatus === 'GRN_IN_PROCESS') {
+        this.activeTab = '1';
+      }
+      else if (this.invoiceStatus === 'GRN_REVERSED') {
+        this.activeTab = '2';
+      }
+      else{
+        this.activeTab = '0';
+      }
+      
     } catch (error) {
       console.log(error);
     }
