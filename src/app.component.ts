@@ -10,7 +10,7 @@ import { RouterModule } from '@angular/router';
     template: `
     <router-outlet></router-outlet>
     <div class="global-loader" *ngIf="loading">
-        <p-progressSpinner strokeWidth="8" fill="transparent"></p-progressSpinner>
+        <p-progressSpinner strokeWidth="3" fill="transparent"></p-progressSpinner>
     </div>
     `,
   styles: [`

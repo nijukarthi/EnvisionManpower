@@ -272,6 +272,10 @@ createEmptyLineItem() {
         lineItem.newEmployeeItems.push(this.addLineItems(emp));
       });
 
+      lineItem.newEmployeeItems.controls.forEach((item: any, index: number) => {
+        this.subscribeToItemChanges(item as FormGroup)
+      });
+
       console.log("LINE ITEM employees:", lineItem.newEmployeeList);
     },
 

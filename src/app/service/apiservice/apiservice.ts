@@ -538,4 +538,8 @@ export class Apiservice {
   fetchViewPurchaseOrder(params: any): Observable<any>{
     return this.postMethod('requesition/purchaseorder/view', params);
   }
+
+  fetchViewInvoice(params: any): Observable<any>{
+    return this.postMethod('requesition/invoice/view', params);
+  }
 }

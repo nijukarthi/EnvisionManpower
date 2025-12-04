@@ -54,8 +54,8 @@
         <div class="grid grid-cols-2 gap-2">
             <div class="grid col-span-1 gap-1">
                 <label for="po-number">PO Number</label>
-                <p-select [options]="poList" optionLabel="poNumber" optionValue="poId"
-                    [filter]="true" filterBy="poNumber"
+                <p-select [options]="poList" formControlName="poId" optionLabel="poNumber" 
+                    optionValue="poId" [filter]="true" filterBy="poNumber"
                     appendTo="body" placeholder="Select PO Number" (onChange)="selectedPOId($event.value)" />
             </div>
             <div class="grid col-span-1 gap-1">
@@ -124,14 +124,18 @@
                         <td>{{ i + 1 }}</td>
                         <td>{{ po.candidate.employeeCode }}</td>
                         <td>{{ po.candidate.candidateName }}</td>
-                        <td>{{ po.employmentDetails.spn.spnCode }}</td>
-                        <td>{{ po.employmentDetails.spn.spnDescription }}</td>
-                        <td>{{ po.employmentDetails.spn.experience }}</td>
-                        <td>{{ po.employmentDetails.joiningDate }}</td>
+                        <td>{{ po?.employmentDetails?.spn?.spnCode }}</td>
+                        <td>{{ po?.employmentDetails?.spn?.spnDescription }}</td>
+                        <td>{{ po?.employmentDetails?.spn?.experience }}</td>
+                        <td>{{ po?.employmentDetails?.joiningDate }}</td>
                         <td>
-                            <input type="text" pInputText formControlName="sacCode" />
+                            @if (po.eligible) {
+                                <input type="text" pInputText formControlName="sacCode" />
+                            } @else {
+                                <span>{{ po.sacCode || '-' }}</span>
+                            }
                         </td>
-                        <td>{{ po.employmentDetails.project.siteName }}</td>
+                        <td>{{ po?.employmentDetails?.project?.siteName }}</td>
                         <td>{{ po.unitRate }}</td>
                         <td>{{ po.taxRate }} %</td>
                         <td>{{ po.totalWorkingDays || '-' }}</td>
@@ -169,7 +173,7 @@
         </div>    
         <div class="flex justify-end mt-4">
             <button pButton pRipple type="submit">
-                <span pButtonLabel>Submit</span>
+                <span pButtonLabel>{{ invoiceId ? 'Update' : 'Submit' }}</span>
             </button>
         </div>
     </form>

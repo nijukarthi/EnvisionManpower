@@ -32,11 +32,13 @@
                     <td>{{ i + 1 }}</td>
                     <td>{{ receipt.invoiceHeader.consultancy.consultancyName }}</td>
                     <td>
-                        <p-button [label]="receipt.invoiceHeader.invoiceNumber" link (onClick)="openGRN(receipt.invoiceHeader.invoiceId)" />
+                        <p-button [label]="receipt.invoiceHeader.invoiceNumber" link 
+                            (onClick)="openGRN(receipt)" />
                     </td>
                     <td>{{ receipt.invoiceHeader.invoiceDate | date:'dd-MM-yyyy' }}</td>
                     <td>
-                        <p-tag [value]="receipt.invoiceHeader.invoiceStatus" [severity]="getSeverity(receipt.invoiceHeader.invoiceStatus)" />
+                        <p-tag [value]="receipt.invoiceHeader.invoiceStatus" 
+                            [severity]="getSeverity(receipt.invoiceHeader.invoiceStatus)" />
                     </td>
                     <td>{{ receipt.invoiceHeader.pod }}</td>
                     <td>{{ receipt.invoiceHeader.sealAndSignDate | date:'dd-MM-yyyy' }}</td>
@@ -66,11 +68,11 @@
 
 <p-toast />
 <p-dialog header="Update GRN Process" [modal]="true" [(visible)]="openGRNModal" [style]="{ width: '35rem' }">
-    <p-tabs value="0">
+    <p-tabs [(value)]="activeTab">
         <p-tablist>
-            <p-tab value="0">Start GRN Process</p-tab>
-            <p-tab value="1">Complete GRN</p-tab>
-            <p-tab value="2">GRN Reverse</p-tab>
+            <p-tab value="0" [disabled]="invoiceStatus === 'GRN_IN_PROCESS' || invoiceStatus === 'GRN_REVERSED'">Start GRN Process</p-tab>
+            <p-tab value="1" [disabled]="invoiceStatus === 'SUBMITTED' || invoiceStatus === 'GRN_REVERSED'" >Complete GRN</p-tab>
+            <p-tab value="2" [disabled]="invoiceStatus === 'SUBMITTED'">GRN Reverse</p-tab>
         </p-tablist>
         <p-tabpanels>
             <p-tabpanel value="0">
