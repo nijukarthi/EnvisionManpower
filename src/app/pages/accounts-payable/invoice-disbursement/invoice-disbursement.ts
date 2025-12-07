@@ -1,6 +1,7 @@
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
 import { Component, OnInit } from '@angular/core';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-invoice-disbursement',
@@ -11,10 +12,13 @@ import { Component, OnInit } from '@angular/core';
 export class InvoiceDisbursement implements OnInit {
   offSet = 0;
   pageSize = 10;
+  selectedInvoiceId = 0;
+
+  invoiceStatus = '';
 
   invoiceDisbursementList: any;
 
-  constructor(private apiService: Apiservice){}
+  constructor(private apiService: Apiservice, private messageService: MessageService){}
 
   ngOnInit(): void {
     this.fetchDisbursementList();
@@ -36,6 +40,46 @@ export class InvoiceDisbursement implements OnInit {
         },
         error: err => {
           console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  selectedInvoice(invoice: any){
+    this.selectedInvoiceId = invoice.invoiceHeader.invoiceId;
+    this.invoiceStatus = invoice.invoiceHeader.invoiceStatus;
+    console.log(this.selectedInvoiceId);
+  }
+
+  unSelectedInvoice(){
+    this.selectedInvoiceId = 0;
+  }
+
+  startDisbursement(){
+    try {
+      const data = {
+        invoiceId: this.selectedInvoiceId
+      }
+
+      console.log(data);
+
+      this.apiService.startDisbursementProcess(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.messageService.add({severity: 'success', summary: 'Success', detail: 'Disbursement Process Started Successfully'});
+          setTimeout(() => {
+            this.fetchDisbursementList();
+            this.selectedInvoiceId = 0;
+          }, 1000);
+        },
+        error: err => {
+          console.log(err);
+
+          if (err.status === 400) {
+            this.messageService.add({severity: 'error', summary: 'Error', detail: err.error.detail });
+          }
         }
       })
     } catch (error) {

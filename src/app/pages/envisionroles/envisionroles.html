@@ -6,7 +6,7 @@
     </div>
     <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
         <p-table [value]="roleList" [rowHover]="true" [paginator]="true" [rows]="pageSize" [first]="first"
-            [lazy]="true" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10, 20, 30]" [totalRecords]="roleListLength" 
+            [lazy]="true" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10, 20, 30]" [totalRecords]="totalRecords" 
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" (onPage)="pageChange($event)">
             <ng-template #header>
                 <tr>

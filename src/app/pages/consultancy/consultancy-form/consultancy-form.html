@@ -3,6 +3,10 @@
     <form [formGroup]="consultancyForm" (ngSubmit)="onSubmit()">
         <div class="grid grid-cols-2 gap-2">
             <div class="grid col-span-1 gap-1">
+                <label for="consultancy-name">Consultancy Code</label>
+                <input type="text" pInputText formControlName="consultancyCode" id="consultancy-name" />
+            </div>
+            <div class="grid col-span-1 gap-1">
                 <label for="consultancy-name">Consultancy Name</label>
                 <input type="text" pInputText formControlName="consultancyName" id="consultancy-name" />
             </div>

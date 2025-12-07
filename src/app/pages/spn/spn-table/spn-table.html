@@ -6,7 +6,7 @@
 
     <div class="p-datatable-table border border-[var(--p-content-border-color)] rounded-lg">
         <p-table [value]="spnList" [rowHover]="true" [paginator]="true" [lazy]="true" [rows]="pageSize"
-            [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true" [totalRecords]="spnListLength" [first]="first"
+            [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true" [totalRecords]="totalRecords" [first]="first"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" (onPage)="pageChange($event)">
             <ng-template #header>
                 <tr>

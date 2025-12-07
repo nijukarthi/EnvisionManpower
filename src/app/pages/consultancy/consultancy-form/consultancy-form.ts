@@ -25,6 +25,7 @@ export class ConsultancyForm implements OnInit {
   consultancyForm = this.fb.group({
     userId: [0],
     consultancyName: [''],
+    consultancyCode: [''],
     userName: [''],
     email: [''],
     phoneNumber: [''],
@@ -80,6 +81,12 @@ export class ConsultancyForm implements OnInit {
           this.consultancyCategoryControl.patchValue(categoryIds);
 
           this.consultancyForm.patchValue(val.data);
+
+          if (val.data.consultancyCode) {
+            this.consultancyForm.get('consultancyCode')?.disable();
+          }else{
+            this.consultancyForm.get('consultancyCode')?.enable();
+          }
         },
         error: err => {
           console.log(err);

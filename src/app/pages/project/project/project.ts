@@ -23,7 +23,7 @@ export class Project implements OnInit {
   first = 0;
   offSet = 0;
   pageSize = 10;
-  projectListLength = 0;
+  totalRecords = 0;
 
   actionName = '';
   siteName = '';
@@ -118,7 +118,7 @@ export class Project implements OnInit {
         next: val => {
           console.log(val);
           this.projectList = val?.data.data;
-          this.projectListLength = val?.data.length;
+          this.totalRecords = val?.data.length ?? 0;
         }
       })
     } catch (error) {
@@ -305,6 +305,10 @@ export class Project implements OnInit {
             },
             error: err => {
               console.log(err);
+
+              if (err.status === 400) {
+                this.messageService.add({severity: 'error', summary: 'Error', detail: err.error.detail });
+              }
             }
           })
         }
@@ -340,6 +344,10 @@ export class Project implements OnInit {
             },
             error: err => {
               console.log(err);
+
+              if (err.status === 400) {
+                this.messageService.add({severity: 'error', summary: 'Error', detail: err.error.detail });
+              }
             }
           })
         }

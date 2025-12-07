@@ -12,7 +12,7 @@
             [loading]="loading" [paginator]="true" [rows]="pageSize" dataKey="employmentDetails.employmentId" selectionMode="multiple"
             [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true" [totalRecords]="onboardingListLength" [first]="first"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" editMode="row"
-            [tableStyle]="{'min-width': '160rem'}" (onPage)="pageChange($event)">
+            [tableStyle]="{'min-width': '180rem'}" (onPage)="pageChange($event)">
             <ng-template #header let-columns>
                 <tr>
                     <th><p-tableHeaderCheckbox /></th>

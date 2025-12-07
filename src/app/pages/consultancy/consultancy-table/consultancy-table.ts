@@ -23,8 +23,10 @@ export class ConsultancyTable implements OnInit {
 
   offSet = 0;
   pageSize = 10;
+  first = 0;
+  totalRecords = 0;
 
-    constructor(
+  constructor(
     private apiService: Apiservice,
     private router: Router,
     private messageService: MessageService,
@@ -62,6 +64,7 @@ export class ConsultancyTable implements OnInit {
         next: val => {
           console.log(val);
           this.consultancyList = val?.data.data;
+          this.totalRecords = val?.data.length ?? 0;
         },
         error: err => {
           console.log(err);
@@ -108,6 +111,13 @@ export class ConsultancyTable implements OnInit {
         }
       }
     })
+  }
+
+  pageChange(event: any){
+    this.first = event.first;
+    this.offSet = event.first / event.rows;
+    this.pageSize = event.rows;
+    this.fetchActiveConsultancy();
   }
 }
 

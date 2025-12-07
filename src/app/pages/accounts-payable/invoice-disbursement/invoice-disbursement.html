@@ -1,9 +1,15 @@
 <div class="card">
     <div class="flex items-baseline-last justify-between">
         <h5>Invoice Disbursement</h5>
+        <p-button label="Start Disbursement" [pTooltip]="!selectedInvoiceId ? 'Select One Invoice' 
+            : (invoiceStatus !== 'UNDER_DISBURSEMENT_REVIEW' ? 'Invoice Status must be in UNDER_DISBURSEMENT_REVIEW' : '')" 
+            tooltipPosition="top" [disabled]="!selectedInvoiceId || invoiceStatus !== 'UNDER_DISBURSEMENT_REVIEW'" 
+            (onClick)="startDisbursement()" />
     </div>
     <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
-        <p-table [value]="invoiceDisbursementList" stripedRows [rowHover]="true" [tableStyle]="{'min-width': '160rem'}">
+        <p-table [value]="invoiceDisbursementList" stripedRows [rowHover]="true" selectionMode="single"
+            (onRowSelect)="selectedInvoice($event.data)" (onRowUnselect)="unSelectedInvoice()"
+            dataKey="invoiceHeader.invoiceId" [tableStyle]="{'min-width': '160rem'}">
             <ng-template #header>
                 <tr>
                     <th>SL NO</th>
@@ -33,7 +39,7 @@
                 </tr>
             </ng-template>
             <ng-template #body let-disbursement let-i="rowIndex">
-                <tr>    
+                <tr [pSelectableRow]="disbursement">    
                     <td>{{ i + 1 }}</td>
                     <td>{{ disbursement.consultancyCode || '-' }}</td>
                     <td>{{ disbursement.invoiceHeader.consultancy.consultancyName || '-' }}</td>
@@ -73,3 +79,5 @@
         </p-table>
     </div>
 </div>
+
+<p-toast />
