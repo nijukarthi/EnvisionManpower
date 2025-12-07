@@ -117,15 +117,15 @@ export class PoAssignForm implements OnInit {
       this.duration = 0;
     }
   }
-createEmptyLineItem() {
-  return {
+createEmptyLineItem(): FormGroup {
+  return this.fb.group({
     selectedSpnId: null,
     selectedSpn: null,
     demandId: null,
     experience: null,
-    newEmployeeList: [],
-    newEmployeeItems: this.fb.array([])   // empty form array
-  };
+    newEmployeeList: [],              // just raw data, not a form control
+    newEmployeeItems: this.fb.array([]) // proper FormArray
+  });
 }
   addNewEmployeeLineItems(){
     this.newEmployeeLineItems.push(this.createEmptyLineItem());
@@ -397,4 +397,95 @@ createEmptyLineItem() {
       console.log(error);
     }
   }
+  submitPO1(){
+    try{
+      const formValue = this.mapPOForm.value;
+
+  const payload: any = {
+    poNumber: formValue.poNumber,
+    consultancy: {
+      userId: formValue.consultancy.userId
+    },
+    poDate: formValue.poDate,
+    validFrom: formValue.validFrom,
+    validTo: formValue.validTo,
+    totalValue: formValue.totalValue,
+    items: []
+  };
+
+  console.log(console.log("Line Items:", this.newEmployeeLineItems));
+  console.log(console.log("Line Items:", this.newEmployeeLineItems));
+  
+
+  // LOOP LINE ITEMS
+this.newEmployeeLineItems.forEach(item => {
+  console.log("newEmployeeList =", item.newEmployeeList);
+  console.log("newEmployeeList =", item.newEmployeeItems.value);
+  payload.items.push({
+        candidate: {
+          candidateId: item.newEmployeeItems.value.candidateId
+        },
+        monthsAllowed: item.newEmployeeItems.value.monthsAllowed,
+        unitRate: item.newEmployeeItems.value.unitRate,
+        taxRate: item.newEmployeeItems.value.taxRate
+      });
+});
+
+/*   this.newEmployeeLineItems.forEach((lineItem: any) => {
+
+    // LOOP EMPLOYEES INSIDE THE LINE ITEM
+    lineItem.newEmployeeItems.forEach((emp: any) => {
+
+      payload.items.push({
+        candidate: {
+          candidateId: emp.candidateId
+        },
+        monthsAllowed: emp.monthsAllowed,
+        unitRate: emp.unitRate,
+        taxRate: emp.taxRate
+      });
+
+    });
+  }); */
+
+  console.log("FINAL PAYLOAD: ", payload);
+    }catch(e){
+
+    }
+  }
+
+  submitPO() {
+  const formValue = this.mapPOForm.value;
+
+  const payload: any = {
+    poNumber: formValue.poNumber,
+    consultancy: {
+      userId: formValue.consultancy.userId
+    },
+    poDate: formValue.poDate,
+    validFrom: formValue.validFrom,
+    validTo: formValue.validTo,
+    totalValue: formValue.totalValue,
+    items: []
+  };
+
+  // LOOP → LINE ITEMS
+  this.newEmployeeLineItems.forEach((lineItem: any) => {
+
+    // LOOP → EMPLOYEE ROWS inside that line item
+    lineItem.newEmployeeItems.value.forEach((item: any) => {
+
+      payload.items.push({
+        candidate: { candidateId: item.candidate.candidateId },
+        monthsAllowed: item.monthsAllowed,
+        unitRate: item.unitRate,
+        taxRate: item.taxRate
+      });
+
+    });
+  });
+
+  console.log("FINAL PAYLOAD =", payload);
+}
+
 }
