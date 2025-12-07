@@ -1,15 +1,19 @@
 <div class="card">
-    <div class="flex items-center justify-between">
+    <div class="flex items-baseline-last justify-between">
         <h5>Consultancies</h5>
         @if (loggedUserGroupId !== 360) {
             <p-button label="Add Consultancy" icon="pi pi-plus" routerLink="/home/consultancies/new" />
         }
     </div>
     <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
-        <p-table [value]="consultancyList" stripedRows [rowHover]="true">
+        <p-table [value]="consultancyList" stripedRows [rowHover]="true" [lazy]="true"
+            [paginator]="true" [rows]="pageSize" [rowsPerPageOptions]="[10, 20, 30]" 
+            [totalRecords]="totalRecords" [showCurrentPageReport]="true"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" (onPage)="pageChange($event)">
             <ng-template #header>
                 <tr>
                     <th>SI No</th>
+                    <th>Consultancy Code</th>
                     <th>Consultancy Name</th>
                     <th>Hr Name</th>
                     <th>Phone</th>
@@ -21,11 +25,12 @@
             <ng-template #body let-consul let-i="rowIndex">
                 <tr>
                     <td>{{ i + 1 }}</td>
-                    <td>{{ consul.consultancyName }}</td>
-                    <td>{{ consul.userName }}</td>
-                    <td>{{ consul.phoneNumber }}</td>
-                    <td>{{ consul.email }}</td>
-                    <td>{{ consul.gstNumber }}</td>
+                    <td>{{ consul.consultancyCode || '-' }}</td>
+                    <td>{{ consul.consultancyName || '-' }}</td>
+                    <td>{{ consul.userName || '-' }}</td>
+                    <td>{{ consul.phoneNumber || '-' }}</td>
+                    <td>{{ consul.email || '-' }}</td>
+                    <td>{{ consul.gstNumber || '-' }}</td>
                     <td>
                         <p-menu #menu [model]="getMenuItems(consul)" [popup]="true" appendTo="body" />
                         <p-button (click)="menu.toggle($event)" icon="pi pi-ellipsis-v" [rounded]="true" variant="text" />

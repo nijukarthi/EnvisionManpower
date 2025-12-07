@@ -20,7 +20,7 @@ export class SpnTable implements OnInit {
   offSet = 0;
   pageSize = 10;
   first = 0;
-  spnListLength = 0;
+  totalRecords = 0;
 
   actionName = '';
 
@@ -102,7 +102,7 @@ export class SpnTable implements OnInit {
         next: val => {
           console.log(val);
           this.spnList = val?.data.data;
-          this.spnListLength = val?.data.length;
+          this.totalRecords = val?.data.length ?? 0;
         }
       })
     } catch (error) {
@@ -147,7 +147,7 @@ export class SpnTable implements OnInit {
               console.log(err);
 
               if (err.status === 400) {
-                this.messageService.add({severity: 'error', summary: 'Error', detail: `${err.error.detail}`})
+                this.messageService.add({severity: 'error', summary: 'Error', detail: err.error.detail})
               }
             }
           })
@@ -173,7 +173,7 @@ export class SpnTable implements OnInit {
               console.log(err);
 
               if (err.status === 400) {
-                this.messageService.add({severity: 'error', summary: 'Error', detail: `${err.error.detail}`});
+                this.messageService.add({severity: 'error', summary: 'Error', detail: err.error.detail});
               }
             }
           })

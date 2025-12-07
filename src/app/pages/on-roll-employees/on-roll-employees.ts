@@ -1,9 +1,10 @@
 import { Column } from '@/models/table-column/table-column';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder } from '@angular/forms';
 import { MessageService } from 'primeng/api';
+import { Table } from 'primeng/table';
 
 @Component({
   selector: 'app-on-roll-employees',
@@ -12,10 +13,11 @@ import { MessageService } from 'primeng/api';
   styleUrl: './on-roll-employees.scss'
 })
 export class OnRollEmployees implements OnInit {
+  @ViewChild('dt') table!: Table
   offSet = 0;
   pageSize = 10;
   first = 0;
-  onrollEmployeeListLength = 0;
+  totalRecords = 0;
   candidateId: number | null = null;
 
   cols!: Column[];
@@ -86,8 +88,17 @@ export class OnRollEmployees implements OnInit {
       this.apiService.fetchOnRollCandidates(data).subscribe({
         next: val => {
           console.log(val);
-          this.onrollEmployeeList = val?.data.data;
-          this.onrollEmployeeListLength = val?.data.length ?? 0;
+          this.onrollEmployeeList = val?.data.data.map((onroll: any) => ({
+            ...onroll,
+            employmentDetails: {
+              ...onroll.employmentDetails,
+              expectedJoiningDate: onroll.employmentDetails.expectedJoiningDate ? 
+                new Date(onroll.employmentDetails.expectedJoiningDate) : null,
+              joiningDate: onroll.employmentDetails.joiningDate ? 
+                new Date(onroll.employmentDetails.joiningDate) : null
+            }
+          }));
+          this.totalRecords = val?.data.length ?? 0;
 
           this.cols = [
             { field: 'employeeCode', header: 'Employee Code', customExportHeader: 'Employee Code' },
@@ -118,6 +129,50 @@ export class OnRollEmployees implements OnInit {
 
   getNestedValue(obj: any, path: string){
     return path.split('.').reduce((acc, part) => acc && acc[part], obj) ?? '-';
+  }
+
+  exportToExcel(){
+    this.onrollEmployeeList.map((item: any) => {
+      const obj: any = {};
+      this.cols.forEach(col => {
+        obj[col.header] = this.getNestedValue(item, col.field);
+      });
+      return obj;
+    });
+    this.table.exportCSV({ selectionOnly: false });
+  }
+
+  updateOnrollDetails(onroll: any){
+    try {
+      const data = {
+        employmentDetails: {
+          employmentId: onroll.employmentDetails.employmentId,
+          expectedJoiningDate: onroll.employmentDetails.expectedJoiningDate,
+          joiningDate: onroll.employmentDetails.joiningDate
+        },
+        phoneNumber: onroll.phoneNumber,
+        alternativeNumber: onroll.alternativeNumber,
+        uan: onroll.uan,
+        aadharNumber: onroll.aadharNumber
+      }
+
+      console.log(data);
+
+      this.apiService.updateOnboardCandidates(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.messageService.add({severity: 'success', summary: 'Success', detail: 'Candidate Details Updated Successfully'});
+          setTimeout(() => {
+            this.fetchActiveOnrollEmployees();
+          }, 1000);
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   populatePpeDetails(){

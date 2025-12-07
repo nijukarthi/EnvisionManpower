@@ -1,14 +1,14 @@
 <div class="card">
     <div class="flex items-baseline-last justify-between">
         <h5>On-roll Employees</h5>
-        <p-button icon="pi pi-external-link" label="Export" (click)="dt.exportCSV()" />
+        <p-button icon="pi pi-external-link" label="Export" (click)="exportToExcel()" />
     </div>
     <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
         <p-table #dt [columns]="cols" [value]="onrollEmployeeList" [exportHeader]="'customExportHeader'" 
             [rowHover]="true" [paginator]="true" [rows]="pageSize" [lazy]="true" stripedRows
-            [first]="first" [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true" [totalRecords]="onrollEmployeeListLength" 
+            [first]="first" [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true" [totalRecords]="totalRecords" 
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" editMode="row"
-            [tableStyle]="{'min-width': '180rem'}" (onPage)="pageChange($event)">
+            [tableStyle]="{'min-width': '200rem'}" (onPage)="pageChange($event)">
             <ng-template #header let-columns>
                 <tr>
                     <th>SL No</th>
@@ -51,15 +51,76 @@
                                     placeholder="Select Date" appendTo="body" fluid />
                             </ng-template>
                             <ng-template #output>
-                                {{ onroll.employmentDetails.expectedJoiningDate ?? '-' }}
+                                {{ onroll.employmentDetails.expectedJoiningDate 
+                                    ? (onroll.employmentDetails.expectedJoiningDate | date: 'dd/MM/yyyy') : '-' }}
                             </ng-template>
                         </p-cellEditor>
                     </td>
-                    <td>{{ onroll.employmentDetails.joiningDate ?? '-' }}</td>
-                    <td>{{ onroll.phoneNumber ?? '-' }}</td>
-                    <td>{{ onroll.alternativeNumber ?? '-' }}</td>
-                    <td>{{ onroll.uan ?? '-' }}</td>
-                    <td>{{ onroll.aadharNumber ?? '-' }}</td>
+                    <td #pEditableColumn>
+                        <p-cellEditor>
+                            <ng-template #input>
+                                <p-datepicker [(ngModel)]="onroll.employmentDetails.joiningDate"
+                                    [showIcon]="true" [iconDisplay]="'input'"
+                                    placeholder="Select Date" appendTo="body" fluid />
+                            </ng-template>
+                            <ng-template #output>
+                                {{ onroll.employmentDetails.joiningDate 
+                                    ? (onroll.employmentDetails.joiningDate | date: 'dd/MM/yyyy') : '-' }}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <td #pEditableColumn>
+                        <p-cellEditor>
+                            <ng-template #input>
+                                <span pKeyFilter="int">
+                                    <input type="text" pInputText [(ngModel)]="onroll.phoneNumber" 
+                                        maxlength="10" />
+                                </span>
+                            </ng-template>
+                            <ng-template #output>
+                                {{ onroll.phoneNumber ?? '-' }}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <td #pEditableColumn>
+                        <p-cellEditor>
+                            <ng-template #input>
+                                <span pKeyFilter="int">
+                                    <input type="text" pInputText [(ngModel)]="onroll.alternativeNumber"
+                                        maxlength="10" />
+                                </span>
+                            </ng-template>
+                            <ng-template #output>
+                                {{ onroll.alternativeNumber ?? '-' }}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <td #pEditableColumn>
+                        <p-cellEditor>
+                            <ng-template #input>
+                                <span pKeyFilter="int">
+                                    <input type="text" pInputText [(ngModel)]="onroll.uan"
+                                        maxlength="12" />
+                                </span>
+                            </ng-template>
+                            <ng-template #output>
+                                {{ onroll.uan ?? '-' }}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
+                    <td #pEditableColumn>
+                        <p-cellEditor>
+                            <ng-template #input>
+                                <span pKeyFilter="int">
+                                    <input type="text" pInputText [(ngModel)]="onroll.aadharNumber" 
+                                        maxlength="12" />
+                                </span>
+                            </ng-template>
+                            <ng-template #output>
+                                {{ onroll.aadharNumber ?? '-' }}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
                     <td>
                         <p-button [label]="onroll?.ppeDetails.length > 0 ? 'Edit PPE' : 'Add PPE'" 
                             [icon]="onroll?.ppeDetails.length > 0 ? 'pi pi-pencil' : 'pi pi-plus'" 
@@ -72,7 +133,7 @@
                                 icon="pi pi-pencil" rounded severity="secondary"></button>
                         }@else {
                             <button pButton pRipple type="button" pSaveEditableRow
-                                icon="pi pi-check" rounded severity="primary"></button>
+                                icon="pi pi-check" rounded severity="primary" (click)="updateOnrollDetails(onroll)"></button>
                             <button pButton pRipple type="button" pCancelEditableRow 
                                 icon="pi pi-times" rounded severity="danger"></button>
                         }
@@ -90,6 +151,7 @@
     </div>
 </div>
 
+<p-toast />
 <p-dialog header="Add/Edit PPE Details" [(visible)]="openPpeDetails" [modal]="true" [style]="{width: '50rem'}" 
     (onHide)="onDialogClose()">
     <div class="flex justify-end mb-2">

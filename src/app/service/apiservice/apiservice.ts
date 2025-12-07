@@ -542,4 +542,8 @@ export class Apiservice {
   fetchViewInvoice(params: any): Observable<any>{
     return this.postMethod('requesition/invoice/view', params);
   }
+
+  startDisbursementProcess(params: any){
+    return this.postMethod('requesition/invoice/disbursement/start', params);
+  }
 }

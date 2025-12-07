@@ -15,7 +15,7 @@ export class Envisionroles {
   offSet = 0;
   pageSize = 10;
   first = 0;
-  roleListLength = 0;
+  totalRecords = 0;
 
   openNewRoleyPopup = false;
   roleId: any;
@@ -67,7 +67,7 @@ export class Envisionroles {
       next: val =>{
         console.log(val);
         this.roleList = val.data.data;
-        this.roleListLength = val?.data.length;
+        this.totalRecords = val?.data.length ?? 0;
       },
       error: err => {
         console.log(err);
@@ -114,6 +114,10 @@ export class Envisionroles {
           },
           error: err => {
             console.log(err);
+
+            if (err.status === 400) {
+              this.messageService.add({severity: 'error', summary: 'Error', detail: err.error.detail });
+            }
           }
         })
         }else{
@@ -149,6 +153,10 @@ export class Envisionroles {
           },
           error: err =>{
             console.log(err);
+
+            if (err.status === 400) {
+              this.messageService.add({severity: 'error', summary: 'Error', detail: err.error.detail });
+            }
           }
         })
         }else{
