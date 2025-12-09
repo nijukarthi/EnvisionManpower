@@ -31,6 +31,7 @@ export class Approval implements OnInit {
   filteredList: any[] = [];
 
   activeTab = 'processing';
+  searchValue = '';
 
   selectedApprovalList:any = [];
   viewDetail:boolean = false;
@@ -65,15 +66,6 @@ export class Approval implements OnInit {
             })
         }
 
-
-  pageChange(event: any){
-    console.log(event);
-    this.first = event.first;
-    this.offSet = event.first / event.rows;
-    this.pageSize = event.rows;
-    this.fetchDemandRequest(102);
-  }
-
   setActiveTab(tab: string, status: number){
     this.activeTab = tab;
     this.fetchDemandRequest(status);
@@ -82,7 +74,7 @@ export class Approval implements OnInit {
   fetchDemandRequest(status: number){
     try {
       const data = {
-        demandStatus: status,
+        demandStatus: [status],
         offSet: this.offSet,
         pageSize: this.pageSize
       }
@@ -201,14 +193,60 @@ export class Approval implements OnInit {
     }
   }
 
-  @ViewChild('dt') dt!: Table;
+  pageChange(event: any){
+    console.log(event);
+    this.first = event.first;
+    this.offSet = event.first / event.rows;
+    this.pageSize = event.rows;
+    this.fetchDemandRequest(102);
+  }
 
-searchText = "";
-searchSpn = '';
 
-applyFilter() {
-  this.dt.filter(this.searchText, 'demandCode', 'contains');
-  this.dt.filter(this.searchSpn, 'spn.spnCode', 'contains');
+  loadDemands(event: any) {
+    this.first = event.first;
+    this.offSet = event.first / event.rows;
+    this.pageSize = event.rows;
+
+    const filters = event.filters;
+    console.log(filters.demandCode[0]?.value);
+    console.log(filters.spnCode[0]?.value);
+    console.log(filters);
+
+    const payload: any = {
+      offSet: this.offSet,
+      pageSize: this.pageSize,
+      demandStatus: [102],
+      demandCode: filters.demandCode[0]?.value ?? '',
+      spnCode: filters.spnCode[0]?.value ?? '',
+      spnDescription: filters.spnDescription[0].value ?? '',
+      experience: filters.experience[0].value ?? ''
+    };
+
+    this.apiService.fetchDemandRequest(payload).subscribe(res => {
+      this.demandProcessingList = res.data?.data;
+      this.totalRecords = res.data?.length;
+    });
 }
+
+@ViewChild('dt') dt: any;
+
+
+onSearch(event: Event) {
+  const input = event.target as HTMLInputElement;
+  this.dt.filterGlobal(input.value, 'contains');
+
+  const payload = {
+    offSet: this.offSet,
+    pageSize: this.pageSize,
+    demandStatus: [102],
+    requisitionCode: input.value
+  }
+
+  this.apiService.fetchDemandRequest(payload).subscribe(res => {
+    this.demandProcessingList = res.data?.data;
+    this.totalRecords = res.data?.length;
+  })
+}
+
 
 }

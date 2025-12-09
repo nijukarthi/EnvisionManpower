@@ -117,23 +117,31 @@ export class PoAssignForm implements OnInit {
       this.duration = 0;
     }
   }
-createEmptyLineItem(): FormGroup {
-  return this.fb.group({
-    selectedSpnId: null,
-    selectedSpn: null,
-    demandId: null,
-    experience: null,
-    newEmployeeList: [],              // just raw data, not a form control
-    newEmployeeItems: this.fb.array([]) // proper FormArray
-  });
-}
+  createEmptyLineItem(): FormGroup {
+    return this.fb.group({
+      selectedSpnId: null,
+      selectedSpn: null,
+      demandId: null,
+      experience: null,
+      newEmployeeList: [],              // just raw data, not a form control
+      newEmployeeItems: this.fb.array([]) // proper FormArray
+    });
+  }
   addNewEmployeeLineItems(){
     this.newEmployeeLineItems.push(this.createEmptyLineItem());
   } 
 
+  createExistingEmptyLineItem(): FormGroup{
+    return this.fb.group({
+      selectedExistingSpnId: null,
+      selectedExistingSpn: null,
+      existingEmployeeList: [],
+      existingEmployeeItems: this.fb.array([])
+    })
+  }
+
   addExistingEmployeeLineItems(){
-    const newItem = this.existingEmployeeLineItems[0];
-    this.existingEmployeeLineItems.push(newItem);
+    this.existingEmployeeLineItems.push(this.createExistingEmptyLineItem());
   }
 
   subscribeToItemChanges(item: FormGroup){
@@ -177,12 +185,12 @@ createEmptyLineItem(): FormGroup {
     this.fetchDemandDetails();
   }
 
-  selectedExistingSpnCode(spnId: number){
+  selectedExistingSpnCode(spnId: number, lineIndex: number){
     this.selectedExistingSpnId = spnId;
     this.selectedExistingSpn = this.spnInfoList.find((spn: any) => spn.spnId === spnId);
     console.log(this.selectedSpn);
 
-    this.fetchSpnCandidates();
+    this.fetchSpnCandidates(lineIndex);
   }
 
   fetchDemandDetails(){
@@ -217,11 +225,11 @@ createEmptyLineItem(): FormGroup {
     }); */ 
     if (!lineItem.newEmployeeList) return;
 
-  lineItem.newEmployeeItems.clear();
+    lineItem.newEmployeeItems.clear();
 
-  lineItem.newEmployeeList.forEach((emp: any) => {
-    lineItem.newEmployeeItems.push(this.addLineItems(emp));
-  });
+    lineItem.newEmployeeList.forEach((emp: any) => {
+      lineItem.newEmployeeItems.push(this.addLineItems(emp));
+    });
   }
 
   selectedDemand(demandId: number, lineIndex: number){
@@ -254,60 +262,62 @@ createEmptyLineItem(): FormGroup {
       }) */
       const lineItem = this.newEmployeeLineItems[lineIndex];
 
-  this.apiService.fetchDemandCandidates({ demandId }).subscribe({
-    next: (val) => {
-      const employees = val.data;
-      const consultancyId = this.mapPOForm.get('consultancy.userId')?.value;
+    this.apiService.fetchDemandCandidates({ demandId }).subscribe({
+      next: (val) => {
+        const employees = val.data;
+        const consultancyId = this.mapPOForm.get('consultancy.userId')?.value;
 
-      // Store inside THIS line item only
-      lineItem.newEmployeeList = employees.filter(
-        (e: any) => e.consultancyId === consultancyId
-      );
+        // Store inside THIS line item only
+        lineItem.newEmployeeList = employees.filter(
+          (e: any) => e.consultancyId === consultancyId
+        );
 
-      // Create a NEW formArray for this line
-      lineItem.newEmployeeItems = this.fb.array([]);
+        // Create a NEW formArray for this line
+        lineItem.newEmployeeItems = this.fb.array([]);
 
-      // Populate controls
-      lineItem.newEmployeeList.forEach((emp: any) => {
-        lineItem.newEmployeeItems.push(this.addLineItems(emp));
-      });
+        // Populate controls
+        lineItem.newEmployeeList.forEach((emp: any) => {
+          lineItem.newEmployeeItems.push(this.addLineItems(emp));
+        });
 
-      lineItem.newEmployeeItems.controls.forEach((item: any, index: number) => {
-        this.subscribeToItemChanges(item as FormGroup)
-      });
+        lineItem.newEmployeeItems.controls.forEach((item: any, index: number) => {
+          this.subscribeToItemChanges(item as FormGroup)
+        });
 
-      console.log("LINE ITEM employees:", lineItem.newEmployeeList);
-    },
+        console.log("LINE ITEM employees:", lineItem.newEmployeeList);
+      },
 
-    error: (err) => {
-      lineItem.newEmployeeList = [];
-      lineItem.newEmployeeItems = this.fb.array([]);
-    }
-  });
+      error: (err) => {
+        lineItem.newEmployeeList = [];
+        lineItem.newEmployeeItems = this.fb.array([]);
+      }
+    });
     } catch (error) {
       console.log(error);
     }
   }
 
-  populateExistingEmployeeList(){
-    this.existingEmployeeItems.clear();
+  // populateExistingEmployeeList(){
+  //   this.existingEmployeeItems.clear();
 
-    this.existingEmployeeList.forEach((emp: any) => {
-      this.existingEmployeeItems.push(this.addLineItems(emp));
-    });
+  //   this.existingEmployeeList.forEach((emp: any) => {
+  //     this.existingEmployeeItems.push(this.addLineItems(emp));
+  //   });
 
-    this.existingEmployeeItems.controls.forEach((item, index) => {
-      this.subscribeToItemChanges(item as FormGroup)
-    });
-  }
+  //   this.existingEmployeeItems.controls.forEach((item, index) => {
+  //     this.subscribeToItemChanges(item as FormGroup)
+  //   });
+  // }
 
-  fetchSpnCandidates(){
+  fetchSpnCandidates(lineIndex: number){
     try {
       const data = {
         spnId: this.selectedExistingSpnId
       }
 
       console.log(data);
+
+      const lineItem = this.existingEmployeeLineItems[lineIndex];
 
       this.apiService.fetchSpnCandidates(data).subscribe({
         next: val => {
@@ -316,16 +326,26 @@ createEmptyLineItem(): FormGroup {
 
           const selectedConsultancy = this.mapPOForm.get('consultancy.userId')?.value;
 
-          this.existingEmployeeList = existingEmployeeItems.filter((e: any) => e.consultancyId === selectedConsultancy);
-          this.populateExistingEmployeeList();
-          console.log(this.existingEmployeeList);
+          lineItem.existingEmployeeList = existingEmployeeItems.filter((e: any) => e.consultancyId === selectedConsultancy);
+          
+          lineItem.existingEmployeeItems = this.fb.array([]);
+
+          lineItem.existingEmployeeList.forEach((emp: any) => {
+            lineItem.existingEmployeeItems.push(this.addLineItems(emp));
+          });
+
+          lineItem.existingEmployeeItems.controls.forEach((item: any, index: number) => {
+            this.subscribeToItemChanges(item as FormGroup)
+          });
+          console.log(lineItem.existingEmployeeList);
         },
         error: err => {
           console.log(err);
 
           if (err.status === 400) {
             this.messageService.add({severity: 'error', summary: 'Error', detail: err.error.detail });
-            this.existingEmployeeList = [];
+            lineItem.existingEmployeeList = [];
+            lineItem.existingEmployeeItems = this.fb.array([]);
           }
         }
       })
@@ -379,20 +399,20 @@ createEmptyLineItem(): FormGroup {
 
       console.log(data);
 
-      this.apiService.mapNewPurchaseOrder(data).subscribe({
-        next: val => {
-          console.log(val);
-          this.messageService.add({severity:'success', summary: 'Success', detail: 'Purchase Order Created Successfully'});
-          this.router.navigate(['/home/po-assign']);
-        },
-        error: err => {
-          console.log(err);
+      // this.apiService.mapNewPurchaseOrder(data).subscribe({
+      //   next: val => {
+      //     console.log(val);
+      //     this.messageService.add({severity:'success', summary: 'Success', detail: 'Purchase Order Created Successfully'});
+      //     this.router.navigate(['/home/po-assign']);
+      //   },
+      //   error: err => {
+      //     console.log(err);
           
-          if (err.status == 400) {
-            this.messageService.add({severity: 'error', summary: 'Error', detail: err.error.detail});
-          }
-        }
-      })
+      //     if (err.status == 400) {
+      //       this.messageService.add({severity: 'error', summary: 'Error', detail: err.error.detail});
+      //     }
+      //   }
+      // })
     } catch (error) {
       console.log(error);
     }
@@ -401,35 +421,35 @@ createEmptyLineItem(): FormGroup {
     try{
       const formValue = this.mapPOForm.value;
 
-  const payload: any = {
-    poNumber: formValue.poNumber,
-    consultancy: {
-      userId: formValue.consultancy.userId
-    },
-    poDate: formValue.poDate,
-    validFrom: formValue.validFrom,
-    validTo: formValue.validTo,
-    totalValue: formValue.totalValue,
-    items: []
-  };
+      const payload: any = {
+        poNumber: formValue.poNumber,
+        consultancy: {
+          userId: formValue.consultancy.userId
+        },
+        poDate: formValue.poDate,
+        validFrom: formValue.validFrom,
+        validTo: formValue.validTo,
+        totalValue: formValue.totalValue,
+        items: []
+      };
 
-  console.log(console.log("Line Items:", this.newEmployeeLineItems));
-  console.log(console.log("Line Items:", this.newEmployeeLineItems));
+      console.log(console.log("Line Items:", this.newEmployeeLineItems));
+      console.log(console.log("Line Items:", this.newEmployeeLineItems));
   
 
   // LOOP LINE ITEMS
-this.newEmployeeLineItems.forEach(item => {
-  console.log("newEmployeeList =", item.newEmployeeList);
-  console.log("newEmployeeList =", item.newEmployeeItems.value);
-  payload.items.push({
-        candidate: {
-          candidateId: item.newEmployeeItems.value.candidateId
-        },
-        monthsAllowed: item.newEmployeeItems.value.monthsAllowed,
-        unitRate: item.newEmployeeItems.value.unitRate,
-        taxRate: item.newEmployeeItems.value.taxRate
+      this.newEmployeeLineItems.forEach(item => {
+        console.log("newEmployeeList =", item.newEmployeeList);
+        console.log("newEmployeeList =", item.newEmployeeItems.value);
+        payload.items.push({
+              candidate: {
+                candidateId: item.newEmployeeItems.value.candidateId
+              },
+              monthsAllowed: item.newEmployeeItems.value.monthsAllowed,
+              unitRate: item.newEmployeeItems.value.unitRate,
+              taxRate: item.newEmployeeItems.value.taxRate
+            });
       });
-});
 
 /*   this.newEmployeeLineItems.forEach((lineItem: any) => {
 
@@ -455,37 +475,66 @@ this.newEmployeeLineItems.forEach(item => {
   }
 
   submitPO() {
-  const formValue = this.mapPOForm.value;
+    try {
+      const formValue = this.mapPOForm.value;
 
-  const payload: any = {
-    poNumber: formValue.poNumber,
-    consultancy: {
-      userId: formValue.consultancy.userId
-    },
-    poDate: formValue.poDate,
-    validFrom: formValue.validFrom,
-    validTo: formValue.validTo,
-    totalValue: formValue.totalValue,
-    items: []
-  };
+      const payload: any = {
+        poNumber: formValue.poNumber,
+        consultancy: {
+          userId: formValue.consultancy.userId
+        },
+        poDate: formValue.poDate,
+        validFrom: formValue.validFrom,
+        validTo: formValue.validTo,
+        totalValue: formValue.totalValue,
+        items: []
+      };
 
-  // LOOP → LINE ITEMS
-  this.newEmployeeLineItems.forEach((lineItem: any) => {
+    // LOOP → LINE ITEMS
+      this.newEmployeeLineItems.forEach((lineItem: any) => {
 
-    // LOOP → EMPLOYEE ROWS inside that line item
-    lineItem.newEmployeeItems.value.forEach((item: any) => {
+        // LOOP → EMPLOYEE ROWS inside that line item
+        lineItem.newEmployeeItems.value.forEach((item: any) => {
 
-      payload.items.push({
-        candidate: { candidateId: item.candidate.candidateId },
-        monthsAllowed: item.monthsAllowed,
-        unitRate: item.unitRate,
-        taxRate: item.taxRate
+          payload.items.push({
+            candidate: { candidateId: item.candidate.candidateId },
+            monthsAllowed: item.monthsAllowed,
+            unitRate: item.unitRate,
+            taxRate: item.taxRate
+          });
+
+        });
       });
 
-    });
-  });
+      this.existingEmployeeLineItems.forEach((lineItem: any) => {
+        lineItem.existingEmployeeItems.value.forEach((item: any) => {
+          payload.items.push({
+            candidate: { candidateId: item.candidate.candidateId },
+            monthsAllowed: item.monthsAllowed,
+            unitRate: item.unitRate,
+            taxRate: item.taxRate
+          })
+        })
+      })
 
-  console.log("FINAL PAYLOAD =", payload);
-}
+      console.log("FINAL PAYLOAD =", payload);
 
+      this.apiService.mapNewPurchaseOrder(payload).subscribe({
+        next: val => {
+          console.log(val);
+          this.messageService.add({severity:'success', summary: 'Success', detail: 'Purchase Order Created Successfully'});
+          this.router.navigate(['/home/po-assign']);
+        },
+        error: err => {
+          console.log(err);
+          
+          if (err.status == 400) {
+            this.messageService.add({severity: 'error', summary: 'Error', detail: err.error.detail});
+          }
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
