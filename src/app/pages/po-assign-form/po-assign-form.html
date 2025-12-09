@@ -81,8 +81,8 @@
                                                 </div>
                                                 <div class="grid col-span-1 gap-1">
                                                     <label for="experience">Experience</label>
-                                                    <input type="text" pInputText [value]="item.selectedSpn?.experience ?? 0" id="experience"
-                                                        [disabled]="true" />
+                                                    <input type="text" pInputText [value]="item.selectedSpn?.experience ?? 0" 
+                                                        id="experience" [disabled]="true" />
                                                 </div>
                                                 <div class="grid col-span-1 gap-1">
                                                     <label for="demand-code">Demand Code</label>
@@ -188,17 +188,18 @@
                                                 <div class="grid col-span-1 gap-1">
                                                     <label for="spn-code">SPN Code</label>
                                                     <p-select [options]="spnInfoList" optionLabel="spnCode" optionValue="spnId" 
-                                                        [(ngModel)]="selectedExistingSpnId" [filter]="true" filterBy="spnCode" 
+                                                        [(ngModel)]="item.selectedExistingSpnId" [filter]="true" filterBy="spnCode" 
                                                         inputId="spn-code" [ngModelOptions]="{ standalone: true }"
                                                         placeholder="Select SPN Code" [showClear]="true"
-                                                        (onChange)="selectedExistingSpnCode($event.value)" appendTo="body" />
+                                                        (onChange)="selectedExistingSpnCode($event.value, i)" appendTo="body" />
                                                 </div>
                                                 <div class="grid col-span-1 gap-1">
                                                     <label for="spn-description">SPN Description</label>
-                                                    <p-select [options]="spnInfoList" optionValue="spnId" [(ngModel)]="selectedExistingSpnId" 
+                                                    <p-select [options]="spnInfoList" optionValue="spnId" 
+                                                        [(ngModel)]="item.selectedExistingSpnId" 
                                                         [filter]="true" [ngModelOptions]="{ standalone: true }"
                                                         filterBy="spnDescription" inputId="spn-description" appendTo="body" [showClear]="true"
-                                                        (onChange)="selectedExistingSpnCode($event.value)" placeholder="Select SPN Description">
+                                                        (onChange)="selectedExistingSpnCode($event.value, i)" placeholder="Select SPN Description">
                                                         <ng-template #item let-item>
                                                             {{ item.spnDescription }} - ({{ item.experience }})
                                                         </ng-template>
@@ -209,17 +210,17 @@
                                                 </div>
                                                 <div class="grid col-span-1 gap-1">
                                                     <label for="experience">Experience</label>
-                                                    <input type="text" pInputText [value]="selectedExistingSpn?.experience ?? 0" id="experience" 
-                                                        [disabled]="true" />
+                                                    <input type="text" pInputText [value]="item.selectedExistingSpn?.experience ?? 0" 
+                                                        id="experience" [disabled]="true" />
                                                 </div>
                                                 <div class="grid col-span-1 gap-1">
                                                     <label for="quantity">Quantity</label>
-                                                    <input type="text" pInputText id="quantity" [value]="existingEmployeeList?.length"
+                                                    <input type="text" pInputText id="quantity" [value]="item.existingEmployeeList?.length"
                                                         [disabled]="true" />
                                                 </div>
                                             </div>
                                             <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden mt-4">
-                                                <p-table [value]="existingEmployeeList" stripedRows [rowHover]="true" 
+                                                <p-table [value]="item.existingEmployeeList" stripedRows [rowHover]="true" dataKey="candidateId"
                                                     dataKey="candidateId" formArrayName="existingEmployeeItems" 
                                                     [tableStyle]="{'min-width': '90rem'}">
                                                     <ng-template #header>
@@ -235,10 +236,10 @@
                                                             <th>Actions</th>
                                                         </tr>
                                                     </ng-template>
-                                                    <ng-template #body let-existingEmployee let-i="rowIndex">
-                                                        @if (existingEmployeeItems.controls[i]) {
-                                                            <tr [formGroupName]="i">
-                                                                <td>{{ i + 1 }}</td>
+                                                    <ng-template #body let-existingEmployee let-index="rowIndex">
+                                                        @if (item.existingEmployeeItems.controls[index]) {
+                                                            <tr [formGroup]="item.existingEmployeeItems.controls[index]">
+                                                                <td>{{ index + 1 }}</td>
                                                                 <td>{{ existingEmployee.employeeCode }}</td>
                                                                 <td>{{ existingEmployee.candidateName }}</td>
                                                                 <td>
@@ -254,11 +255,11 @@
                                                                         <p-inputgroup-addon>%</p-inputgroup-addon>
                                                                     </p-inputgroup>
                                                                 </td>
-                                                                <td>{{ (existingEmployeeItems.controls[i].get('taxAmount')?.value ?? 0) | number:'1.2-2' }}</td>
-                                                                <td>{{ (existingEmployeeItems.controls[i].get('itemTotal')?.value ?? 0) | number:'1.2-2' }}</td>
+                                                                <td>{{ (item.existingEmployeeItems.controls[index].get('taxAmount')?.value ?? 0) | number:'1.2-2' }}</td>
+                                                                <td>{{ (item.existingEmployeeItems.controls[index].get('itemTotal')?.value ?? 0) | number:'1.2-2' }}</td>
                                                                 <td>
                                                                     <p-button icon="pi pi-trash" severity="danger" rounded 
-                                                                        (onClick)="removeExistingEmployee(i, existingEmployee.candidateId)" />
+                                                                        (onClick)="removeExistingEmployee(index, existingEmployee.candidateId)" />
                                                                 </td>
                                                             </tr>
                                                         }

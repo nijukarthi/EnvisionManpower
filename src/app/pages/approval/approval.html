@@ -19,52 +19,56 @@
     </div>
     <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
         <p-table [value]="demandProcessingList" #dt [(selection)]="selectedApprovalList" dataKey="id" [lazy]="true"
-            [tableStyle]="{ 'min-width': '110rem' }" [paginator]="true" [rowsPerPageOptions]="[10, 20, 30]" stripedRows
+            [tableStyle]="{ 'min-width': '120rem' }" [paginator]="true" [rowsPerPageOptions]="[10, 20, 30]" stripedRows
             [rows]="pageSize" [rowHover]="true" [showCurrentPageReport]="true" [first]="first"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [totalRecords]="totalRecords"
-            responsiveLayout="scroll" (onPage)="pageChange($event)"
-            [globalFilterFields]="['demandCode', 'spn.spnCode','spn.spnDescription','spn.experience','quantity']">
+            responsiveLayout="scroll" (onLazyLoad)="loadDemands($event)"
+            [globalFilterFields]="['demandCode', 'spn.spnCode','spn.spnDescription','spn.experience', 'requisitionCode']">
+            <ng-template #caption>
+                <div class="flex justify-between">
+                    <p-button [outlined]="true" icon="pi pi-filter-slash" label="Clear" (click)="dt.clear()" />
+                    <p-iconField iconPosition="left">
+                        <p-inputIcon>
+                            <i class="pi pi-search"></i>
+                        </p-inputIcon>
+                        <input pInputText type="text" [(ngModel)]="searchValue"
+                            (input)="onSearch($event)" placeholder="Keyboard Search" />
+                    </p-iconField>
+                </div>
+            </ng-template>
             <ng-template #header>
                 <tr>
                     <th>S.No</th>
                     <th>View</th>
                     <th>
-                        Demand Code
+                        <div class="flex items-center justify-between">
+                            <span>Demand Code</span>
+                            <p-columnFilter type="text" field="demandCode" display="menu" />
+                        </div>
                     </th>
                     <th>
-                        SPN Code
+                        <div class="flex items-center justify-between">
+                            <span>SPN Code</span>
+                            <p-columnFilter type="text" field="spnCode" display="menu" />
+                        </div>
                     </th>
-                    <th>SPN Description</th>
-                    <th>Experience</th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>SPN Description</span>
+                            <p-columnFilter type="text" field="spnDescription" display="menu" />
+                        </div>    
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Experience</span>
+                            <p-columnFilter type="text" field="experience" display="menu" />
+                        </div>
+                    </th>
                     <th>Quantity</th>
                     <th>Planned Deployment Date</th>
                     <th>Planned Release Date</th>
                     <th style="text-align: center;">Cluster Head Approval</th>
                     <th style="text-align: center;">Department Head Approval</th> 
-                </tr>
-                <tr>
-                    <td colspan="2"></td>
-                    <td>
-                        <input type="text" [(ngModel)]="searchText" (input)="applyFilter()" placeholder="Search Demand Code" pInputText />
-
-                        <!-- <input #demandCode type="text" (input)="dt.filter(demandCode.value, 'demandCode', 'contains')" 
-                            placeholder="Type to search" pInputText /> -->
-                    </td>
-                    <td>
-                        <input type="text" [(ngModel)]="searchSpn" (input)="applyFilter()" placeholder="Search SPN Code" 
-                           style="margin: 5px;" pInputText />
-                        <!-- <input #spn type="text"(input)="dt.filter(spn.value, 'spn.spnCode', 'contains')" placeholder="search..." style="width: 9rem;margin:5px" pInputText /> -->
-                    </td>
-                    <td>
-                    <input #spnDesc type="text"(input)="dt.filter(spnDesc.value, 'spn.spnDescription', 'contains')" placeholder="search..." style="width: 9rem;margin:5px" pInputText />
-                    </td>
-                    <td>
-                    <input #exp type="text"(input)="dt.filter(exp.value, 'spn.experience', 'contains')" placeholder="search..." style="width: 9rem;margin:5px" pInputText />
-                    </td>
-                    <td>
-                    <input #qty type="text"(input)="dt.filter(qty.value, 'quantity', 'contains')" placeholder="search..." style="width: 9rem;margin:5px" pInputText />
-                    </td>
-                    <td colspan="100%"></td>
                 </tr>
             </ng-template>
             <ng-template #body let-demand let-rowIndex="rowIndex">
