@@ -4,9 +4,20 @@
         <p-button label="Add Project" icon="pi pi-plus" (click)="addProject()" />
     </div>
     <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
-        <p-table [value]="projectList" stripedRows [rowHover]="true" [paginator]="true" [first]="first" [lazy]="true"
-            [rows]="pageSize" [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true" [totalRecords]="totalRecords"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" (onPage)="pageChange($event)">
+        <p-table
+            [value]="projectList"
+            stripedRows
+            [rowHover]="true"
+            [paginator]="true"
+            [first]="first"
+            [lazy]="true"
+            [rows]="pageSize"
+            [rowsPerPageOptions]="[10, 20, 30]"
+            [showCurrentPageReport]="true"
+            [totalRecords]="totalRecords"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            (onPage)="pageChange($event)"
+        >
             <ng-template #header>
                 <tr>
                     <th>SL No</th>
@@ -38,102 +49,157 @@
             </ng-template>
             <ng-template #emptymessage>
                 <tr>
-                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground);">
-                        No Records Found
-                    </td>
+                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground)">No Records Found</td>
                 </tr>
             </ng-template>
         </p-table>
     </div>
 </div>
 
-<p-dialog [header]="projectId ? 'Edit Project' : 'Add New Project'" [modal]="true" [(visible)]="openProject" 
-    [style]="{width: '50rem'}" (onHide)="onDialogClose()">
+<p-dialog [header]="projectId ? 'Edit Project' : 'Add New Project'" [modal]="true" [(visible)]="openProject" [style]="{width: '50rem'}" (onHide)="onDialogClose()">
     <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
         <div class="grid grid-cols-2 gap-2">
             <div class="col-span-1">
                 <label for="project-code">Project Code</label>
-                <input type="text" pInputText formControlName="projectCode" appFormFieldError
-                    id="project-code" class="block w-full" />
+                <input type="text" pInputText formControlName="projectCode" appFormFieldError id="project-code" class="block w-full" />
 
-                @if (projectCode?.invalid && (projectCode?.dirty || projectCode?.touched)) {
-                    @if (projectCode?.hasError('required')) {
-                        <p-message severity="error" variant="simple" size="small" styleClass="mt-1">
-                            Project Code is required
-                        </p-message>
-                    }
-                    @if (projectCode?.hasError('maxlength')) {
-                        <p-message severity="error" variant="simple" size="small" styleClass="mt-1">
-                            Project Code cannot exceed 20 characters
-                        </p-message>
-                    }
-                }
+                @if (projectCode?.invalid && (projectCode?.dirty || projectCode?.touched)) { @if (projectCode?.hasError('required')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Project Code is required </p-message>
+                } @if (projectCode?.hasError('maxlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Project Code cannot exceed 20 characters </p-message>
+                } }
             </div>
             <div class="col-span-1">
                 <label for="site-name">Site Name</label>
-                <input type="text" pInputText formControlName="siteName" id="site-name" appFormFieldError
-                    class="block w-full" />
+                <input type="text" pInputText formControlName="siteName" id="site-name" appFormFieldError class="block w-full" />
 
-                @if (site?.invalid && (site?.dirty || site?.touched)) {
-                    @if (site?.hasError('required')) {
-                        <p-message severity="error" variant="simple" size="small" styleClass="mt-1">
-                            Site Name is required
-                        </p-message>
-                    }
-                    @if (site?.hasError('maxlength')) {
-                        <p-message severity="error" variant="simple" size="small" styleClass="mt-1">
-                            Site Name cannot exceed 50 characters
-                        </p-message>
-                    }
-                }
+                @if (site?.invalid && (site?.dirty || site?.touched)) { @if (site?.hasError('required')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Site Name is required </p-message>
+                } @if (site?.hasError('maxlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Site Name cannot exceed 50 characters </p-message>
+                } }
             </div>
-            <div class="grid col-span-1 gap-1" formGroupName="cluster">
+            <div class="col-span-1" formGroupName="cluster">
                 <label for="project-code">Cluster</label>
-                <p-select [options]="clusterList" formControlName="clusterId" id="cluster" optionLabel="clusterName" 
-                    optionValue="clusterId" [filter]="true" filterBy="clusterName" [showClear]="true" 
-                    placeholder="Select Cluster" appendTo="body" (onChange)="fetchClusterHeadByCluster($event.value)" />
+                <p-select
+                    [options]="clusterList"
+                    formControlName="clusterId"
+                    id="cluster"
+                    optionLabel="clusterName"
+                    optionValue="clusterId"
+                    [filter]="true"
+                    filterBy="clusterName"
+                    [showClear]="true"
+                    placeholder="Select Cluster"
+                    appendTo="body"
+                    appFormFieldError
+                    class="block w-full"
+                    (onChange)="fetchClusterHeadByCluster($event.value)"
+                />
+                @if(cluster?.invalid && (cluster?.dirty || cluster?.touched)){ @if(cluster?.hasError('required')){
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1">Cluster is required</p-message>
+                }}
             </div>
-            <div class="grid col-span-1 gap-1" formGroupName="clusterHead">
+            <div class="col-span-1" formGroupName="clusterHead">
                 <label for="cluster-head">Cluster Head</label>
-                <p-select [options]="clusterHeadList" formControlName="userId" id="cluster-head" optionLabel="userName"
-                    optionValue="userId" [filter]="true" filterBy="userName" [showClear]="true" placeholder="Select Cluster Head"
-                    appendTo="body" />
+                <p-select
+                    [options]="clusterHeadList"
+                    formControlName="userId"
+                    id="cluster-head"
+                    optionLabel="userName"
+                    optionValue="userId"
+                    [filter]="true"
+                    filterBy="userName"
+                    [showClear]="true"
+                    placeholder="Select Cluster Head"
+                    appendTo="body"
+                    appFormFieldError
+                    class="block w-full"
+                />
+                @if(clusterHead?.invalid && (clusterHead?.dirty || clusterHead?.touched)){ @if(clusterHead?.hasError('required')){
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1">clusterHead is required</p-message>
+                }}
             </div>
-            <div class="grid col-span-1 gap-1" formGroupName="siteIncharge">
+            <div class="col-span-1" formGroupName="siteIncharge">
                 <label for="site-incharge">Site Incharge</label>
-                <p-select [options]="siteInchargeList" formControlName="userId" id="site-incharge" 
-                    optionLabel="userName" optionValue="userId" [filter]="true" filterBy="userName" [showClear]="true" 
-                    placeholder="Select Site Incharge" appendTo="body" [loading]="loading"
-                    (onClick)="findUserGroup(UserGroups.SITEINCHARGE, 'siteIncharge')">
+                <p-select
+                    [options]="siteInchargeList"
+                    formControlName="userId"
+                    id="site-incharge"
+                    optionLabel="userName"
+                    optionValue="userId"
+                    [filter]="true"
+                    filterBy="userName"
+                    [showClear]="true"
+                    placeholder="Select Site Incharge"
+                    appendTo="body"
+                    appFormFieldError
+                    class="block w-full"
+                    [loading]="loading"
+                    (onClick)="findUserGroup(UserGroups.SITEINCHARGE, 'siteIncharge')"
+                >
                     <ng-template #empty>
                         @if (loading) {
-                            <span>Loading...</span>
+                        <span>Loading...</span>
                         } @else {
-                            <span>No users found</span>
+                        <span>No users found</span>
                         }
                     </ng-template>
                 </p-select>
+                @if(siteIncharge?.invalid && (siteIncharge?.dirty || siteIncharge?.touched)){ @if(siteIncharge?.hasError('required')){
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1">siteIncharge is required</p-message>
+                }}
             </div>
-            <div class="grid col-span-1 gap-1" formGroupName="department">
+            <div class="col-span-1" formGroupName="department">
                 <label for="department">Department</label>
-                <p-select [options]="departmentList" formControlName="departmentId" id="department"
-                    optionLabel="departmentName" optionValue="departmentId" [filter]="true" filterBy="departmentName" 
-                    [showClear]="true" placeholder="Select Department" appendTo="body" 
-                    (onChange)="fetchDepartmentHeadByDepartment($event.value)" />
+                <p-select
+                    [options]="departmentList"
+                    formControlName="departmentId"
+                    id="department"
+                    optionLabel="departmentName"
+                    optionValue="departmentId"
+                    [filter]="true"
+                    filterBy="departmentName"
+                    [showClear]="true"
+                    placeholder="Select Department"
+                    appendTo="body"
+                    appFormFieldError
+                    class="block w-full"
+                    (onChange)="fetchDepartmentHeadByDepartment($event.value)"
+                />
+                @if(department?.invalid && (department?.dirty || department?.touched)){ @if(department?.hasError('required')){
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1">Department is required</p-message>
+                }}
             </div>
-            <div class="grid col-span-1 gap-1" formGroupName="departmentHead">
+            <div class="col-span-1" formGroupName="departmentHead">
                 <label for="department-head">Department Head</label>
-                <p-select [options]="departmentHeadList" formControlName="userId" id="department-head" 
-                    optionLabel="userName" optionValue="userId" [filter]="true" filterBy="userName" 
-                    [showClear]="true" placeholder="Select Department Head" appendTo="body" [loading]="loading">
+                <p-select
+                    [options]="departmentHeadList"
+                    formControlName="userId"
+                    id="department-head"
+                    optionLabel="userName"
+                    optionValue="userId"
+                    [filter]="true"
+                    filterBy="userName"
+                    [showClear]="true"
+                    placeholder="Select Department Head"
+                    appendTo="body"
+                    appFormFieldError
+                    class="block w-full"
+                    [loading]="loading"
+                >
                     <ng-template #empty>
                         @if (loading) {
-                            <span>Loading...</span>
+                        <span>Loading...</span>
                         }@else {
-                            <span>No users found</span>
+                        <span>No users found</span>
                         }
                     </ng-template>
                 </p-select>
+
+                @if(departmentHead?.invalid && (departmentHead?.dirty || departmentHead?.touched)){ @if(departmentHead?.hasError('required')){
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1">DepartmentHead is required</p-message>
+                }}
             </div>
         </div>
         <div class="flex justify-end mt-4">

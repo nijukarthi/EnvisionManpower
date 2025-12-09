@@ -6,118 +6,117 @@ import { Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
 
 @Component({
-  selector: 'app-consultancy-table',
-  imports: [Shared],
-  templateUrl: './consultancy-table.html',
-  styleUrl: './consultancy-table.scss'
+    selector: 'app-consultancy-table',
+    imports: [Shared],
+    templateUrl: './consultancy-table.html',
+    styleUrl: './consultancy-table.scss'
 })
 export class ConsultancyTable implements OnInit {
-  consultancyList: any;
+    consultancyList: any;
 
-  consultancyId:any;
-  openAddConsultancy:boolean = false;
-  consultancyForm:any;
-  actionName:any = 'Add';
+    consultancyId: any;
+    openAddConsultancy: boolean = false;
+    consultancyForm: any;
+    actionName: any = 'Add';
 
-  loggedUserGroupId = Number(sessionStorage.getItem('userGroupId'));
+    loggedUserGroupId = Number(sessionStorage.getItem('userGroupId'));
 
-  offSet = 0;
-  pageSize = 10;
-  first = 0;
-  totalRecords = 0;
+    offSet = 0;
+    pageSize = 10;
+    first = 0;
+    totalRecords = 0;
 
-  constructor(
-    private apiService: Apiservice,
-    private router: Router,
-    private messageService: MessageService,
-    private confirmationService: ConfirmationService,
-    private fb:FormBuilder
-  ){}
+    constructor(
+        private apiService: Apiservice,
+        private router: Router,
+        private messageService: MessageService,
+        private confirmationService: ConfirmationService,
+        private fb: FormBuilder
+    ) {}
 
-  ngOnInit(){
-    this.fetchActiveConsultancy();
-  }
-
-  getMenuItems(consultancy: any){
-    return [
-      {
-        label: 'Edit',
-        icon: 'pi pi-pencil',
-        command: () => this.router.navigate(['/home/consultancies', consultancy.userId])
-       },
-      {
-        label: 'Delete',
-        icon: 'pi pi-trash',
-        command: () => this.deleteConsultancy(consultancy)
-      }
-    ]
-  }
-
-  fetchActiveConsultancy(){
-    try {
-      const data ={
-        offSet: this.offSet,
-        pageSize: this.pageSize
-      }
-
-      this.apiService.fetchActiveConsultancy(data).subscribe({
-        next: val => {
-          console.log(val);
-          this.consultancyList = val?.data.data;
-          this.totalRecords = val?.data.length ?? 0;
-        },
-        error: err => {
-          console.log(err);
-        }
-      })
-    } catch (error) {
-      console.log(error);
+    ngOnInit() {
+        this.fetchActiveConsultancy();
     }
-  }
 
-  deleteConsultancy(consultancy: any){
-    this.confirmationService.confirm({
-      message: 'Do you want to delete this record?',
-      header: `Delete ${consultancy.consultancyName}`,
-      icon: 'pi pi-info-circle',
-      rejectLabel: 'Cancel',
-      rejectButtonProps: {
-        label: 'Cancel',
-        severity: 'secondary',
-        outlined: true
-      },
-      acceptButtonProps: {
-        label: 'Delete',
-        severity: 'danger'
-      },
-      accept: () => {
-        try {
-          const data = {
-            userId: consultancy.userId
-          }
-
-          this.apiService.deleteConsultancy(data).subscribe({
-            next: val => {
-              console.log(val);
-              this.messageService.add({severity: 'success', summary: 'Success', detail: 'Consultancy Deleted Successfully'});
-              this.fetchActiveConsultancy();
+    getMenuItems(consultancy: any) {
+        return [
+            {
+                label: 'Edit',
+                icon: 'pi pi-pencil',
+                command: () => this.router.navigate(['/home/consultancies', consultancy.userId])
             },
-            error: err => {
-              console.log(err);
+            {
+                label: 'Delete',
+                icon: 'pi pi-trash',
+                command: () => this.deleteConsultancy(consultancy)
             }
-          })
+        ];
+    }
+
+    fetchActiveConsultancy() {
+        try {
+            const data = {
+                offSet: this.offSet,
+                pageSize: this.pageSize
+            };
+
+            this.apiService.fetchActiveConsultancy(data).subscribe({
+                next: (val) => {
+                    console.log(val);
+                    this.consultancyList = val?.data.data;
+                    this.totalRecords = val?.data.length ?? 0;
+                },
+                error: (err) => {
+                    console.log(err);
+                }
+            });
         } catch (error) {
-          console.log(error);
+            console.log(error);
         }
-      }
-    })
-  }
+    }
 
-  pageChange(event: any){
-    this.first = event.first;
-    this.offSet = event.first / event.rows;
-    this.pageSize = event.rows;
-    this.fetchActiveConsultancy();
-  }
+    deleteConsultancy(consultancy: any) {
+        this.confirmationService.confirm({
+            message: 'Do you want to delete this record?',
+            header: `Delete ${consultancy.consultancyName}`,
+            icon: 'pi pi-info-circle',
+            rejectLabel: 'Cancel',
+            rejectButtonProps: {
+                label: 'Cancel',
+                severity: 'secondary',
+                outlined: true
+            },
+            acceptButtonProps: {
+                label: 'Delete',
+                severity: 'danger'
+            },
+            accept: () => {
+                try {
+                    const data = {
+                        userId: consultancy.userId
+                    };
+
+                    this.apiService.deleteConsultancy(data).subscribe({
+                        next: (val) => {
+                            console.log(val);
+                            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Consultancy Deleted Successfully' });
+                            this.fetchActiveConsultancy();
+                        },
+                        error: (err) => {
+                            console.log(err);
+                        }
+                    });
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+        });
+    }
+
+    pageChange(event: any) {
+        this.first = event.first;
+        this.offSet = event.first / event.rows;
+        this.pageSize = event.rows;
+        this.fetchActiveConsultancy();
+    }
 }
-
