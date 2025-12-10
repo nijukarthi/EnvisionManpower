@@ -26,26 +26,38 @@
             </ng-template>
             <ng-template #emptymessage>
                 <tr>
-                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground);">
-                        No Records Found
-                    </td>
+                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground)">No Records Found</td>
                 </tr>
             </ng-template>
         </p-table>
     </div>
 </div>
 
-<p-dialog [header]="userId ? 'Edit Interviewer' : 'Add Interviewer'" [modal]="true" [(visible)]="openInterviewer"
-    [style]="{width: '50rem'}" (onHide)="onDialogClose()">
+<p-dialog [header]="userId ? 'Edit Interviewer' : 'Add Interviewer'" [modal]="true" [(visible)]="openInterviewer" [style]="{width: '50rem'}" (onHide)="onDialogClose()">
     <form [formGroup]="interviewerForm" (ngSubmit)="onSubmit()">
         <div class="grid grid-cols-2 gap-2">
-            <div class="grid col-span-1 gap-1">
+            <div class="col-span-1">
                 <label for="interviewer-name">Interviewer Name</label>
-                <input type="text" formControlName="userName" pInputText id="interviewer-name" />
+                <input type="text" formControlName="userName" pInputText id="interviewer-name" appFormFieldError class="block w-full" />
+
+                @if(userName?.invalid && (userName?.dirty || userName?.touched)){ @if(userName?.hasError('required')){
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Username is required </p-message>
+                }@if (userName?.hasError('minlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Username must contain at least 3 characters </p-message>
+                } @if (userName?.hasError('maxlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Username cannot exceed 50 characters </p-message>
+                } }
             </div>
-            <div class="grid col-span-1 gap-1">
+            <div class="col-span-1">
                 <label for="contact-number">Contact Number</label>
-                <input type="text" formControlName="phoneNumber" pInputText id="contact-number" maxlength="10" pKeyFilter="int" />
+                <input type="text" formControlName="phoneNumber" pInputText id="contact-number" appFormFieldError class="block w-full" maxlength="10" pKeyFilter="int" />
+                @if(phoneNumber?.invalid && (phoneNumber?.dirty || phoneNumber?.touched)){ @if(phoneNumber?.hasError('required')){
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Phone Number is required </p-message>
+                }@if (phoneNumber?.hasError('minlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Phone Number must contain at least 10 characters </p-message>
+                } @if (phoneNumber?.hasError('maxlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Phone Number cannot exceed 10 characters </p-message>
+                } }
             </div>
         </div>
         <div class="flex justify-end mt-4">
