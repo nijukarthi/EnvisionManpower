@@ -41,8 +41,8 @@ export class CompanyUsers implements OnInit {
 
     companyUserForm = this.fb.group({
         userId: [0],
-        userName: ['', Validators.required, Validators.minLength(3), Validators.maxLength(50)],
-        email: ['', Validators.required, Validators.maxLength(80), Validators.pattern(/^[a-zA-Z0-9._%+-]+$/)],
+        userName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
+        email: ['', [Validators.required, Validators.maxLength(80), Validators.pattern(/^[a-zA-Z0-9._%+-]+$/)]],
         userGroupId: [0],
         userDepartments: this.fb.array([])
     });

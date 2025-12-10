@@ -39,8 +39,8 @@ export class Cluster implements OnInit {
     ngOnInit(): void {
         this.clusterForm = this.fb.group({
             clusterId: [0],
-            clusterName: ['', Validators.required],
-            clusterCode: ['', Validators.required],
+            clusterName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
+            clusterCode: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(2)]],
             clusterHead: this.fb.group({
                 userId: [0]
             })

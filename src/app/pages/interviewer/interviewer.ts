@@ -26,8 +26,8 @@ export class Interviewer implements OnInit {
 
     interviewerForm = this.fb.group({
         userId: [0],
-        userName: ['', [Validators.required, Validators.min(30), Validators.max(50)]],
-        phoneNumber: ['', [Validators.required, Validators.min(10), Validators.max(10)]]
+        userName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
+        phoneNumber: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]]
     });
 
     get userName() {
