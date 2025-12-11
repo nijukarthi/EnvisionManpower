@@ -1,8 +1,32 @@
 <div class="card">
     <h5>New Invoice Submission</h5>
-    <h6>Invoice Details</h6>
     <form [formGroup]="invoiceForm" (ngSubmit)="onSubmit()">
         <div class="grid grid-cols-2 gap-2">
+            <div class="grid col-span-1 gap-1">
+                <label for="po-number">PO Number</label>
+                <p-select [options]="poList" formControlName="poId" optionLabel="poNumber" optionValue="poId" [filter]="true"
+                    filterBy="poNumber" appendTo="body" placeholder="Select PO Number" (onChange)="selectedPOId($event.value)" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="po-date">PO Date</label>
+                <input type="text" pInputText [value]="poDetails?.poDate" id="po-date" [disabled]="true" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="po-value">PO Value</label>
+                <input type="text" pInputText [value]="poDetails?.totalValue" id="po-value" [disabled]="true" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="start-date">PO Start Date</label>
+                <input type="text" pInputText id="start-date" [value]="poDetails?.validFrom" [disabled]="true" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="po-valid">PO Valid Till</label>
+                <input type="text" pInputText id="po-valid" [value]="poDetails?.validTo" [disabled]="true" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="duration">Duration (In Months)</label>
+                <input type="text" pInputText id="duration" [value]="poDetails?.duration" [disabled]="true" />
+            </div>
             <div class="grid col-span-1 gap-1">
                 <label for="invoice-number">Invoice Number</label>
                 <input type="text" pInputText formControlName="invoiceNumber" id="invoice-number" />
@@ -49,37 +73,7 @@
 </div>
 
 <div class="card">
-    <h6>PO Details</h6>
-    <form [formGroup]="invoiceForm" (ngSubmit)="onSubmit()">
-        <div class="grid grid-cols-2 gap-2">
-            <div class="grid col-span-1 gap-1">
-                <label for="po-number">PO Number</label>
-                <p-select [options]="poList" formControlName="poId" optionLabel="poNumber" 
-                    optionValue="poId" [filter]="true" filterBy="poNumber"
-                    appendTo="body" placeholder="Select PO Number" (onChange)="selectedPOId($event.value)" />
-            </div>
-            <div class="grid col-span-1 gap-1">
-                <label for="po-date">PO Date</label>
-                <input type="text" pInputText [value]="poDetails?.poDate" id="po-date" [disabled]="true" />
-            </div>
-            <div class="grid col-span-1 gap-1">
-                <label for="po-value">PO Value</label>
-                <input type="text" pInputText [value]="poDetails?.totalValue" id="po-value" [disabled]="true" />
-            </div>
-            <div class="grid col-span-1 gap-1">
-                <label for="start-date">PO Start Date</label>
-                <input type="text" pInputText id="start-date" [value]="poDetails?.validFrom" [disabled]="true" />
-            </div>
-            <div class="grid col-span-1 gap-1">
-                <label for="po-valid">PO Valid Till</label>
-                <input type="text" pInputText id="po-valid" [value]="poDetails?.validTo" [disabled]="true" />
-            </div>
-            <div class="grid col-span-1 gap-1">
-                <label for="duration">Duration (In Months)</label>
-                <input type="text" pInputText id="duration" [value]="poDetails?.duration" [disabled]="true" />
-            </div>
-        </div>
-    
+    <form [formGroup]="invoiceForm" (ngSubmit)="onSubmit()">  
         <h6>Line Items</h6>
         <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden -mt-3">
             <p-table [value]="poEmployeeList" showGridlines stripedRows [rowHover]="true" 

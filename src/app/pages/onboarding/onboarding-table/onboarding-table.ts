@@ -319,6 +319,8 @@ export class OnboardingTable implements OnInit {
         return 'primary';
       case 'TRANSFERRED':
         return 'warn';
+      case 'RESIGNED':
+        return 'danger';
       default:
         return 'primary';
     }
@@ -340,16 +342,17 @@ export class OnboardingTable implements OnInit {
         pageSize: this.pageSize,
         employeeCode: filters?.employeeCode?.[0]?.value ?? null,
         candidateName: filters?.candidateName?.[0]?.value ?? null,
+        consultancyName: filters?.consultancyName?.[0]?.value ?? null,
         projectCode: filters?.projectCode?.[0]?.value ?? null,
         clusterName: filters?.clusterName?.[0]?.value ?? null,
         spnCode: filters?.spnCode?.[0]?.value ?? null,
         spnDescription: filters?.spnDescription?.[0]?.value ?? null,
         experience: filters?.experience?.[0]?.value ?? null,
-        roleName: filters?.roleName?.[0]?.value ?? null,
+        envisionRoleName: filters?.roleName?.[0]?.value ?? null,
         employmentStatuses: filters?.status?.[0]?.value ?? null,
         phoneNumber: filters?.phoneNumber?.[0]?.value ?? null,
         joiningDateFrom: Array.isArray(dateValue) ? dateValue[0] : null,
-      joiningDateTo: Array.isArray(dateValue) ? dateValue[1] : null,
+        joiningDateTo: Array.isArray(dateValue) ? dateValue[1] : null
       }
       console.log(payload);
 

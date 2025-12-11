@@ -24,6 +24,7 @@
                     <th>Employee Name</th>
                     <th>SPN Code</th>
                     <th>SPN Description</th>
+                    <th>Experience</th>
                     <th>Project Code</th>
                     <th>Site Name</th>
                     <th>Cluster Name</th>
@@ -57,7 +58,8 @@
                     <td>{{ performance.candidate?.employeeCode || '-' }}</td>
                     <td>{{ performance.candidate?.candidateName || '-' }}</td>
                     <td>{{ performance.employmentDetails?.spn?.spnCode || '-' }}</td>
-                    <td>{{ performance.employmentDetails?.spn?.spnDescription }} ({{ performance.employmentDetails?.spn?.experience }})</td>
+                    <td>{{ performance.employmentDetails?.spn?.spnDescription }}</td>
+                    <td>{{ performance.employmentDetails?.spn?.experience }}</td>
                     <td>{{ performance.employmentDetails.project.projectCode || '-' }}</td>
                     <td>{{ performance.employmentDetails.project.siteName || '-' }}</td>
                     <td>{{ performance.employmentDetails.cluster.clusterName || '-' }}</td>

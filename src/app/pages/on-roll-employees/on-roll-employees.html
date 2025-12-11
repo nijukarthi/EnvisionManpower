@@ -1,33 +1,119 @@
 <div class="card">
     <div class="flex items-baseline-last justify-between">
         <h5>On-roll Employees</h5>
-        <p-button icon="pi pi-external-link" label="Export" (click)="exportToExcel()" />
+        <div class="flex gap-2">
+            <p-button icon="pi pi-external-link" label="Export" (click)="exportToExcel()" />
+            <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
+        </div>
     </div>
     <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
         <p-table #dt [columns]="cols" [value]="onrollEmployeeList" [exportHeader]="'customExportHeader'" 
             [rowHover]="true" [paginator]="true" [rows]="pageSize" [lazy]="true" stripedRows
             [first]="first" [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true" [totalRecords]="totalRecords" 
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" editMode="row"
-            [tableStyle]="{'min-width': '200rem'}" (onPage)="pageChange($event)">
+            [tableStyle]="{'min-width': '200rem'}" (onLazyLoad)="loadDemands($event)">
             <ng-template #header let-columns>
                 <tr>
                     <th>SL No</th>
-                    <th>Employee Code</th>
-                    <th>Employee Name</th>
-                    <th>Consultancy Name</th>
-                    <th>Project Code</th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Employee Code</span>
+                            <p-columnFilter type="text" field="employeeCode" display="menu" />
+                        </div>                
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Employee Name</span>
+                            <p-columnFilter type="text" field="candidateName" display="menu" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Consultancy Name</span>
+                            <p-columnFilter type="text" field="consultancyName" display="menu" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Project Code</span>
+                            <p-columnFilter type="text" field="projectCode" display="menu" />
+                        </div>     
+                    </th>
                     <th>Site Name</th>
-                    <th>Cluster Name</th>
-                    <th>SPN Code</th>
-                    <th>SPN Description</th>
-                    <th>Experience</th>
-                    <th>Role</th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Cluster Name</span>
+                            <p-columnFilter type="text" field="clusterName" display="menu" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>SPN Code</span>
+                            <p-columnFilter type="text" field="spnCode" display="menu" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>SPN Description</span>
+                            <p-columnFilter type="text" field="spnDescription" display="menu" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Experience</span>
+                            <p-columnFilter type="text" field="experience" display="menu" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Role</span>
+                            <p-columnFilter type="text" field="roleName" display="menu" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Status</span>
+                            <p-columnFilter field="status" matchMode="equals" display="menu">
+                                <ng-template #filter let-value let-filter="filterCallback">
+                                    <p-multiselect [options]="statuses" (onChange)="filter($event.value)"
+                                        placeholder="Select Statuses" class="w-full">
+                                        <ng-template let-option #item>
+                                            <p-tag [value]="option.value" [severity]="getSeverity(option.value)" />
+                                        </ng-template>
+                                    </p-multiselect>
+                                </ng-template>
+                            </p-columnFilter>
+                        </div>
+                    </th>
                     <th>Expected DOJ</th>
-                    <th>Actual DOJ</th>
-                    <th>Contact Number</th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Actual DOJ</span>
+                            <p-columnFilter type="date" field="date" display="menu" matchMode="between"
+                                [showOperator]="false">
+                                <ng-template #filter let-filter="filterCallback" let-value>
+                                    <div class="flex flex-col gap-2">
+                                        <p-datepicker [ngModel]="value?.[0] || null" 
+                                            (ngModelChange)="updateRange($event, value, 0, filter)" 
+                                            placeholder="From Date" />
+
+                                        <p-datepicker [ngModel]="value?.[1] || null"
+                                            (ngModelChange)="updateRange($event, value, 1, filter)"
+                                            placeholder="To Date" />
+                                    </div>
+                                </ng-template>
+                            </p-columnFilter>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Contact Number</span>
+                            <p-columnFilter type="text" field="phoneNumber" display="menu" />
+                        </div>
+                    </th>
                     <th>Emergency Contact Number</th>
-                    <th>UAN</th>
-                    <th>Aadhar Number</th>
+                    <!-- <th>UAN</th> -->
+                    <!-- <th>Aadhar Number</th> -->
                     <th>PPE Details</th>
                     <th>Actions</th>
                 </tr>
@@ -45,6 +131,10 @@
                     <td>{{ onroll.employmentDetails.spn.spnDescription || '-' }}</td>
                     <td>{{ onroll.employmentDetails.spn.experience || '-' }}</td>
                     <td>{{ onroll.employmentDetails.envisionRole.roleName || '-' }}</td>
+                    <td>
+                        <p-tag [value]="onroll.employmentDetails.employmentStatus"
+                            [severity]="getSeverity(onroll.employmentDetails.employmentStatus)" />
+                    </td>
                     <td #pEditableColumn>
                         <p-cellEditor>
                             <ng-template #input>
@@ -97,7 +187,7 @@
                             </ng-template>
                         </p-cellEditor>
                     </td>
-                    <td #pEditableColumn>
+                    <!-- <td #pEditableColumn>
                         <p-cellEditor>
                             <ng-template #input>
                                 <span pKeyFilter="int">
@@ -122,7 +212,7 @@
                                 {{ onroll.aadharNumber ?? '-' }}
                             </ng-template>
                         </p-cellEditor>
-                    </td>
+                    </td> -->
                     <td>
                         <p-button [label]="onroll?.ppeDetails.length > 0 ? 'Edit PPE' : 'Add PPE'" 
                             [icon]="onroll?.ppeDetails.length > 0 ? 'pi pi-pencil' : 'pi pi-plus'" 

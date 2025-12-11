@@ -108,6 +108,7 @@
                                                         <th>SL NO</th>
                                                         <th>Employee Code</th>
                                                         <th>Employee Name</th>
+                                                        <th>Joining Date</th>
                                                         <th>Duration Allowed</th>
                                                         <th>Unit Price</th>
                                                         <th>Tax %</th>
@@ -124,7 +125,7 @@
                                                         <td>{{ rowIndex + 1 }}</td>
                                                         <td>{{ row.employeeCode }}</td>
                                                         <td>{{ row.candidateName }}</td>
-                                            
+                                                        <td>{{ row.joiningDate }}</td>
                                                         <td>
                                                             <p-inputnumber formControlName="monthsAllowed"></p-inputnumber>
                                                         </td>
@@ -140,12 +141,12 @@
                                                             </p-inputgroup>
                                                         </td>
                                             
-                                                        <td>{{ item.newEmployeeItems.controls[rowIndex].get('taxAmount')?.value }}</td>
-                                                        <td>{{ item.newEmployeeItems.controls[rowIndex].get('itemTotal')?.value }}</td>
+                                                        <td>{{ item.newEmployeeItems.controls[rowIndex].get('taxAmount')?.value | number: '1.2-2' }}</td>
+                                                        <td>{{ item.newEmployeeItems.controls[rowIndex].get('itemTotal')?.value | number: '1.2-2' }}</td>
                                             
                                                         <td>
                                                             <p-button icon="pi pi-trash" severity="danger" rounded
-                                                                (onClick)="removeNewEmployee(rowIndex, row.candidateId)">
+                                                                (onClick)="removeNewEmployee(i, rowIndex, row.candidateId)">
                                                             </p-button>
                                                         </td>
                                                     </tr>
@@ -228,6 +229,7 @@
                                                             <th>SL NO</th>
                                                             <th>Employee Code</th>
                                                             <th>Employee Name</th>
+                                                            <th>Joining Date</th>
                                                             <th>Duration (In Months)</th>
                                                             <th>Unit Price</th>
                                                             <th>Tax Rate %</th>
@@ -242,6 +244,7 @@
                                                                 <td>{{ index + 1 }}</td>
                                                                 <td>{{ existingEmployee.employeeCode }}</td>
                                                                 <td>{{ existingEmployee.candidateName }}</td>
+                                                                <td>{{ existingEmployee.joiningDate }}</td>
                                                                 <td>
                                                                     <p-inputnumber formControlName="monthsAllowed" [useGrouping]="false" />
                                                                 </td>
@@ -259,7 +262,7 @@
                                                                 <td>{{ (item.existingEmployeeItems.controls[index].get('itemTotal')?.value ?? 0) | number:'1.2-2' }}</td>
                                                                 <td>
                                                                     <p-button icon="pi pi-trash" severity="danger" rounded 
-                                                                        (onClick)="removeExistingEmployee(index, existingEmployee.candidateId)" />
+                                                                        (onClick)="removeExistingEmployee(i, index, existingEmployee.candidateId)" />
                                                                 </td>
                                                             </tr>
                                                         }

@@ -22,6 +22,8 @@ export class OnRollEmployees implements OnInit {
 
   cols!: Column[];
 
+  statuses!: any[];
+
   openPpeDetails = false;
 
   onrollEmployeeList: any;
@@ -76,15 +78,16 @@ export class OnRollEmployees implements OnInit {
 
   ngOnInit(): void {
     this.fetchActiveOnrollEmployees();
+
+    this.statuses = [
+      { label: 'ACTIVE', value: 'ACTIVE' },
+      { label: 'TRANSFERRED', value: 'TRANSFERRED' },
+      { label: 'RESIGNED', value: 'RESIGNED' }
+    ]
   }
 
-  fetchActiveOnrollEmployees(){
+  onrollEmployeeApi(data: any){
     try {   
-      const data = {
-        offSet: this.offSet,
-        pageSize: this.pageSize
-      }
-      console.log(data);
       this.apiService.fetchOnRollCandidates(data).subscribe({
         next: val => {
           console.log(val);
@@ -122,6 +125,20 @@ export class OnRollEmployees implements OnInit {
           console.log(err);
         }
       })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  fetchActiveOnrollEmployees(){
+    try {   
+      const data = {
+        offSet: this.offSet,
+        pageSize: this.pageSize
+      }
+      console.log(data);
+      
+      this.onrollEmployeeApi(data);
     } catch (error) {
       console.log(error);
     }
@@ -269,11 +286,62 @@ export class OnRollEmployees implements OnInit {
     this.ppeDetails.removeAt(index);
   }
 
-  pageChange(event: any){
-    this.first = event.first;
-    this.offSet = event.first / event.rows;
-    this.pageSize = event.rows;
-    this.fetchActiveOnrollEmployees();
+  loadDemands(event: any){
+    try {
+      this.first = event.first;
+      this.offSet = event.first / event.rows;
+      this.pageSize = event.rows;
+
+      const filters = event.filters;
+      console.log(filters);
+
+      const dateValue = filters?.date?.[0]?.value;
+
+      const payload = {
+        offSet: this.offSet,
+        pageSize: this.pageSize,
+        employeeCode: filters?.employeeCode?.[0]?.value ?? null,
+        candidateName: filters?.candidateName?.[0]?.value ?? null,
+        consultancyName: filters?.consultancyName?.[0]?.value ?? null,
+        projectCode: filters?.projectCode?.[0]?.value ?? null,
+        clusterName: filters?.clusterName?.[0]?.value ?? null,
+        spnCode: filters?.spnCode?.[0]?.value ?? null,
+        spnDescription: filters?.spnDescription?.[0]?.value ?? null,
+        experience: filters?.experience?.[0]?.value ?? null,
+        envisionRoleName: filters?.roleName?.[0]?.value ?? null,
+        employmentStatuses: filters?.status?.[0]?.value ?? null,
+        phoneNumber: filters?.phoneNumber?.[0]?.value ?? null,
+        joiningDateFrom: Array.isArray(dateValue) ? dateValue[0] : null,
+        joiningDateTo: Array.isArray(dateValue) ? dateValue[1] : null 
+      }
+
+      console.log(payload);
+
+      this.onrollEmployeeApi(payload);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  updateRange(selectedValue: any, value: any[], index: number, filter: any){
+    if(!value) value = [];
+
+    value[index] = selectedValue;
+
+    filter(value);
+  }
+
+  getSeverity(status: string){
+    switch(status){
+      case 'ACTIVE':
+        return 'primary';
+      case 'TRANSFERRED':
+        return 'warn';
+      case 'RESIGNED':
+        return 'danger';
+      default:
+        return 'primary';
+    }
   }
 
   onDialogClose(){
