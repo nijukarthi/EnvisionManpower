@@ -7,7 +7,7 @@
         </div>
     </div>
     <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
-        <p-table #dt [columns]="cols" [value]="onrollEmployeeList" [exportHeader]="'customExportHeader'" 
+        <p-table #dt [columns]="cols" dataKey="candidateId" [value]="onrollEmployeeList" [exportHeader]="'customExportHeader'" 
             [rowHover]="true" [paginator]="true" [rows]="pageSize" [lazy]="true" stripedRows
             [first]="first" [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true" [totalRecords]="totalRecords" 
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" editMode="row"
