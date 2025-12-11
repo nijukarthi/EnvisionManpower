@@ -51,7 +51,7 @@
             </div>
             <div class="col-span-1">
                 <label for="cluster-code">Cluster Code</label>
-                <input type="text" pInputText formControlName="clusterCode" id="cluster-code" maxlength="2" appFormFieldError class="block w-full" />
+                <input type="text" pInputText formControlName="clusterCode" id="cluster-code" appFormFieldError class="block w-full" />
                 @if(clusterCode?.invalid && (clusterCode?.dirty || clusterCode?.touched)){ @if(clusterCode?.hasError('required')){
                 <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Cluster Code is required </p-message>
                 }@if (clusterCode?.hasError('minlength')) {

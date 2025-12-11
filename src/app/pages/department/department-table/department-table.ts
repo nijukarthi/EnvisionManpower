@@ -36,7 +36,7 @@ export class DepartmentTable implements OnInit {
     ngOnInit(): void {
         this.departmentForm = this.fb.group({
             departmentId: [],
-            departmentName: ['', Validators.required, Validators.minLength(3), Validators.maxLength(80)],
+            departmentName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(80)]],
             departmentHead: this.fb.group({
                 userId: [0]
             })

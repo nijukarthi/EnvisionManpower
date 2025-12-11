@@ -50,7 +50,7 @@
             </div>
             <div class="col-span-1">
                 <label for="contact-number">Contact Number</label>
-                <input type="text" formControlName="phoneNumber" pInputText id="contact-number" appFormFieldError class="block w-full" maxlength="10" pKeyFilter="int" />
+                <input type="text" formControlName="phoneNumber" pInputText id="contact-number" appFormFieldError class="block w-full" pKeyFilter="int" />
                 @if(phoneNumber?.invalid && (phoneNumber?.dirty || phoneNumber?.touched)){ @if(phoneNumber?.hasError('required')){
                 <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Phone Number is required </p-message>
                 }@if (phoneNumber?.hasError('minlength')) {

@@ -69,7 +69,7 @@
                 <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Email is required </p-message>
                 }@if (email?.hasError('minlength')) {
                 <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Email must contain at least 3 characters </p-message>
-                } @if (userName?.hasError('maxlength')) {
+                } @if (email?.hasError('maxlength')) {
                 <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Email cannot exceed 80 characters </p-message>
                 } }
             </div>
