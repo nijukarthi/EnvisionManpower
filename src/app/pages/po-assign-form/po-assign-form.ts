@@ -45,7 +45,7 @@ export class PoAssignForm implements OnInit {
       poDate: [''],
       validFrom: [''],
       validTo: [''],
-      totalValue: [0],
+      totalValue: [{ value: 0, disabled: true }],
       newEmployeeItems: this.fb.array([]),
       existingEmployeeItems: this.fb.array([])
     });
@@ -153,11 +153,43 @@ export class PoAssignForm implements OnInit {
 
       const taxAmount = (unitPrice * (taxRate / 100)) + unitPrice;
       const itemTotal = months * taxAmount;
+
       item.patchValue({
         taxAmount: taxAmount,
         itemTotal: itemTotal
-      }, { emitEvent: false })
+      }, { emitEvent: false });
+
+      this.calculateGrandTotal();
+      console.log(item);
     })
+  }
+
+  calculateGrandTotal(){
+    let newTotal = 0;
+    let existingTotal = 0;
+
+    this.newEmployeeLineItems.forEach(line => {
+      if (line.newEmployeeItems) {
+        line.newEmployeeItems.controls.forEach((ctrl: any) => {
+          newTotal += ctrl.get('itemTotal').value || 0;
+        });
+      }
+    })
+
+    this.existingEmployeeLineItems.forEach(line => {
+      if (line.existingEmployeeItems) {
+        line.existingEmployeeItems.controls.forEach((ctrl: any) => {
+          existingTotal += ctrl.get('itemTotal').value || 0;
+        })
+      }
+    })
+
+    const grandTotal = newTotal + existingTotal;
+    console.log("Grand Total = ", grandTotal);
+
+    this.mapPOForm.patchValue({
+      totalValue: grandTotal.toFixed(2)
+    }, { emitEvent: false });
   }
 
   fetchSpnInfoList(){
@@ -354,17 +386,23 @@ export class PoAssignForm implements OnInit {
     }
   }
 
-  removeNewEmployee(index: number, candidateId: number){
-    this.newEmployeeList = this.newEmployeeList.filter((e: any) => e.candidateId !== candidateId);
-    this.newEmployeeItems.removeAt(index);
+  removeNewEmployee(outerIndex: number, index: number, candidateId: number){
+    console.log(this.newEmployeeLineItems);
+    const lineItem = this.newEmployeeLineItems[outerIndex];
+    console.log(lineItem);
+    lineItem.newEmployeeList = lineItem?.newEmployeeList.filter((e: any) => e.candidateId !== candidateId);
+    console.log(lineItem.newEmployeeList);
+    console.log(lineItem.newEmployeeItems);
+    lineItem.newEmployeeItems.removeAt(index);
   }
 
-  removeExistingEmployee(index: number, candidateId: number){
-    this.existingEmployeeList = this.existingEmployeeList.filter((e: any) => e.candidateId !== candidateId);
-    console.log(this.existingEmployeeItems.value);
-    console.log(index);
-    this.existingEmployeeItems.removeAt(index);
-    console.log(this.existingEmployeeItems.value);
+  removeExistingEmployee(outerIndex: number, index: number, candidateId: number){
+    const lineItem = this.existingEmployeeLineItems[outerIndex];
+    console.log(lineItem);
+    lineItem.existingEmployeeList = lineItem.existingEmployeeList.filter((e: any) => e.candidateId !== candidateId);
+    console.log(lineItem.existingEmployeeList);
+    console.log(lineItem.existingEmployeeItems);
+    lineItem.existingEmployeeItems.removeAt(index);
   }
 
   mapItems(list: any[]){
