@@ -2,68 +2,165 @@
     <h5>Consultancy Form</h5>
     <form [formGroup]="consultancyForm" (ngSubmit)="onSubmit()">
         <div class="grid grid-cols-2 gap-2">
-            <div class="grid col-span-1 gap-1">
+            <div class="col-span-1">
                 <label for="consultancy-name">Consultancy Code</label>
-                <input type="text" pInputText formControlName="consultancyCode" id="consultancy-name" />
+                <input type="text" pInputText formControlName="consultancyCode" id="consultancy-name" appFormFieldError class="block w-full" />
+                @if(consultancyCode?.invalid && (consultancyCode?.dirty || consultancyCode?.touched)){ @if(consultancyCode?.hasError('required')){
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Consultancy Code is required </p-message>
+                }@if (consultancyCode?.hasError('minlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Consultancy Code must contain at least 3 characters </p-message>
+                } @if (consultancyCode?.hasError('maxlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Consultancy Code cannot exceed 80 characters </p-message>
+                } }
             </div>
-            <div class="grid col-span-1 gap-1">
+            <div class="col-span-1">
                 <label for="consultancy-name">Consultancy Name</label>
-                <input type="text" pInputText formControlName="consultancyName" id="consultancy-name" />
+                <input type="text" pInputText formControlName="consultancyName" id="consultancy-name" appFormFieldError class="block w-full" />
+                @if(consultancyName?.invalid && (consultancyName?.dirty || consultancyName?.touched)){ @if(consultancyName?.hasError('required')){
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Consultancy Name is required </p-message>
+                }@if (consultancyName?.hasError('minlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Consultancy Name must contain at least 3 characters </p-message>
+                } @if (consultancyName?.hasError('maxlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Consultancy Name cannot exceed 80 characters </p-message>
+                } }
             </div>
-            <div class="grid col-span-1 gap-1">
+            <div class="col-span-1">
                 <label for="hr-name">HR Name</label>
-                <input type="text" pInputText formControlName="userName" id="hr-name" />
+                <input type="text" pInputText formControlName="userName" id="hr-name" appFormFieldError class="block w-full" />
+                @if(hrName?.invalid && (hrName?.dirty || hrName?.touched)){ @if(hrName?.hasError('required')){
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Hr Name is required </p-message>
+                }@if (hrName?.hasError('minlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Hr Name must contain at least 3 characters </p-message>
+                } @if (hrName?.hasError('maxlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Hr Name cannot exceed 50 characters </p-message>
+                } }
             </div>
-            <div class="grid col-span-1 gap-1">
+            <div class="col-span-1">
                 <label for="email">Email</label>
-                <input type="email" pInputText formControlName="email" id="email" />
+                <input type="email" pInputText formControlName="email" id="email" appFormFieldError class="block w-full" />
+                @if(email?.invalid && (email?.dirty || email?.touched)){ @if(email?.hasError('required')){
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Email is required </p-message>
+
+                } @if (email?.hasError('maxlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Email cannot exceed 80 characters </p-message>
+                } }
             </div>
-            <div class="grid col-span-1 gap-1">
+            <div class="col-span-1">
                 <label for="phone-number">Phone Number</label>
-                <input type="text" pInputText formControlName="phoneNumber" pKeyFilter="int" maxlength="10" id="phone-number" />
+                <input type="text" pInputText formControlName="phoneNumber" pKeyFilter="int" id="phone-number" appFormFieldError class="block w-full" />
+                @if(phoneNumber?.invalid && (phoneNumber?.dirty || phoneNumber?.touched)){ @if(phoneNumber?.hasError('required')){
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Phone Number is required </p-message>
+
+                } @if (phoneNumber?.hasError('maxlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Phone Number cannot exceed 15 characters </p-message>
+                } }
             </div>
-            <div class="grid col-span-1 gap-1">
+            <div class="col-start-1 col-span-1">
                 <label for="address-line-1">Address Line 1</label>
-                <input type="text" pInputText formControlName="address_1" id="address-line-1" />
+                <input type="text" pInputText formControlName="address_1" id="address-line-1" appFormFieldError class="block w-full" />
+                @if(address_1?.invalid && (address_1?.dirty || address_1?.touched)){ @if (address_1?.hasError('maxlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1">Address Line1 cannot exceed 80 characters</p-message>
+                } }
             </div>
-            <div class="grid col-span-1 gap-1">
+            <div class="col-span-1">
                 <label for="address-line-2">Address Line 2</label>
-                <input type="text" pInputText formControlName="address_2" id="address-line-2" />
+                <input type="text" pInputText formControlName="address_2" id="address-line-2" appFormFieldError class="block w-full" />
+                @if(address_2?.invalid && (address_2?.dirty || address_2?.touched)){ @if (address_2?.hasError('maxlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1">Address Line2 cannot exceed 80 characters</p-message>
+                } }
             </div>
-            <div class="grid col-span-1 gap-1">
+            <div class="col-span-1">
                 <label for="city">City</label>
-                <input type="text" pInputText formControlName="city" id="city" />
+                <input type="text" pInputText formControlName="city" id="city" appFormFieldError class="block w-full" />
+                @if(city?.invalid && (city?.dirty || city?.touched)){ @if (city?.hasError('maxlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1">City cannot exceed 80 characters </p-message>
+                } }
             </div>
-            <div class="grid col-span-1 gap-1">
+            <div class="col-span-1">
                 <label for="state">State</label>
-                <input type="text" pInputText formControlName="state" id="state" />
+                <input type="text" pInputText formControlName="state" id="state" appFormFieldError class="block w-full" />
+                @if(state?.invalid && (state?.dirty || state?.touched)){ @if (state?.hasError('maxlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> State cannot exceed 80 characters</p-message>
+                } }
             </div>
-            <div class="grid col-span-1 gap-1">
+            <div class="col-span-1">
                 <label for="country">Country</label>
-                <input type="text" pInputText formControlName="country" id="country" />
+                <input type="text" pInputText formControlName="country" id="country" appFormFieldError class="block w-full" />
+                @if(country?.invalid && (country?.dirty || country?.touched)){ @if (country?.hasError('maxlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1">Country cannot exceed 80 characters</p-message>
+                } }
             </div>
-            <div class="grid col-span-1 gap-1">
+            <div class="col-span-1">
                 <label for="pincode">Pincode</label>
-                <input type="text" pInputText formControlName="pinCode" pKeyFilter="int" maxlength="10" id="pincode" />
+                <input type="text" pInputText formControlName="pinCode" pKeyFilter="int" id="pincode" appFormFieldError class="block w-full" />
+                @if(pinCode?.invalid && (pinCode?.dirty || pinCode?.touched)){ @if(pinCode?.hasError('required')){
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1">Pincode is required</p-message>
+                } @if (pinCode?.hasError('minlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1">Pincode must contain at least 6 characters </p-message>
+                } @if (pinCode?.hasError('maxlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> PinCode cannot exceed 6 characters </p-message>
+                } }
             </div>
-            <div class="grid col-span-1 gap-1">
+            <div class="col-span-1">
                 <label for="pan-number">PAN Number</label>
-                <input type="text" pInputText formControlName="panNumber" id="pan-number" />
+                <input type="text" pInputText formControlName="panNumber" maxlength="10" id="pan-number" appFormFieldError class="block w-full" />
+                @if(panNumber?.invalid && (panNumber?.dirty || panNumber?.touched)){ @if(panNumber?.hasError('required')){
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> PanNumber is required </p-message>
+                @if (panNumber?.hasError('minlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> PanNumber must contain at least 10 characters </p-message>
+                }} @if (panNumber?.hasError('maxlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> PanNumber cannot exceed 10 characters </p-message>
+                } @if (panNumber?.hasError('pattern')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Invalide PanNumber </p-message>
+                } }
             </div>
-            <div class="grid col-span-1 gap-1">
+            <div class="col-span-1">
                 <label for="tan-number">TAN Number</label>
-                <input type="text" pInputText formControlName="tanNumber" id="tan-number" />
+                <input type="text" pInputText formControlName="tanNumber" maxlength="10" id="tan-number" appFormFieldError class="block w-full" />
+                @if(tanNumber?.invalid && (tanNumber?.dirty || tanNumber?.touched)){ @if (tanNumber?.hasError('minlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> TanNumber must contain at least 10 characters </p-message>
+                }} @if (tanNumber?.hasError('maxlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> TanNumber cannot exceed 10 characters </p-message>
+                } @if (tanNumber?.hasError('pattern')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Invalide TanNumber </p-message>
+                }
             </div>
-            <div class="grid col-span-1 gap-1">
+            <div class="col-span-1">
                 <label for="gst-number">GST Number</label>
-                <input type="text" pInputText formControlName="gstNumber" id="gst-number" />
+                <input type="text" pInputText formControlName="gstNumber" id="gst-number" appFormFieldError class="block w-full" />
+                @if(gstNumber?.invalid && (gstNumber?.dirty || gstNumber?.touched)){ @if (gstNumber?.hasError('maxlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> </p-message>
+                @if (gstNumber?.hasError('minlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> GST Number must contain at least 15 characters </p-message>
+                }} @if (gstNumber?.hasError('maxlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> GST Number cannot exceed 15 characters </p-message>
+                } @if (gstNumber?.hasError('pattern')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Invalide GST Number </p-message>
+                } }
             </div>
-            <div class="grid col-span-1 gap-1">
+            <div class="col-span-1">
                 <label for="category">Category</label>
-                <p-multiselect [options]="categoryList" [formControl]="consultancyCategoryControl" id="category" 
-                    optionLabel="categoryName" optionValue="categoryId" [filter]="true" filterBy="categoryName" 
-                    display="chip" [maxSelectedLabels]="1" placeholder="Select Category" 
-                    (onChange)="categoryChange($event.value)" [showClear]="true" appendTo="body" />
+                <p-multiselect
+                    [options]="categoryList"
+                    [formControl]="consultancyCategoryControl"
+                    id="category"
+                    optionLabel="categoryName"
+                    optionValue="categoryId"
+                    [filter]="true"
+                    filterBy="categoryName"
+                    display="chip"
+                    [maxSelectedLabels]="1"
+                    placeholder="Select Category"
+                    (onChange)="categoryChange($event.value)"
+                    [showClear]="true"
+                    appFormFieldError
+                    class="block w-full"
+                    appendTo="body"
+                />
+                @if(category?.invalid && (category?.dirty || category?.touched)){ @if(category?.hasError('required')){
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Category is required </p-message>
+
+                } }
             </div>
         </div>
         <div class="flex justify-end mt-4">

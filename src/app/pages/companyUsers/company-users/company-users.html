@@ -4,9 +4,19 @@
         <p-button label="Add Users" icon="pi pi-plus" (click)="addUser()" />
     </div>
     <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
-        <p-table [value]="companyUserList" [rowHover]="true" [first]="first" [lazy]="true" [totalRecords]="companyUserListLength"
-            [paginator]="true" [rows]="pageSize" [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" (onPage)="pageChange($event)">
+        <p-table
+            [value]="companyUserList"
+            [rowHover]="true"
+            [first]="first"
+            [lazy]="true"
+            [totalRecords]="companyUserListLength"
+            [paginator]="true"
+            [rows]="pageSize"
+            [rowsPerPageOptions]="[10, 20, 30]"
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            (onPage)="pageChange($event)"
+        >
             <ng-template #header>
                 <tr>
                     <th>SI No</th>
@@ -30,41 +40,74 @@
             </ng-template>
             <ng-template #emptymessage>
                 <tr>
-                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground);">
-                        No Records Found
-                    </td>
+                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground)">No Records Found</td>
                 </tr>
             </ng-template>
         </p-table>
     </div>
 </div>
 
-<p-dialog [header]="userId ? 'Edit Company User' : 'Add New Company User'" [modal]="true" 
-    [(visible)]="openCompanyUser" [style]="{width: '50rem'}" (onHide)="onDialogClose()">
+<p-dialog [header]="userId ? 'Edit Company User' : 'Add New Company User'" [modal]="true" [(visible)]="openCompanyUser" [style]="{width: '50rem'}" (onHide)="onDialogClose()">
     <form [formGroup]="companyUserForm" (ngSubmit)="onSubmit()">
         <div class="grid grid-cols-2 gap-2">
-            <div class="grid col-span-1 gap-1">
+            <div class="col-span-1">
                 <label for="username">Username</label>
-                <input type="text" pInputText formControlName="userName" id="username" />
+                <input type="text" pInputText formControlName="userName" id="username" appFormFieldError class="block w-full" />
+                @if(userName?.invalid && (userName?.dirty || userName?.touched)){ @if(userName?.hasError('required')){
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Username is required </p-message>
+                }@if (userName?.hasError('maxlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Username cannot exceed 50 characters </p-message>
+                } }
             </div>
-            <div class="grid col-span-1 gap-1">
+            <div class="col-span-1">
                 <label for="email">Email</label>
-                <input type="email" pInputText formControlName="email" id="email" />
+                <p-inputgroup>
+                    <input type="text" pInputText id="email" formControlName="email" appFormFieldError class="block w-full" />
+                    <p-inputgroup-addon>@envision-energy.com</p-inputgroup-addon>
+                </p-inputgroup>
+                @if(email?.invalid && (email?.dirty || email?.touched)){ @if(email?.hasError('required')){
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Email is required </p-message>
+                }@if (email?.hasError('minlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Email must contain at least 3 characters </p-message>
+                } @if (email?.hasError('maxlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Email cannot exceed 80 characters </p-message>
+                } }
             </div>
             <div class="grid col-span-1 gap-1">
                 <label for="user-group">User Group</label>
-                <p-select [options]="userGroupList" formControlName="userGroupId" id="user-group" 
-                  optionLabel="userGroupName" optionValue="userGroupId" [filter]="true" filterBy="userGroupName" 
-                  (onChange)="selectedUserGroup($event.value)" placeholder="Select User Group" [showClear]="true" appendTo="body" />
+                <p-select
+                    [options]="userGroupList"
+                    formControlName="userGroupId"
+                    id="user-group"
+                    optionLabel="userGroupName"
+                    optionValue="userGroupId"
+                    [filter]="true"
+                    filterBy="userGroupName"
+                    (onChange)="selectedUserGroup($event.value)"
+                    placeholder="Select User Group"
+                    [showClear]="true"
+                    appendTo="body"
+                />
             </div>
             @if (showDepartments) {
-                <div class="grid col-span-1 gap-1">
-                    <label for="department">Department</label>
-                    <p-multiselect [options]="departmentList" [formControl]="departmentsControl" id="department" 
-                       optionLabel="departmentName" optionValue="departmentId" display="chip" 
-                       [filter]="true" [maxSelectedLabels]="3" filterBy="departmentName" [showClear]="true" 
-                       (onChange)="selectDepartments($event.value)" placeholder="Select Departments" appendTo="body" />
-                </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="department">Department</label>
+                <p-multiselect
+                    [options]="departmentList"
+                    [formControl]="departmentsControl"
+                    id="department"
+                    optionLabel="departmentName"
+                    optionValue="departmentId"
+                    display="chip"
+                    [filter]="true"
+                    [maxSelectedLabels]="3"
+                    filterBy="departmentName"
+                    [showClear]="true"
+                    (onChange)="selectDepartments($event.value)"
+                    placeholder="Select Departments"
+                    appendTo="body"
+                />
+            </div>
             }
         </div>
         <div class="flex justify-end mt-4">

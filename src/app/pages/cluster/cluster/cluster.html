@@ -28,31 +28,57 @@
             </ng-template>
             <ng-template #emptymessage>
                 <tr>
-                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground);">
-                        No Records Found
-                    </td>
+                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground)">No Records Found</td>
                 </tr>
             </ng-template>
         </p-table>
     </div>
 </div>
 
-<p-dialog [header]="clusterId ? 'Edit Cluster' : 'Add New Cluster'" [modal]="true" [(visible)]="openCluster" 
-    [style]="{width: '50rem'}" (onHide)="onDialogClose()">
+<p-dialog [header]="clusterId ? 'Edit Cluster' : 'Add New Cluster'" [modal]="true" [(visible)]="openCluster" [style]="{width: '50rem'}" (onHide)="onDialogClose()">
     <form [formGroup]="clusterForm" (ngSubmit)="onSubmit()">
         <div class="grid grid-cols-2 gap-2">
-            <div class="grid col-span-1 gap-1">
+            <div class="col-span-1">
                 <label for="cluster-name">Cluster Name</label>
-                <input type="text" pInputText formControlName="clusterName" id="cluster-name" />
+                <input type="text" pInputText formControlName="clusterName" id="cluster-name" appFormFieldError class="block w-full" />
+                @if(clusterName?.invalid && (clusterName?.dirty || clusterName?.touched)){ @if(clusterName?.hasError('required')){
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Cluster Name is required </p-message>
+                }@if (clusterName?.hasError('minlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Cluster Name must contain at least 2 characters </p-message>
+                } @if (clusterName?.hasError('maxlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Cluster Name cannot exceed 50 characters </p-message>
+                } }
             </div>
-            <div class="grid col-span-1 gap-1">
+            <div class="col-span-1">
                 <label for="cluster-code">Cluster Code</label>
-                <input type="text" pInputText formControlName="clusterCode" id="cluster-code" maxlength="2" />
+                <input type="text" pInputText formControlName="clusterCode" id="cluster-code" appFormFieldError class="block w-full" />
+                @if(clusterCode?.invalid && (clusterCode?.dirty || clusterCode?.touched)){ @if(clusterCode?.hasError('required')){
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Cluster Code is required </p-message>
+                }@if (clusterCode?.hasError('minlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Cluster Code must contain at least 2 characters </p-message>
+                } @if (clusterCode?.hasError('maxlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Cluster Code cannot exceed 2 characters </p-message>
+                } }
             </div>
-            <div class="grid col-span-1 gap-1" formGroupName="clusterHead">
+            <div class="col-span-1" formGroupName="clusterHead">
                 <label for="cluster-head">Cluster Head</label>
-                <p-select [options]="userList" formControlName="userId" id="cluster-head" optionLabel="userName" optionValue="userId"
-                    [filter]="true" filterBy="userName" [showClear]="true" placeholder="Select Cluster Head" appendTo="body" />
+                <p-select
+                    [options]="userList"
+                    formControlName="userId"
+                    id="cluster-head"
+                    optionLabel="userName"
+                    optionValue="userId"
+                    [filter]="true"
+                    filterBy="userName"
+                    [showClear]="true"
+                    placeholder="Select Cluster Head"
+                    appendTo="body"
+                    appFormFieldError
+                    class="block w-full"
+                />
+                @if (clusterHead?.invalid && (clusterHead?.dirty || clusterHead?.touched)) { @if (clusterHead?.hasError('required')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> clusterHead is required </p-message>
+                } }
             </div>
         </div>
         <div class="flex justify-end mt-4">
