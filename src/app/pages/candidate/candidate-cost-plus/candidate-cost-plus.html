@@ -5,13 +5,14 @@
     </div>
     <p-table [value]="costPlusCandidateList" showGridlines [rowHover]="true" [paginator]="true" [rows]="pageSize" [lazy]="true"
        [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true" [first]="first" [totalRecords]="costPlusCandidateListLength"
-       currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [tableStyle]="{'min-width': '100rem'}"
+       currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [tableStyle]="{'min-width': '120rem'}"
        (onPage)="pageChange($event)">
         <ng-template #header>
             <tr>
                 <th>SL No</th>
                 <th>Candidate Code</th>
                 <th>Candidate Name</th>
+                <th>Contact Number</th>
                 <th>Position Applied</th>
                 <th>Current Experience</th>
                 <th>Total Experience</th>
@@ -30,6 +31,7 @@
                     <p-button (onClick)="menu.toggle($event)" [label]="candidate.candidateCode" variant="text" link />
                 </td>
                 <td>{{ candidate.candidateName }}</td>
+                <td>{{ candidate.phoneNumber || '-' }}</td>
                 <td>{{ candidate.positionApplied }}</td>
                 <td>{{ candidate.currentExperience }}</td>
                 <td>{{ candidate.totalExperience }}</td>

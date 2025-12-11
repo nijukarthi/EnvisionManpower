@@ -17,11 +17,13 @@ export class OnboardingTable implements OnInit {
 
   offSet = 0;
   pageSize = 10;
-  onboardingListLength = 0;
+  totalRecords = 0;
   first = 0;
   candidateId: number | null = null;
 
   cols!: Column[];
+
+  statuses!: any[];
 
   loading = false;
   openPpeModal = false;
@@ -89,16 +91,17 @@ export class OnboardingTable implements OnInit {
 
   ngOnInit(): void {
     this.fetchOnboardingCandidateList();
-    console.log(this.onboardingListLength);
+    console.log(this.totalRecords);
+
+    this.statuses = [
+      { label: 'ACTIVE', value: 'ACTIVE' },
+      { label: 'TRANSFERRED', value: 'TRANSFERRED' },
+      { label: 'RESIGNED', value: 'RESIGNED' }
+    ];
   }
 
-  fetchOnboardingCandidateList(){
+  onboardingApi(data: any){
     try {
-      const data = {
-        offSet: this.offSet,
-        pageSize: this.pageSize
-      }
-      console.log("sending data to backend:", data);
       this.loading = true;
 
       this.apiService.fetchOnboardingCandidateList(data).subscribe({
@@ -112,7 +115,7 @@ export class OnboardingTable implements OnInit {
                 joiningDate: onboarding.employmentDetails.joiningDate ? new Date(onboarding.employmentDetails.joiningDate) : null
               },
             }));
-            this.onboardingListLength = val?.data?.length ?? 0;
+            this.totalRecords = val?.data?.length ?? 0;
             this.loading = false;
 
             this.cols = [
@@ -135,6 +138,21 @@ export class OnboardingTable implements OnInit {
             this.loading = false;
           }
       })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  fetchOnboardingCandidateList(){
+    try {
+      const data = {
+        offSet: this.offSet,
+        pageSize: this.pageSize
+      }
+      console.log("sending data to backend:", data);
+
+      this.onboardingApi(data);
+      
     } catch (error) {
       console.log(error);
     }
@@ -295,14 +313,60 @@ export class OnboardingTable implements OnInit {
     this.ppeDetails.removeAt(index);
   }
 
-  pageChange(event: any){
-    console.log("Event:", event);
-    this.first = event.first;
-    this.offSet = event.first / event.rows;
-    this.pageSize = event.rows;
-    console.log("checking:", { offSet: this.offSet, pageSize: this.pageSize });
-    this.fetchOnboardingCandidateList();
+  getSeverity(status: string){
+    switch(status){
+      case 'ACTIVE':
+        return 'primary';
+      case 'TRANSFERRED':
+        return 'warn';
+      default:
+        return 'primary';
+    }
   }
+
+  loadDemands(event: any){
+    try {
+      this.first = event.first;
+      this.offSet = event.first / event.rows;
+      this.pageSize = event.rows;
+
+      const filters = event.filters;
+      console.log(filters);
+
+      const dateValue = filters?.date?.[0]?.value;
+
+      const payload = {
+        offSet: this.offSet,
+        pageSize: this.pageSize,
+        employeeCode: filters?.employeeCode?.[0]?.value ?? null,
+        candidateName: filters?.candidateName?.[0]?.value ?? null,
+        projectCode: filters?.projectCode?.[0]?.value ?? null,
+        clusterName: filters?.clusterName?.[0]?.value ?? null,
+        spnCode: filters?.spnCode?.[0]?.value ?? null,
+        spnDescription: filters?.spnDescription?.[0]?.value ?? null,
+        experience: filters?.experience?.[0]?.value ?? null,
+        roleName: filters?.roleName?.[0]?.value ?? null,
+        employmentStatuses: filters?.status?.[0]?.value ?? null,
+        phoneNumber: filters?.phoneNumber?.[0]?.value ?? null,
+        joiningDateFrom: Array.isArray(dateValue) ? dateValue[0] : null,
+      joiningDateTo: Array.isArray(dateValue) ? dateValue[1] : null,
+      }
+      console.log(payload);
+
+      this.onboardingApi(payload);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  updateRange(selectedValue: any, value: any[], index: number, filter: any) {
+    if (!value) value = [];
+
+    value[index] = selectedValue;
+
+    filter(value);
+  }
+
 
   onDialogClose(){
     this.candidateId = null;

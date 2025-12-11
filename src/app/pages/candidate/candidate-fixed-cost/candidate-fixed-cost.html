@@ -12,6 +12,7 @@
                 <th>SI NO</th>
                 <th>Candidate Code</th>
                 <th>Candidate Name</th>
+                <th>Contact Number</th>
                 <th>Position Applied</th>
                 <th>Current Experience</th>
                 <th>Total Experience</th>
@@ -30,6 +31,7 @@
                     <p-button (click)="menu.toggle($event)" [label]="candidate.candidateCode" variant="text" link />
                 </td>
                 <td>{{ candidate.candidateName }}</td>
+                <td>{{ candidate.phoneNumber || '-' }}</td>
                 <td>{{ candidate.positionApplied }}</td>
                 <td>{{ candidate.currentExperience }}</td>
                 <td>{{ candidate.totalExperience }}</td>

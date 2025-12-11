@@ -29,6 +29,7 @@ export class CostPlusCandidateForm implements OnInit {
   costPlusCandidateForm = this.fb.group({
     candidateId: [0],
     candidateName: [''],
+    phoneNumber: [''],
     positionApplied: [''],
     currentExperience: [0],
     totalExperience: [0],
@@ -90,8 +91,6 @@ export class CostPlusCandidateForm implements OnInit {
     // form.get('costPlusSalaryDetails.expectedSalaryNet')?.valueChanges.subscribe(() => this.calculateSalaryDetails());
     // form.get('costPlusSalaryDetails.approvedHike')?.valueChanges.subscribe(() => this.calculateSalaryDetails());
 
-    this.fetchPCodes();
-    this.fetchSpnInfo();
     this.fetchEnvisionRolesInfoList();
 
     this.route.paramMap.subscribe(param => {
@@ -223,22 +222,6 @@ export class CostPlusCandidateForm implements OnInit {
     }
   }
 
-  fetchPCodes(){
-    try {
-      this.apiService.fetchProjectCodes('').subscribe({
-        next: val => {
-          console.log(val);
-          this.pCodeList = val?.data;
-        },
-        error: err => {
-          console.log(err);
-        }
-      })
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
   selectedPCode(projectId: any){
     try {
       console.log(projectId);
@@ -251,22 +234,6 @@ export class CostPlusCandidateForm implements OnInit {
         next: val => {
           console.log(val);
           this.projectDetails = val.data;
-        },
-        error: err => {
-          console.log(err);
-        }
-      })
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  fetchSpnInfo(){
-    try {
-      this.apiService.fetchSpnInfo('').subscribe({
-        next: val => {
-          console.log(val);
-          this.spnInfoList = val?.data;
         },
         error: err => {
           console.log(err);
@@ -305,7 +272,8 @@ export class CostPlusCandidateForm implements OnInit {
 
   costPlusCandidateApi(data: any){
     try {
-      if (!this.candidateId) {     
+      if (!this.candidateId) { 
+        console.log(data);    
         this.apiService.createCostPlusCandidates(data).subscribe({
           next: val => {
             console.log(val);
@@ -350,12 +318,13 @@ export class CostPlusCandidateForm implements OnInit {
         ...data
       }
       console.log(data);
+      this.costPlusCandidateApi(data);
     } else {
       const data = this.costPlusCandidateForm.getRawValue();
       console.log('Final data to send:', data);
+      this.costPlusCandidateApi(data);
     }
     
-    this.costPlusCandidateApi(data);
   }
 
   updateSalaryDetails(){

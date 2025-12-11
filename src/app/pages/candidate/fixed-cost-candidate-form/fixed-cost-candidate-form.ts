@@ -32,6 +32,7 @@ export class FixedCostCandidateForm implements OnInit {
   fixedCostCandidateForm = this.fb.group({
     candidateId: [0],
     candidateName: [''],
+    phoneNumber: [''],
     positionApplied: [''],
     currentExperience: [0],
     totalExperience: [0],
@@ -59,7 +60,6 @@ export class FixedCostCandidateForm implements OnInit {
   constructor(private apiService: Apiservice, private messageService: MessageService, private router: Router, private route: ActivatedRoute){}
 
   ngOnInit(): void {
-    this.fetchPCodes();
     this.fetchEnvisionRolesInfoList();
     this.fetchSpnInfo();
     this.fetchEmploymentStatus();
@@ -191,22 +191,6 @@ export class FixedCostCandidateForm implements OnInit {
         next: val => {
           console.log(val);
           this.employmentStatusList = val.data;
-        },
-        error: err => {
-          console.log(err);
-        }
-      })
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  fetchPCodes(){
-    try {
-      this.apiService.fetchProjectCodes('').subscribe({
-        next: val =>{
-          console.log(val);
-          this.pCodeList = val?.data;
         },
         error: err => {
           console.log(err);

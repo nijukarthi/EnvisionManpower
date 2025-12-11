@@ -6,7 +6,7 @@ import { DemandStatus } from '@/models/demand-status/demand-status.enum';
 import { ApprovalStatus } from '@/models/approval-status/approval-status.enum';
 import { UserGroups } from '@/models/usergroups/usergroups.enum';
 import { MessageService } from 'primeng/api';
-import { Table } from 'primeng/table';
+import { Column } from '@/models/table-column/table-column';
 
 @Component({
   selector: 'app-approval',
@@ -15,8 +15,13 @@ import { Table } from 'primeng/table';
   styleUrl: './approval.scss'
 })
 export class Approval implements OnInit {
+  @ViewChild('dt') dt: any;
+
   demandProcessingList: any[] = [];
   requisitionDetails: any;
+
+  cols!: Column[];
+  selectedColumns!: Column[];
 
   USERGROUPS = UserGroups;
   DEMANDSTATUS = DemandStatus;
@@ -32,55 +37,61 @@ export class Approval implements OnInit {
 
   activeTab = 'processing';
   searchValue = '';
+  searchText: string = '';
 
   selectedApprovalList:any = [];
   viewDetail:boolean = false;
-   loggedInUserDetails:any = "";
+  loggedInUserDetails:any = "";
   departmentUser:boolean = false;
   clusterUser:boolean = false;
 
+  statusMap: any = {
+    102: { label: 'Processing', severity: 'warn' },
+    200: { label: 'Completed', severity: 'success' },
+    406: { label: 'Rejected', severity: 'danger' }
+  }
 
   constructor(private fb: FormBuilder, private apiService: Apiservice, private messageService: MessageService) {}
 
   ngOnInit(): void {
-    this.fetchDemandRequest(102);
+    this.fetchDemandRequest([102]);
     this.fetchUserProfile();
+
+    this.cols = [
+      { field: 'processing', header: 'Processing', status: 102 },
+      { field: 'completed', header: 'Completed', status: 200 },
+      { field: 'rejected', header: 'Rejected', status: 406 }
+    ];
+
+    this.selectedColumns = [this.cols[0]];
   }
 
   fetchUserProfile(){
-            this.apiService.fetchUserProfile('').subscribe({
-                next: val => {
-                    console.log(val);
-                    this.loggedInUserDetails = val.data;
-                    if(this.loggedInUserDetails){
-                         if(this.loggedInUserDetails.userGroupId == 316 && this.loggedInUserDetails.userGroupName == 'Department Head'){
-                            this.departmentUser = true;
-                        }else if(this.loggedInUserDetails.userGroupId == 311 && this.loggedInUserDetails.userGroupName == 'Cluster Head'){
-                            this.clusterUser = true;
-                        }
-                    }
-                },
-                error: err => {
-                    console.log(err);
-                }
-            })
-        }
-
-  setActiveTab(tab: string, status: number){
-    this.activeTab = tab;
-    this.fetchDemandRequest(status);
+    this.apiService.fetchUserProfile('').subscribe({
+      next: val => {
+          console.log(val);
+          this.loggedInUserDetails = val.data;
+          if(this.loggedInUserDetails){
+                if(this.loggedInUserDetails.userGroupId == 316 && this.loggedInUserDetails.userGroupName == 'Department Head'){
+                  this.departmentUser = true;
+              }else if(this.loggedInUserDetails.userGroupId == 311 && this.loggedInUserDetails.userGroupName == 'Cluster Head'){
+                  this.clusterUser = true;
+              }
+          }
+      },
+      error: err => {
+          console.log(err);
+      }
+    })
   }
 
-  fetchDemandRequest(status: number){
-    try {
-      const data = {
-        demandStatus: [status],
-        offSet: this.offSet,
-        pageSize: this.pageSize
-      }
+  statusChange(){
+    const selectedStatus = this.selectedColumns.map(c => c.status).filter((s): s is number => s !== undefined);
+    this.fetchDemandRequest(selectedStatus);
+  }
 
-      console.log(data);
-  
+  manpowerApprovalApi(data: any){
+    try {
       this.apiService.fetchDemandRequest(data).subscribe({
         next: val => {
           console.log(val);
@@ -91,6 +102,22 @@ export class Approval implements OnInit {
           console.log(err);
         }
       })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  fetchDemandRequest(statusList: number[]){
+    try {
+      const data = {
+        demandStatus: statusList,
+        offSet: this.offSet,
+        pageSize: this.pageSize
+      }
+
+      console.log(data);
+  
+      this.manpowerApprovalApi(data);
     } catch (error) {
       console.log(error);
     }
@@ -109,7 +136,7 @@ export class Approval implements OnInit {
         next: val => {
           console.log(val);
           this.messageService.add({severity: 'success', summary: 'Success', detail: 'Manpower Quantity Updated Successfully'});
-          this.fetchDemandRequest(102);
+          this.fetchDemandRequest([102]);
         },
         error: err => {
           console.log(err);
@@ -134,7 +161,7 @@ export class Approval implements OnInit {
           console.log(val);
           this.messageService.add({severity: 'success', summary: 'Success', 
             detail: type === 'Accepted' ? 'Manpower Successfully Accepted' : 'Manpower Rejected' });
-          this.fetchDemandRequest(102);
+          this.fetchDemandRequest([102]);
         },
         error: err => {
           console.log(err);
@@ -159,7 +186,7 @@ export class Approval implements OnInit {
           console.log(val);
           this.messageService.add({severity: 'success', summary: 'Success', detail: type === 'Accepted' ? 
             'Manpower Successfully Accepted' : 'Manpower Rejected'});
-          this.fetchDemandRequest(102);
+          this.fetchDemandRequest([102]);
         },
         error: err => {
           console.log(err);
@@ -198,55 +225,65 @@ export class Approval implements OnInit {
     this.first = event.first;
     this.offSet = event.first / event.rows;
     this.pageSize = event.rows;
-    this.fetchDemandRequest(102);
+    this.fetchDemandRequest([102]);
   }
 
 
   loadDemands(event: any) {
-    this.first = event.first;
-    this.offSet = event.first / event.rows;
-    this.pageSize = event.rows;
+    try {   
+      this.first = event.first;
+      this.offSet = event.first / event.rows;
+      this.pageSize = event.rows;
+  
+      const filters = event.filters;
+      // console.log(filters.demandCode[0]?.value);
+      // console.log(filters.spnCode[0]?.value);
+      console.log(filters);
+  
+      const payload: any = {
+        offSet: this.offSet,
+        pageSize: this.pageSize,
+        demandStatus: this.selectedColumns?.map(c => c.status) ?? [],
+        demandCode: filters?.demandCode?.[0]?.value ?? '',
+        spnCode: filters?.spnCode?.[0]?.value ?? '',
+        spnDescription: filters?.spnDescription?.[0].value ?? '',
+        experience: filters?.experience?.[0].value ?? '',
+        envisionRoleName: filters?.role?.[0].value ?? ''
+      };
 
-    const filters = event.filters;
-    console.log(filters.demandCode[0]?.value);
-    console.log(filters.spnCode[0]?.value);
-    console.log(filters);
+      console.log(payload);
 
-    const payload: any = {
-      offSet: this.offSet,
-      pageSize: this.pageSize,
-      demandStatus: [102],
-      demandCode: filters.demandCode[0]?.value ?? '',
-      spnCode: filters.spnCode[0]?.value ?? '',
-      spnDescription: filters.spnDescription[0].value ?? '',
-      experience: filters.experience[0].value ?? ''
-    };
-
-    this.apiService.fetchDemandRequest(payload).subscribe(res => {
-      this.demandProcessingList = res.data?.data;
-      this.totalRecords = res.data?.length;
-    });
-}
-
-@ViewChild('dt') dt: any;
-
-
-onSearch(event: Event) {
-  const input = event.target as HTMLInputElement;
-  this.dt.filterGlobal(input.value, 'contains');
-
-  const payload = {
-    offSet: this.offSet,
-    pageSize: this.pageSize,
-    demandStatus: [102],
-    requisitionCode: input.value
+      this.manpowerApprovalApi(payload);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
-  this.apiService.fetchDemandRequest(payload).subscribe(res => {
-    this.demandProcessingList = res.data?.data;
-    this.totalRecords = res.data?.length;
-  })
-}
+  onSearch(event: Event) {
+    const input = event.target as HTMLInputElement;
+    this.searchText = input.value;
+    this.dt.filterGlobal(input.value, 'contains');
 
+    const payload = {
+      offSet: this.offSet,
+      pageSize: this.pageSize,
+      demandStatus: this.selectedColumns.map(c => c.status) ?? [],
+      requisitionCode: this.searchText,
+      clusterName: this.searchText,
+      projectCode: this.searchText
+    }
+
+    console.log(payload);
+
+    this.manpowerApprovalApi(payload);
+  }
+
+  getStatusLabel(status: number){
+    return this.statusMap[status]?.label ?? 'UnKnown';
+  }
+
+  getSeverity(status: number): string{
+    return this.statusMap[status]?.severity ?? 'primary';
+  }
 
 }

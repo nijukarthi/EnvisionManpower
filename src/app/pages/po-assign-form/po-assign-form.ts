@@ -494,9 +494,9 @@ export class PoAssignForm implements OnInit {
       this.newEmployeeLineItems.forEach((lineItem: any) => {
 
         // LOOP → EMPLOYEE ROWS inside that line item
-        lineItem.newEmployeeItems.value.forEach((item: any) => {
+        lineItem?.newEmployeeItems?.value?.forEach((item: any) => {
 
-          payload.items.push({
+          payload?.items?.push({
             candidate: { candidateId: item.candidate.candidateId },
             monthsAllowed: item.monthsAllowed,
             unitRate: item.unitRate,
@@ -507,7 +507,7 @@ export class PoAssignForm implements OnInit {
       });
 
       this.existingEmployeeLineItems.forEach((lineItem: any) => {
-        lineItem.existingEmployeeItems.value.forEach((item: any) => {
+        lineItem?.existingEmployeeItems?.value?.forEach((item: any) => {
           payload.items.push({
             candidate: { candidateId: item.candidate.candidateId },
             monthsAllowed: item.monthsAllowed,
