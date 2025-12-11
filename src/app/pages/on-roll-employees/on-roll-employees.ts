@@ -144,11 +144,16 @@ export class OnRollEmployees implements OnInit {
 
   updateOnrollDetails(onroll: any){
     try {
+      const formatDate = (d: any) => {
+        if (!d) return null;
+        return typeof d === 'string' ? d : d.toLocaleDateString('en-CA');
+      };
+
       const data = {
         employmentDetails: {
           employmentId: onroll.employmentDetails.employmentId,
-          expectedJoiningDate: onroll.employmentDetails.expectedJoiningDate,
-          joiningDate: onroll.employmentDetails.joiningDate
+          expectedJoiningDate: formatDate(onroll.employmentDetails.expectedJoiningDate),
+          joiningDate: formatDate(onroll.employmentDetails.joiningDate)
         },
         phoneNumber: onroll.phoneNumber,
         alternativeNumber: onroll.alternativeNumber,

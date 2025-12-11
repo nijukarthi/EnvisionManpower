@@ -79,6 +79,32 @@ export class InvoiceReceipt implements OnInit {
       this.invoiceId = receipt.invoiceHeader.invoiceId;
       this.invoiceStatus = receipt.invoiceHeader.invoiceStatus;
 
+      this.GRNProcessForm.get('recipient')?.reset();
+      this.grnReverseForm.reset();
+
+      if (receipt.recipient) {    
+        this.GRNProcessForm.patchValue({
+          recipient: receipt.recipient
+        });
+
+        this.GRNProcessForm.get('recipient')?.disable();
+      } else{
+        this.GRNProcessForm.get('recipient')?.enable();
+      }
+
+      if (receipt.grnReverseNumber) {
+        this.grnReverseForm.patchValue({
+          grnReverseNumber: receipt.grnReverseNumber,
+          reverseReason: receipt.grnReverseReason
+        });
+
+        this.grnReverseForm.get('grnReverseNumber')?.disable();
+        this.grnReverseForm.get('reverseReason')?.disable();
+      } else {
+        this.grnReverseForm.get('grnReverseNumber')?.enable();
+        this.grnReverseForm.get('reverseReason')?.enable();
+      }
+
       if (this.invoiceStatus === 'GRN_IN_PROCESS') {
         this.activeTab = '1';
       }
@@ -204,6 +230,21 @@ export class InvoiceReceipt implements OnInit {
         return 'success';
       default:
         return 'primary';
+    }
+  }
+
+  getGRNSeverity(status: string){
+    if(!status) return undefined;
+    // const normalized = status.trim().toUpperCase();
+    switch(status){
+      case 'PENDING':
+        return 'warn';
+      case 'COMPLETED':
+        return 'success';
+      case 'REVERSED':
+        return 'primary';
+      default:
+        return null;
     }
   }
 

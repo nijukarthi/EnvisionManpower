@@ -62,9 +62,13 @@ export class PoAssignTable implements OnInit {
   getMenuItems(po: any){
     return [
       {
-        label: 'Edit',
-        icon: 'pi pi-pencil',
+        label: 'View',
+        icon: 'pi pi-eye',
         command: () => this.router.navigate(['/home/po-assign', po.poId])
+      },
+      {
+        label: 'Edit',
+        icon: 'pi pi-pencil'
       },
       {
         label: 'Delete',

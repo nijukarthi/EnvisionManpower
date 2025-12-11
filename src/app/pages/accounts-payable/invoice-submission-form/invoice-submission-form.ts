@@ -190,8 +190,8 @@ export class InvoiceSubmissionForm implements OnInit {
           console.log(val);
           this.poEmployeeList = val?.data;
           this.items.clear();
-          this.poEmployeeList.forEach((emp: any) => {
-            this.items.push(this.poEmployeeDetails(emp));
+          this.poEmployeeList?.forEach((emp: any) => {
+            this.items?.push(this.poEmployeeDetails(emp));
           });
         },
         error: err => {

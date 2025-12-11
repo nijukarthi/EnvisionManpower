@@ -49,7 +49,10 @@
                     <td>{{ receipt.invoiceHeader.grandTotal }}</td>
                     <td>{{ receipt.recipient || '-' }}</td>
                     <td>{{ receipt.grnNumber || '-' }}</td>
-                    <td>{{ receipt.grnStatus || '-' }}</td>
+                    <td>
+                        <p-tag [value]="receipt.grnStatus || '-'" 
+                            [severity]="receipt.grnStatus ? getGRNSeverity(receipt.grnStatus) : null" />
+                    </td>
                     <td>{{ receipt.grnDoneDate || '-' }}</td>
                     <td>{{ receipt.grnReverseNumber || '-' }}</td>
                     <td>{{ receipt.grnReverseReason || '-' }}</td>
@@ -70,8 +73,8 @@
 <p-dialog header="Update GRN Process" [modal]="true" [(visible)]="openGRNModal" [style]="{ width: '35rem' }">
     <p-tabs [(value)]="activeTab">
         <p-tablist>
-            <p-tab value="0" [disabled]="invoiceStatus === 'GRN_IN_PROCESS' || invoiceStatus === 'GRN_REVERSED'">Start GRN Process</p-tab>
-            <p-tab value="1" [disabled]="invoiceStatus === 'SUBMITTED' || invoiceStatus === 'GRN_REVERSED'" >Complete GRN</p-tab>
+            <p-tab value="0">Start GRN Process</p-tab>
+            <p-tab value="1" [disabled]="invoiceStatus === 'SUBMITTED'" >Complete GRN</p-tab>
             <p-tab value="2" [disabled]="invoiceStatus === 'SUBMITTED'">GRN Reverse</p-tab>
         </p-tablist>
         <p-tabpanels>
@@ -83,11 +86,13 @@
                             <input type="text" pInputText formControlName="recipient" id="recipient" />
                         </div>
                     </div>
-                    <div class="flex justify-end mt-4">
-                        <button pButton pRipple type="submit">
-                            <span pButtonLabel>Submit</span>
-                        </button>
-                    </div>
+                    @if (invoiceStatus === 'SUBMITTED') {
+                        <div class="flex justify-end mt-4">
+                            <button pButton pRipple type="submit">
+                                <span pButtonLabel>Submit</span>
+                            </button>
+                        </div>
+                    }
                 </form>
             </p-tabpanel>
             <p-tabpanel value="1">
@@ -103,11 +108,13 @@
                                 inputId="done-date" placeholder="Select Date" appendTo="body" />
                         </div>
                     </div>
-                    <div class="flex justify-end mt-4">
-                        <button pButton pRipple type="submit">
-                            <span pButtonLabel>Submit</span>
-                        </button>
-                    </div>
+                    @if (invoiceStatus !== 'GRN_REVERSED') {
+                        <div class="flex justify-end mt-4">
+                            <button pButton pRipple type="submit">
+                                <span pButtonLabel>Submit</span>
+                            </button>
+                        </div>
+                    }
                 </form>
             </p-tabpanel>
             <p-tabpanel value="2">
@@ -123,11 +130,13 @@
                                 id="reverse-reason"></textarea>
                         </div>
                     </div>
-                    <div class="flex justify-end mt-4">
-                        <button pButton pRipple type="submit">
-                            <span pButtonLabel>Submit</span>
-                        </button>
-                    </div>
+                    @if (invoiceStatus !== 'GRN_REVERSED') {
+                        <div class="flex justify-end mt-4">
+                            <button pButton pRipple type="submit">
+                                <span pButtonLabel>Submit</span>
+                            </button>
+                        </div>
+                    }
                 </form>
             </p-tabpanel>
         </p-tabpanels>

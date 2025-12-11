@@ -1,32 +1,20 @@
 <div class="card">
     <h5>Manpower Approval</h5>
-    <div class="flex">
-        <button class="custom-btn" pButton pRipple text (click)="setActiveTab('processing', 102)"
-            [ngClass]="{'active-tab': activeTab === 'processing'}">
-            <i pButtonIcon class="pi pi-stopwatch"></i>
-            <span pButtonLabel>Processing</span>
-        </button>
-        <button class="custom-btn" pButton pRipple text (click)="setActiveTab('accepted', 200)"
-            [ngClass]="{'active-tab': activeTab === 'accepted'}">
-            <i pButtonIcon class="pi pi-check-circle"></i>
-            <span pButtonLabel>Completed</span>
-        </button>
-        <button class="custom-btn" pButton pRipple text (click)="setActiveTab('rejected', 406)"
-            [ngClass]="{'active-tab': activeTab === 'rejected'}">
-            <i pButtonIcon class="pi pi-times-circle"></i>
-            <span pButtonLabel>Rejected</span>
-        </button>
-    </div>
     <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
         <p-table [value]="demandProcessingList" #dt [(selection)]="selectedApprovalList" dataKey="id" [lazy]="true"
-            [tableStyle]="{ 'min-width': '120rem' }" [paginator]="true" [rowsPerPageOptions]="[10, 20, 30]" stripedRows
+            [tableStyle]="{ 'min-width': '130rem' }" [paginator]="true" [rowsPerPageOptions]="[10, 20, 30]" stripedRows
             [rows]="pageSize" [rowHover]="true" [showCurrentPageReport]="true" [first]="first"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [totalRecords]="totalRecords"
             responsiveLayout="scroll" (onLazyLoad)="loadDemands($event)"
-            [globalFilterFields]="['demandCode', 'spn.spnCode','spn.spnDescription','spn.experience', 'requisitionCode']">
+            [globalFilterFields]="['demandCode', 'spn.spnCode','spn.spnDescription','spn.experience', 'requisitionCode', 'envisionRole.roleName']">
             <ng-template #caption>
                 <div class="flex justify-between">
-                    <p-button [outlined]="true" icon="pi pi-filter-slash" label="Clear" (click)="dt.clear()" />
+                    <div class="flex gap-2">
+                        <p-multiselect display="chip" [options]="cols" [(ngModel)]="selectedColumns" 
+                            optionLabel="header" placeholder="Choose Status" (onChange)="statusChange()"
+                            selectedItemsLabel="{0} columns selected" [style]="{'min-width': '180px'}" />
+                        <p-button [outlined]="true" icon="pi pi-filter-slash" label="Clear" (click)="dt.clear()" />
+                    </div>
                     <p-iconField iconPosition="left">
                         <p-inputIcon>
                             <i class="pi pi-search"></i>
@@ -64,9 +52,16 @@
                             <p-columnFilter type="text" field="experience" display="menu" />
                         </div>
                     </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Role</span>
+                            <p-columnFilter type="text" field="role" display="menu" />
+                        </div>
+                    </th>
                     <th>Quantity</th>
                     <th>Planned Deployment Date</th>
                     <th>Planned Release Date</th>
+                    <th>Demand Status</th>
                     <th style="text-align: center;">Cluster Head Approval</th>
                     <th style="text-align: center;">Department Head Approval</th> 
                 </tr>
@@ -82,14 +77,19 @@
                     <td>{{ demand.spn.spnCode }}</td>
                     <td>{{ demand.spn.spnDescription }}</td>
                     <td>{{ demand.spn.experience }}</td>
+                    <td>{{ demand?.envisionRole?.roleName || '-' }}</td>
                     <td style="text-align: center;">
                         <input type="text" pInputText [value]="demand.quantity" [(ngModel)]="demand.quantity" 
                             (blur)="demandQtyChange(demand.demandId, demand.quantity)" 
                             [disabled]="demand.stateHeadApproval.approvalStatus === APPROVALSTATUS.ACCEPTED ||
                                 demand.departmentHeadApproval.approvalStatus === APPROVALSTATUS.ACCEPTED" />
                     </td>
-                    <td>{{ demand.plannedDeploymentDate }}</td>
-                    <td>{{ demand.plannedReleaseDate }}</td>
+                    <td>{{ demand.plannedDeploymentDate || '-' }}</td>
+                    <td>{{ demand.plannedReleaseDate || '-' }}</td>
+                    <td>
+                        <p-tag [value]="getStatusLabel(demand.demandStatus)" 
+                            [severity]="getSeverity(demand.demandStatus)" />
+                    </td>
                     <td style="text-align: center;">
                         @if (demand.stateHeadApproval.approvalStatus === APPROVALSTATUS.ACCEPTED) {
                             <p-button icon="pi pi-check" [rounded]="true" [disabled]="true" />
