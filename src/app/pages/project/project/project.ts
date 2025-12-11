@@ -49,19 +49,19 @@ export class Project implements OnInit {
         projectCode: ['', [Validators.required, Validators.maxLength(20)]],
         siteName: ['', [Validators.required, Validators.maxLength(50)]],
         cluster: this.fb.group({
-            clusterId: [0, Validators.required]
+            clusterId: [null, Validators.required]
         }),
         siteIncharge: this.fb.group({
-            userId: [0, Validators.required]
+            userId: [null, Validators.required]
         }),
         clusterHead: this.fb.group({
-            userId: [0, Validators.required]
+            userId: [null, Validators.required]
         }),
         department: this.fb.group({
-            departmentId: [0, Validators.required]
+            departmentId: [null, Validators.required]
         }),
         departmentHead: this.fb.group({
-            userId: [0, Validators.required]
+            userId: [null, Validators.required]
         })
     });
 

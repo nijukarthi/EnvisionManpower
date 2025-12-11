@@ -41,7 +41,7 @@ export class CostPlusCandidateForm implements OnInit {
         totalExperience: [0],
         highestQualification: ['', [Validators.minLength(3), Validators.maxLength(80)]],
         qualification: ['', [Validators.minLength(3), Validators.maxLength(80)]],
-        noticePeriod: ['', [Validators.minLength(3), Validators.maxLength(80)]],
+        noticePeriod: ['', Validators.pattern(/^\d{2,3}$/)],
         monthlyReimbursements: this.fb.group({
             grossCTC: [0],
             margin: [{ value: 0, disabled: true }],

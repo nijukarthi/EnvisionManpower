@@ -62,11 +62,13 @@
             <div class="col-span-1">
                 <label for="notice-period">Notice Period</label>
                 <p-inputNumber formControlName="noticePeriod" inputId="notice-period" [useGrouping]="false" appFormFieldError class="block w-full" />
-                @if(noticePeriod?.invalid && (noticePeriod?.dirty || noticePeriod?.touched)){ @if (noticePeriod?.hasError('minlength')) {
-                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> NoticePeriod must contain at least 3 characters </p-message>
-                } @if (noticePeriod?.hasError('maxlength')) {
-                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> NoticePeriod cannot exceed 3 characters </p-message>
-                }}
+                @if(noticePeriod?.invalid && (noticePeriod?.dirty || noticePeriod?.touched)){ 
+                    @if (noticePeriod?.hasError('pattern')) {
+                        <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> 
+                            Notice Period must be 2 to 3 digits
+                        </p-message>
+                    } 
+                }
             </div>
             <!-- @if (!(candidateId && loggedUserGroupId === 360 && fixedCostCandidateForm.get('workingCurrently')?.value === false)) {
                 <div class="col-start-1 flex items-center gap-3 mt-2">

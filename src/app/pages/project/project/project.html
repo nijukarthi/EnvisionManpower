@@ -96,9 +96,11 @@
                     class="block w-full"
                     (onChange)="fetchClusterHeadByCluster($event.value)"
                 />
-                @if(cluster?.invalid && (cluster?.dirty || cluster?.touched)){ @if(cluster?.hasError('required')){
-                <p-message severity="error" variant="simple" size="small" styleClass="mt-1">Cluster is required</p-message>
-                }}
+                @if(cluster?.invalid && (cluster?.dirty || cluster?.touched)){ 
+                    @if(cluster?.hasError('required')){
+                        <p-message severity="error" variant="simple" size="small" styleClass="mt-1">Cluster is required</p-message>
+                    }
+                }
             </div>
             <div class="col-span-1" formGroupName="clusterHead">
                 <label for="cluster-head">Cluster Head</label>
@@ -117,7 +119,7 @@
                     class="block w-full"
                 />
                 @if(clusterHead?.invalid && (clusterHead?.dirty || clusterHead?.touched)){ @if(clusterHead?.hasError('required')){
-                <p-message severity="error" variant="simple" size="small" styleClass="mt-1">clusterHead is required</p-message>
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1">Cluster Head is required</p-message>
                 }}
             </div>
             <div class="col-span-1" formGroupName="siteIncharge">
@@ -147,7 +149,7 @@
                     </ng-template>
                 </p-select>
                 @if(siteIncharge?.invalid && (siteIncharge?.dirty || siteIncharge?.touched)){ @if(siteIncharge?.hasError('required')){
-                <p-message severity="error" variant="simple" size="small" styleClass="mt-1">siteIncharge is required</p-message>
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1">Site Incharge is required</p-message>
                 }}
             </div>
             <div class="col-span-1" formGroupName="department">
@@ -198,7 +200,7 @@
                 </p-select>
 
                 @if(departmentHead?.invalid && (departmentHead?.dirty || departmentHead?.touched)){ @if(departmentHead?.hasError('required')){
-                <p-message severity="error" variant="simple" size="small" styleClass="mt-1">DepartmentHead is required</p-message>
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1">Department Head is required</p-message>
                 }}
             </div>
         </div>

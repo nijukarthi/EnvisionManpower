@@ -83,9 +83,11 @@
                     appendTo="body"
                 />
 
-                @if (experience?.invalid && (experience?.dirty || experience?.touched)) { @if (experience?.hasError('required')) {
-                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Experience is required </p-message>
-                } }
+                @if (experience?.invalid && (experience?.dirty || experience?.touched)) { 
+                    @if (experience?.hasError('required')) {
+                        <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Experience is required </p-message>
+                    } 
+                }
             </div>
         </div>
         <div class="flex justify-end mt-4">

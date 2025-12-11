@@ -39,7 +39,7 @@ export class FixedCostCandidateForm implements OnInit {
         totalExperience: [0],
         highestQualification: ['', [Validators.minLength(3), Validators.maxLength(80)]],
         qualification: ['', [Validators.minLength(3), Validators.maxLength(80)]],
-        noticePeriod: ['', [Validators.minLength(3), Validators.maxLength(3)]]
+        noticePeriod: ['', Validators.pattern(/^\d{2,3}$/)]
     });
 
     get candidateName() {
