@@ -2,39 +2,71 @@
     <h5>{{ candidateId ? 'Edit Candidate' : 'Add Candidate' }}</h5>
     <form [formGroup]="fixedCostCandidateForm" (ngSubmit)="onSubmit()">
         <div class="grid grid-cols-2 gap-2">
-            <div class="grid col-span-1 gap-1">
+            <div class="col-span-1">
                 <label for="candidate-name">Candidate Name</label>
-                <input type="text" formControlName="candidateName" id="candidate-name" pInputText />
+                <input type="text" formControlName="candidateName" id="candidate-name" pInputText appFormFieldError class="block w-full" />
+                @if(candidateName?.invalid && (candidateName?.dirty || candidateName?.touched)){ @if(candidateName?.hasError('required')){
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> CandidateName is required </p-message>
+                }@if (candidateName?.hasError('minlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> CandidateName must contain at least 3 characters </p-message>
+                } @if (candidateName?.hasError('maxlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> CandidateName cannot exceed 100 characters </p-message>
+                } }
             </div>
-            <div class="grid col-span-1 gap-1">
+            <div class="col-span-1">
                 <label for="phone-number">Contact Number</label>
-                <input type="text" formControlName="phoneNumber" id="phone-number" pKeyFilter="int" pInputText />
+                <input type="text" formControlName="phoneNumber" id="phone-number" pKeyFilter="int" pInputText appFormFieldError class="block w-full" />
+                @if(phoneNumber?.invalid && (phoneNumber?.dirty || phoneNumber?.touched)){ @if(phoneNumber?.hasError('required')){
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Phone Number is required </p-message>
+                }@if (phoneNumber?.hasError('minlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Phone Number must contain at least 10 characters </p-message>
+                } @if (phoneNumber?.hasError('maxlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Phone Number cannot exceed 10 characters </p-message>
+                } }
             </div>
-            <div class="grid col-span-1 gap-1">
+            <div class="col-span-1">
                 <label for="position-applied">Position Applied</label>
-                <input type="text" formControlName="positionApplied" id="position-applied" pInputText />
+                <input type="text" formControlName="positionApplied" id="position-applied" pInputText appFormFieldError class="block w-full" />
+                @if(positionApplied?.invalid && (positionApplied?.dirty || positionApplied?.touched)){ @if (positionApplied?.hasError('minlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> PositionApplied must contain at least 3 characters </p-message>
+                } @if (positionApplied?.hasError('maxlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> PositionApplied cannot exceed 100 characters </p-message>
+                }}
             </div>
-            <div class="grid col-span-1 gap-1">
+            <div class="col-span-1">
                 <label for="current-experience">Current Experience</label>
-                <p-inputNumber formControlName="currentExperience" inputId="currentExperience" 
-                    mode="decimal" [useGrouping]="false" [minFractionDigits]="1" [maxFractionDigits]="2" [min]="0" [max]="99.99" />
+                <p-inputNumber formControlName="currentExperience" inputId="currentExperience" mode="decimal" [useGrouping]="false" [minFractionDigits]="1" [maxFractionDigits]="2" [min]="0" [max]="99.99" appFormFieldError class="block w-full" />
             </div>
-            <div class="grid col-span-1 gap-1">
+            <div class="col-span-1">
                 <label for="total-experience">Total Experience</label>
-                <p-inputNumber formControlName="totalExperience" inputId="totalExperience" mode="decimal" [useGrouping]="false"
-                    [minFractionDigits]="1" [maxFractionDigits]="2" [min]="0" [max]="99.99" />
+                <p-inputNumber formControlName="totalExperience" inputId="totalExperience" mode="decimal" [useGrouping]="false" [minFractionDigits]="1" [maxFractionDigits]="2" [min]="0" [max]="99.99" appFormFieldError class="block w-full" />
             </div>
-            <div class="grid col-span-1 gap-1">
+            <div class="col-span-1">
                 <label for="highest-qualification">Highest Qualification</label>
-                <input type="text" formControlName="highestQualification" id="highest-qualification" pInputText />
+                <input type="text" formControlName="highestQualification" id="highest-qualification" pInputText appFormFieldError class="block w-full" />
+                @if(highestQualification?.invalid && (highestQualification?.dirty || highestQualification?.touched)){ @if (highestQualification?.hasError('minlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> HighestQualification must contain at least 3 characters </p-message>
+                } @if (highestQualification?.hasError('maxlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> HighestQualification cannot exceed 80 characters </p-message>
+                }}
             </div>
-            <div class="grid col-span-1 gap-1">
+            <div class="col-span-1">
                 <label for="qualification">Qualification</label>
-                <input type="text" formControlName="qualification" id="qualification" pInputText />
+                <input type="text" formControlName="qualification" id="qualification" pInputText appFormFieldError class="block w-full" />
+                @if(qualification?.invalid && (qualification?.dirty || qualification?.touched)){ @if (qualification?.hasError('minlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Qualification must contain at least 3 characters </p-message>
+                } @if (qualification?.hasError('maxlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Qualification cannot exceed 80 characters </p-message>
+                }}
             </div>
-            <div class="grid col-span-1 gap-1">
+            <div class="col-span-1">
                 <label for="notice-period">Notice Period</label>
-                <p-inputNumber formControlName="noticePeriod" inputId="notice-period" [useGrouping]="false" />
+                <p-inputNumber formControlName="noticePeriod" inputId="notice-period" [useGrouping]="false" appFormFieldError class="block w-full" />
+                @if(noticePeriod?.invalid && (noticePeriod?.dirty || noticePeriod?.touched)){ @if (noticePeriod?.hasError('minlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> NoticePeriod must contain at least 3 characters </p-message>
+                } @if (noticePeriod?.hasError('maxlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> NoticePeriod cannot exceed 3 characters </p-message>
+                }}
             </div>
             <!-- @if (!(candidateId && loggedUserGroupId === 360 && fixedCostCandidateForm.get('workingCurrently')?.value === false)) {
                 <div class="col-start-1 flex items-center gap-3 mt-2">

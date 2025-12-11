@@ -3,47 +3,103 @@
         <h5>{{ candidateId ? 'Edit Candidate' : 'Add Candidate' }}</h5>
         <form [formGroup]="costPlusCandidateForm" (ngSubmit)="updatePersonalDetails()">
             <div class="grid grid-cols-2 gap-2">
-                <div class="grid col-span-1 gap-1">
+                <div class="col-span-1">
                     <label for="candidate-name">Candidate Name</label>
-                    <input type="text" formControlName="candidateName" id="candidate-name" pInputText fluid />
+                    <input type="text" formControlName="candidateName" id="candidate-name" pInputText fluid appFormFieldError class="block w-full" />
+                    @if(candidateName?.invalid && (candidateName?.dirty || candidateName?.touched)){ @if(candidateName?.hasError('required')){
+                    <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> CandidateName is required </p-message>
+                    }@if (candidateName?.hasError('minlength')) {
+                    <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> CandidateName must contain at least 3 characters </p-message>
+                    } @if (candidateName?.hasError('maxlength')) {
+                    <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> CandidateName cannot exceed 100 characters </p-message>
+                    } }
                 </div>
-                <div class="grid col-span-1 gap-1">
+                <div class="col-span-1">
                     <label for="phone-number">Contact Number</label>
-                    <input type="text" formControlName="phoneNumber" id="phone-number" pKeyFilter="int" pInputText />
+                    <input type="text" formControlName="phoneNumber" id="phone-number" pKeyFilter="int" pInputText appFormFieldError class="block w-full" />
+                    @if(phoneNumber?.invalid && (phoneNumber?.dirty || phoneNumber?.touched)){ @if(phoneNumber?.hasError('required')){
+                    <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Phone Number is required </p-message>
+                    }@if (phoneNumber?.hasError('minlength')) {
+                    <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Phone Number must contain at least 10 characters </p-message>
+                    } @if (phoneNumber?.hasError('maxlength')) {
+                    <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Phone Number cannot exceed 10 characters </p-message>
+                    } }
                 </div>
-                <div class="grid col-span-1 gap-1">
+                <div class="col-span-1">
                     <label for="position-applied">Position Applied</label>
-                    <input type="text" formControlName="positionApplied" id="position-applied" pInputText fluid />
+                    <input type="text" formControlName="positionApplied" id="position-applied" pInputText fluid appFormFieldError class="block w-full" />
+                    @if(positionApplied?.invalid && (positionApplied?.dirty || positionApplied?.touched)){ @if (positionApplied?.hasError('minlength')) {
+                    <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> PositionApplied must contain at least 3 characters </p-message>
+                    } @if (positionApplied?.hasError('maxlength')) {
+                    <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> PositionApplied cannot exceed 100 characters </p-message>
+                    }}
                 </div>
-                <div class="grid col-span-1 gap-1">
+                <div class="col-span-1">
                     <label for="current-experience">Current Experience</label>
-                    <p-inputNumber formControlName="currentExperience" inputId="currentExperience" 
-                       mode="decimal" [useGrouping]="false" [minFractionDigits]="1" [maxFractionDigits]="2" [min]="0" [max]="99.99" fluid />
+                    <p-inputNumber
+                        formControlName="currentExperience"
+                        inputId="currentExperience"
+                        mode="decimal"
+                        [useGrouping]="false"
+                        [minFractionDigits]="1"
+                        [maxFractionDigits]="2"
+                        [min]="0"
+                        [max]="99.99"
+                        fluid
+                        appFormFieldError
+                        class="block w-full"
+                    />
                 </div>
-                <div class="grid col-span-1 gap-1">
+                <div class="col-span-1">
                     <label for="total-experience">Total Experience</label>
-                    <p-inputNumber formControlName="totalExperience" inputId="totalExperience" 
-                       mode="decimal" [useGrouping]="false" [minFractionDigits]="1" [maxFractionDigits]="2" [min]="0" [max]="99.99" fluid />
+                    <p-inputNumber
+                        formControlName="totalExperience"
+                        inputId="totalExperience"
+                        mode="decimal"
+                        [useGrouping]="false"
+                        [minFractionDigits]="1"
+                        [maxFractionDigits]="2"
+                        [min]="0"
+                        [max]="99.99"
+                        fluid
+                        appFormFieldError
+                        class="block w-full"
+                    />
                 </div>
-                <div class="grid col-span-1 gap-1">
+                <div class="col-span-1">
                     <label for="highest-qualification">Highest Qualification</label>
-                    <input type="text" formControlName="highestQualification" id="highest-qualification" pInputText fluid />
+                    <input type="text" formControlName="highestQualification" id="highest-qualification" pInputText fluid appFormFieldError class="block w-full" />
+                    @if(highestQualification?.invalid && (highestQualification?.dirty || highestQualification?.touched)){ @if (highestQualification?.hasError('minlength')) {
+                    <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> HighestQualification must contain at least 3 characters </p-message>
+                    } @if (highestQualification?.hasError('maxlength')) {
+                    <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> HighestQualification cannot exceed 80 characters </p-message>
+                    }}
                 </div>
-                <div class="grid col-span-1 gap-1">
+                <div class="col-span-1">
                     <label for="qualification">Qualification</label>
-                    <input type="text" formControlName="qualification" id="qualification" pInputText fluid />
+                    <input type="text" formControlName="qualification" id="qualification" pInputText fluid appFormFieldError class="block w-full" />
+                    @if(qualification?.invalid && (qualification?.dirty || qualification?.touched)){ @if (qualification?.hasError('minlength')) {
+                    <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Qualification must contain at least 3 characters </p-message>
+                    } @if (qualification?.hasError('maxlength')) {
+                    <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Qualification cannot exceed 80 characters </p-message>
+                    }}
                 </div>
-                <div class="grid col-span-1 gap-1">
+                <div class="col-span-1">
                     <label for="notice-period">Notice Period (days)</label>
-                    <p-inputNumber formControlName="noticePeriod" inputId="notice-period" [useGrouping]="false" />
+                    <p-inputNumber formControlName="noticePeriod" inputId="notice-period" [useGrouping]="false" appFormFieldError class="block w-full" />
+                    @if(noticePeriod?.invalid && (noticePeriod?.dirty || noticePeriod?.touched)){ @if (noticePeriod?.hasError('minlength')) {
+                    <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> NoticePeriod must contain at least 3 characters </p-message>
+                    } @if (noticePeriod?.hasError('maxlength')) {
+                    <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> NoticePeriod cannot exceed 3 characters </p-message>
+                    }}
                 </div>
             </div>
             @if (candidateId) {
-                <div class="flex justify-end mt-4">
-                    <button pButton pRipple type="submit">
-                        <span pButtonLabel>Update</span>
-                    </button>
-                </div>
+            <div class="flex justify-end mt-4">
+                <button pButton pRipple type="submit">
+                    <span pButtonLabel>Update</span>
+                </button>
+            </div>
             }
         </form>
     </div>
@@ -54,41 +110,35 @@
             <div class="grid grid-cols-2 gap-2" formGroupName="monthlyReimbursements">
                 <div class="grid col-span-2 gap-1">
                     <label for="gross-ctc">Gross CTC</label>
-                    <p-inputNumber formControlName="grossCTC" inputId="gross-ctc" [useGrouping]="false" mode="decimal" 
-                       [minFractionDigits]="1" [maxFractionDigits]="2" fluid />
+                    <p-inputNumber formControlName="grossCTC" inputId="gross-ctc" [useGrouping]="false" mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="2" fluid />
                 </div>
                 <div class="grid col-span-1 gap-1">
                     <label for="margin">Margin</label>
-                    <p-inputNumber formControlName="margin" inputId="margin" [useGrouping]="false" mode="decimal" 
-                       [minFractionDigits]="1" [maxFractionDigits]="2" fluid />
+                    <p-inputNumber formControlName="margin" inputId="margin" [useGrouping]="false" mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="2" fluid />
                 </div>
                 <div class="grid col-span-1 gap-1">
                     <label for="laptop">Laptop</label>
-                    <p-inputNumber formControlName="laptop" inputId="laptop" [useGrouping]="false" mode="decimal" 
-                       [minFractionDigits]="1" [maxFractionDigits]="2" fluid />
+                    <p-inputNumber formControlName="laptop" inputId="laptop" [useGrouping]="false" mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="2" fluid />
                 </div>
                 <div class="grid col-span-1 gap-1">
                     <label for="total">Total</label>
-                    <p-inputNumber formControlName="total" inputId="total" [useGrouping]="false" 
-                       mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="2" fluid />
+                    <p-inputNumber formControlName="total" inputId="total" [useGrouping]="false" mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="2" fluid />
                 </div>
                 <div class="grid col-span-1 gap-1">
                     <label for="gst">GST</label>
-                    <p-inputNumber formControlName="gst" inputId="gst" [useGrouping]="false" 
-                       mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="2" fluid />
+                    <p-inputNumber formControlName="gst" inputId="gst" [useGrouping]="false" mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="2" fluid />
                 </div>
                 <div class="grid col-span-2 gap-1">
                     <label for="grand-total">Grand Total</label>
-                    <p-inputNumber formControlName="grandTotal" inputId="grand-total" [useGrouping]="false" 
-                       mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="2" fluid />
+                    <p-inputNumber formControlName="grandTotal" inputId="grand-total" [useGrouping]="false" mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="2" fluid />
                 </div>
             </div>
             @if (candidateId) {
-                <div class="flex justify-end mt-4">
-                    <button pButton pRipple type="submit">
-                        <span pButtonLabel>Update</span>
-                    </button>
-                </div>
+            <div class="flex justify-end mt-4">
+                <button pButton pRipple type="submit">
+                    <span pButtonLabel>Update</span>
+                </button>
+            </div>
             }
         </form>
     </div>
@@ -100,28 +150,23 @@
         <div class="grid grid-cols-2 gap-2" formGroupName="oneTimeReimbursements">
             <div class="grid col-span-1 gap-1">
                 <label for="sourcing-fee">One Time Sourcing Fee</label>
-                <p-inputNumber formControlName="oneTimeSourcingFee" inputId="sourcing-fee" [useGrouping]="false"
-                    mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="2" />
+                <p-inputNumber formControlName="oneTimeSourcingFee" inputId="sourcing-fee" [useGrouping]="false" mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="2" />
             </div>
             <div class="grid col-span-1 gap-1">
                 <label for="bgv-cost">BGV Cost</label>
-                <p-inputNumber formControlName="bgvCost" inputId="bgv-cost" [useGrouping]="false"
-                    mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="2" />
+                <p-inputNumber formControlName="bgvCost" inputId="bgv-cost" [useGrouping]="false" mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="2" />
             </div>
             <div class="grid col-span-1 gap-1">
                 <label for="total">Total</label>
-                <p-inputNumber formControlName="total" inputId="total" [useGrouping]="false"
-                   mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="2" />
+                <p-inputNumber formControlName="total" inputId="total" [useGrouping]="false" mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="2" />
             </div>
             <div class="grid col-span-1 gap-1">
                 <label for="gst">GST</label>
-                <p-inputNumber formControlName="gst" inputId="gst" [useGrouping]="false" 
-                   mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="2" />
+                <p-inputNumber formControlName="gst" inputId="gst" [useGrouping]="false" mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="2" />
             </div>
             <div class="grid col-span-1 gap-1">
                 <label for="grand-total">Grand Total</label>
-                <p-inputNumber formControlName="grandTotal" inputId="grand-total" [useGrouping]="false"
-                    mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="2" />
+                <p-inputNumber formControlName="grandTotal" inputId="grand-total" [useGrouping]="false" mode="decimal" [minFractionDigits]="1" [maxFractionDigits]="2" />
             </div>
         </div>
         <!-- <div class="col-start-1 flex items-center gap-3 mt-5">
