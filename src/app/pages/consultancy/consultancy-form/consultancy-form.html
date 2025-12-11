@@ -128,15 +128,13 @@
             <div class="col-span-1">
                 <label for="gst-number">GST Number</label>
                 <input type="text" pInputText formControlName="gstNumber" id="gst-number" appFormFieldError class="block w-full" />
-                @if(gstNumber?.invalid && (gstNumber?.dirty || gstNumber?.touched)){ @if (gstNumber?.hasError('maxlength')) {
-                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> </p-message>
-                @if (gstNumber?.hasError('minlength')) {
+                @if(gstNumber?.invalid && (gstNumber?.dirty || gstNumber?.touched)){ @if (gstNumber?.hasError('minlength')) {
                 <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> GST Number must contain at least 15 characters </p-message>
                 }} @if (gstNumber?.hasError('maxlength')) {
                 <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> GST Number cannot exceed 15 characters </p-message>
                 } @if (gstNumber?.hasError('pattern')) {
                 <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Invalide GST Number </p-message>
-                } }
+                }
             </div>
             <div class="col-span-1">
                 <label for="category">Category</label>

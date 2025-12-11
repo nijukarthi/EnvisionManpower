@@ -5,9 +5,19 @@
     </div>
 
     <div class="p-datatable-table border border-[var(--p-content-border-color)] rounded-lg">
-        <p-table [value]="spnList" [rowHover]="true" [paginator]="true" [lazy]="true" [rows]="pageSize"
-            [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true" [totalRecords]="totalRecords" [first]="first"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" (onPage)="pageChange($event)">
+        <p-table
+            [value]="spnList"
+            [rowHover]="true"
+            [paginator]="true"
+            [lazy]="true"
+            [rows]="pageSize"
+            [rowsPerPageOptions]="[10, 20, 30]"
+            [showCurrentPageReport]="true"
+            [totalRecords]="totalRecords"
+            [first]="first"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            (onPage)="pageChange($event)"
+        >
             <ng-template #header>
                 <tr>
                     <th>SI. No</th>
@@ -31,59 +41,51 @@
             </ng-template>
             <ng-template #emptymessage>
                 <tr>
-                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground);">
-                        No Records Found
-                    </td>
+                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground)">No Records Found</td>
                 </tr>
             </ng-template>
         </p-table>
     </div>
 </div>
 
-<p-dialog [header]="spnId ? 'Edit SPN' : 'Add New SPN'" [modal]="true" [(visible)]="openSpn" 
-    [style]="{width: '50rem'}" (onHide)="onDialogClose()">
+<p-dialog [header]="spnId ? 'Edit SPN' : 'Add New SPN'" [modal]="true" [(visible)]="openSpn" [style]="{width: '50rem'}" (onHide)="onDialogClose()">
     <form [formGroup]="spnForm" (ngSubmit)="onSubmit()">
         <div class="grid grid-cols-2 gap-2">
             <div class="col-span-1">
                 <label for="spn-code">SPN Code</label>
-                <input type="text" pInputText formControlName="spnCode" id="spn-code" appFormFieldError
-                    class="block w-full" />
+                <input type="text" pInputText formControlName="spnCode" id="spn-code" appFormFieldError class="block w-full" />
 
-                @if (spnCode?.invalid && (spnCode?.dirty || spnCode?.touched)) {
-                    @if (spnCode?.hasError('required')) {
-                        <p-message severity="error" variant="simple" size="small" styleClass="mt-1">
-                            SPN Code is required
-                        </p-message>
-                    }
-                }
+                @if (spnCode?.invalid && (spnCode?.dirty || spnCode?.touched)) { @if (spnCode?.hasError('required')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> SPN Code is required </p-message>
+                } }
             </div>
             <div class="col-span-1">
                 <label for="spn-description">SPN Description</label>
-                <input type="text" pInputText formControlName="spnDescription" id="spn-description" appFormFieldError
-                    class="block w-full" />
+                <input type="text" pInputText formControlName="spnDescription" id="spn-description" appFormFieldError class="block w-full" />
 
-                @if (spnDescription?.invalid && (spnDescription?.dirty || spnDescription?.touched)) {
-                    @if (spnDescription?.hasError('required')) {
-                        <p-message severity="error" variant="simple" size="small" styleClass="mt-1">
-                            SPN Description is required
-                        </p-message>
-                    }
-                }
+                @if (spnDescription?.invalid && (spnDescription?.dirty || spnDescription?.touched)) { @if (spnDescription?.hasError('required')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> SPN Description is required </p-message>
+                } }
             </div>
             <div class="grid col-span-1 gap-1">
                 <label for="experience">Experience</label>
-                <p-select [options]="experiences" formControlName="experience" id="experience" 
-                    optionLabel="year" optionValue="year" [filter]="true" filterBy="year" 
-                    [showClear]="true" placeholder="Select Experience" appFormFieldError
-                    appendTo="body" />
+                <p-select
+                    [options]="experiences"
+                    formControlName="experience"
+                    id="experience"
+                    optionLabel="year"
+                    optionValue="year"
+                    [filter]="true"
+                    filterBy="year"
+                    [showClear]="true"
+                    placeholder="Select Experience"
+                    appFormFieldError
+                    appendTo="body"
+                />
 
-                @if (experience?.invalid && (experience?.dirty || experience?.touched)) {
-                    @if (experience?.hasError('required')) {
-                        <p-message severity="error" variant="simple" size="small" styleClass="mt-1">
-                            Experience is required
-                        </p-message>
-                    }
-                }
+                @if (experience?.invalid && (experience?.dirty || experience?.touched)) { @if (experience?.hasError('required')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Experience is required </p-message>
+                } }
             </div>
         </div>
         <div class="flex justify-end mt-4">
