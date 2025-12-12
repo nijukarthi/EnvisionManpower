@@ -87,7 +87,12 @@
                     placeholder="Select User Group"
                     [showClear]="true"
                     appendTo="body"
+                    appFormFieldError
+                    class="block w-full"
                 />
+                @if(userGroupId?.invalid && (userGroupId?.dirty || userGroupId?.touched)){ @if(userGroupId?.hasError('required')){
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1">User Group is required</p-message>
+                }}
             </div>
             @if (showDepartments) {
             <div class="grid col-span-1 gap-1">
@@ -108,6 +113,7 @@
                     appendTo="body"
                 />
             </div>
+
             }
         </div>
         <div class="flex justify-end mt-4">

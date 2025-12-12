@@ -96,11 +96,9 @@
                     class="block w-full"
                     (onChange)="fetchClusterHeadByCluster($event.value)"
                 />
-                @if(cluster?.invalid && (cluster?.dirty || cluster?.touched)){ 
-                    @if(cluster?.hasError('required')){
-                        <p-message severity="error" variant="simple" size="small" styleClass="mt-1">Cluster is required</p-message>
-                    }
-                }
+                @if(cluster?.invalid && (cluster?.dirty || cluster?.touched)){ @if(cluster?.hasError('required')){
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1">Cluster is required</p-message>
+                } }
             </div>
             <div class="col-span-1" formGroupName="clusterHead">
                 <label for="cluster-head">Cluster Head</label>

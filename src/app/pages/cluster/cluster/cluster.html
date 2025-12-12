@@ -76,9 +76,9 @@
                     appFormFieldError
                     class="block w-full"
                 />
-                @if (clusterHead?.invalid && (clusterHead?.dirty || clusterHead?.touched)) { @if (clusterHead?.hasError('required')) {
-                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> clusterHead is required </p-message>
-                } }
+                @if(clusterHead?.invalid && (clusterHead?.dirty || clusterHead?.touched)){ @if(clusterHead?.hasError('required')){
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1">Cluster Head is required</p-message>
+                }}
             </div>
         </div>
         <div class="flex justify-end mt-4">

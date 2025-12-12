@@ -42,7 +42,7 @@ export class Cluster implements OnInit {
             clusterName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
             clusterCode: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(2)]],
             clusterHead: this.fb.group({
-                userId: [0]
+                userId: [null, Validators.required]
             })
         });
         this.fetchActiveCluster();
@@ -57,7 +57,7 @@ export class Cluster implements OnInit {
         return this.clusterForm.get('clusterCode');
     }
     get clusterHead() {
-        return this.clusterForm.get('clusterHead');
+        return this.clusterForm.get('clusterHead.userId');
     }
 
     getMenuItems(cluster: any) {
