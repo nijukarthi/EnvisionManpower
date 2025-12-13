@@ -38,7 +38,7 @@ export class DepartmentTable implements OnInit {
             departmentId: [],
             departmentName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(80)]],
             departmentHead: this.fb.group({
-                userId: [0]
+                userId: [null, Validators.required]
             })
         });
         this.fetchActiveDepartments();
@@ -46,6 +46,10 @@ export class DepartmentTable implements OnInit {
 
     get departmentName() {
         return this.departmentForm.get('departmentName');
+    }
+
+    get departmentHead() {
+        return this.departmentForm.get('departmentHead.userId');
     }
 
     getMenuItems(category: any) {

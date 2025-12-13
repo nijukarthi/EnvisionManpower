@@ -43,7 +43,7 @@ export class CompanyUsers implements OnInit {
         userId: [0],
         userName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
         email: ['', [Validators.required, Validators.maxLength(80), Validators.pattern(/^[a-zA-Z0-9._%+-]+$/)]],
-        userGroupId: [0],
+        userGroupId: ['', Validators.required],
         userDepartments: this.fb.array([])
     });
 
@@ -161,7 +161,7 @@ export class CompanyUsers implements OnInit {
     }
 
     selectedUserGroup(selectedGroupId: number) {
-        this.showDepartments = selectedGroupId !== 301;
+        this.showDepartments = selectedGroupId !== 301 && selectedGroupId !== 316;
 
         // if (!this.showDepartments) {
         //   this.userDepartments.clear();
