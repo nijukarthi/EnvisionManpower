@@ -335,6 +335,11 @@ export class OnboardingTable implements OnInit {
       const filters = event.filters;
       console.log(filters);
 
+      const formDate = (d: any) => {
+        if(!d) return null;
+        return typeof d === 'string' ? d : d.toLocaleDateString('en-CA');
+      }
+
       const dateValue = filters?.date?.[0]?.value;
 
       const payload = {
@@ -351,8 +356,8 @@ export class OnboardingTable implements OnInit {
         envisionRoleName: filters?.roleName?.[0]?.value ?? null,
         employmentStatuses: filters?.status?.[0]?.value ?? null,
         phoneNumber: filters?.phoneNumber?.[0]?.value ?? null,
-        joiningDateFrom: Array.isArray(dateValue) ? dateValue[0] : null,
-        joiningDateTo: Array.isArray(dateValue) ? dateValue[1] : null
+        joiningDateFrom: Array.isArray(dateValue) ? formDate(dateValue[0]) : null,
+        joiningDateTo: Array.isArray(dateValue) ? formDate(dateValue[1]) : null
       }
       console.log(payload);
 

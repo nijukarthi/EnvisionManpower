@@ -8,22 +8,106 @@
         <p-table dataKey="candidate.candidateId" [value]="attendanceList" stripedRows [rowHover]="true" [paginator]="true" [first]="first" editMode="row"
             [rows]="pageSize" [lazy]="true" [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true"
             [scrollable]="true" scrollHeight="500px" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" 
-            [totalRecords]="totalRecords" [tableStyle]="{'min-width': '130rem'}" (onPage)="pageChange($event)">
+            [totalRecords]="totalRecords" [tableStyle]="{'min-width': '160rem'}" (onLazyLoad)="loadDemands($event)">
             <ng-template #header>
                 <tr>
                     <th>SL NO</th>
-                    <th>Employee Code</th>
-                    <th>Employee Name</th>
-                    <th>SPN Code</th>
-                    <th>SPN Description</th>
-                    <th>Experience</th>
-                    <th>Project Code</th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Employee Code</span>
+                            <p-columnFilter type="text" field="employeeCode" display="menu" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Employee Name</span>
+                            <p-columnFilter type="text" field="candidateName" display="menu" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Consultancy Name</span>
+                            <p-columnFilter type="text" field="consultancyName" display="menu" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Project Code</span>
+                            <p-columnFilter type="text" field="projectCode" display="menu" />
+                        </div>
+                    </th>
                     <th>Site Name</th>
-                    <th>Cluster Name</th>
-                    <th>Role</th>
-                    <th>Joining Date</th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Cluster Name</span>
+                            <p-columnFilter type="text" field="clusterName" display="menu" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>SPN Code</span>
+                            <p-columnFilter type="text" field="spnCode" display="menu" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>SPN Description</span>
+                            <p-columnFilter type="text" field="spnDescription" display="menu" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Experience</span>
+                            <p-columnFilter type="text" field="experience" display="menu" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Role</span>
+                            <p-columnFilter type="text" field="roleName" display="menu" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Contact Number</span>
+                            <p-columnFilter type="text" field="phoneNumber" display="menu" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Joining Date</span>
+                            <p-columnFilter type="date" field="date" display="menu" matchMode="between"
+                                [showOperator]="false">
+                                <ng-template #filter let-filter="filterCallback" let-value>
+                                    <div class="flex flex-col gap-2">
+                                        <p-datepicker [ngModel]="value?.[0] || null" 
+                                            (ngModelChange)="updateRange($event, value, 0, filter)"
+                                            placeholder="From Date" />
+
+                                        <p-datepicker [ngModel]="value?.[1] || null"
+                                            (ngModelChange)="updateRange($event, value, 1, filter)"
+                                            placeholder="To Date" />
+                                    </div>
+                                </ng-template>
+                            </p-columnFilter>
+                        </div>
+                    </th>
                     <th>Last Working Date</th>
-                    <th>Status</th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Status</span>
+                            <p-columnFilter field="status" matchMode="equals" display="menu">
+                                <ng-template #filter let-value let-filter="filterCallback">
+                                    <p-multiselect [options]="statuses" (onChange)="filter($event.value)"
+                                        placeholder="Select Statuses" class="w-full">
+                                        <ng-template let-option #item>
+                                            <p-tag [value]="option.value" [severity]="getSeverity(option.value)" />
+                                        </ng-template>
+                                    </p-multiselect>
+                                </ng-template>
+                            </p-columnFilter>
+                        </div>
+                    </th>
                     <th>Total No. of Working Days</th>
                     <th>Present Days</th>
                     <th>Week Off</th>
@@ -37,18 +121,20 @@
                     <td>{{ i + 1 }}</td>
                     <td>{{ attendance.candidate?.employeeCode || '-' }}</td>
                     <td>{{ attendance.candidate?.candidateName || '-' }}</td>
-                    <td>{{ attendance.employmentDetails?.spn?.spnCode || '-' }}</td>
-                    <td>{{ attendance.employmentDetails?.spn?.spnDescription }}</td>
-                    <td>{{ attendance.employmentDetails?.spn?.experience }}</td>
+                    <td>{{ attendance.candidate.consultancy.consultancyName || '-' }}</td>
                     <td>{{ attendance.employmentDetails.project.projectCode || '-' }}</td>               
                     <td>{{ attendance.employmentDetails.project.siteName || '-' }}</td>               
                     <td>{{ attendance.employmentDetails.cluster.clusterName || '-' }}</td>               
-                    <td>{{ attendance.employmentDetails.envisionRole.roleName || '-' }}</td>   
+                    <td>{{ attendance.employmentDetails?.spn?.spnCode || '-' }}</td>
+                    <td>{{ attendance.employmentDetails?.spn?.spnDescription }}</td>
+                    <td>{{ attendance.employmentDetails?.spn?.experience }}</td>
+                    <td>{{ attendance.employmentDetails.envisionRole.roleName || '-' }}</td>  
+                    <td>{{ attendance.candidate.phoneNumber || '-' }}</td>
                     <td>{{ attendance.employmentDetails.joiningDate || '-' }}</td>
                     <td>{{ attendance.employmentDetails.lastWorkingDate || '-' }}</td>
                     <td>
                         <p-tag [value]="attendance.employmentDetails.employmentStatus" 
-                        [severity]="getSeverity(attendance.employmentDetails.employmentStatus)" />
+                            [severity]="getSeverity(attendance.employmentDetails.employmentStatus)" />
                     </td> 
                     <td #pEditableColumn>
                         <p-cellEditor>

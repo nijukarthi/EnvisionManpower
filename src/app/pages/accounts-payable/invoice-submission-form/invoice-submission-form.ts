@@ -16,6 +16,7 @@ export class InvoiceSubmissionForm implements OnInit {
   offSet = 0;
   pageSize = 100;
   invoiceId = 0;
+  currentPOId = 0;
 
   poList: any;
   poDetails: any;
@@ -152,18 +153,16 @@ export class InvoiceSubmissionForm implements OnInit {
 
   convertMonthAndYear(){
     const selectedMonth = this.invoiceForm.get('month')?.value;
+    console.log(selectedMonth);
     if (!selectedMonth) {
-      this.messageService.add({severity: 'error', summary: 'Error', detail: "Month not selected"});
+      this.messageService.add({severity: 'error', summary: 'Error', detail: "Month & Year not selected"});
       return;
     }
     const month = selectedMonth?.getMonth() + 1;
+    console.log(month);
 
-    const selectedYear = this.invoiceForm.get('year')?.value;
-    if (!selectedYear) {
-      this.messageService.add({severity: 'error', summary: 'Error', detail: "Year not selected"});
-      return;
-    }
-    const year = selectedYear.getFullYear();
+    const year = selectedMonth.getFullYear();
+    console.log(year);
 
     return { month, year };
   }
@@ -172,13 +171,20 @@ export class InvoiceSubmissionForm implements OnInit {
   selectedPOId(poId: number){
     try {
       console.log(poId);
+      this.currentPOId = poId;
       this.poDetails = this.poList.find((po: any) => po.poId === poId);
       console.log(this.poDetails);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
+  getLineItems(){
+    try {
       const monthYear = this.convertMonthAndYear();
 
       const data = {
-        poId: poId,
+        poId: this.currentPOId,
         month: monthYear?.month,
         year: monthYear?.year
       }

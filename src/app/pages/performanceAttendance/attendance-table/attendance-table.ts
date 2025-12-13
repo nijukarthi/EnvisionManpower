@@ -18,6 +18,7 @@ export class AttendanceTable implements OnInit {
   year: number | null = null;
 
   attendanceList: any;
+  statuses: any[] = [];
 
   date: Date = new Date();
 
@@ -25,6 +26,11 @@ export class AttendanceTable implements OnInit {
 
   ngOnInit(): void {
       this.fetchAttendanceList();
+      this.statuses = [
+        { label: 'ACTIVE', value: 'ACTIVE' },
+        { label: 'TRANSFERRED', value: 'TRANSFERRED' },
+        { label: 'RESIGNED', value: 'RESIGNED' }
+      ]
   }
 
   fetchAttendanceList(){
@@ -40,6 +46,14 @@ export class AttendanceTable implements OnInit {
       }
       console.log(data);
       
+      this.attendanceApi(data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  attendanceApi(data: any){
+    try {
       this.apiService.fetchAttendanceList(data).subscribe({
         next: val => {
           console.log(val);
@@ -123,10 +137,58 @@ export class AttendanceTable implements OnInit {
     return status !== 'ACTIVE' && date > last;
   } 
 
-  pageChange(event: any){
-    this.first = event.first;
-    this.offSet = event.first / event.rows;
-    this.pageSize = event.rows;
-    this.fetchAttendanceList();
+  loadDemands(event: any){
+    try {
+      this.first = event.first;
+      this.offSet = event.first / event.rows;
+      this.pageSize = event.rows;
+
+      const filters = event.filters;
+      console.log(filters);
+
+      const formatDate = (d: any) => {
+        console.log(d);
+        if (!d) return null;
+        console.log(typeof d);
+        console.log(d.toLocaleDateString('en-CA'));
+        return typeof d === 'string' ? d : d.toLocaleDateString('en-CA');
+      };
+
+      const dateValue = filters?.date?.[0]?.value;
+
+      const payload = {
+        offSet: this.offSet,
+        pageSize: this.pageSize,
+        month: this.month,
+        year: this.year,
+        employeeCode: filters?.employeeCode?.[0]?.value ?? null,
+        candidateName: filters?.candidateName?.[0]?.value ?? null,
+        consultancyName: filters?.consultancyName?.[0]?.value ?? null,
+        projectCode: filters?.projectCode?.[0]?.value ?? null,
+        clusterName: filters?.clusterName?.[0]?.value ?? null,
+        spnCode: filters?.spnCode?.[0]?.value ?? null,
+        spnDescription: filters?.spnDescription?.[0]?.value ?? null,
+        experience: filters?.experience?.[0]?.value ?? null,
+        envisionRoleName: filters?.roleName?.[0]?.value ?? null,
+        phoneNumber: filters?.phoneNumber?.[0]?.value ?? null,
+        employmentStatuses: filters?.status?.[0]?.value ?? null,
+        joiningDateFrom: Array.isArray(dateValue) ? formatDate(dateValue[0]) : null,
+        joiningDateTo: Array.isArray(dateValue) ? formatDate(dateValue[1]) : null
+      }
+
+      console.log(payload);
+
+      this.attendanceApi(payload);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  updateRange(selectedValue: any, value: any[], index: number, filter: any){
+    if(!value) value = [];
+
+    value[index] = selectedValue;
+
+    filter(value);
   }
 }
