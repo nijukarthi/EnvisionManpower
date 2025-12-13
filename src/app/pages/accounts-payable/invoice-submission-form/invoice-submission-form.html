@@ -51,14 +51,9 @@
                     appendTo="body" inputId="po-copy" placeholder="Select Yes/No" />
             </div>
             <div class="grid col-span-1 gap-1">
-                <label for="month">Select Month</label>
-                <p-datepicker formControlName="month" view="month" dateFormat="M" [readonlyInput]="true" inputId="month"
-                    placeholder="Select Month" />
-            </div>
-            <div class="grid col-span-1 gap-1">
-                <label for="year">Select Year</label>
-                <p-datepicker formControlName="year" view="year" dateFormat="yy" [readonlyInput]="true" inputId="year"
-                    placeholder="Select Year" />
+                <label for="month">Select Month & Year</label>
+                <p-datepicker formControlName="month" view="month" dateFormat="mm/yy" [readonlyInput]="true" inputId="month"
+                    placeholder="Select Month & Year" />
             </div>
             <div class="grid col-span-1 gap-1">
                 <label for="submitted-date">Submitted Date</label>
@@ -67,6 +62,11 @@
             <div class="grid col-span-1 gap-1">
                 <label for="submitted-to">Submitted To</label>
                 <input type="text" formControlName="submittedTo" pInputText id="submitted-to" />
+            </div>
+            <div class="mt-6">
+                <button pButton pRipple type="button" (click)="getLineItems()">
+                    <span pButtonLabel>Get Line Items</span>
+                </button>
             </div>
         </div>
     </form>
@@ -81,7 +81,9 @@
                 [tableStyle]="{'min-width': '150rem'}" formArrayName="items">
                 <ng-template #header>
                     <tr>
-                        <th rowspan="2"><p-tableHeaderCheckbox /></th>
+                        @if (!invoiceId) {
+                            <th rowspan="2"><p-tableHeaderCheckbox /></th>
+                        }
                         <th rowspan="2">SL NO</th>
                         <th rowspan="2">Employee Code</th>
                         <th rowspan="2">Employee Name</th>
@@ -108,13 +110,15 @@
                 </ng-template>
                 <ng-template #body let-po let-i="rowIndex">
                     <tr [formGroupName]="i">
-                        <td>
-                            @if (po.eligible) {
-                                <p-tableCheckbox [value]="po" />
-                            } @else{
-                                <i class="pi pi-info-circle" [pTooltip]="po.reasonNotEligible"></i>
-                            }   
-                        </td>
+                        @if (!invoiceId) {
+                            <td>
+                                @if (po.eligible) {
+                                    <p-tableCheckbox [value]="po" />
+                                } @else{
+                                    <i class="pi pi-info-circle" [pTooltip]="po.reasonNotEligible"></i>
+                                }   
+                            </td>
+                        }
                         <td>{{ i + 1 }}</td>
                         <td>{{ po.candidate.employeeCode }}</td>
                         <td>{{ po.candidate.candidateName }}</td>

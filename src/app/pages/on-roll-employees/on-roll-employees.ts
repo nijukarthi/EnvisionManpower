@@ -295,6 +295,11 @@ export class OnRollEmployees implements OnInit {
       const filters = event.filters;
       console.log(filters);
 
+      const formatDate = (d: any) => {
+        if(!d) return null;
+        return typeof d === 'string' ? d : d.toLocaleDateString('en-CA');
+      }
+
       const dateValue = filters?.date?.[0]?.value;
 
       const payload = {
@@ -311,8 +316,8 @@ export class OnRollEmployees implements OnInit {
         envisionRoleName: filters?.roleName?.[0]?.value ?? null,
         employmentStatuses: filters?.status?.[0]?.value ?? null,
         phoneNumber: filters?.phoneNumber?.[0]?.value ?? null,
-        joiningDateFrom: Array.isArray(dateValue) ? dateValue[0] : null,
-        joiningDateTo: Array.isArray(dateValue) ? dateValue[1] : null 
+        joiningDateFrom: Array.isArray(dateValue) ? formatDate(dateValue[0]) : null,
+        joiningDateTo: Array.isArray(dateValue) ? formatDate(dateValue[1]) : null 
       }
 
       console.log(payload);
