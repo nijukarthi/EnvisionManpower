@@ -20,8 +20,7 @@ export class Approval implements OnInit {
   demandProcessingList: any[] = [];
   requisitionDetails: any;
 
-  cols!: Column[];
-  selectedColumns!: Column[];
+  statuses: any[] = [];
 
   USERGROUPS = UserGroups;
   DEMANDSTATUS = DemandStatus;
@@ -54,16 +53,14 @@ export class Approval implements OnInit {
   constructor(private fb: FormBuilder, private apiService: Apiservice, private messageService: MessageService) {}
 
   ngOnInit(): void {
-    this.fetchDemandRequest([102]);
+    this.fetchDemandRequest();
     this.fetchUserProfile();
 
-    this.cols = [
-      { field: 'processing', header: 'Processing', status: 102 },
-      { field: 'completed', header: 'Completed', status: 200 },
-      { field: 'rejected', header: 'Rejected', status: 406 }
+    this.statuses = [
+      { label: 'Processing', value: 102 },
+      { label: 'Completed', value: 200 },
+      { label: 'Rejected', value: 406 }
     ];
-
-    this.selectedColumns = [this.cols[0]];
   }
 
   fetchUserProfile(){
@@ -85,11 +82,6 @@ export class Approval implements OnInit {
     })
   }
 
-  statusChange(){
-    const selectedStatus = this.selectedColumns.map(c => c.status).filter((s): s is number => s !== undefined);
-    this.fetchDemandRequest(selectedStatus);
-  }
-
   manpowerApprovalApi(data: any){
     try {
       this.apiService.fetchDemandRequest(data).subscribe({
@@ -100,6 +92,10 @@ export class Approval implements OnInit {
         },
         error: err => {
           console.log(err);
+
+          if (err.status === 400) {
+            this.messageService.add({severity: 'error', summary: 'Error', detail: err.error.detail });
+          }
         }
       })
     } catch (error) {
@@ -107,12 +103,12 @@ export class Approval implements OnInit {
     }
   }
 
-  fetchDemandRequest(statusList: number[]){
+  fetchDemandRequest(){
     try {
       const data = {
-        demandStatus: statusList,
         offSet: this.offSet,
-        pageSize: this.pageSize
+        pageSize: this.pageSize,
+        demandStatus: [102]
       }
 
       console.log(data);
@@ -136,7 +132,7 @@ export class Approval implements OnInit {
         next: val => {
           console.log(val);
           this.messageService.add({severity: 'success', summary: 'Success', detail: 'Manpower Quantity Updated Successfully'});
-          this.fetchDemandRequest([102]);
+          this.fetchDemandRequest();
         },
         error: err => {
           console.log(err);
@@ -161,7 +157,7 @@ export class Approval implements OnInit {
           console.log(val);
           this.messageService.add({severity: 'success', summary: 'Success', 
             detail: type === 'Accepted' ? 'Manpower Successfully Accepted' : 'Manpower Rejected' });
-          this.fetchDemandRequest([102]);
+          this.fetchDemandRequest();
         },
         error: err => {
           console.log(err);
@@ -186,7 +182,7 @@ export class Approval implements OnInit {
           console.log(val);
           this.messageService.add({severity: 'success', summary: 'Success', detail: type === 'Accepted' ? 
             'Manpower Successfully Accepted' : 'Manpower Rejected'});
-          this.fetchDemandRequest([102]);
+          this.fetchDemandRequest();
         },
         error: err => {
           console.log(err);
@@ -220,15 +216,6 @@ export class Approval implements OnInit {
     }
   }
 
-  pageChange(event: any){
-    console.log(event);
-    this.first = event.first;
-    this.offSet = event.first / event.rows;
-    this.pageSize = event.rows;
-    this.fetchDemandRequest([102]);
-  }
-
-
   loadDemands(event: any) {
     try {   
       this.first = event.first;
@@ -243,7 +230,7 @@ export class Approval implements OnInit {
       const payload: any = {
         offSet: this.offSet,
         pageSize: this.pageSize,
-        demandStatus: this.selectedColumns?.map(c => c.status) ?? [],
+        demandStatus: filters?.status?.[0]?.value ?? [102],
         demandCode: filters?.demandCode?.[0]?.value ?? '',
         spnCode: filters?.spnCode?.[0]?.value ?? '',
         spnDescription: filters?.spnDescription?.[0].value ?? '',
@@ -257,25 +244,6 @@ export class Approval implements OnInit {
     } catch (error) {
       console.log(error);
     }
-  }
-
-  onSearch(event: Event) {
-    const input = event.target as HTMLInputElement;
-    this.searchText = input.value;
-    this.dt.filterGlobal(input.value, 'contains');
-
-    const payload = {
-      offSet: this.offSet,
-      pageSize: this.pageSize,
-      demandStatus: this.selectedColumns.map(c => c.status) ?? [],
-      requisitionCode: this.searchText,
-      clusterName: this.searchText,
-      projectCode: this.searchText
-    }
-
-    console.log(payload);
-
-    this.manpowerApprovalApi(payload);
   }
 
   getStatusLabel(status: number){

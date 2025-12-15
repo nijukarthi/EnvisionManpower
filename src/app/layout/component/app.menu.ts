@@ -118,25 +118,25 @@ export class AppMenu {
                                     label: 'PO & Demand Map',
                                     icon: 'pi pi-file-import', 
                                     routerLink: ['/home/po-assign'],
-                                    visible: this.adminUser
+                                    visible: this.adminUser || this.resourceManagerUser
                                 },
                                 {
                                     label: 'Onboarding',
                                     icon: 'pi pi-graduation-cap',
                                     routerLink: ['/home/onboarding'],
-                                    visible: this.adminUser
+                                    visible: this.adminUser || this.resourceManagerUser
                                 },
                                 {
                                     label: 'On-roll Employees',
                                     icon: 'pi pi-user',
                                     routerLink: ['/home/onroll-employees'],
-                                    visible: this.adminUser
+                                    visible: this.adminUser || this.resourceManagerUser
                                 },
                                 {
                                     label: 'Training',
                                     icon: 'pi pi-warehouse',
                                     routerLink: ['/home/training'],
-                                    visible: this.adminUser
+                                    visible: this.adminUser || this.resourceManagerUser
                                 }
                             ],
                             visible: this.adminUser || this.consultancyUser || this.resourceManagerUser || this.guestUser
@@ -149,13 +149,13 @@ export class AppMenu {
                                     label: 'Attendance',
                                     icon: 'pi pi-book',
                                     routerLink: ['/home/attendance'],
-                                    visible: this.adminUser || this.siteInchargeUser
+                                    visible: this.adminUser || this.siteInchargeUser || this.resourceManagerUser
                                 },
                                 {
                                     label: 'Site Performance',
                                     icon: 'pi pi-map',
                                     routerLink: ['/home/site-performance'],
-                                    visible: this.adminUser || this.siteInchargeUser
+                                    visible: this.adminUser || this.siteInchargeUser || this.resourceManagerUser
                                 },
                                 {
                                     label: 'Transfer',
@@ -170,7 +170,7 @@ export class AppMenu {
                                     visible: this.adminUser || this.siteInchargeUser || this.departmentUser || this.clusterUser
                                 }
                             ],
-                                visible: this.adminUser || this.siteInchargeUser || this.departmentUser || this.clusterUser
+                                visible: this.adminUser || this.siteInchargeUser || this.departmentUser || this.clusterUser || this.resourceManagerUser
                         },  
                         {
                             label: 'Accounts Payable',
@@ -204,7 +204,8 @@ export class AppMenu {
                                 {
                                     label: 'Consultancy',
                                     icon: 'pi pi-briefcase',
-                                    routerLink: ['/home/consultancies']
+                                    routerLink: ['/home/consultancies'],
+                                    visible: this.resourceManagerUser || this.adminUser 
                                 },
                                 {
                                     label: 'Candidate',
@@ -213,17 +214,20 @@ export class AppMenu {
                                         {
                                             label: 'Fixed Cost',
                                             icon: 'pi pi-wallet',
-                                            routerLink: ['/home/candidate/fixed-cost']
+                                            routerLink: ['/home/candidate/fixed-cost'],
+                                            visible: this.adminUser || this.consultancyUser
                                         },
                                         {
                                             label: 'Cost Plus',
                                             icon: 'pi pi-receipt',
-                                            routerLink: ['/home/candidate/cost-plus']
+                                            routerLink: ['/home/candidate/cost-plus'],
+                                            visible: this.adminUser || this.consultancyUser
                                         }
-                                    ]
+                                    ],
+                                    visible: this.adminUser || this.consultancyUser
                                 }
                             ],
-                                visible: this.adminUser || this.consultancyUser
+                                visible: this.adminUser || this.consultancyUser || this.resourceManagerUser
                         },
                         {
                             label: 'Masters',
