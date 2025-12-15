@@ -24,6 +24,7 @@ export class SitePerformance implements OnInit {
 
   sitePerformancesList: any;
   employeeDetails: any;
+  statuses: any[] = [];
 
   date: Date = new Date();
 
@@ -80,21 +81,16 @@ export class SitePerformance implements OnInit {
 
   ngOnInit(): void {
     this.fetchCandidateSitePerformance();
+
+    this.statuses = [
+      { label: 'ACTIVE', value: 'ACTIVE' },
+      { label: 'TRANSFERRED', value: 'TRANSFERRED' },
+      { label: 'RESIGNED', value: 'RESIGNED' }
+    ]
   }
 
-  fetchCandidateSitePerformance(){
+  performanceApi(data: any){
     try {
-      this.month = this.date ? this.date.getMonth() + 1 : null;
-      this.year = this.date ? this.date.getFullYear() : null;
-
-      const data = {
-        offSet: this.offSet,
-        pageSize: this.pageSize,
-        month: this.month,
-        year: this.year
-      }
-      console.log(data);
-
       this.apiService.fetchCandidateSitePerformance(data).subscribe({
         next: val => {
           console.log(val);
@@ -111,6 +107,25 @@ export class SitePerformance implements OnInit {
           }
         }
       })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  fetchCandidateSitePerformance(){
+    try {
+      this.month = this.date ? this.date.getMonth() + 1 : null;
+      this.year = this.date ? this.date.getFullYear() : null;
+
+      const data = {
+        offSet: this.offSet,
+        pageSize: this.pageSize,
+        month: this.month,
+        year: this.year
+      }
+      console.log(data);
+
+      this.performanceApi(data);
     } catch (error) {
       console.log(error);
     }
@@ -228,11 +243,56 @@ export class SitePerformance implements OnInit {
     return status !== 'ACTIVE' && date > last;
   }
 
-  pageChange(event: any){
-    console.log("Event:", event);
-    this.first = event.first;
-    this.offSet = event.first / event.rows;
-    this.pageSize = event.rows;
-    this.fetchCandidateSitePerformance();
+  loadPerformances(event: any){
+    try {
+      this.first = event.first;
+      this.offSet = event.first / event.rows;
+      this.pageSize = event.rows;
+
+      const filters = event.filters;
+      console.log(filters);
+
+      const formatDate = (d: any) => {
+        if(!d) return null;
+        return typeof d === 'string' ? d : d.toLocaleDateString('en-CA');
+      }
+
+      const dateValue = filters?.date?.[0]?.value;
+
+      const payload = {
+        offSet: this.offSet,
+        pageSize: this.pageSize,
+        month: this.month,
+        year: this.year,
+        employeeCode: filters?.employeeCode?.[0]?.value ?? null,
+        candidateCode: filters?.candidateCode?.[0]?.value ?? null,
+        candidateName: filters?.candidateName?.[0]?.value ?? null,
+        consultancyName: filters?.consultancyName?.[0]?.value ?? null,
+        projectCode: filters?.projectCode?.[0]?.value ?? null,
+        clusterName: filters?.clusterName?.[0]?.value ?? null,
+        spnCode: filters?.spnCode?.[0]?.value ?? null,
+        spnDescription: filters?.spnDescription?.[0]?.value ?? null,
+        experience: filters?.experience?.[0]?.value ?? null,
+        envisionRoleName: filters?.roleName?.[0]?.value ?? null,
+        phoneNumber: filters?.phoneNumber?.[0]?.value ?? null,
+        employmentStatuses: filters?.status?.[0]?.value ?? null,
+        joiningDateFrom: Array.isArray(dateValue) ? formatDate(dateValue[0]) : null,
+        joiningDateTo: Array.isArray(dateValue) ? formatDate(dateValue[1]) : null
+      }
+
+      console.log(payload);
+
+      this.performanceApi(payload);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  updateRange(selectedValue: any, value: any[], index: number, filter: any){
+    if(!value) value = [];
+
+    value[index] = selectedValue;
+
+    filter(value);
   }
 }

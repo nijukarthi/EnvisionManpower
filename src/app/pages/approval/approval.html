@@ -1,5 +1,8 @@
 <div class="card">
-    <h5>Manpower Approval</h5>
+    <div class="flex items-baseline-last justify-between">
+        <h5>Manpower Approval</h5>
+        <p-button icon="pi pi-filter-slash" label="Clear" (click)="dt.clear()" />
+    </div>
     <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
         <p-table [value]="demandProcessingList" #dt [(selection)]="selectedApprovalList" dataKey="id" [lazy]="true"
             [tableStyle]="{ 'min-width': '130rem' }" [paginator]="true" [rowsPerPageOptions]="[10, 20, 30]" stripedRows
@@ -7,23 +10,6 @@
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [totalRecords]="totalRecords"
             responsiveLayout="scroll" (onLazyLoad)="loadDemands($event)"
             [globalFilterFields]="['demandCode', 'spn.spnCode','spn.spnDescription','spn.experience', 'requisitionCode', 'envisionRole.roleName']">
-            <ng-template #caption>
-                <div class="flex justify-between">
-                    <div class="flex gap-2">
-                        <p-multiselect display="chip" [options]="cols" [(ngModel)]="selectedColumns" 
-                            optionLabel="header" placeholder="Choose Status" (onChange)="statusChange()"
-                            selectedItemsLabel="{0} columns selected" [style]="{'min-width': '180px'}" />
-                        <p-button [outlined]="true" icon="pi pi-filter-slash" label="Clear" (click)="dt.clear()" />
-                    </div>
-                    <p-iconField iconPosition="left">
-                        <p-inputIcon>
-                            <i class="pi pi-search"></i>
-                        </p-inputIcon>
-                        <input pInputText type="text" [(ngModel)]="searchValue"
-                            (input)="onSearch($event)" placeholder="Keyboard Search" />
-                    </p-iconField>
-                </div>
-            </ng-template>
             <ng-template #header>
                 <tr>
                     <th>S.No</th>
@@ -61,7 +47,21 @@
                     <th>Quantity</th>
                     <th>Planned Deployment Date</th>
                     <th>Planned Release Date</th>
-                    <th>Demand Status</th>
+                    <th>
+                        <div class="flex items-center  justify-between">
+                            <span>Demand Status</span>
+                            <p-columnFilter field="status" matchMode="equals" display="menu">
+                                <ng-template #filter let-value let-filter="filterCallback">
+                                    <p-multiselect [options]="statuses" (onChange)="filter($event.value)"
+                                        placeholder="Select Statuses" class="w-full">
+                                        <ng-template let-option #item>
+                                            <p-tag [value]="option.label" [severity]="getSeverity(option.value)" />
+                                        </ng-template>
+                                    </p-multiselect>
+                                </ng-template>
+                            </p-columnFilter>
+                        </div>
+                    </th>
                     <th style="text-align: center;">Cluster Head Approval</th>
                     <th style="text-align: center;">Department Head Approval</th> 
                 </tr>

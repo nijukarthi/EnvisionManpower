@@ -93,36 +93,34 @@
             <div class="col-span-1">
                 <label for="pincode">Pincode</label>
                 <input type="text" pInputText formControlName="pinCode" pKeyFilter="int" id="pincode" appFormFieldError class="block w-full" />
-                @if(pinCode?.invalid && (pinCode?.dirty || pinCode?.touched)){ @if(pinCode?.hasError('required')){
-                <p-message severity="error" variant="simple" size="small" styleClass="mt-1">Pincode is required</p-message>
-                } @if (pinCode?.hasError('minlength')) {
-                <p-message severity="error" variant="simple" size="small" styleClass="mt-1">Pincode must contain at least 6 characters </p-message>
+                @if(pinCode?.invalid && (pinCode?.dirty || pinCode?.touched)){ @if (pinCode?.hasError('minlength')) {
+                    <p-message severity="error" variant="simple" size="small" styleClass="mt-1">Pincode must contain at least 6 characters</p-message>
                 } @if (pinCode?.hasError('maxlength')) {
-                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> PinCode cannot exceed 6 characters </p-message>
-                } }
+                    <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Pincode cannot exceed 6 characters </p-message>
+                } 
+                }
             </div>
             <div class="col-span-1">
                 <label for="pan-number">PAN Number</label>
                 <input type="text" pInputText formControlName="panNumber" maxlength="10" id="pan-number" appFormFieldError class="block w-full" />
-                @if(panNumber?.invalid && (panNumber?.dirty || panNumber?.touched)){ @if(panNumber?.hasError('required')){
-                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> PanNumber is required </p-message>
+                @if(panNumber?.invalid && (panNumber?.dirty || panNumber?.touched)){
                 @if (panNumber?.hasError('minlength')) {
-                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> PanNumber must contain at least 10 characters </p-message>
-                }} @if (panNumber?.hasError('maxlength')) {
-                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> PanNumber cannot exceed 10 characters </p-message>
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> PAN Number must contain at least 10 characters </p-message>
+                } @if (panNumber?.hasError('maxlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> PAN Number cannot exceed 10 characters </p-message>
                 } @if (panNumber?.hasError('pattern')) {
-                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Invalide PanNumber </p-message>
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Invalid PAN Number </p-message>
                 } }
             </div>
             <div class="col-span-1">
                 <label for="tan-number">TAN Number</label>
                 <input type="text" pInputText formControlName="tanNumber" maxlength="10" id="tan-number" appFormFieldError class="block w-full" />
                 @if(tanNumber?.invalid && (tanNumber?.dirty || tanNumber?.touched)){ @if (tanNumber?.hasError('minlength')) {
-                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> TanNumber must contain at least 10 characters </p-message>
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> TAN Number must contain at least 10 characters </p-message>
                 }} @if (tanNumber?.hasError('maxlength')) {
-                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> TanNumber cannot exceed 10 characters </p-message>
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> TAN Number cannot exceed 10 characters </p-message>
                 } @if (tanNumber?.hasError('pattern')) {
-                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Invalide TanNumber </p-message>
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Invalid TAN Number </p-message>
                 }
             </div>
             <div class="col-span-1">
@@ -155,7 +153,7 @@
                     class="block w-full"
                     appendTo="body"
                 />
-                @if(category?.invalid && (category?.dirty || category?.touched)){ @if(category?.hasError('required')){
+                @if(category.invalid && (category.dirty || category.touched)){ @if(category.hasError('required')){
                 <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Category is required </p-message>
 
                 } }

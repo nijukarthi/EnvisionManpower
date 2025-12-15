@@ -2,6 +2,7 @@ import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
+import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 
 @Component({
@@ -43,7 +44,7 @@ export class InvoiceReceipt implements OnInit {
     reverseReason: ['']
   })
 
-  constructor(private apiService: Apiservice, private messageService: MessageService){}
+  constructor(private apiService: Apiservice, private messageService: MessageService, private router: Router){}
 
   ngOnInit(): void {
     this.fetchInvoiceGRNList();
@@ -204,6 +205,16 @@ export class InvoiceReceipt implements OnInit {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  getMenuItems(receipt: any){
+    return [
+      {
+        label: 'Edit',
+        icon: 'pi pi-pencil',
+        command: () => this.router.navigate(['/home/invoice-submission', receipt.invoiceHeader.invoiceId])
+      }
+    ]
   }
 
   getSeverity(status: string){

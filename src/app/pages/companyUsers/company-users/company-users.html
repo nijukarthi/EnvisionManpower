@@ -63,15 +63,19 @@
                 <label for="email">Email</label>
                 <p-inputgroup>
                     <input type="text" pInputText id="email" formControlName="email" appFormFieldError class="block w-full" />
-                    <p-inputgroup-addon>@envision-energy.com</p-inputgroup-addon>
+                    <p-inputgroup-addon>&#64;envision-energy.com</p-inputgroup-addon>
                 </p-inputgroup>
-                @if(email?.invalid && (email?.dirty || email?.touched)){ @if(email?.hasError('required')){
-                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Email is required </p-message>
-                }@if (email?.hasError('minlength')) {
-                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Email must contain at least 3 characters </p-message>
-                } @if (email?.hasError('maxlength')) {
-                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Email cannot exceed 80 characters </p-message>
-                } }
+                @if(email?.invalid && (email?.dirty || email?.touched)){ 
+                    @if(email?.hasError('required')){
+                        <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Email is required </p-message>
+                    }
+                    @if (email?.hasError('maxlength')) {
+                    <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Email cannot exceed 80 characters </p-message>
+                    } 
+                    @if (email?.hasError('pattern')) {
+                        <p-message severity="error" variant="simple" size="small" styleClass="mt-1">Invalid Email Address</p-message>                    
+                    }
+                }
             </div>
             <div class="grid col-span-1 gap-1">
                 <label for="user-group">User Group</label>
