@@ -6,33 +6,122 @@
                 placeholder="Pick a month" (onSelect)="fetchCandidateSitePerformance()" />
             <p-menu #menu [model]="getMenuItems()" [popup]="true" />
             <p-button (onClick)="menu.toggle($event)" label="Actions" icon="pi pi-angle-down" iconPos="right" />
+            <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
         </div>
     </div>
     <div class="border border-[var(--p-surface-200)] rounded-lg overflow-hidden">
-        <p-table [value]="sitePerformancesList" stripedRows [rowHover]="true" [paginator]="true" editMode="row"
+        <p-table #dt [value]="sitePerformancesList" stripedRows [rowHover]="true" [paginator]="true" editMode="row"
            [rows]="pageSize" [lazy]="true" [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true"
            [first]="first" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-           [scrollable]="true" scrollHeight="500px" [totalRecords]="totalRecords" 
-           [tableStyle]="{'min-width': '220rem'}" (onPage)="pageChange($event)">
+           [scrollable]="true" scrollHeight="500px" [totalRecords]="totalRecords" dataKey="candidate.candidateId"
+           [tableStyle]="{'min-width': '220rem'}" (onLazyLoad)="loadPerformances($event)">
             <ng-template #header>
                 <tr>
                     <th>
                         <p-tableHeaderCheckbox />
                     </th>
                     <th>SL No</th>
-                    <th>Employee Code</th>
-                    <th>Employee Name</th>
-                    <th>SPN Code</th>
-                    <th>SPN Description</th>
-                    <th>Experience</th>
-                    <th>Project Code</th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Employee Code</span>
+                            <p-columnFilter type="text" field="employeeCode" display="menu" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Temp EMP Code</span>
+                            <p-columnFilter type="text" field="candidateCode" display="menu" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Employee Name</span>
+                            <p-columnFilter type="text" field="candidateName" display="menu" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Consultancy Name</span>
+                            <p-columnFilter type="text" field="consultancyName" display="menu" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Project Code</span>
+                            <p-columnFilter type="text" field="projectCode" display="menu" />
+                        </div>
+                    </th>
                     <th>Site Name</th>
-                    <th>Cluster Name</th>
-                    <th>Role</th>
-                    <th>Status</th>
-                    <th>Actual DOJ</th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Cluster Name</span>
+                            <p-columnFilter type="text" field="clusterName" display="menu" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>SPN Code</span>
+                            <p-columnFilter type="text" field="spnCode" display="menu" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>SPN Description</span>
+                            <p-columnFilter type="text" field="spnDescription" display="menu" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Experience</span>
+                            <p-columnFilter type="text" field="experience" display="menu" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Role</span>
+                            <p-columnFilter type="text" field="roleName" display="menu" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Status</span>
+                            <p-columnFilter field="status" matchMode="equals" display="menu">
+                                <ng-template #filter let-value let-filter="filterCallback">
+                                    <p-multiselect [options]="statuses" (onChange)="filter($event.value)"
+                                        placeholder="Select Statuses" class="w-full">
+                                        <ng-template #item let-option>
+                                            <p-tag [value]="option.value" [severity]="getSeverity(option.value)" />
+                                        </ng-template>
+                                    </p-multiselect>
+                                </ng-template>
+                            </p-columnFilter>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Joining Date</span>
+                            <p-columnFilter type="date" field="date" display="menu" matchMode="between"
+                                [showOperator]="false">
+                                <ng-template #filter let-value let-filter="filterCallback">
+                                    <div class="flex flex-col gap-2">
+                                        <p-datepicker [ngModel]="value?.[0] || null" 
+                                            (ngModelChange)="updateRange($event, value, 0, filter)"
+                                            placeholder="From Date" />
+                                        <p-datepicker [ngModel]="value?.[1] || null" 
+                                            (ngModelChange)="updateRange($event, value, 1, filter)"
+                                            placeholder="To Date" />
+                                    </div>
+                                </ng-template>
+                            </p-columnFilter>
+                        </div>
+                    </th>
                     <th>Last Working Date</th>
-                    <th>Contact Number</th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Contact Number</span>
+                            <p-columnFilter type="text" field="phoneNumber" display="menu" />
+                        </div>
+                    </th>
                     <th>Site Incharge</th>
                     <th>Qualification</th>
                     <th>Technical Skills</th>
@@ -56,13 +145,15 @@
                     </td>
                     <td>{{ i + 1 }}</td>
                     <td>{{ performance.candidate?.employeeCode || '-' }}</td>
+                    <td>{{ performance.candidate?.candidateCode || '-' }}</td>
                     <td>{{ performance.candidate?.candidateName || '-' }}</td>
-                    <td>{{ performance.employmentDetails?.spn?.spnCode || '-' }}</td>
-                    <td>{{ performance.employmentDetails?.spn?.spnDescription }}</td>
-                    <td>{{ performance.employmentDetails?.spn?.experience }}</td>
+                    <td>{{ performance.candidate?.consultancy?.consultancyName || '-' }}</td>
                     <td>{{ performance.employmentDetails.project.projectCode || '-' }}</td>
                     <td>{{ performance.employmentDetails.project.siteName || '-' }}</td>
                     <td>{{ performance.employmentDetails.cluster.clusterName || '-' }}</td>
+                    <td>{{ performance.employmentDetails?.spn?.spnCode || '-' }}</td>
+                    <td>{{ performance.employmentDetails?.spn?.spnDescription }}</td>
+                    <td>{{ performance.employmentDetails?.spn?.experience }}</td>
                     <td>{{ performance.employmentDetails.envisionRole.roleName || '-' }}</td>
                     <td>
                         <p-tag [value]="performance.employmentDetails.employmentStatus"

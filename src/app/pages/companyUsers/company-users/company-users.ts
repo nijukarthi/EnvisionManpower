@@ -42,7 +42,7 @@ export class CompanyUsers implements OnInit {
     companyUserForm = this.fb.group({
         userId: [0],
         userName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
-        email: ['', [Validators.required, Validators.maxLength(80), Validators.pattern(/^[a-zA-Z0-9._%+-]+$/)]],
+        email: ['', [Validators.required, Validators.maxLength(80), Validators.pattern(/^[a-z0-9.]+$/)]],
         userGroupId: ['', Validators.required],
         userDepartments: this.fb.array([])
     });
@@ -162,11 +162,6 @@ export class CompanyUsers implements OnInit {
 
     selectedUserGroup(selectedGroupId: number) {
         this.showDepartments = selectedGroupId !== 301 && selectedGroupId !== 316;
-
-        // if (!this.showDepartments) {
-        //   this.userDepartments.clear();
-        //   this.userDepartments.push(this.assignDepartments());
-        // }
     }
 
     selectDepartments(selectedIds: number[]) {
@@ -207,7 +202,12 @@ export class CompanyUsers implements OnInit {
                     const departmentIds = val.data.userDepartments.map((d: any) => d.departmentId);
                     this.departmentsControl.patchValue(departmentIds);
 
-                    this.companyUserForm.patchValue(val.data);
+                    const emailPrefix = val.data.email.split('@')[0];
+
+                    this.companyUserForm.patchValue({
+                        ...val.data,
+                        email: emailPrefix
+                    });
                 },
                 error: (err) => {
                     console.log(err);
@@ -243,7 +243,12 @@ export class CompanyUsers implements OnInit {
         try {
             console.log(this.companyUserForm.value);
             if (this.actionName == 'Add') {
-                let data = this.companyUserForm.value;
+                const emailPrefix = this.companyUserForm.get('email')?.value?.trim();
+                let data = {
+                    ...this.companyUserForm.value,
+                    email: emailPrefix ? `${emailPrefix}@envision-energy.com` : null
+                };
+                console.log(data);
                 this.apiService.createCompanyUsers(data).subscribe({
                     next: (res) => {
                         console.log(res);
@@ -256,6 +261,10 @@ export class CompanyUsers implements OnInit {
                     },
                     error: (error) => {
                         console.log(error);
+
+                        if (error.status === 400) {
+                            this.messageService.add({severity: 'error', summary: 'Error', detail: error.error.detail});
+                        }
                     }
                 });
             } else if (this.actionName == 'Update') {
@@ -282,6 +291,10 @@ export class CompanyUsers implements OnInit {
                     },
                     error: (err) => {
                         console.log(err);
+
+                        if (err.status === 400) {
+                            this.messageService.add({severity: 'error', summary: 'Error', detail: err.error.detail});
+                        }
                     }
                 });
             }

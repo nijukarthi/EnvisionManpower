@@ -30,6 +30,12 @@
                     </th>
                     <th>
                         <div class="flex items-center justify-between">
+                            <span>Temp EMP Code</span>
+                            <p-columnFilter type="text" field="candidateCode" display="menu" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
                             <span>Employee Name</span>
                             <p-columnFilter type="text" field="candidateName" display="menu" />
                         </div>
@@ -127,6 +133,7 @@
                     <td><p-tableCheckbox [value]="onboarding" /></td>
                     <td>{{ i + 1 }}</td>
                     <td>{{ onboarding.employeeCode || '-' }}</td>
+                    <td>{{ onboarding.candidateCode || '-' }}</td>
                     <td>{{ onboarding.candidateName }}</td>
                     <td>{{ onboarding.consultancy.consultancyName }}</td>
                     <td>{{ onboarding.employmentDetails.project.projectCode }}</td>
