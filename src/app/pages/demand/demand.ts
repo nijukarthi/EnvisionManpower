@@ -4,10 +4,11 @@ import { FormArray, FormBuilder, Validators } from '@angular/forms';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { UserGroups } from '@/models/usergroups/usergroups.enum';
 import { MessageService } from 'primeng/api';
+import { FormFieldError } from '@/directives/form-field-error';
 
 @Component({
     selector: 'app-demand',
-    imports: [Shared],
+    imports: [Shared, FormFieldError],
     templateUrl: './demand.html',
     styleUrl: './demand.scss'
 })
@@ -31,6 +32,7 @@ export class Demand implements OnInit {
 
     selectedState: any = '';
     plannedDeploymentDate: any;
+    project: any;
 
     constructor(
         private apiService: Apiservice,
@@ -42,7 +44,7 @@ export class Demand implements OnInit {
             projectId: [null, Validators.required]
         }),
         category: this.fb.group({
-            categoryId: [0]
+            categoryId: [null, Validators.required]
         }),
         demandDetails: this.fb.array([this.createDemandDetails()])
     });
@@ -72,6 +74,13 @@ export class Demand implements OnInit {
     get demandDetails(): FormArray {
         return this.demandForm.get('demandDetails') as FormArray;
     }
+    getSpnId(index: number) {
+        return this.demandDetails.at(index).get('spn.spnId');
+    }
+    getspnDescription(index: number) {
+        return this.demandDetails.at(index).get('spnDescription');
+    }
+
     getQuantityControl(index: number) {
         return this.demandDetails.at(index).get('quantity');
     }
@@ -82,7 +91,12 @@ export class Demand implements OnInit {
     getReleaseDate(index: number) {
         return this.demandDetails.at(index).get('plannedReleaseDate');
     }
-
+    get projectId() {
+        return this.demandForm.get('project.projectId');
+    }
+    get categoryId() {
+        return this.demandForm.get('category.categoryId');
+    }
     selectedPCode(projectId: number) {
         try {
             console.log(projectId);
