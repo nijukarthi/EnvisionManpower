@@ -132,7 +132,8 @@ export class Transfer implements OnInit {
         if (transfer.transferStatus === TransferStatus.SCHEDULED) {
             this.selectedTransferId = transfer.transferId;
         } else {
-            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Scheduled transfer request only can be force transfer' });
+            this.messageService.add({ severity: 'error', summary: 'Error', 
+              detail: 'Scheduled transfer request can only be force & cancel transfer' });
         }
     }
 
@@ -140,10 +141,9 @@ export class Transfer implements OnInit {
         this.selectedTransferId = 0;
     }
 
-    transferConfirmPopup() {
+    forceTransferPopup() {
         this.confirmationService.confirm({
             header: 'Are you sure?',
-            message: 'Please Type Confirm to Proceed.',
             accept: () => {
                 try {
                     const data = {
@@ -171,6 +171,20 @@ export class Transfer implements OnInit {
         });
     }
 
+    cancelTransferPopup(){
+      this.confirmationService.confirm({
+        header: 'Are you sure?',
+        accept: () => {
+          try {
+            
+          } catch (error) {
+            console.log(error);
+          }
+        },
+        reject: () => this.isEnableBtn = false
+      })
+    }
+
     typedValue(event: any) {
         // console.log(event);
 
@@ -186,11 +200,12 @@ export class Transfer implements OnInit {
             {
                 label: 'Force Transfer',
                 icon: 'pi pi-bolt',
-                command: () => this.transferConfirmPopup()
+                command: () => this.forceTransferPopup()
             },
             {
                 label: 'Cancel Transfer',
-                icon: 'pi pi-times'
+                icon: 'pi pi-times',
+                command: () => this.cancelTransferPopup()
             }
         ];
     }

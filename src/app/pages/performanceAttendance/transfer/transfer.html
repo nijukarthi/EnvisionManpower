@@ -2,7 +2,8 @@
     <div class="flex items-baseline-last justify-between">
         <h5>Transfer</h5>
         <p-menu #menu [model]="getMenuItems()" [popup]="true" />
-        <p-button (onClick)="menu.toggle($event)" label="Actions" icon="pi pi-angle-down" iconPos="right" />
+        <p-button (onClick)="menu.toggle($event)" label="Actions" icon="pi pi-angle-down" 
+            iconPos="right" [disabled]="!selectedTransferId" />
     </div>
     <div class="flex">
         <button class="custom-btn" pButton pRipple text (click)="setActiveTab('processing', 102)"
@@ -128,7 +129,7 @@
             </div>
             <span class="font-bold text-2xl block mb-2 mt-4">{{ message.header }}</span>
             <p class="mb-0">Please Type <span class="font-bold">Confirm</span> to Proceed</p>
-            <input type="text" pInputText class="w-full" (input)="typedValue($event)" />
+            <input type="text" pInputText class="w-full -mt-3" (input)="typedValue($event)" />
             <div class="flex items-center gap-2 mt-3">
                 <p-button label="OK" (onClick)="onAccept()" styleClass="w-32" [disabled]="!isEnableBtn" />
                 <p-button label="Cancel" [outlined]="true" (onClick)="onReject()" styleClass="w-32" />
