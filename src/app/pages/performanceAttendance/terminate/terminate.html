@@ -1,5 +1,10 @@
 <div class="card">
-    <h5>Resignation</h5>
+    <div class="flex items-baseline-last justify-between">
+        <h5>Resignation</h5>
+        <p-menu #menu [model]="getMenuItems()" [popup]="true" />
+        <p-button (onClick)="menu.toggle($event)" label="Actions" icon="pi pi-angle-down" 
+            iconPos="right" [disabled]="!selectedResignationId" />
+    </div>
     <div class="flex">
         <button class="custom-btn" pButton pRipple text (click)="setActiveTab('processing', 102)"
             [ngClass]="{ 'active-tab': activeTab === 'processing' }">
@@ -20,7 +25,9 @@
     <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
         <p-table [value]="resignationList" stripedRows [rowHover]="true" [paginator]="true" [rows]="pageSize"
             [showCurrentPageReport]="true" [rowsPerPageOptions]="[10, 20, 30]" [totalRecords]="resignationListLength"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [first]="first"
+            selectionMode="single" dataKey="resignationId" (onRowSelect)="selectedEmployee($event.data)" 
+            (onRowUnselect)="unSelectedEmployee()" [first]="first" [(selection)]="selectedResignation"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" 
             [tableStyle]="{'min-width': '100rem'}" (onPage)="pageChange($event)">
             <ng-template #header>
                 <tr>
@@ -31,6 +38,7 @@
                     <th>Site Name</th>
                     <th>Cluster Name</th>
                     <th>Role</th>
+                    <th>Status</th>
                     <th>NDC From Site Head</th>
                     <th>NDC From Consultancy</th>
                     <th>Cluster Head Approval</th>
@@ -38,7 +46,7 @@
                 </tr>
             </ng-template>
             <ng-template #body let-resignation let-i="rowIndex">
-                <tr>
+                <tr [pSelectableRow]="resignation">
                     <td>{{ i + 1 }}</td>
                     <td>{{ resignation.candidate.employeeCode }}</td>
                     <td>{{ resignation.candidate.candidateName }}</td>
@@ -46,6 +54,10 @@
                     <td>{{ resignation.employmentDetails.project.siteName }}</td>
                     <td>{{ resignation.employmentDetails.cluster.clusterName }}</td>
                     <td>{{ resignation.employmentDetails.envisionRole.roleName }}</td>
+                    <td>
+                        <p-tag [value]="getStatusLabel(resignation.resignationStatus)"
+                            [severity]="getSeverity(resignation.resignationStatus)" />
+                    </td>
                     <td>
                         <p-select [options]="noDueClearanceList" optionLabel="label" optionValue="value"
                             inputId="no-due-clerance-sm" placeholder="Select Yes/No" appendTo="body" />
@@ -98,3 +110,20 @@
 </div>
 
 <p-toast />
+<p-confirmdialog>
+    <ng-template #headless let-message let-onAccept="onAccept" let-onReject="onReject">
+        <div class="grid place-items-center p-8 bg-surface-0 dark:bg-surface-900 rounded">
+            <div class="rounded-full bg-primary text-primary-contrast inline-flex justify-center items-center h-24 w-24 -mt-20">
+                <i class="pi pi-question !text-5xl"></i>
+            </div>
+            <span class="font-bold text-2xl block mb-2 mt-4">{{ message.header }}</span>
+            <p class="mb-0">Please Type <span class="font-bold">Confirm</span> to Proceed</p>
+            <input type="text" pInputText class="w-full -mt-3" (input)="typedValue($event)" />
+            <div class="flex items-center gap-2 mt-3">
+                <p-button label="OK" (onClick)="onAccept()" styleClass="w-32" [disabled]="!isEnabledBtn" />
+                <p-button label="Cancel" [outlined]="true"
+                    (onClick)="onReject()" styleClass="w-32" />
+            </div>
+        </div>
+    </ng-template>
+</p-confirmdialog>

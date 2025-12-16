@@ -1,9 +1,10 @@
 import { ApprovalStatus } from '@/models/approval-status/approval-status.enum';
+import { TransferStatus } from '@/models/transfer-status/transfer-status.enum';
 import { UserGroups } from '@/models/usergroups/usergroups.enum';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
 import { Component, OnInit } from '@angular/core';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-terminate',
@@ -16,14 +17,27 @@ export class Terminate implements OnInit {
   pageSize = 10;
   first = 0;
   resignationListLength = 0;
+  selectedResignationId = 0;
+
   activeTab = 'processing';
+
+  isEnabledBtn = false;
 
   resignationList: any;
 
+  selectedResignation: any[] = [];
+
   APPROVALSTATUS = ApprovalStatus;
   USERGROUPS = UserGroups;
+  
+  statusMap: any = {
+    102: { label: 'Processing', severity: 'warn' },
+    108: { label: 'Scheduled', severity: 'primary' },
+    200: { label: 'Completed', severity: 'success' },
+    406: { label: 'Rejected', severity: 'danger' }
+  }
 
-  constructor(private apiService: Apiservice, private messageService: MessageService){}
+  constructor(private apiService: Apiservice, private messageService: MessageService, private confirmationService: ConfirmationService){}
 
   ngOnInit(): void {
       this.fetchResignationList(102);
@@ -116,6 +130,40 @@ export class Terminate implements OnInit {
     }
   }
 
+  selectedEmployee(resignation: any){
+    console.log(resignation);
+
+    if (resignation.resignationStatus === TransferStatus.SCHEDULED) {
+      this.selectedResignationId = resignation.resignationId;
+    } else {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Scheduled Resignation request can only be force resignate' });
+    }
+  }
+
+  unSelectedEmployee(){
+    this.selectedResignationId = 0;
+  }
+
+  typedValue(event: any){
+    if (event.target.value === 'Confirm') {
+      this.isEnabledBtn = true;
+    } else {
+      this.isEnabledBtn = false;
+    }
+  }
+
+  resignConfirmPopup(){
+    this.confirmationService.confirm({
+      header: 'Are you sure?',
+      accept: () => {
+
+      },
+      reject: () => {
+        this.isEnabledBtn = false;
+      }
+    })
+  }
+
   noDueClearanceList = [
     {
       label: 'Yes',
@@ -126,6 +174,28 @@ export class Terminate implements OnInit {
       value: false
     }
   ]
+
+  getMenuItems(){
+    return [
+      {
+        label: 'Force Resignation',
+        icon: 'pi pi-bolt',
+        command: () => this.resignConfirmPopup()
+      },
+      {
+        label: 'Cancel Resignation',
+        icon: 'pi pi-times'
+      }
+    ]
+  }
+
+  getStatusLabel(status: number){
+    return this.statusMap[status]?.label ?? 'UnKnown';
+  }
+
+  getSeverity(status: number){
+    return this.statusMap[status]?.severity ?? 'primary';
+  }
 
   pageChange(event: any){
     this.first = event.first;
