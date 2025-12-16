@@ -2,14 +2,28 @@
     <h5>New Invoice Submission</h5>
     <form [formGroup]="invoiceForm" (ngSubmit)="onSubmit()">
         <div class="grid grid-cols-2 gap-2">
-            <div class="grid col-span-1 gap-1">
+            <div class="col-span-1 gap-1">
                 <label for="po-number">PO Number</label>
-                <p-select [options]="poList" formControlName="poId" optionLabel="poNumber" optionValue="poId" [filter]="true"
-                    filterBy="poNumber" appendTo="body" placeholder="Select PO Number" (onChange)="selectedPOId($event.value)" />
+                <p-select
+                    [options]="poList"
+                    formControlName="poId"
+                    optionLabel="poNumber"
+                    optionValue="poId"
+                    [filter]="true"
+                    filterBy="poNumber"
+                    appendTo="body"
+                    appFormFieldError
+                    class="block w-full"
+                    placeholder="Select PO Number"
+                    (onChange)="selectedPOId($event.value)"
+                />
+                @if(poId?.invalid && (poId?.dirty || poId?.touched)){ @if(poId?.hasError('required')){
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1">PO Number is required</p-message>
+                }}
             </div>
-            <div class="grid col-span-1 gap-1">
+            <div class="col-span-1 gap-1">
                 <label for="po-date">PO Date</label>
-                <input type="text" pInputText [value]="poDetails?.poDate" id="po-date" [disabled]="true" />
+                <input type="text" pInputText [value]="poDetails?.poDate" id="po-date" [disabled]="true" class="block w-full" />
             </div>
             <div class="grid col-span-1 gap-1">
                 <label for="po-value">PO Value</label>
@@ -27,41 +41,61 @@
                 <label for="duration">Duration (In Months)</label>
                 <input type="text" pInputText id="duration" [value]="poDetails?.duration" [disabled]="true" />
             </div>
-            <div class="grid col-span-1 gap-1">
+            <div class="col-span-1 gap-1">
                 <label for="invoice-number">Invoice Number</label>
-                <input type="text" pInputText formControlName="invoiceNumber" id="invoice-number" />
+                <input type="text" pInputText formControlName="invoiceNumber" id="invoice-number" appendTo="body" appFormFieldError class="block w-full" />
+                @if(invoiceNumber?.invalid && (invoiceNumber?.dirty || invoiceNumber?.touched)){ @if(invoiceNumber?.hasError('required')){
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1">Invoice Number is required</p-message>
+                }@if (invoiceNumber?.hasError('minlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Invoice Number must contain at least 1 characters </p-message>
+                } @if (invoiceNumber?.hasError('maxlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Invoice Number cannot exceed 30 characters </p-message>
+                } }
             </div>
-            <div class="grid col-span-1 gap-1">
+            <div class="col-span-1 gap-1">
                 <label for="invoice-date">Invoice Date</label>
-                <p-datepicker formControlName="invoiceDate" [showIcon]="true" [iconDisplay]="'input'" 
-                    appendTo="body" placeholder="Select Date" inputId="invoice-date" />
+                <p-datepicker formControlName="invoiceDate" [showIcon]="true" [iconDisplay]="'input'" appendTo="body" appFormFieldError class="block w-full" placeholder="Select Date" inputId="invoice-date" />
+                @if(invoiceDate?.invalid && (invoiceDate?.dirty || invoiceDate?.touched)){ @if(invoiceDate?.hasError('required')){
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1">Invoice Date is required</p-message>
+                }}
             </div>
-            <div class="grid col-start-1 col-span-1 gap-1">
+            <div class="col-start-1 col-span-1 gap-1">
                 <label for="pod">POD</label>
-                <input type="text" formControlName="pod" pInputText id="pod" />
+                <input type="text" formControlName="pod" pInputText id="pod" appendTo="body" appFormFieldError class="block w-full" />
+                @if(pod?.invalid && (pod?.dirty || pod?.touched)){ @if(pod?.hasError('required')){
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1">POD is required</p-message>
+                }}
             </div>
-            <div class="grid col-span-1 gap-1">
+            <div class="col-span-1 gap-1">
                 <label for="seal-date">Seal and Sign Date By Consultancy</label>
-                <p-datepicker formControlName="sealAndSignDate" [showIcon]="true" [iconDisplay]="'input'" 
-                    appendTo="body" placeholder="Select Date" inputId="seal-date" />
+                <p-datepicker formControlName="sealAndSignDate" [showIcon]="true" [iconDisplay]="'input'" appendTo="body" appFormFieldError class="block w-full" placeholder="Select Date" inputId="seal-date" />
+                @if(sealAndSignDate?.invalid && (sealAndSignDate?.dirty || sealAndSignDate?.touched)){ @if(sealAndSignDate?.hasError('required')){
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1">Seal and Sign Date is required</p-message>
+                }}
             </div>
-            <div class="grid col-span-1 gap-1">
+            <div class="col-span-1 gap-1">
                 <label for="po-copy">PO Copy Attached</label>
-                <p-select [options]="isPoCopyAttached" formControlName="isPoCopyAttached" optionLabel="label" optionValue="value" 
-                    appendTo="body" inputId="po-copy" placeholder="Select Yes/No" />
+                <p-select [options]="isPoCopyAttached" formControlName="isPoCopyAttached" optionLabel="label" optionValue="value" appendTo="body" inputId="po-copy" placeholder="Select Yes/No" class="block w-full" />
             </div>
-            <div class="grid col-span-1 gap-1">
+            <div class="col-span-1 gap-1">
                 <label for="month">Select Month & Year</label>
-                <p-datepicker formControlName="month" view="month" dateFormat="mm/yy" [readonlyInput]="true" inputId="month"
-                    placeholder="Select Month & Year" />
+                <p-datepicker formControlName="month" view="month" dateFormat="mm/yy" [readonlyInput]="true" inputId="month" appendTo="body" appFormFieldError class="block w-full" placeholder="Select Month & Year" />
+                @if(month?.invalid && (month?.dirty || month?.touched)){ @if(month?.hasError('required')){
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1">Select Month & Year is required</p-message>
+                }}
             </div>
-            <div class="grid col-span-1 gap-1">
+            <div class="col-span-1 gap-1">
                 <label for="submitted-date">Submitted Date</label>
-                <p-datepicker formControlName="submittedOn" [showIcon]="true" [iconDisplay]="'input'" appendTo="body" placeholder="Select Date" inputId="submitted-date" />
+                <p-datepicker formControlName="submittedOn" [showIcon]="true" [iconDisplay]="'input'" appendTo="body" placeholder="Select Date" inputId="submitted-date" class="block w-full" />
             </div>
-            <div class="grid col-span-1 gap-1">
+            <div class="col-span-1 gap-1">
                 <label for="submitted-to">Submitted To</label>
-                <input type="text" formControlName="submittedTo" pInputText id="submitted-to" />
+                <input type="text" formControlName="submittedTo" pInputText id="submitted-to" appendTo="body" appFormFieldError class="block w-full" />
+                @if(submittedTo?.invalid && (submittedTo?.dirty || submittedTo?.touched)){ @if(submittedTo?.hasError('required')){
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1">Submitted To is required</p-message>
+                } @if (submittedTo?.hasError('maxlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Submitted To cannot exceed 30 characters </p-message>
+                } }
             </div>
             <div class="mt-6">
                 <button pButton pRipple type="button" (click)="getLineItems()">
@@ -73,16 +107,14 @@
 </div>
 
 <div class="card">
-    <form [formGroup]="invoiceForm" (ngSubmit)="onSubmit()">  
+    <form [formGroup]="invoiceForm" (ngSubmit)="onSubmit()">
         <h6>Line Items</h6>
         <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden -mt-3">
-            <p-table [value]="poEmployeeList" showGridlines stripedRows [rowHover]="true" 
-                (onRowSelect)="selectedPOEmployee($event.data)" (onRowUnselect)="unSelectedEmployee($event.data)"
-                [tableStyle]="{'min-width': '150rem'}" formArrayName="items">
+            <p-table [value]="poEmployeeList" showGridlines stripedRows [rowHover]="true" (onRowSelect)="selectedPOEmployee($event.data)" (onRowUnselect)="unSelectedEmployee($event.data)" [tableStyle]="{'min-width': '150rem'}" formArrayName="items">
                 <ng-template #header>
                     <tr>
                         @if (!invoiceId) {
-                            <th rowspan="2"><p-tableHeaderCheckbox /></th>
+                        <th rowspan="2"><p-tableHeaderCheckbox /></th>
                         }
                         <th rowspan="2">SL NO</th>
                         <th rowspan="2">Employee Code</th>
@@ -95,7 +127,7 @@
                         <th rowspan="2">Site Name</th>
                         <th rowspan="2">Unit Price</th>
                         <th rowspan="2">Tax Rate %</th>
-                        <th colspan="5" style="text-align: center;">No. of Days</th>
+                        <th colspan="5" style="text-align: center">No. of Days</th>
                         <th rowspan="2">Quantity</th>
                         <th rowspan="2">Total Net Price As Actual Days</th>
                         <!-- <th rowspan="2">Actions</th> -->
@@ -111,13 +143,13 @@
                 <ng-template #body let-po let-i="rowIndex">
                     <tr [formGroupName]="i">
                         @if (!invoiceId) {
-                            <td>
-                                @if (po.eligible) {
-                                    <p-tableCheckbox [value]="po" />
-                                } @else{
-                                    <i class="pi pi-info-circle" [pTooltip]="po.reasonNotEligible"></i>
-                                }   
-                            </td>
+                        <td>
+                            @if (po.eligible) {
+                            <p-tableCheckbox [value]="po" />
+                            } @else{
+                            <i class="pi pi-info-circle" [pTooltip]="po.reasonNotEligible"></i>
+                            }
+                        </td>
                         }
                         <td>{{ i + 1 }}</td>
                         <td>{{ po.candidate.employeeCode }}</td>
@@ -128,10 +160,14 @@
                         <td>{{ po?.employmentDetails?.joiningDate }}</td>
                         <td>
                             @if (po.eligible) {
-                                <input type="text" pInputText formControlName="sacCode" />
-                            } @else {
-                                <span>{{ po.sacCode || '-' }}</span>
-                            }
+                            <input type="text" pInputText formControlName="sacCode" appendTo="body" appFormFieldError class="block w-full" />
+                            @if(getsacCode(i)?.invalid && (getsacCode(i)?.dirty || getsacCode(i)?.touched)){ @if(getsacCode(i)?.hasError('required')){
+                            <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> SAC Code is required </p-message>
+                            @if (getsacCode(i)?.hasError('maxlength')) {
+                            <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> SAC Code cannot exceed 20 characters </p-message>
+                            } } } @else {
+                            <span>{{ po.sacCode || '-' }}</span>
+                            }}
                         </td>
                         <td>{{ po?.employmentDetails?.project?.siteName }}</td>
                         <td>{{ po.unitRate }}</td>
@@ -142,9 +178,7 @@
                         <td>{{ po.paidLeaves || '-' }}</td>
                         <td>{{ po.absentDays || '-' }}</td>
                         <td>{{ po.quantity || '-' }}</td>
-                        <td>
-                            {{ po.lineTotal || '-' }}
-                        </td>
+                        <td>{{ po.lineTotal || '-' }}</td>
                         <!-- <td class="flex items-center justify-center gap-2">
                             @if (!editing) {
                             <button pButton pRipple type="button" icon="pi pi-pencil" pInitEditableRow rounded
@@ -161,14 +195,11 @@
                 </ng-template>
                 <ng-template #emptymessage>
                     <tr>
-                        <td colspan="100%"
-                            style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground);">
-                            No Records Found
-                        </td>
+                        <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground)">No Records Found</td>
                     </tr>
                 </ng-template>
             </p-table>
-        </div>    
+        </div>
         <div class="flex justify-end mt-4">
             <button pButton pRipple type="submit">
                 <span pButtonLabel>{{ invoiceId ? 'Update' : 'Submit' }}</span>

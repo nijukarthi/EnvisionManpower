@@ -3,7 +3,7 @@
         <p class="font-semibold text-xl">Manpower Request</p>
         <form [formGroup]="demandForm" (ngSubmit)="onSubmit()">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="flex flex-wrap gap-2 w-full" formGroupName="project">
+                <div class="col-span-1 gap-1" formGroupName="project">
                     <label for="p-code">Project Code</label>
                     <p-select
                         [options]="PCodeList"
@@ -15,49 +15,69 @@
                         [filter]="true"
                         filterBy="projectCode"
                         [showClear]="true"
-                        class="w-full md:w-56"
+                        appendTo="body"
+                        appFormFieldError
+                        class="block w-full md:w-56"
                         (onChange)="selectedPCode($event.value)"
                     />
+                    @if(projectId?.invalid && (projectId?.dirty || projectId?.touched)){ @if(projectId?.hasError('required')){
+                    <p-message severity="error" variant="simple" size="small" styleClass="mt-1">Project code is required</p-message>
+                    }}
                 </div>
-                <div class="flex flex-wrap gap-2 w-full">
+                <div class="col-span-1 gap-1">
                     <label for="site-name">Site Name</label>
-                    <input type="text" pInputText [value]="projectDetails?.siteName" id="site-name" [disabled]="true" />
+                    <input type="text" pInputText [value]="projectDetails?.siteName" id="site-name" [disabled]="true" class="block w-full" />
                 </div>
-                <div class="flex flex-wrap gap-2 w-full">
+                <div class="col-span-1 gap-1">
                     <label for="cluster">Cluster</label>
-                    <input type="text" pInputText [value]="projectDetails?.cluster?.clusterName" id="cluster" [disabled]="true" />
+                    <input type="text" pInputText [value]="projectDetails?.cluster?.clusterName" id="cluster" [disabled]="true" class="block w-full" />
                 </div>
-                <div class="flex flex-wrap gap-2 w-full">
+                <div class="col-span-1 gap-1">
                     <label for="cluster-head">Cluster Head</label>
                     <input type="text" pInputText [value]="projectDetails?.clusterHead?.userName" id="cluster-head" [disabled]="true" />
                 </div>
-                <div class="flex flex-wrap gap-2 w-full">
+                <div class="col-span-1 gap-1">
                     <label for="site-incharge">Site Incharge</label>
                     <input type="text" pInputText [value]="projectDetails?.siteIncharge?.userName" id="site-incharge" [disabled]="true" />
                 </div>
-                <div class="flex flex-wrap gap-2 w-full">
+                <div class="col-span-1 gap-1">
                     <label for="department">Department</label>
                     <input type="text" pInputText [value]="projectDetails?.department?.departmentName" id="department" [disabled]="true" />
                 </div>
-                <div class="flex flex-wrap gap-2 w-full">
+                <div class="col-span-1 gap-1">
                     <label for="department-head">Department Head</label>
                     <input type="text" pInputText [value]="projectDetails?.departmentHead?.userName" id="department-head" [disabled]="true" />
                 </div>
-                <div class="flex flex-wrap gap-2 w-full" formGroupName="category">
+                <div class="col-span-1 gap-1" formGroupName="category">
                     <label for="category">Category</label>
-                    <p-select [options]="categoryList" formControlName="categoryId" id="category" optionLabel="categoryName" optionValue="categoryId" placeholder="Select Category" [filter]="true" filterBy="categoryName" class="w-full md:w-56" />
+                    <p-select
+                        [options]="categoryList"
+                        formControlName="categoryId"
+                        id="category"
+                        optionLabel="categoryName"
+                        optionValue="categoryId"
+                        placeholder="Select Category"
+                        [filter]="true"
+                        filterBy="categoryName"
+                        appendTo="body"
+                        appFormFieldError
+                        class="block w-full md:w-56"
+                    />
+                    @if(categoryId?.invalid && (categoryId?.dirty || categoryId?.touched)){ @if(categoryId?.hasError('required')){
+                    <p-message severity="error" variant="simple" size="small" styleClass="mt-1">Category is required</p-message>
+                    }}
                 </div>
-                <div class="flex flex-wrap gap-2 w-full">
+                <div class="col-span-1 gap-1">
                     <label for="requestedBy">Requested By</label>
                     <input pInputText type="text" [value]="requestedBy" [disabled]="true" class="w-full" />
                 </div>
-                <div class="flex flex-wrap gap-2 w-full">
+                <div class="col-span-1 gap-1">
                     <label for="lastname2">Add Manpower</label>
                     <p-button icon="pi pi-plus" [rounded]="true" class="w-full" (onClick)="addSpnRow()" />
                 </div>
             </div>
             <div class="mt-4">
-                <div class="flex items-center justify-between mb-1">
+                <div class="col-span-1 gap-1">
                     <p class="font-semibold text-xl">Manpower Details</p>
                 </div>
                 <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
@@ -90,8 +110,13 @@
                                         [showClear]="true"
                                         placeholder="Select SPN Code"
                                         appendTo="body"
+                                        appFormFieldError
+                                        class="block w-full"
                                         (onChange)="selectedSpnCode($event.value, rowIndex)"
                                     />
+                                    @if(getSpnId(rowIndex)?.invalid && (getSpnId(rowIndex)?.dirty || getSpnId(rowIndex)?.touched)){ @if(getSpnId(rowIndex)?.hasError('required')){
+                                    <p-message severity="error" variant="simple" size="small" styleClass="mt-1">Spn Code is required </p-message>
+                                    }}
                                 </td>
                                 <td>
                                     <p-select
@@ -103,11 +128,16 @@
                                         [showClear]="true"
                                         placeholder="Select SPN Description"
                                         appendTo="body"
+                                        appFormFieldError
+                                        class="block w-full"
                                         (onChange)="selectedSpnDescription($event.value, rowIndex)"
                                     >
                                         <ng-template #item let-item> {{ item.spnDescription }} - ({{ item.experience }}) </ng-template>
                                         <ng-template #selectedItem let-item> {{ item.spnDescription }} - ({{ item.experience }}) </ng-template>
                                     </p-select>
+                                    @if(getspnDescription(rowIndex)?.invalid && (getspnDescription(rowIndex)?.dirty || getspnDescription(rowIndex)?.touched)){ @if(getspnDescription(rowIndex)?.hasError('required')){
+                                    <p-message severity="error" variant="simple" size="small" styleClass="mt-1">Spn Description required </p-message>
+                                    }}
                                 </td>
                                 <td>
                                     <p-select
@@ -120,10 +150,12 @@
                                         [showClear]="true"
                                         placeholder="Select Experience"
                                         appendTo="body"
+                                        appFormFieldError
+                                        class="block w-full"
                                     />
                                 </td>
                                 <td>
-                                    <input pInputText type="number" min="1" formControlName="quantity" appFormFieldError class="block w-full" />
+                                    <input pInputText type="number" min="1" formControlName="quantity" appendTo="body" appFormFieldError class="block w-full" />
                                     @if(getQuantityControl(rowIndex)?.invalid && (getQuantityControl(rowIndex)?.dirty || getQuantityControl(rowIndex)?.touched)){ @if(getQuantityControl(rowIndex)?.hasError('required')){
                                     <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Quantity is required </p-message>
                                     }@if (getQuantityControl(rowIndex)?.hasError('minlength')) {
@@ -133,13 +165,13 @@
                                     } }
                                 </td>
                                 <td>
-                                    <p-datepicker formControlName="plannedDeploymentDate" [minDate]="minDate" placeholder="Select Date" appendTo="body" (onSelect)="selectedDeploymentDate($event)" />
+                                    <p-datepicker formControlName="plannedDeploymentDate" [minDate]="minDate" placeholder="Select Date" appendTo="body" appFormFieldError class="block w-full" (onSelect)="selectedDeploymentDate($event)" />
                                     @if(getDeploymentDate(rowIndex)?.invalid && (getDeploymentDate(rowIndex)?.dirty || getDeploymentDate(rowIndex)?.touched)){ @if(getDeploymentDate(rowIndex)?.hasError('required')){
                                     <p-message severity="error" variant="simple" size="small" styleClass="mt-1">PlannedDeploymentDate is required </p-message>
                                     }}
                                 </td>
                                 <td>
-                                    <p-datepicker formControlName="plannedReleaseDate" [minDate]="releaseMinDate" placeholder="Select Date" appendTo="body" />
+                                    <p-datepicker formControlName="plannedReleaseDate" [minDate]="releaseMinDate" placeholder="Select Date" appendTo="body" appFormFieldError class="block w-full" />
                                     @if(getReleaseDate(rowIndex)?.invalid && (getReleaseDate(rowIndex)?.dirty || getReleaseDate(rowIndex)?.touched)){ @if(getReleaseDate(rowIndex)?.hasError('required')){
                                     <p-message severity="error" variant="simple" size="small" styleClass="mt-1">PlannedReleaseDate is required </p-message>
                                     }}
