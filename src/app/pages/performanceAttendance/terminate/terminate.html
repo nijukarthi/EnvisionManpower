@@ -46,8 +46,14 @@
                     <td>{{ resignation.employmentDetails.project.siteName }}</td>
                     <td>{{ resignation.employmentDetails.cluster.clusterName }}</td>
                     <td>{{ resignation.employmentDetails.envisionRole.roleName }}</td>
-                    <td>{{ resignation.ndcFromSiteHead === true ? 'Yes' : 'No' }}</td>
-                    <td>{{ resignation.ndcFromConsultancy === true ? 'Yes' : 'No' }}</td>
+                    <td>
+                        <p-select [options]="noDueClearanceList" optionLabel="label" optionValue="value"
+                            inputId="no-due-clerance-sm" placeholder="Select Yes/No" appendTo="body" />
+                    </td>
+                    <td>
+                        <p-select [options]="noDueClearanceList" optionLabel="label" optionValue="value"
+                            inputId="no-due-clerance-sm" placeholder="Select Yes/No" appendTo="body" />
+                    </td>
                     <td>
                         <div class="flex items-center justify-center gap-2">
                             @if (resignation.stateHeadApproval.approvalStatus === APPROVALSTATUS.ACCEPTED) {

@@ -1,5 +1,9 @@
 <div class="card">
-    <h5>Transfer</h5>
+    <div class="flex items-baseline-last justify-between">
+        <h5>Transfer</h5>
+        <p-menu #menu [model]="getMenuItems()" [popup]="true" />
+        <p-button (onClick)="menu.toggle($event)" label="Actions" icon="pi pi-angle-down" iconPos="right" />
+    </div>
     <div class="flex">
         <button class="custom-btn" pButton pRipple text (click)="setActiveTab('processing', 102)"
             [ngClass]="{'active-tab': activeTab === 'processing'}">
@@ -21,26 +25,31 @@
         <p-table [value]="transferredEmployeeList" showGridlines stripedRows [rowHover]="true" 
             [paginator]="true" [rows]="pageSize" [lazy]="true" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10, 20, 30]" 
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [first]="first" 
-            [totalRecords]="transferredListLength" [tableStyle]="{'min-width': '120rem'}" (onPage)="pageChange($event)">
+            [totalRecords]="transferredListLength" [tableStyle]="{'min-width': '130rem'}" (onPage)="pageChange($event)">
             <ng-template #header>
                 <tr>
                     <th rowspan="2">SL No</th>
                     <th rowspan="2">Employee Code</th>
-                    <th rowspan="2">Employee Name</th>         
-                    <th colspan="4" style="text-align: center;">Transfer From</th>
-                    <th colspan="4" style="text-align: center;">Transfer To</th>
+                    <th rowspan="2">Employee Name</th>              
+                    <th colspan="6" style="text-align: center;">Transfer From</th>
+                    <th colspan="6" style="text-align: center;">Transfer To</th>
+                    <th rowspan="2">Status</th>
                     <th rowspan="2">Cluster Head Approval</th>
                     <th rowspan="2">Department Head Approval</th>
                 </tr>
                 <tr>
+                    <th>Demand Code</th>
                     <th>Project Code</th>
                     <th>Site Name</th>
                     <th>Cluster Name</th>
                     <th>Role</th>
+                    <th>Last Working Date</th>
+                    <th>Demand Code</th>
                     <th>Project Code</th>
                     <th>Site Name</th>
                     <th>Cluster Name</th>
                     <th>Role</th>
+                    <th>Joining Date</th>
                 </tr>
             </ng-template>
             <ng-template #body let-transfer let-i="rowIndex">
@@ -48,14 +57,22 @@
                     <td>{{ i + 1 }}</td>
                     <td>{{ transfer.candidate.employeeCode }}</td>
                     <td>{{ transfer.candidate.candidateName }}</td>
+                    <td>{{ transfer.transferFrom?.demand?.demandCode || '-' }}</td>
                     <td>{{ transfer.transferFrom.project.projectCode }}</td>
                     <td>{{ transfer.transferFrom.project.siteName }}</td>
                     <td>{{ transfer.transferFrom.cluster.clusterName }}</td>
                     <td>{{ transfer.transferFrom.envisionRole.roleName }}</td>
+                    <td>{{ transfer.transferFrom.lastWorkingDate || '-' }}</td>
+                    <td>{{ transfer.transferTo?.demandCode || '-' }}</td>
                     <td>{{ transfer.project.projectCode }}</td>
                     <td>{{ transfer.project.siteName }}</td>
                     <td>{{ transfer.cluster.clusterName }}</td>
                     <td>{{ transfer.envisionRole.roleName }}</td>
+                    <td>{{ transfer.joiningDate }}</td>
+                    <td>
+                        <p-tag [value]="getStatusLabel(transfer.transferStatus)" 
+                            [severity]="getSeverity(transfer.transferStatus)" />
+                    </td>
                     <td class="flex items-center justify-center gap-2">
                         @if (transfer.stateHeadApproval.approvalStatus === APPROVALSTATUS.ACCEPTED) {
                             <p-button icon="pi pi-check" severity="primary" rounded [disabled]="true" />
@@ -102,3 +119,10 @@
 </div>
 
 <p-toast />
+<p-confirmdialog>
+    <ng-template #headless let-message let-onAccept="onAccept" let-onReject="onReject">
+        <div class="p-8 bg-surface-0 dark:bg-surface-900 rounded">
+            <i class="pi pi-question !text-"></i>
+        </div>
+    </ng-template>
+</p-confirmdialog>
