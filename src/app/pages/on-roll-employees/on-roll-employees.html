@@ -23,6 +23,12 @@
                     </th>
                     <th>
                         <div class="flex items-center justify-between">
+                            <span>Temp EMP Code</span>
+                            <p-columnFilter type="text" field="candidateCode" display="menu" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
                             <span>Employee Name</span>
                             <p-columnFilter type="text" field="candidateName" display="menu" />
                         </div>
@@ -122,6 +128,7 @@
                 <tr [pEditableRow]="onroll">
                     <td>{{ i + 1 }}</td>
                     <td>{{ onroll.employeeCode }}</td>
+                    <td>{{ onroll.candidateCode || '-' }}</td>
                     <td>{{ onroll.candidateName }}</td>
                     <td>{{ onroll.consultancy.consultancyName }}</td>
                     <td>{{ onroll.employmentDetails.project.projectCode }}</td>

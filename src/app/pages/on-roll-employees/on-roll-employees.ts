@@ -306,6 +306,7 @@ export class OnRollEmployees implements OnInit {
         offSet: this.offSet,
         pageSize: this.pageSize,
         employeeCode: filters?.employeeCode?.[0]?.value ?? null,
+        candidateCode: filters?.candidateCode?.[0]?.value ?? null,
         candidateName: filters?.candidateName?.[0]?.value ?? null,
         consultancyName: filters?.consultancyName?.[0]?.value ?? null,
         projectCode: filters?.projectCode?.[0]?.value ?? null,

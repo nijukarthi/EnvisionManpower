@@ -1,11 +1,14 @@
 <div class="card">
     <div class="flex items-baseline-last justify-between">
         <h5>Attendance</h5>
-        <p-datepicker view="month" [(ngModel)]="date" dateFormat="mm/yy" [readonlyInput]="true" 
-            placeholder="Pick a month" (onSelect)="fetchAttendanceList()" />
+        <div class="flex gap-2">
+            <p-datepicker view="month" [(ngModel)]="date" dateFormat="mm/yy" [readonlyInput]="true" 
+                placeholder="Pick a month" (onSelect)="fetchAttendanceList()" />
+            <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
+        </div>
     </div>
     <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
-        <p-table dataKey="candidate.candidateId" [value]="attendanceList" stripedRows [rowHover]="true" [paginator]="true" [first]="first" editMode="row"
+        <p-table #dt dataKey="candidate.candidateId" [value]="attendanceList" stripedRows [rowHover]="true" [paginator]="true" [first]="first" editMode="row"
             [rows]="pageSize" [lazy]="true" [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true"
             [scrollable]="true" scrollHeight="500px" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" 
             [totalRecords]="totalRecords" [tableStyle]="{'min-width': '160rem'}" (onLazyLoad)="loadDemands($event)">
@@ -16,6 +19,12 @@
                         <div class="flex items-center justify-between">
                             <span>Employee Code</span>
                             <p-columnFilter type="text" field="employeeCode" display="menu" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Temp EMP Code</span>
+                            <p-columnFilter type="text" field="candidateCode" display="menu" />
                         </div>
                     </th>
                     <th>
@@ -120,6 +129,7 @@
                 <tr [pEditableRow]="attendance">
                     <td>{{ i + 1 }}</td>
                     <td>{{ attendance.candidate?.employeeCode || '-' }}</td>
+                    <td>{{ attendance.candidate?.candidateCode || '-' }}</td>
                     <td>{{ attendance.candidate?.candidateName || '-' }}</td>
                     <td>{{ attendance.candidate.consultancy.consultancyName || '-' }}</td>
                     <td>{{ attendance.employmentDetails.project.projectCode || '-' }}</td>               

@@ -35,11 +35,11 @@ export class FixedCostCandidateForm implements OnInit {
         candidateName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
         phoneNumber: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
         positionApplied: ['', [Validators.minLength(3), Validators.maxLength(100)]],
-        currentExperience: [0],
-        totalExperience: [0],
+        currentExperience: [null],
+        totalExperience: [null],
         highestQualification: ['', [Validators.minLength(3), Validators.maxLength(80)]],
         qualification: ['', [Validators.minLength(3), Validators.maxLength(80)]],
-        noticePeriod: ['', Validators.pattern(/^\d{2,3}$/)]
+        noticePeriod: [null, Validators.pattern(/^\d{2,3}$/)]
     });
 
     get candidateName() {

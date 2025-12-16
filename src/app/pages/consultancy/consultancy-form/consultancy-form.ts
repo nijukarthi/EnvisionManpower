@@ -40,8 +40,8 @@ export class ConsultancyForm implements OnInit {
         city: ['', Validators.maxLength(80)],
         state: ['', Validators.maxLength(80)],
         country: ['', Validators.maxLength(80)],
-        pinCode: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]],
-        panNumber: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/)]],
+        pinCode: ['', [Validators.minLength(6), Validators.maxLength(6)]],
+        panNumber: ['', [Validators.minLength(10), Validators.maxLength(10), Validators.pattern(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/)]],
         tanNumber: ['', [Validators.minLength(10), Validators.maxLength(10), Validators.pattern(/^[A-Z]{4}[0-9]{5}[A-Z]{1}$/)]],
         gstNumber: ['', [Validators.minLength(15), Validators.maxLength(15), Validators.pattern(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}Z[A-Z0-9]{1}$/)]],
         consultancyCategory: this.fb.array([])
@@ -104,10 +104,10 @@ export class ConsultancyForm implements OnInit {
     }
 
     get category() {
-        return this.consultancyForm.get('category');
+        return this.consultancyCategoryControl;
     }
 
-    consultancyCategoryControl = new FormControl([]);
+    consultancyCategoryControl = new FormControl([], Validators.required);
 
     assignCategory(categoryId: number): FormGroup {
         return this.fb.group({
@@ -200,6 +200,10 @@ export class ConsultancyForm implements OnInit {
                     },
                     error: (err) => {
                         console.log(err);
+
+                        if (err.status === 400) {
+                            this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
+                        }
                     }
                 });
             } else {
@@ -221,6 +225,10 @@ export class ConsultancyForm implements OnInit {
                     },
                     error: (err) => {
                         console.log(err);
+
+                        if (err.status === 400) {
+                            this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
+                        }
                     }
                 });
             }
