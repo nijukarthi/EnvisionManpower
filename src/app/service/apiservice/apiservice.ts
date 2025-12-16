@@ -546,7 +546,11 @@ export class Apiservice {
         return this.postMethod('requesition/invoice/disbursement/start', params);
     }
 
-    postTransfer(params: any) {
+    forceTransfer(params: any) {
         return this.postMethod('candidate/siteperfomance/transfer/force', params);
+    }
+
+    forceResignation(params: any) {
+        return this.postMethod('candidate/siteperfomance/resignation/force', params);
     }
 }
