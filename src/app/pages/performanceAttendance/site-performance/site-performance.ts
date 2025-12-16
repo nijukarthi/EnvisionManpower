@@ -25,8 +25,10 @@ export class SitePerformance implements OnInit {
   sitePerformancesList: any;
   employeeDetails: any;
   statuses: any[] = [];
+  selectedPerformances: any[] = [];
 
   date: Date = new Date();
+  minDate: Date | undefined;
 
   private fb = inject(FormBuilder);
   private router = inject(Router);
@@ -38,8 +40,8 @@ export class SitePerformance implements OnInit {
   resignEmployee(){
     return this.fb.group({
       employmentId: [0],
-      ndcFromSiteHead: [false],
-      ndcFromConsultancy: [false]
+      lastWorkingDate: [false],
+      replacementRequired: [false]
     })
   }
 
@@ -87,6 +89,9 @@ export class SitePerformance implements OnInit {
       { label: 'TRANSFERRED', value: 'TRANSFERRED' },
       { label: 'RESIGNED', value: 'RESIGNED' }
     ]
+
+    const today = new Date();
+    this.minDate = new Date(today);
   }
 
   performanceApi(data: any){
@@ -199,6 +204,11 @@ export class SitePerformance implements OnInit {
     console.log(this.employeeDetails);
   }
 
+  unSelectedEmployee(){
+    this.employeeDetails = null;
+    console.log(this.employeeDetails);
+  }
+
   onSubmit(){
     try {    
       console.log(this.resignationRequestForm.value);
@@ -216,6 +226,7 @@ export class SitePerformance implements OnInit {
           this.messageService.add({severity: 'success', summary: 'Success', detail: 'Resignation Request Created Successfully'});
           this.openTerminateModal = false;
           this.resignationRequestForm.reset();
+          this.selectedPerformances = [];
           this.fetchCandidateSitePerformance();
         },
         error: err => {
@@ -224,6 +235,8 @@ export class SitePerformance implements OnInit {
           if (err.status === 400) {
             this.messageService.add({severity: 'error', summary: 'Error', detail: err.error.detail});
             this.openTerminateModal = false;
+            this.selectedPerformances = [];
+            this.employeeDetails = null;
           }
         }
       })
@@ -241,6 +254,14 @@ export class SitePerformance implements OnInit {
     if (!last) return status !== 'ACTIVE';
 
     return status !== 'ACTIVE' && date > last;
+  }
+
+  replacementChange(isReplace: boolean){
+    if (isReplace && !this.employeeDetails.demand) {
+      this.messageService.add({severity: 'error', summary: 'Error', detail: 'Employment is not mapped to any demand. Create a new demand if replacement is required.'});
+      this.resignationDetails.at(0).get('replacementRequired')?.setValue(false, { emitEvent: false });
+      return;
+    }
   }
 
   loadPerformances(event: any){
@@ -294,5 +315,9 @@ export class SitePerformance implements OnInit {
     value[index] = selectedValue;
 
     filter(value);
+  }
+
+  onDialogClose(){
+    this.resignationRequestForm.reset();
   }
 }

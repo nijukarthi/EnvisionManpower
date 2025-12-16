@@ -5,7 +5,8 @@
             <p-datepicker view="month" [(ngModel)]="date" dateFormat="mm/yy" [readonlyInput]="true" 
                 placeholder="Pick a month" (onSelect)="fetchCandidateSitePerformance()" />
             <p-menu #menu [model]="getMenuItems()" [popup]="true" />
-            <p-button (onClick)="menu.toggle($event)" label="Actions" icon="pi pi-angle-down" iconPos="right" />
+            <p-button (onClick)="menu.toggle($event)" label="Actions" icon="pi pi-angle-down" iconPos="right"
+                [disabled]="!employeeDetails" />
             <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
         </div>
     </div>
@@ -14,6 +15,7 @@
            [rows]="pageSize" [lazy]="true" [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true"
            [first]="first" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
            [scrollable]="true" scrollHeight="500px" [totalRecords]="totalRecords" dataKey="candidate.candidateId"
+           [(selection)]="selectedPerformances" (onRowSelect)="selectedEmployee($event.data)" (onRowUnselect)="unSelectedEmployee()"
            [tableStyle]="{'min-width': '220rem'}" (onLazyLoad)="loadPerformances($event)">
             <ng-template #header>
                 <tr>
@@ -141,7 +143,7 @@
             <ng-template #body let-performance let-editing="editing" let-i="rowIndex">
                 <tr [pEditableRow]="performance">
                     <td>
-                        <p-tableCheckbox [value]="performance" (click)="selectedEmployee(performance)" />
+                        <p-tableCheckbox [value]="performance" />
                     </td>
                     <td>{{ i + 1 }}</td>
                     <td>{{ performance.candidate?.employeeCode || '-' }}</td>
@@ -231,20 +233,20 @@
 </div>
 
 <p-dialog header="Resignation Acceptance" [(visible)]="openTerminateModal" [modal]="true" [draggable]="false"
-    [style]="{width: '50rem'}">
+    [style]="{width: '50rem'}" (onHide)="onDialogClose()">
     <form [formGroup]="resignationRequestForm" (ngSubmit)="onSubmit()">
         <div class="grid grid-cols-2 gap-2" formArrayName="resignationDetails">
             @for (item of resignationDetails.controls; track $index; let i = $index) {
                 <ng-container [formGroupName]="i">
                     <div class="col-span-1 col-start-1 gap-1 grid">
                         <label for="last-working-date">Last Working Date</label>
-                        <p-datepicker [showIcon]="true" [iconDisplay]="'input'" appendTo="body" 
-                            inputId="last-working-date" placeholder="Select Date" />
+                        <p-datepicker formControlName="lastWorkingDate" [minDate]="minDate" [showIcon]="true" [iconDisplay]="'input'"  
+                            inputId="last-working-date" placeholder="Select Date" appendTo="body" />
                     </div>
                     <div class="col-span-1 gap-1 grid">
                         <label for="replacement">Replacement Required?</label>
-                        <p-select [options]="isReplacement"  
-                            optionLabel="label" optionValue="value"
+                        <p-select [options]="isReplacement" formControlName="replacementRequired"
+                            optionLabel="label" optionValue="value" (onChange)="replacementChange($event.value)"
                             inputId="replacement" placeholder="Select Yes/No" appendTo="body" />
                     </div>
                 </ng-container>
