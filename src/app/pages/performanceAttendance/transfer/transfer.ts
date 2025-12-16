@@ -16,6 +16,10 @@ export class Transfer implements OnInit {
   pageSize = 10;
   first = 0;
   transferredListLength = 0;
+  selectedTransferId = 0;
+
+  isEnableBtn = false;
+
   activeTab = 'processing';
 
   transferredEmployeeList: any;
@@ -120,6 +124,37 @@ export class Transfer implements OnInit {
     }
   }
 
+  selectedEmployee(transferId: number){
+    this.selectedTransferId = transferId;
+  }
+
+  unSelectedEmployee(){
+    this.selectedTransferId = 0;
+  }
+
+  transferConfirmPopup(){
+    this.confirmationService.confirm({
+      header: 'Are you sure?',
+      message: 'Please Type Confirm to Proceed.',
+      accept: () => {
+        
+      },
+      reject: () => {
+        this.isEnableBtn = false;
+      }
+    })
+  }
+
+  typedValue(event: any){
+    // console.log(event);
+
+    if (event.target.value === 'Confirm') {
+      this.isEnableBtn = true;
+    } else{
+      this.isEnableBtn = false;
+    }
+  }
+
   getMenuItems(){
     return [
       {
@@ -132,12 +167,6 @@ export class Transfer implements OnInit {
         icon: 'pi pi-times'
       }
     ]
-  }
-
-  transferConfirmPopup(){
-    this.confirmationService.confirm({
-      header: 'Are you sure?'
-    })
   }
 
   getStatusLabel(status: number){
