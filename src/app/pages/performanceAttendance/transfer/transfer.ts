@@ -150,10 +150,10 @@ export class Transfer implements OnInit {
                         id: this.selectedTransferId
                     };
                     console.log(data);
-                    this.apiService.postTransfer(data).subscribe({
+                    this.apiService.forceTransfer(data).subscribe({
                         next: (val) => {
                             console.log(val);
-                            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Transfered Successfuly' });
+                            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Transfered Successfully' });
                             this.fetchTransferedList(102);
                         },
                         error: (err) => {
