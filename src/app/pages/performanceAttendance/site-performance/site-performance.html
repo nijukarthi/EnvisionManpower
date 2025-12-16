@@ -237,16 +237,15 @@
             @for (item of resignationDetails.controls; track $index; let i = $index) {
                 <ng-container [formGroupName]="i">
                     <div class="col-span-1 col-start-1 gap-1 grid">
-                        <label for="no-due-clerance-sm">No Due Clearance from Site Manager</label>
-                        <p-select [options]="noDueClearanceList" formControlName="ndcFromSiteHead" 
-                            optionLabel="label" optionValue="value"
-                            inputId="no-due-clerance-sm" placeholder="Select Yes/No" appendTo="body" />
+                        <label for="last-working-date">Last Working Date</label>
+                        <p-datepicker [showIcon]="true" [iconDisplay]="'input'" appendTo="body" 
+                            inputId="last-working-date" placeholder="Select Date" />
                     </div>
                     <div class="col-span-1 gap-1 grid">
-                        <label for="no-due-clerance-rm">No Due Clearance from Resource Pool Manager</label>
-                        <p-select [options]="noDueClearanceList" formControlName="ndcFromConsultancy" 
+                        <label for="replacement">Replacement Required?</label>
+                        <p-select [options]="isReplacement"  
                             optionLabel="label" optionValue="value"
-                            inputId="no-due-clerance-rm" placeholder="Select Yes/No" appendTo="body" />
+                            inputId="replacement" placeholder="Select Yes/No" appendTo="body" />
                     </div>
                 </ng-container>
             }

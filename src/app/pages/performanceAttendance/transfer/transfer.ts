@@ -3,7 +3,7 @@ import { UserGroups } from '@/models/usergroups/usergroups.enum';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
 import { Component, OnInit } from '@angular/core';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-transfer',
@@ -25,7 +25,14 @@ export class Transfer implements OnInit {
   APPROVALSTATUS = ApprovalStatus;
   USERGROUPS = UserGroups;
 
-  constructor(private apiService: Apiservice, private messageService: MessageService){}
+  statusMap: any = {
+    102: { label: 'Processing', severity: 'warn' },
+    108: { label: 'Scheduled', severity: 'primary'},
+    200: { label: 'Completed', severity: 'success' },
+    406: { label: 'Rejected', severity: 'danger' }
+  }
+
+  constructor(private apiService: Apiservice, private messageService: MessageService, private confirmationService: ConfirmationService){}
 
   ngOnInit(): void {
     this.fetchTransferedList(102);
@@ -111,6 +118,34 @@ export class Transfer implements OnInit {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  getMenuItems(){
+    return [
+      {
+        label: 'Force Transfer',
+        icon: 'pi pi-bolt',
+        command: () => this.transferConfirmPopup()
+      },
+      {
+        label: 'Cancel Transfer',
+        icon: 'pi pi-times'
+      }
+    ]
+  }
+
+  transferConfirmPopup(){
+    this.confirmationService.confirm({
+      header: 'Are you sure?'
+    })
+  }
+
+  getStatusLabel(status: number){
+    return this.statusMap[status]?.label ?? 'UnKnown';
+  }
+
+  getSeverity(status: number): string{
+    return this.statusMap[status]?.severity ?? 'primary';
   }
 
   pageChange(event: any){

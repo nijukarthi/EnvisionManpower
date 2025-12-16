@@ -1,63 +1,81 @@
 <div class="card">
     <h5>Transfer Employee</h5>
     <p class="text-lg font-semibold">Transfer From</p>
-    <div class="grid grid-cols-2 gap-2">
-        <div class="grid col-span-1 gap-1">
-            <label for="project-code">Project Code</label>
-            <input type="text" pInputText 
-                [value]="employeeDetails?.employeeDetails?.project?.projectCode" [disabled]="true" id="project-code" />
+    <form [formGroup]="transferForm" (ngSubmit)="onSubmit()">
+        <div class="grid grid-cols-2 gap-2" formArrayName="transferDetails">
+            @for (item of transferDetails.controls; track $index; let i = $index) {
+                <ng-container [formGroupName]="i">
+                    @if (employeeDetails.employeeDetails.demand) {
+                        <div class="grid col-span-1 gap-1">
+                            <label for="demand-code">Demand Code</label>
+                            <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.demand.demandCode"
+                                [disabled]="true" id="demand-code" />
+                        </div>
+                    }
+                    <div class="grid col-span-1 gap-1">
+                        <label for="project-code">Project Code</label>
+                        <input type="text" pInputText 
+                            [value]="employeeDetails?.employeeDetails?.project?.projectCode" [disabled]="true" id="project-code" />
+                    </div>
+                    <div class="grid col-span-1 gap-1">
+                        <label for="site-name">Site Name</label>
+                        <input type="text" pInputText 
+                            [value]="employeeDetails?.employeeDetails?.project?.siteName" [disabled]="true" id="site-name" />
+                    </div>
+                    <div class="grid col-span-1 gap-1">
+                        <label for="cluster">Cluster</label>
+                        <input type="text" pInputText 
+                            [value]="employeeDetails?.employeeDetails?.cluster?.clusterName" [disabled]="true" id="cluster" />
+                    </div>
+                    <div class="grid col-span-1 gap-1">
+                        <label for="cluster-head">Cluster Head</label>
+                        <input type="text" pInputText 
+                            [value]="employeeDetails?.employeeDetails?.clusterHead?.userName" [disabled]="true" id="cluster-head" />
+                    </div>
+                    <div class="grid col-span-1 gap-1">
+                        <label for="site-incharge">Site Incharge</label>
+                        <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.siteIncharge?.userName" 
+                            id="site-incharge" [disabled]="true" />
+                    </div>
+                    <div class="grid col-span-1 gap-1">
+                        <label for="department">Department</label>
+                        <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.department?.departmentName" 
+                           id="department" [disabled]="true" />
+                    </div>
+                    <div class="grid col-span-1 gap-1">
+                        <label for="department-head">Department Head</label>
+                        <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.departmentHead?.userName" 
+                           id="department-head" [disabled]="true" />
+                    </div>
+                    <div class="grid col-span-1 gap-1">
+                        <label for="department-head">Role</label>
+                        <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.envisionRole?.roleName"
+                            id="department-head" [disabled]="true" />
+                    </div>
+                    <div class="grid col-span-1 gap-1">
+                        <label for="spn-code">SPN Code</label>
+                        <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.spn?.spnCode"
+                            [disabled]="true" id="spn-code" />
+                    </div>
+                    <div class="grid col-span-1 gap-1">
+                        <label for="spn-description">SPN Description</label>
+                        <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.spn?.spnDescription"
+                            [disabled]="true" id="spn-description" />
+                    </div>
+                    <div class="grid col-span-1 gap-1">
+                        <label for="experience">Experience</label>
+                        <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.spn?.experience"
+                            [disabled]="true" id="experience" />
+                    </div>
+                    <div class="grid col-span-1 gap-1" formGroupName="transferFrom">
+                        <label for="last-working-date">Last Working Date</label>
+                        <p-datepicker formControlName="lastWorkingDate" [minDate]="minDate" [showIcon]="true" [iconDisplay]="'input'" 
+                            placeholder="Select Date" appendTo="body" inputId="last-working-date" (onSelect)="selectedLastDate($event)" />
+                    </div>
+                </ng-container>
+            }
         </div>
-        <div class="grid col-span-1 gap-1">
-            <label for="site-name">Site Name</label>
-            <input type="text" pInputText 
-                [value]="employeeDetails?.employeeDetails?.project?.siteName" [disabled]="true" id="site-name" />
-        </div>
-        <div class="grid col-span-1 gap-1">
-            <label for="cluster">Cluster</label>
-            <input type="text" pInputText 
-                [value]="employeeDetails?.employeeDetails?.cluster?.clusterName" [disabled]="true" id="cluster" />
-        </div>
-        <div class="grid col-span-1 gap-1">
-            <label for="cluster-head">Cluster Head</label>
-            <input type="text" pInputText 
-                [value]="employeeDetails?.employeeDetails?.clusterHead?.userName" [disabled]="true" id="cluster-head" />
-        </div>
-        <div class="grid col-span-1 gap-1">
-            <label for="site-incharge">Site Incharge</label>
-            <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.siteIncharge?.userName" 
-                id="site-incharge" [disabled]="true" />
-        </div>
-        <div class="grid col-span-1 gap-1">
-            <label for="department">Department</label>
-            <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.department?.departmentName" 
-               id="department" [disabled]="true" />
-        </div>
-        <div class="grid col-span-1 gap-1">
-            <label for="department-head">Department Head</label>
-            <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.departmentHead?.userName" 
-               id="department-head" [disabled]="true" />
-        </div>
-        <div class="grid col-span-1 gap-1">
-            <label for="department-head">Role</label>
-            <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.envisionRole?.roleName"
-                id="department-head" [disabled]="true" />
-        </div>
-        <div class="grid col-span-1 gap-1">
-            <label for="spn-code">SPN Code</label>
-            <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.spn?.spnCode"
-                [disabled]="true" id="spn-code" />
-        </div>
-        <div class="grid col-span-1 gap-1">
-            <label for="spn-description">SPN Description</label>
-            <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.spn?.spnDescription"
-                [disabled]="true" id="spn-description" />
-        </div>
-        <div class="grid col-span-1 gap-1">
-            <label for="experience">Experience</label>
-            <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.spn?.experience"
-                [disabled]="true" id="experience" />
-        </div>
-    </div>
+    </form>
 </div>
 
 
@@ -130,14 +148,14 @@
                     </div>
                     <div class="grid col-span-1 gap-1">
                         <label for="joining-date">Joining Date</label>
-                        <p-datepicker formControlName="joiningDate" [iconDisplay]="'input'" [showIcon]="true" 
-                            placeholder="Select Date" appendTo="body" inputId="joining-date" />
+                        <p-datepicker formControlName="joiningDate" [minDate]="minJoiningDate" [iconDisplay]="'input'" 
+                            [showIcon]="true" placeholder="Select Date" appendTo="body" inputId="joining-date" />
                     </div>
                     <div class="grid col-span-1 gap-1">
                         <label for="replace">Replacement Required?</label>
                         <p-select [options]="isReplacement" formControlName="isReplacementRequired" 
-                            optionLabel="label" optionValue="value" 
-                            inputId="replace" placeholder="Select Yes/No" />
+                            optionLabel="label" optionValue="value" inputId="replace" placeholder="Select Yes/No" 
+                            (onChange)="replacementChange($event.value)" />
                     </div>
                 </ng-container>
             }
