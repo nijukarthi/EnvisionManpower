@@ -16,6 +16,9 @@ export class TransferForm implements OnInit {
   demandDetails: any;
   employeeDetails: any;
 
+  minDate: Date | undefined;
+  minJoiningDate: Date | undefined;
+
   private fb = inject(FormBuilder);
 
   constructor(private apiService: Apiservice, private messageService: MessageService, private router: Router){}
@@ -32,6 +35,7 @@ export class TransferForm implements OnInit {
     return this.fb.group({
       transferFrom: this.fb.group({
         employmentId: [0],
+        lastWorkingDate: ['']
       }),
       transferTo: this.fb.group({
         demandId: [0]
@@ -56,6 +60,9 @@ export class TransferForm implements OnInit {
     this.employeeDetails = history.state;
     console.log(this.employeeDetails);
     this.fetchDemandDetails();
+
+    const today = new Date();
+    this.minDate = new Date(today);
   }
 
   fetchDemandDetails(){
@@ -68,7 +75,7 @@ export class TransferForm implements OnInit {
       this.apiService.fetchDemandDetails(data).subscribe({
         next: val => {
           console.log(val);
-          this.demandList = val.data.filter((d: any) => d.demandStatus === 102 && 
+          this.demandList = val?.data?.filter((d: any) => d.demandStatus === 102 && 
             d.departmentHeadApproval.approvalStatus === 200 && d.stateHeadApproval.approvalStatus === 200 &&
             d.envisionRole);
           console.log(this.demandList);
@@ -86,6 +93,27 @@ export class TransferForm implements OnInit {
     console.log(demandId);
     this.demandDetails = this.demandList.find((d) => d.demandId === demandId);
     console.log(this.demandDetails);
+  }
+
+  selectedLastDate(lastDate: any){
+    const nextDay = new Date(lastDate);
+    nextDay.setDate(nextDay.getDate() + 1);
+
+    this.minJoiningDate = nextDay;
+    console.log(this.minJoiningDate);
+
+    this.transferDetails.at(0).get('joiningDate')?.reset();
+  }
+
+  replacementChange(isReplace: boolean){
+    console.log(isReplace);
+
+    if (isReplace && !this.employeeDetails.employeeDetails.demand) {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: "Transfer-from employment is not mapped to any demand. Create a new demand if replacement is required." });
+
+      this.transferDetails.at(0).get('isReplacementRequired')?.setValue(false, { emitEvent: false });
+      return;
+    }
   }
 
   onSubmit(){

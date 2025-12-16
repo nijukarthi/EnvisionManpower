@@ -116,6 +116,17 @@ export class Terminate implements OnInit {
     }
   }
 
+  noDueClearanceList = [
+    {
+      label: 'Yes',
+      value: true
+    },
+    {
+      label: 'No',
+      value: false
+    }
+  ]
+
   pageChange(event: any){
     this.first = event.first;
     this.offSet = event.first / event.rows;

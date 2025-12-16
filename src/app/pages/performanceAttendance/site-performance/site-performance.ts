@@ -68,7 +68,7 @@ export class SitePerformance implements OnInit {
     ]
   }
 
-  noDueClearanceList = [
+  isReplacement = [
     {
       label: 'Yes',
       value: true
