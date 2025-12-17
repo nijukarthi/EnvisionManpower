@@ -13,7 +13,7 @@
             [loading]="loading" [paginator]="true" [rows]="pageSize" dataKey="employmentDetails.employmentId" selectionMode="multiple"
             [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true" [totalRecords]="totalRecords" [first]="first"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" editMode="row"
-            [tableStyle]="{'min-width': '180rem'}" (onLazyLoad)="loadDemands($event)"
+            [tableStyle]="{'min-width': '220rem'}" (onLazyLoad)="loadDemands($event)"
             [globalFilterFields]="['candidateName', 'phoneNumber', 'employeeCode', 'candidateCode', 'employmentDetails.project.projectCode',
                 'employmentDetails.cluster.clusterName', 'employmentDetails.spn.spnCode', 'employmentDetails.spn.spnDescription',
                 'employmentDetails.spn.experience', 'employmentDetails.envisionRole.roleName'
@@ -44,6 +44,12 @@
                         <div class="flex items-center justify-between">
                             <span>Consultancy Name</span>
                             <p-columnFilter type="text" field="consultancyName" display="menu" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Demand Code</span>
+                            <p-columnFilter type="text" field="demandCode" display="menu" />
                         </div>
                     </th>
                     <th>
@@ -136,6 +142,7 @@
                     <td>{{ onboarding.candidateCode || '-' }}</td>
                     <td>{{ onboarding.candidateName }}</td>
                     <td>{{ onboarding.consultancy.consultancyName }}</td>
+                    <td>{{ onboarding.employmentDetails?.demand?.demandCode || '-' }}</td>
                     <td>{{ onboarding.employmentDetails.project.projectCode }}</td>
                     <td>{{ onboarding.employmentDetails.project.siteName ?? '-' }}</td>
                     <td>{{ onboarding.employmentDetails.cluster.clusterName || '-' }}</td>

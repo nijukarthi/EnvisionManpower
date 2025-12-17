@@ -10,6 +10,7 @@
                     <th>SI No</th>
                     <th>Steps</th>
                     <th>Demand Code</th>
+                    <th>Status</th>
                     <th>SPN Code</th>
                     <th>SPN Description</th>
                     <th>Experience</th>
@@ -33,6 +34,9 @@
                     <td>
                         <p-menu #menu [model]="getMenuItems(demand)" [popup]="true" appendTo="body" />
                         <p-button (onClick)="menu.toggle($event)" [label]="demand.demandCode" variant="text" link />
+                    </td>
+                    <td>
+                        <p-tag [value]="getStatusLabel(demand.demandStatus)" [severity]="getSeverity(demand.demandStatus)" />
                     </td>
                     <td>{{ demand.spn.spnCode }}</td>
                     <td>{{ demand.spn.spnDescription }}</td>

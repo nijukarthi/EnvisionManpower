@@ -11,7 +11,7 @@
         <p-table #dt dataKey="candidate.candidateId" [value]="attendanceList" stripedRows [rowHover]="true" [paginator]="true" [first]="first" editMode="row"
             [rows]="pageSize" [lazy]="true" [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true"
             [scrollable]="true" scrollHeight="500px" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" 
-            [totalRecords]="totalRecords" [tableStyle]="{'min-width': '160rem'}" (onLazyLoad)="loadDemands($event)">
+            [totalRecords]="totalRecords" [tableStyle]="{'min-width': '180rem'}" (onLazyLoad)="loadDemands($event)">
             <ng-template #header>
                 <tr>
                     <th>SL NO</th>

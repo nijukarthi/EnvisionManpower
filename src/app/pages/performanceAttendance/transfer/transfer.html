@@ -5,54 +5,113 @@
         <p-button (onClick)="menu.toggle($event)" label="Actions" icon="pi pi-angle-down" 
             iconPos="right" [disabled]="!selectedTransferId" />
     </div>
-    <div class="flex">
-        <button class="custom-btn" pButton pRipple text (click)="setActiveTab('processing', 102)"
-            [ngClass]="{'active-tab': activeTab === 'processing'}">
-            <i pButtonIcon class="pi pi-stopwatch"></i>
-            <span pButtonLabel>Processing</span>
-        </button>
-        <button class="custom-btn" pButton pRipple text (click)="setActiveTab('accepted', 200)"
-            [ngClass]="{'active-tab': activeTab === 'accepted'}">
-            <i pButtonIcon class="pi pi-check-circle"></i>
-            <span pButtonLabel>Accepted</span>
-        </button>
-        <button class="custom-btn" pButton pRipple text (click)="setActiveTab('rejected', 406)"
-            [ngClass]="{'active-tab': activeTab === 'rejected'}">
-            <i pButtonIcon class="pi pi-times-circle"></i>
-            <span pButtonLabel>Rejected</span>
-        </button>
-    </div>
     <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
         <p-table [value]="transferredEmployeeList" showGridlines stripedRows [rowHover]="true" 
             [paginator]="true" [rows]="pageSize" [lazy]="true" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10, 20, 30]" 
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [first]="first" 
             selectionMode="single" dataKey="transferId" (onRowSelect)="selectedEmployee($event.data)" 
             (onRowUnselect)="unSelectedEmployee()" [(selection)]="selectedTransfer"
-            [totalRecords]="transferredListLength" [tableStyle]="{'min-width': '130rem'}" (onPage)="pageChange($event)">
+            [totalRecords]="transferredListLength" [tableStyle]="{'min-width': '170rem'}" (onLazyLoad)="loadTransfer($event)">
             <ng-template #header>
                 <tr>
                     <th rowspan="2">SL No</th>
-                    <th rowspan="2">Employee Code</th>
-                    <th rowspan="2">Employee Name</th>              
+                    <th rowspan="2">
+                        <div class="flex items-center justify-between">
+                            <span>Employee Code</span>
+                            <p-columnFilter type="text" field="employeeCode" display="menu" />
+                        </div>
+                    </th>
+                    <th rowspan="2">
+                        <div class="flex items-center justify-between">
+                            <span>Employee Name</span>
+                            <p-columnFilter type="text" field="candidateName" display="menu" />
+                        </div>
+                    </th>              
                     <th colspan="6" style="text-align: center;">Transfer From</th>
                     <th colspan="6" style="text-align: center;">Transfer To</th>
-                    <th rowspan="2">Status</th>
+                    <th rowspan="2">
+                        <div class="flex items-center justify-between">
+                            <span>Is Replacement Required</span>
+                            <p-columnFilter field="replace" matchMode="equals" display="menu">
+                                <ng-template #filter let-value let-filter="filterCallback">
+                                    <p-select [options]="isReplacement" optionValue="value" (onChange)="filter($event.value)" 
+                                        placeholder="Select Yes/No" class="w-full">
+                                        <ng-template let-option #item>
+                                            {{ option.label }}
+                                        </ng-template>
+                                    </p-select>
+                                </ng-template>
+                            </p-columnFilter>
+                        </div>
+                    </th>
+                    <th rowspan="2">
+                        <div class="flex items-center justify-between">
+                            <span>Status</span>
+                            <p-columnFilter field="status" matchMode="equals" display="menu">
+                                <ng-template #filter let-value let-filter="filterCallback">
+                                    <p-multiselect [options]="statuses" (onChange)="filter($event.value)"
+                                        placeholder="Select Statuses" class="w-full">
+                                        <ng-template let-option #item>
+                                            <p-tag [value]="option.label" [severity]="getSeverity(option.value)" />
+                                        </ng-template>
+                                    </p-multiselect>
+                                </ng-template>
+                            </p-columnFilter>
+                        </div>
+                    </th>
                     <th rowspan="2">Cluster Head Approval</th>
                     <th rowspan="2">Department Head Approval</th>
                 </tr>
                 <tr>
                     <th>Demand Code</th>
-                    <th>Project Code</th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Project Code</span>
+                            <p-columnFilter type="text" field="projectCode" display="menu" />
+                        </div>
+                    </th>
                     <th>Site Name</th>
-                    <th>Cluster Name</th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Cluster Name</span>
+                            <p-columnFilter type="text" field="clusterName" display="menu" />
+                        </div>     
+                    </th>
                     <th>Role</th>
                     <th>Last Working Date</th>
                     <th>Demand Code</th>
-                    <th>Project Code</th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Project Code</span>
+                            <p-columnFilter type="text" field="projectCode" display="menu" />
+                        </div>
+                    </th>
                     <th>Site Name</th>
-                    <th>Cluster Name</th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Cluster Name</span>
+                            <p-columnFilter type="text" field="clusterName" display="menu" />
+                        </div>
+                    </th>
                     <th>Role</th>
-                    <th>Joining Date</th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Joining Date</span>
+                            <p-columnFilter type="date" field="date" display="menu" matchMode="between"
+                                [showOperator]="false">
+                                <ng-template #filter let-filter="filterCallback" let-value>
+                                    <div class="flex flex-col gap-2">
+                                        <p-datepicker [ngModel]="value?.[0] || null" 
+                                            (ngModelChange)="updateRange($event, value, 0, filter)"
+                                            placeholder="From Date" />
+                                        <p-datepicker [ngModel]="value?.[1] || null" 
+                                            (ngModelChange)="updateRange($event, value, 1, filter)"
+                                            placeholder="To Date" />
+                                    </div>
+                                </ng-template>
+                            </p-columnFilter>
+                        </div>
+                    </th>
                 </tr>
             </ng-template>
             <ng-template #body let-transfer let-i="rowIndex">
@@ -72,6 +131,7 @@
                     <td>{{ transfer.cluster.clusterName }}</td>
                     <td>{{ transfer.envisionRole.roleName }}</td>
                     <td>{{ transfer.joiningDate }}</td>
+                    <td>{{ transfer.isReplacementRequired ? 'Yes' : 'No' }}</td>
                     <td>
                         <p-tag [value]="getStatusLabel(transfer.transferStatus)" 
                             [severity]="getSeverity(transfer.transferStatus)" />

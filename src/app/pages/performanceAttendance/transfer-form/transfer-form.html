@@ -2,12 +2,11 @@
     <h5>Transfer Employee</h5>
     <p class="text-lg font-semibold">Transfer From</p>
     <form [formGroup]="transferForm" (ngSubmit)="onSubmit()">
-        <div class="mb-4">
+        <div class="mb-4 flex items-center gap-2">
             <span class="font-bold">Demand Code:</span>
-            <span class="ml-2 px-3 py-1 rounded text-sm font-semibold" [ngClass]="employeeDetails?.employeeDetails?.demand
-                  ? 'bg-green-100 text-green-800'
-                  : 'bg-red-100 text-red-800'">
-                {{ employeeDetails?.employeeDetails?.demand?.demandCode ?? 'Not Found' }}
+            <span>
+                <p-tag [value]="employeeDetails?.employeeDetails?.demand?.demandCode ?? 'Not Found'"
+                    [severity]="employeeDetails?.employeeDetails?.demand === null ? 'danger' : 'secondary'" />
             </span>
         </div>
 
@@ -73,6 +72,11 @@
                         <label for="last-working-date">Last Working Date</label>
                         <p-datepicker formControlName="lastWorkingDate" [minDate]="minDate" [showIcon]="true" [iconDisplay]="'input'" 
                             placeholder="Select Date" appendTo="body" inputId="last-working-date" (onSelect)="selectedLastDate($event)" />
+                    </div>
+                    <div class="grid col-span-1 gap-1">
+                        <label for="replace">Replacement Required?</label>
+                        <p-select [options]="isReplacement" formControlName="isReplacementRequired" optionLabel="label" optionValue="value"
+                            inputId="replace" placeholder="Select Yes/No" (onChange)="replacementChange($event.value)" />
                     </div>
                 </ng-container>
             }
@@ -152,12 +156,6 @@
                         <label for="joining-date">Joining Date</label>
                         <p-datepicker formControlName="joiningDate" [minDate]="minJoiningDate" [iconDisplay]="'input'" 
                             [showIcon]="true" placeholder="Select Date" appendTo="body" inputId="joining-date" />
-                    </div>
-                    <div class="grid col-span-1 gap-1">
-                        <label for="replace">Replacement Required?</label>
-                        <p-select [options]="isReplacement" formControlName="isReplacementRequired" 
-                            optionLabel="label" optionValue="value" inputId="replace" placeholder="Select Yes/No" 
-                            (onChange)="replacementChange($event.value)" />
                     </div>
                 </ng-container>
             }

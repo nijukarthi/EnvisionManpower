@@ -24,6 +24,8 @@ export class Steps implements OnInit {
   finalInterviewId = 0;
   categoryId = 0;
 
+  minDate: Date | undefined;
+
   currentUserRole = Number(sessionStorage.getItem('userGroupId'));
 
   private fb = inject(FormBuilder);
@@ -220,6 +222,12 @@ export class Steps implements OnInit {
     const joiningDateCtrl = group.get('joiningDate');
     const codeCtrl = group.get('candidate.candidateCode');
 
+    if (this.currentUserRole === UserGroups.CONSULTANCY) {
+      acceptanceCtrl?.enable();
+    } else {
+      acceptanceCtrl?.disable();
+    }
+
     const fromAPI = candidate.candidateAcceptance === true;
 
     if (fromAPI) {
@@ -240,7 +248,7 @@ export class Steps implements OnInit {
         codeCtrl?.enable();
       } else {
         joiningDateCtrl?.disable();
-        joiningDateCtrl?.disable();
+        codeCtrl?.disable();
       }
     });
     return group;
@@ -289,6 +297,9 @@ export class Steps implements OnInit {
         this.fetchJoiningProcessCandidateList();
       }
     })
+
+    const today = new Date();
+    this.minDate = new Date(today);
   }
 
   stepChange(stepValue: any){
@@ -1003,16 +1014,25 @@ export class Steps implements OnInit {
 
   submitStep7Form(){
     try {
-      const approvalCandidates = this.joiningProcessCandidates.value.map((candidate: any) => {
-        const updatedCandidate = { ...candidate };
+      const approvalCandidates = this.joiningProcessCandidates.controls
+        .filter((control: any) => control.dirty)
+        .map((control: any) => {
+        console.log(control);
+        const candidate = { ...control.value };
 
-        if (!updatedCandidate.candidateAcceptance) {
-          delete updatedCandidate.joiningDate;
+        if (!candidate.candidateAcceptance) {
+          delete candidate.joiningDate;
         }
 
-        return updatedCandidate;
-      })
+        return candidate;
+      });
 
+      if (!approvalCandidates.length) {
+        this.messageService.add({severity: 'info', summary: 'No Changes', detail: 'No candidate data was modified'});
+        return;
+      }
+
+      console.log(approvalCandidates);
       const data = {
         demandId: this.demandDetails.demandId,
         approvalCandidates: approvalCandidates
@@ -1024,9 +1044,6 @@ export class Steps implements OnInit {
         next: val => {
           console.log(val);
           this.messageService.add({severity: 'success', summary: 'Success', detail: 'Joining Process Done Successfully'});
-          // setTimeout(() => {
-          //   this.router.navigate(['/home/demand-fullfillment']);
-          // }, 2000);
           this.fetchJoiningProcessCandidateList();
         },
         error: err => {
