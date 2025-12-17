@@ -25,6 +25,8 @@ export class Transfer implements OnInit {
 
     transferredEmployeeList: any;
 
+    selectedTransfer: any[] = [];
+
     currentUserRole = Number(sessionStorage.getItem('userGroupId'));
 
     APPROVALSTATUS = ApprovalStatus;
@@ -34,7 +36,8 @@ export class Transfer implements OnInit {
         102: { label: 'Processing', severity: 'warn' },
         108: { label: 'Scheduled', severity: 'primary' },
         200: { label: 'Completed', severity: 'success' },
-        406: { label: 'Rejected', severity: 'danger' }
+        406: { label: 'Rejected', severity: 'danger' },
+        418: { label: 'Cancelled', severity: 'danger' }
     };
 
     constructor(
@@ -155,10 +158,15 @@ export class Transfer implements OnInit {
                             console.log(val);
                             this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Transfered Successfully' });
                             this.fetchTransferedList(102);
+                            this.selectedTransfer = [];
                         },
                         error: (err) => {
                             console.log(err);
-                            this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
+
+                            if (err.status === 400) {      
+                              this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
+                              this.selectedTransfer = [];
+                            }
                         }
                     });
                 } catch (error) {
@@ -172,11 +180,32 @@ export class Transfer implements OnInit {
     }
 
     cancelTransferPopup(){
+      console.log('cancel request');
       this.confirmationService.confirm({
         header: 'Are you sure?',
         accept: () => {
           try {
-            
+            const data = {
+              id: this.selectedTransferId
+            }
+            console.log(data);
+
+            this.apiService.cancelTransfer(data).subscribe({
+              next: val => {
+                console.log(val);
+                this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Transfer Cancelled Successfully' });
+                this.fetchTransferedList(102);
+                this.selectedTransfer = [];
+              },
+              error: err => {
+                console.log(err);
+
+                if (err.status === 400) {
+                  this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
+                  this.selectedTransfer = [];
+                }
+              }
+            })
           } catch (error) {
             console.log(error);
           }

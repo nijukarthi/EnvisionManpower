@@ -34,7 +34,8 @@ export class Terminate implements OnInit {
         102: { label: 'Processing', severity: 'warn' },
         108: { label: 'Scheduled', severity: 'primary' },
         200: { label: 'Completed', severity: 'success' },
-        406: { label: 'Rejected', severity: 'danger' }
+        406: { label: 'Rejected', severity: 'danger' },
+        418: { label: 'Cancelled', severity: 'danger' }
     };
 
     constructor(
@@ -155,7 +156,7 @@ export class Terminate implements OnInit {
         }
     }
 
-    resignConfirmPopup() {
+    forceResignationPopup() {
         this.confirmationService.confirm({
             header: 'Are you sure?',
             accept: () => {
@@ -169,10 +170,15 @@ export class Terminate implements OnInit {
                             console.log(val);
                             this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Employee resigned Successfully' });
                             this.fetchResignationList(102);
+                            this.selectedResignation = [];
                         },
                         error: (err) => {
                             console.log(err);
-                            this.messageService.add({ severity: 'error', summary: 'Error', detail: err?.error?.detail });
+
+                            if (err.status === 400) {
+                              this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
+                              this.selectedResignation = [];
+                            }
                         }
                     });
                 } catch (error) {
@@ -183,6 +189,42 @@ export class Terminate implements OnInit {
                 this.isEnabledBtn = false;
             }
         });
+    }
+
+    cancelResignationPopup(){
+      console.log('cancel request');
+      this.confirmationService.confirm({
+        header: 'Are you sure?',
+        accept: () => {
+          try {
+            const data = {
+              id: this.selectedResignationId
+            }
+
+            console.log(data);
+
+            this.apiService.cancelResignation(data).subscribe({
+              next: val => {
+                console.log(val);
+                this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Resignation Cancelled Successfully' });
+                this.fetchResignationList(102);
+                this.selectedResignation = [];
+              },
+              error: err => {
+                console.log(err);
+
+                if (err.status === 400) {
+                  this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
+                  this.selectedResignation = [];
+                }
+              }
+            })
+          } catch (error) {
+            console.log(error);
+          }
+        },
+        reject: () => this.isEnabledBtn = false
+      })
     }
 
     noDueClearanceList = [
@@ -201,11 +243,12 @@ export class Terminate implements OnInit {
             {
                 label: 'Force Resignation',
                 icon: 'pi pi-bolt',
-                command: () => this.resignConfirmPopup()
+                command: () => this.forceResignationPopup()
             },
             {
                 label: 'Cancel Resignation',
-                icon: 'pi pi-times'
+                icon: 'pi pi-times',
+                command: () => this.cancelResignationPopup()
             }
         ];
     }

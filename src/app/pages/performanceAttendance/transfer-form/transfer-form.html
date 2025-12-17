@@ -2,16 +2,18 @@
     <h5>Transfer Employee</h5>
     <p class="text-lg font-semibold">Transfer From</p>
     <form [formGroup]="transferForm" (ngSubmit)="onSubmit()">
+        <div class="mb-4">
+            <span class="font-bold">Demand Code:</span>
+            <span class="ml-2 px-3 py-1 rounded text-sm font-semibold" [ngClass]="employeeDetails?.employeeDetails?.demand
+                  ? 'bg-green-100 text-green-800'
+                  : 'bg-red-100 text-red-800'">
+                {{ employeeDetails?.employeeDetails?.demand?.demandCode ?? 'Not Found' }}
+            </span>
+        </div>
+
         <div class="grid grid-cols-2 gap-2" formArrayName="transferDetails">
             @for (item of transferDetails.controls; track $index; let i = $index) {
                 <ng-container [formGroupName]="i">
-                    @if (employeeDetails.employeeDetails.demand) {
-                        <div class="grid col-span-1 gap-1">
-                            <label for="demand-code">Demand Code</label>
-                            <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.demand.demandCode"
-                                [disabled]="true" id="demand-code" />
-                        </div>
-                    }
                     <div class="grid col-span-1 gap-1">
                         <label for="project-code">Project Code</label>
                         <input type="text" pInputText 

@@ -553,4 +553,12 @@ export class Apiservice {
     forceResignation(params: any) {
         return this.postMethod('candidate/siteperfomance/resignation/force', params);
     }
+
+    cancelTransfer(params: any){
+      return this.postMethod('candidate/siteperfomance/transfer/cancel', params);
+    }
+
+    cancelResignation(params: any){
+      return this.postMethod('candidate/siteperfomance/resignation/cancel', params);
+    }
 }
