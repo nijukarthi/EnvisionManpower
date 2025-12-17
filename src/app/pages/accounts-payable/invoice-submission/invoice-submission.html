@@ -2,20 +2,70 @@
     <div class="flex items-baseline-last justify-between">
         <h5>Invoice Submission</h5>
         @if(currentUserRole === USERGROUPS.CONSULTANCY){
-            <p-button label="Add Invoice Submission" icon="pi pi-plus" routerLink="/home/invoice-submission/new" />
+        <p-button label="Add Invoice Submission" icon="pi pi-plus" routerLink="/home/invoice-submission/new" />
         }
     </div>
     <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
-        <p-table [value]="invoiceSubmissionList" stripedRows [rowHover]="true" [rowsPerPageOptions]="[10, 20, 30]"
-            [paginator]="true" [rows]="pageSize" [first]="first" [showCurrentPageReport]="true" [lazy]="true"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [totalRecords]="totalRecords"
-            [tableStyle]="{'min-width': '150rem'}" (onPage)="pageChange($event)">
+        <p-table
+            [value]="invoiceSubmissionList"
+            stripedRows
+            [rowHover]="true"
+            [rowsPerPageOptions]="[10, 20, 30]"
+            [paginator]="true"
+            [rows]="pageSize"
+            [first]="first"
+            [showCurrentPageReport]="true"
+            [lazy]="true"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [totalRecords]="totalRecords"
+            [tableStyle]="{'min-width': '150rem'}"
+            (onPage)="pageChange($event)"
+            (onLazyLoad)="loadInvoice($event)"
+        >
             <ng-template #header>
                 <tr>
                     <th>SL No</th>
-                    <th>Invoice Number</th>
-                    <th>Invoice Date</th>
-                    <th>Invoice Status</th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Invoice Number</span>
+                            <p-columnFilter type="text" field="invoiceNumber" display="menu" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>PO Number</span>
+                            <p-columnFilter type="text" field="poNumber" display="menu" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Invoice Date</span>
+                            <p-columnFilter type="date" field="date" display="menu" matchMode="between" [showOperator]="false">
+                                <ng-template #filter let-filter="filterCallback" let-value>
+                                    <div class="flex flex-col gap-2">
+                                        <p-datepicker [ngModel]="value?.[0] || null" (ngModelChange)="updateRange($event, value, 0, filter)" placeholder="From Date" />
+
+                                        <p-datepicker [ngModel]="value?.[1] || null" (ngModelChange)="updateRange($event, value, 1, filter)" placeholder="To Date" />
+                                    </div>
+                                </ng-template>
+                            </p-columnFilter>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Invoice Status</span>
+                            <p-columnFilter field="status" matchMode="equals" display="menu">
+                                <ng-template #filter let-value let-filter="filterCallback">
+                                    <p-multiselect [options]="statuses" (onChange)="filter($event.value)" placeholder="Select Statuses" class="w-full">
+                                        <ng-template let-option #item>
+                                            <p-tag [value]="option.value" [severity]="getSeverity(option.value)" />
+                                        </ng-template>
+                                    </p-multiselect>
+                                </ng-template>
+                            </p-columnFilter>
+                        </div>
+                    </th>
+
                     <th>POD</th>
                     <th>Seal and Sign Date by Consultancy</th>
                     <th>Submitted Date</th>
@@ -31,6 +81,7 @@
                 <tr>
                     <td>{{ i + 1 }}</td>
                     <td>{{ submission.invoiceNumber }}</td>
+                    <td>{{ submission.poNumber }}</td>
                     <td>{{ submission.invoiceDate }}</td>
                     <td>
                         <p-tag [value]="submission.invoiceStatus" [severity]="getSeverity(submission.invoiceStatus)" />
@@ -51,9 +102,7 @@
             </ng-template>
             <ng-template #emptymessage>
                 <tr>
-                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground);">
-                        No Records Found
-                    </td>
+                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground)">No Records Found</td>
                 </tr>
             </ng-template>
         </p-table>
