@@ -26,7 +26,8 @@
         <p-table [value]="transferredEmployeeList" showGridlines stripedRows [rowHover]="true" 
             [paginator]="true" [rows]="pageSize" [lazy]="true" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10, 20, 30]" 
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [first]="first" 
-            selectionMode="single" dataKey="transferId" (onRowSelect)="selectedEmployee($event.data)" (onRowUnselect)="unSelectedEmployee()"
+            selectionMode="single" dataKey="transferId" (onRowSelect)="selectedEmployee($event.data)" 
+            (onRowUnselect)="unSelectedEmployee()" [(selection)]="selectedTransfer"
             [totalRecords]="transferredListLength" [tableStyle]="{'min-width': '130rem'}" (onPage)="pageChange($event)">
             <ng-template #header>
                 <tr>
