@@ -14,9 +14,9 @@
         <p-table #dt [value]="sitePerformancesList" stripedRows [rowHover]="true" [paginator]="true" editMode="row"
            [rows]="pageSize" [lazy]="true" [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true"
            [first]="first" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-           [scrollable]="true" scrollHeight="500px" [totalRecords]="totalRecords" dataKey="candidate.candidateId"
+           [scrollable]="true" scrollHeight="500px" [totalRecords]="totalRecords" dataKey="employmentDetails.employmentId"
            [(selection)]="selectedPerformances" (onRowSelect)="selectedEmployee($event.data)" (onRowUnselect)="unSelectedEmployee()"
-           [tableStyle]="{'min-width': '220rem'}" (onLazyLoad)="loadPerformances($event)">
+           [tableStyle]="{'min-width': '250rem'}" (onLazyLoad)="loadPerformances($event)">
             <ng-template #header>
                 <tr>
                     <th>
@@ -164,8 +164,8 @@
                     <td>{{ performance.employmentDetails.joiningDate || '-' }}</td>
                     <td>{{ performance.employmentDetails.lastWorkingDate || '-' }}</td>
                     <td>{{ performance.candidate?.phoneNumber || '-' }}</td>
-                    <td>{{ performance.employmentDetails.siteIncharge.userName }}</td>
-                    <td>{{ performance.candidate.qualification }}</td>
+                    <td>{{ performance.employmentDetails.siteIncharge.userName || '-' }}</td>
+                    <td>{{ performance.candidate.qualification || '-' }}</td>
                     @for (detail of performance.employeePerformance.performanceDetails; track $index) {
                         <td #pEditableColumn>
                             <p-cellEditor>
@@ -174,7 +174,7 @@
                                         [useGrouping]="false" [min]="0" [max]="10" />
                                 </ng-template>
                                 <ng-template #output>
-                                    {{ detail.score }}
+                                    {{ detail.score || '-' }}
                                 </ng-template>
                             </p-cellEditor>
                         </td>
@@ -186,7 +186,7 @@
                                     [disabled]="true" />
                             </ng-template>
                             <ng-template #output>
-                                {{ performance.employeePerformance.totalScore }}
+                                {{ performance.employeePerformance.totalScore || '-' }}
                             </ng-template>
                         </p-cellEditor>
                     </td>

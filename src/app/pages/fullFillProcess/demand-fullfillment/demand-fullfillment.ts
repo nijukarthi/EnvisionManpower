@@ -30,6 +30,12 @@ export class DemandFullfillment implements OnInit {
 
   currentUserRole = Number(sessionStorage.getItem('userGroupId'));
 
+  statusMap: any = {
+    102: { label: 'Processing', severity: 'warn' },
+    200: { label: 'Completed', severity: 'primary' },
+    406: { label: 'Rejected', severity: 'danger' }
+  }
+
   constructor(private apiService: Apiservice, private router: Router, private stepService: StepStateService,
       private messageService: MessageService
   ){}
@@ -147,6 +153,15 @@ export class DemandFullfillment implements OnInit {
       console.log(error);
     }
   }
+
+  getStatusLabel(status: number){
+    return this.statusMap[status].label ?? 'Unknown';
+  }
+
+  getSeverity(status: number){
+    return this.statusMap[status].severity ?? 'primary';
+  }
+  
 
   pageChange(event: any){
     this.first = event.first;

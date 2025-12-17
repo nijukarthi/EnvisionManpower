@@ -444,11 +444,9 @@
                                         <th>Selected Candidates Name</th>
                                         <th>First Interview Feedback</th>
                                         <th>Final Interview Feedback</th>
-                                        <th>Candidate Acceptance (Yes/No)</th>
-                                        @if (hasAcceptedCandidate) {
-                                            <th>Joining Date If Yes</th>
-                                            <th>Consultancy Employee Code</th>
-                                        }
+                                        <th>Candidate Acceptance (Yes/No)</th>                                        
+                                        <th>Joining Date If Yes</th>
+                                        <th>Consultancy Employee Code</th>
                                     </tr>
                                 </ng-template>
                                 <ng-template #body let-candidate let-i="rowIndex">
@@ -463,14 +461,18 @@
                                                 placeholder="Select Status" appendTo="body" class="w-full" />
                                         </td>
                                         
-                                        @if (hasAcceptedCandidate) {
+                                        @if (joiningProcessCandidates.at(i).get('candidateAcceptance')?.value === true) {
                                             <td>
-                                                <p-datepicker formControlName="joiningDate" [iconDisplay]="'input'" [showIcon]="true" inputId="joining-date" 
+                                                <p-datepicker formControlName="joiningDate" [iconDisplay]="'input'" [showIcon]="true" 
+                                                    [minDate]="minDate" inputId="joining-date" 
                                                     placeholder="Select Joining Date" appendTo="body" class="w-full" />
                                             </td>
                                             <td formGroupName="candidate">
                                                 <input type="text" formControlName="candidateCode" pInputText />
                                             </td>
+                                        }@else {
+                                            <td>-</td>
+                                            <td>-</td>
                                         }
                                     </tr>
                                 </ng-template>

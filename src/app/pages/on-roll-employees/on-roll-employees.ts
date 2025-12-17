@@ -309,6 +309,7 @@ export class OnRollEmployees implements OnInit {
         candidateCode: filters?.candidateCode?.[0]?.value ?? null,
         candidateName: filters?.candidateName?.[0]?.value ?? null,
         consultancyName: filters?.consultancyName?.[0]?.value ?? null,
+        demandCode: filters?.demandCode?.[0]?.value ?? null,
         projectCode: filters?.projectCode?.[0]?.value ?? null,
         clusterName: filters?.clusterName?.[0]?.value ?? null,
         spnCode: filters?.spnCode?.[0]?.value ?? null,

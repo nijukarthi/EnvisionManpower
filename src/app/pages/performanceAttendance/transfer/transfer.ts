@@ -21,11 +21,10 @@ export class Transfer implements OnInit {
 
     isEnableBtn = false;
 
-    activeTab = 'processing';
-
     transferredEmployeeList: any;
 
     selectedTransfer: any[] = [];
+    statuses: any[] = [];
 
     currentUserRole = Number(sessionStorage.getItem('userGroupId'));
 
@@ -40,6 +39,11 @@ export class Transfer implements OnInit {
         418: { label: 'Cancelled', severity: 'danger' }
     };
 
+    isReplacement = [
+        { label: 'Yes', value: true },
+        { label: 'No', value: false }
+    ]
+
     constructor(
         private apiService: Apiservice,
         private messageService: MessageService,
@@ -48,20 +52,18 @@ export class Transfer implements OnInit {
 
     ngOnInit(): void {
         this.fetchTransferedList(102);
+
+        this.statuses = [
+            { label: 'Processing', value: 102 },
+            { label: 'Scheduled', value: 108 },
+            { label: 'Completed', value: 200 },
+            { label: 'Rejected', value: 406 },
+            { label: 'Cancelled', value: 418 }
+        ]
     }
 
-    setActiveTab(tab: string, status: number) {
-        this.activeTab = tab;
-        this.fetchTransferedList(status);
-    }
-
-    fetchTransferedList(status: number) {
+    transferApi(data: any){
         try {
-            const data = {
-                offSet: this.offSet,
-                pageSize: this.pageSize,
-                transferStatus: status
-            };
             this.apiService.fetchTransferredEmployeeList(data).subscribe({
                 next: (val) => {
                     console.log(val);
@@ -72,6 +74,20 @@ export class Transfer implements OnInit {
                     console.log(err);
                 }
             });
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    fetchTransferedList(status: number) {
+        try {
+            const data = {
+                offSet: this.offSet,
+                pageSize: this.pageSize,
+                transferStatus: status
+            };
+            
+            this.transferApi(data);
         } catch (error) {
             console.log(error);
         }
@@ -247,10 +263,48 @@ export class Transfer implements OnInit {
         return this.statusMap[status]?.severity ?? 'primary';
     }
 
-    pageChange(event: any) {
-        this.first = event.first;
-        this.offSet = event.first / event.rows;
-        this.pageSize = event.rows;
-        this.fetchTransferedList(102);
+    updateRange(selectedValue: any, value: any[], index: number, filter: any){
+        if(!value) value = [];
+
+        value[index] = selectedValue;
+
+        filter(value);
+    }
+
+    loadTransfer(event: any){
+        try {         
+            this.first = event.first;
+            this.offSet = event.first / event.rows;
+            this.pageSize = event.rows;
+    
+            const filters = event.filters;
+            console.log(filters);
+
+            const formatDate = (d: any) => {
+                if(!d) return null;
+                return typeof d === 'string' ? d : d.toLocaleDateString('en-CA');
+            }
+
+            const dateValue = filters?.date?.[0]?.value;
+    
+            const payload = {
+                offSet: this.offSet,
+                pageSize: this.pageSize,
+                employeeCode: filters?.employeeCode?.[0]?.value ?? null,
+                candidateName: filters?.candidateName?.[0]?.value ?? null,
+                projectCode: filters?.projectCode?.[0]?.value ?? null,
+                clusterName: filters?.clusterName?.[0]?.value ?? null,
+                transferStatuses: filters?.status?.[0]?.value ?? null,
+                replacementRequired: filters?.replace?.[0]?.value ?? null,
+                joiningFrom: Array.isArray(dateValue) ? formatDate(dateValue[0]) : null,
+                joiningTo: Array.isArray(dateValue) ? formatDate(dateValue[1]) : null
+            }
+    
+            console.log(payload);
+
+            this.transferApi(payload);
+        } catch (error) {
+            console.log(error);
+        }
     }
 }

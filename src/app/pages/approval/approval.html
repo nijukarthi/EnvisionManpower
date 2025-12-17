@@ -45,6 +45,7 @@
                         </div>
                     </th>
                     <th>Quantity</th>
+                    <th>FulFilled Quantity</th>
                     <th>Planned Deployment Date</th>
                     <th>Planned Release Date</th>
                     <th>
@@ -84,6 +85,7 @@
                             [disabled]="demand.stateHeadApproval.approvalStatus === APPROVALSTATUS.ACCEPTED ||
                                 demand.departmentHeadApproval.approvalStatus === APPROVALSTATUS.ACCEPTED" />
                     </td>
+                    <td>{{ demand.fulfilledQuantity }}</td>
                     <td>{{ demand.plannedDeploymentDate || '-' }}</td>
                     <td>{{ demand.plannedReleaseDate || '-' }}</td>
                     <td>
