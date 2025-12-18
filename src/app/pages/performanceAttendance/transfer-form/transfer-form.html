@@ -5,159 +5,178 @@
         <div class="mb-4 flex items-center gap-2">
             <span class="font-bold">Demand Code:</span>
             <span>
-                <p-tag [value]="employeeDetails?.employeeDetails?.demand?.demandCode ?? 'Not Found'"
-                    [severity]="employeeDetails?.employeeDetails?.demand === null ? 'danger' : 'secondary'" />
+                <p-tag [value]="employeeDetails?.employeeDetails?.demand?.demandCode ?? 'Not Found'" [severity]="employeeDetails?.employeeDetails?.demand === null ? 'danger' : 'secondary'" />
             </span>
         </div>
 
         <div class="grid grid-cols-2 gap-2" formArrayName="transferDetails">
             @for (item of transferDetails.controls; track $index; let i = $index) {
-                <ng-container [formGroupName]="i">
-                    <div class="grid col-span-1 gap-1">
-                        <label for="project-code">Project Code</label>
-                        <input type="text" pInputText 
-                            [value]="employeeDetails?.employeeDetails?.project?.projectCode" [disabled]="true" id="project-code" />
-                    </div>
-                    <div class="grid col-span-1 gap-1">
-                        <label for="site-name">Site Name</label>
-                        <input type="text" pInputText 
-                            [value]="employeeDetails?.employeeDetails?.project?.siteName" [disabled]="true" id="site-name" />
-                    </div>
-                    <div class="grid col-span-1 gap-1">
-                        <label for="cluster">Cluster</label>
-                        <input type="text" pInputText 
-                            [value]="employeeDetails?.employeeDetails?.cluster?.clusterName" [disabled]="true" id="cluster" />
-                    </div>
-                    <div class="grid col-span-1 gap-1">
-                        <label for="cluster-head">Cluster Head</label>
-                        <input type="text" pInputText 
-                            [value]="employeeDetails?.employeeDetails?.clusterHead?.userName" [disabled]="true" id="cluster-head" />
-                    </div>
-                    <div class="grid col-span-1 gap-1">
-                        <label for="site-incharge">Site Incharge</label>
-                        <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.siteIncharge?.userName" 
-                            id="site-incharge" [disabled]="true" />
-                    </div>
-                    <div class="grid col-span-1 gap-1">
-                        <label for="department">Department</label>
-                        <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.department?.departmentName" 
-                           id="department" [disabled]="true" />
-                    </div>
-                    <div class="grid col-span-1 gap-1">
-                        <label for="department-head">Department Head</label>
-                        <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.departmentHead?.userName" 
-                           id="department-head" [disabled]="true" />
-                    </div>
-                    <div class="grid col-span-1 gap-1">
-                        <label for="department-head">Role</label>
-                        <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.envisionRole?.roleName"
-                            id="department-head" [disabled]="true" />
-                    </div>
-                    <div class="grid col-span-1 gap-1">
-                        <label for="spn-code">SPN Code</label>
-                        <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.spn?.spnCode"
-                            [disabled]="true" id="spn-code" />
-                    </div>
-                    <div class="grid col-span-1 gap-1">
-                        <label for="spn-description">SPN Description</label>
-                        <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.spn?.spnDescription"
-                            [disabled]="true" id="spn-description" />
-                    </div>
-                    <div class="grid col-span-1 gap-1">
-                        <label for="experience">Experience</label>
-                        <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.spn?.experience"
-                            [disabled]="true" id="experience" />
-                    </div>
-                    <div class="grid col-span-1 gap-1" formGroupName="transferFrom">
-                        <label for="last-working-date">Last Working Date</label>
-                        <p-datepicker formControlName="lastWorkingDate" [minDate]="minDate" [showIcon]="true" [iconDisplay]="'input'" 
-                            placeholder="Select Date" appendTo="body" inputId="last-working-date" (onSelect)="selectedLastDate($event)" />
-                    </div>
-                    <div class="grid col-span-1 gap-1">
-                        <label for="replace">Replacement Required?</label>
-                        <p-select [options]="isReplacement" formControlName="isReplacementRequired" optionLabel="label" optionValue="value"
-                            inputId="replace" placeholder="Select Yes/No" (onChange)="replacementChange($event.value)" />
-                    </div>
-                </ng-container>
+            <ng-container [formGroupName]="i">
+                <div class="grid col-span-1 gap-1">
+                    <label for="project-code">Project Code</label>
+                    <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.project?.projectCode" [disabled]="true" id="project-code" />
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="site-name">Site Name</label>
+                    <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.project?.siteName" [disabled]="true" id="site-name" />
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="cluster">Cluster</label>
+                    <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.cluster?.clusterName" [disabled]="true" id="cluster" />
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="cluster-head">Cluster Head</label>
+                    <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.clusterHead?.userName" [disabled]="true" id="cluster-head" />
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="site-incharge">Site Incharge</label>
+                    <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.siteIncharge?.userName" id="site-incharge" [disabled]="true" />
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="department">Department</label>
+                    <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.department?.departmentName" id="department" [disabled]="true" />
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="department-head">Department Head</label>
+                    <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.departmentHead?.userName" id="department-head" [disabled]="true" />
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="department-head">Role</label>
+                    <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.envisionRole?.roleName" id="department-head" [disabled]="true" />
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="spn-code">SPN Code</label>
+                    <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.spn?.spnCode" [disabled]="true" id="spn-code" />
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="spn-description">SPN Description</label>
+                    <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.spn?.spnDescription" [disabled]="true" id="spn-description" />
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="experience">Experience</label>
+                    <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.spn?.experience" [disabled]="true" id="experience" />
+                </div>
+                <div class="col-span-1 gap-1" formGroupName="transferFrom">
+                    <label for="last-working-date">Last Working Date</label>
+                    <p-datepicker
+                        formControlName="lastWorkingDate"
+                        [minDate]="minDate"
+                        [showIcon]="true"
+                        [iconDisplay]="'input'"
+                        placeholder="Select Date"
+                        appendTo="body"
+                        inputId="last-working-date"
+                        (onSelect)="selectedLastDate($event)"
+                        appendTo="body"
+                        appFormFieldError
+                        class="block w-full"
+                    />
+                    @if(getLastWorkingDate(i)?.invalid && (getLastWorkingDate(i)?.dirty || getLastWorkingDate(i)?.touched)){ @if(getLastWorkingDate(i)?.hasError('required')){
+                    <p-message severity="error" variant="simple" size="small" styleClass="mt-1">Last Working Date is required </p-message>
+                    }}
+                </div>
+                <div class="col-span-1 gap-1">
+                    <label for="replace">Replacement Required?</label>
+                    <p-select
+                        [options]="isReplacement"
+                        formControlName="isReplacementRequired"
+                        optionLabel="label"
+                        optionValue="value"
+                        inputId="replace"
+                        placeholder="Select Yes/No"
+                        (onChange)="replacementChange($event.value)"
+                        appendTo="body"
+                        appFormFieldError
+                        class="block w-full"
+                    />
+                    @if(getReplacementRequired(i)?.invalid && (getReplacementRequired(i)?.dirty || getReplacementRequired(i)?.touched)){ @if(getReplacementRequired(i)?.hasError('required')){
+                    <p-message severity="error" variant="simple" size="small" styleClass="mt-1">A replacement is required</p-message>
+                    }}
+                </div>
+            </ng-container>
             }
         </div>
     </form>
 </div>
-
 
 <div class="card">
     <p class="text-lg font-semibold">Transfer To</p>
     <form [formGroup]="transferForm" (ngSubmit)="onSubmit()">
         <div class="grid grid-cols-2 gap-2" formArrayName="transferDetails">
             @for (item of transferDetails.controls; track $index; let i = $index) {
-                <ng-container [formGroupName]="i">
-                    <div class="grid col-span-1 gap-1" formGroupName="transferTo">
-                        <label for="project-code">Demand Code</label>
-                        <p-select [options]="demandList" formControlName="demandId" optionLabel="demandCode" optionValue="demandId"
-                            [filter]="true" filterBy="demandCode" placeholder="Select Demand Code" 
-                            inputId="project-code" (onChange)="selectedDCode($event.value)" />
-                    </div>
-                    <div class="grid col-span-1 gap-1">
-                        <label for="project-code">Project Code</label>
-                        <input type="text" pInputText id="project-code" 
-                            [value]="demandDetails?.requesitionDetails.project.projectCode" [disabled]="true" />
-                    </div>
-                    <div class="grid col-span-1 gap-1">
-                        <label for="site-name">Site Name</label>
-                        <input type="text" pInputText id="site-name" 
-                            [value]="demandDetails?.requesitionDetails.project.siteName" [disabled]="true" />
-                    </div>
-                    <div class="grid col-span-1 gap-1">
-                        <label for="cluster">Cluster</label>
-                        <input type="text" pInputText id="cluster" 
-                            [value]="demandDetails?.requesitionDetails?.cluster?.clusterName" [disabled]="true" />
-                    </div>
-                    <div class="grid col-span-1 gap-1">
-                        <label for="cluster-head">Cluster Head</label>
-                        <input type="text" pInputText id="cluster-head" 
-                            [value]="demandDetails?.requesitionDetails?.clusterHead?.userName" [disabled]="true" />
-                    </div>
-                    <div class="grid col-span-1 gap-1">
-                        <label for="site-incharge">Site Incharge</label>
-                        <input type="text" pInputText id="site-incharge" 
-                            [value]="demandDetails?.requesitionDetails?.siteIncharge?.userName" [disabled]="true" />
-                    </div>
-                    <div class="grid col-span-1 gap-1">
-                        <label for="department">Department</label>
-                        <input type="text" pInputText id="department" 
-                            [value]="demandDetails?.requesitionDetails?.department?.departmentName" [disabled]="true" />
-                    </div>
-                    <div class="grid col-span-1 gap-1">
-                        <label for="department-head">Department Head</label>
-                        <input type="text" pInputText id="department-head" 
-                            [value]="demandDetails?.requesitionDetails?.departmentHead?.userName" [disabled]="true" />
-                    </div>
-                    <div class="grid col-span-1 gap-1">
-                        <label for="role">Role</label>
-                        <input type="text" pInputText id="role"
-                            [value]="demandDetails?.envisionRole?.roleName" [disabled]="true" />
-                    </div>
-                    <div class="grid col-span-1 gap-1">
-                        <label for="spn-code">SPN Code</label>
-                        <input type="text" pInputText id="spn-code" 
-                            [value]="demandDetails?.spn?.spnCode" [disabled]="true" />
-                    </div>
-                    <div class="grid col-span-1 gap-1">
-                        <label for="spn-description">SPN Description</label>
-                        <input type="text" pInputText [value]="demandDetails?.spn?.spnDescription" [disabled]="true"
-                            id="spn-description" />
-                    </div>
-                    <div class="grid col-span-1 gap-1">
-                        <label for="experience">Experience</label>
-                        <input type="text" pInputText [value]="demandDetails?.spn?.experience" [disabled]="true"
-                            id="experience" />
-                    </div>
-                    <div class="grid col-span-1 gap-1">
-                        <label for="joining-date">Joining Date</label>
-                        <p-datepicker formControlName="joiningDate" [minDate]="minJoiningDate" [iconDisplay]="'input'" 
-                            [showIcon]="true" placeholder="Select Date" appendTo="body" inputId="joining-date" />
-                    </div>
-                </ng-container>
+            <ng-container [formGroupName]="i">
+                <div class="col-span-1 gap-1" formGroupName="transferTo">
+                    <label for="project-code">Demand Code</label>
+                    <p-select
+                        [options]="demandList"
+                        formControlName="demandId"
+                        optionLabel="demandCode"
+                        optionValue="demandId"
+                        [filter]="true"
+                        filterBy="demandCode"
+                        placeholder="Select Demand Code"
+                        inputId="project-code"
+                        (onChange)="selectedDCode($event.value)"
+                        appendTo="body"
+                        appFormFieldError
+                        class="block w-full"
+                    />
+                    @if(getDemandId(i)?.invalid && (getDemandId(i)?.dirty || getDemandId(i)?.touched)){ @if(getDemandId(i)?.hasError('required')){
+                    <p-message severity="error" variant="simple" size="small" styleClass="mt-1">Demand Code is required </p-message>
+                    }}
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="project-code">Project Code</label>
+                    <input type="text" pInputText id="project-code" [value]="demandDetails?.requesitionDetails.project.projectCode" [disabled]="true" />
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="site-name">Site Name</label>
+                    <input type="text" pInputText id="site-name" [value]="demandDetails?.requesitionDetails.project.siteName" [disabled]="true" />
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="cluster">Cluster</label>
+                    <input type="text" pInputText id="cluster" [value]="demandDetails?.requesitionDetails?.cluster?.clusterName" [disabled]="true" />
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="cluster-head">Cluster Head</label>
+                    <input type="text" pInputText id="cluster-head" [value]="demandDetails?.requesitionDetails?.clusterHead?.userName" [disabled]="true" />
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="site-incharge">Site Incharge</label>
+                    <input type="text" pInputText id="site-incharge" [value]="demandDetails?.requesitionDetails?.siteIncharge?.userName" [disabled]="true" />
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="department">Department</label>
+                    <input type="text" pInputText id="department" [value]="demandDetails?.requesitionDetails?.department?.departmentName" [disabled]="true" />
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="department-head">Department Head</label>
+                    <input type="text" pInputText id="department-head" [value]="demandDetails?.requesitionDetails?.departmentHead?.userName" [disabled]="true" />
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="role">Role</label>
+                    <input type="text" pInputText id="role" [value]="demandDetails?.envisionRole?.roleName" [disabled]="true" />
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="spn-code">SPN Code</label>
+                    <input type="text" pInputText id="spn-code" [value]="demandDetails?.spn?.spnCode" [disabled]="true" />
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="spn-description">SPN Description</label>
+                    <input type="text" pInputText [value]="demandDetails?.spn?.spnDescription" [disabled]="true" id="spn-description" />
+                </div>
+                <div class="grid col-span-1 gap-1">
+                    <label for="experience">Experience</label>
+                    <input type="text" pInputText [value]="demandDetails?.spn?.experience" [disabled]="true" id="experience" />
+                </div>
+                <div class="col-span-1 gap-1">
+                    <label for="joining-date">Joining Date</label>
+                    <p-datepicker formControlName="joiningDate" [minDate]="minJoiningDate" [iconDisplay]="'input'" [showIcon]="true" placeholder="Select Date" appendTo="body" inputId="joining-date" appFormFieldError class="block w-full" />
+                    @if(getJoiningDate(i)?.invalid && (getJoiningDate(i)?.dirty || getJoiningDate(i)?.touched)){ @if(getJoiningDate(i)?.hasError('required')){
+                    <p-message severity="error" variant="simple" size="small" styleClass="mt-1">Joining Date is required </p-message>
+                    }}
+                </div>
+            </ng-container>
             }
         </div>
         <div class="flex justify-end mt-4">
