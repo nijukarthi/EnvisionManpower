@@ -3,7 +3,9 @@ import { TransferStatus } from '@/models/transfer-status/transfer-status.enum';
 import { UserGroups } from '@/models/usergroups/usergroups.enum';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
-import { Component, OnInit } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { Component, inject, OnInit } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
 
 @Component({
@@ -20,10 +22,18 @@ export class Terminate implements OnInit {
     selectedResignationId = 0;
 
     isEnabledBtn = false;
+    resignationModal = false;
+
+    currentUser = Number(sessionStorage.getItem('userGroupId'));
 
     resignationList: any;
+    selectedResignDetails: any;
 
     selectedResignation: any[] = [];
+
+    minDate: Date | undefined;
+
+    private fb = inject(FormBuilder);
 
     APPROVALSTATUS = ApprovalStatus;
     USERGROUPS = UserGroups;
@@ -41,14 +51,24 @@ export class Terminate implements OnInit {
         { label: 'No', value: false }
     ]
 
+    updateResignationForm = this.fb.group({
+        resignationId: [0],
+        newLastWorkingDate: [''],
+        reason: ['']
+    })
+
     constructor(
         private apiService: Apiservice,
         private messageService: MessageService,
-        private confirmationService: ConfirmationService
+        private confirmationService: ConfirmationService,
+        private datePipe: DatePipe
     ) {}
 
     ngOnInit(): void {
-        this.fetchResignationList(102);
+        this.fetchResignationList();
+
+        const today = new Date();
+        this.minDate = new Date(today);
     }
 
     get statuses(){
@@ -75,13 +95,12 @@ export class Terminate implements OnInit {
         }
     }
 
-    fetchResignationList(status: number) {
+    fetchResignationList() {
         try {
-            console.log(status);
             const data = {
                 offSet: this.offSet,
                 pageSize: this.pageSize,
-                resignationStatus: status
+                resignationStatuses: [102]
             };
             console.log(data);
 
@@ -89,6 +108,56 @@ export class Terminate implements OnInit {
         } catch (error) {
             console.log(error);
         }
+    }
+
+    siteInchargeNDC(selectedValue: boolean, resignationId: number){
+        console.log(selectedValue);
+
+        const data = {
+            resignationId: resignationId,
+            updateNdc: selectedValue
+        }
+
+        console.log(data);
+
+        this.apiService.siteInchargeNDC(data).subscribe({
+            next: val => {
+                console.log(val);
+                this.messageService.add({ severity: 'success', summary: 'Success', detail: 'NDC Updated Successfully' });
+                this.fetchResignationList();
+            },
+            error: err => {
+                console.log(err);
+
+                if (err.status === 400) {
+                    this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
+                }
+            }
+        })
+    }
+
+    consultancyNDC(selectedValue: boolean, resignationId: number){
+        const data = {
+            resignationId: resignationId,
+            updateNdc: selectedValue
+        }
+
+        console.log(data);
+
+        this.apiService.consultancyNDC(data).subscribe({
+            next: val => {
+                console.log(val);
+                this.messageService.add({ severity: 'success', summary: 'Success', detail: 'NDC Updated Successfully' });
+                this.fetchResignationList();
+            },
+            error: err => {
+                console.log(err);
+
+                if (err.status === 400) {
+                    this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
+                }
+            }
+        })
     }
 
     clusterHeadApproval(resignationId: number, type: 'Accepted' | 'Rejected') {
@@ -108,7 +177,7 @@ export class Terminate implements OnInit {
                     } else {
                         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Resignation Request Rejected' });
                     }
-                    this.fetchResignationList(102);
+                    this.fetchResignationList();
                 },
                 error: (err) => {
                     console.log(err);
@@ -135,7 +204,7 @@ export class Terminate implements OnInit {
                     } else {
                         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Resignation Request Rejected' });
                     }
-                    this.fetchResignationList(102);
+                    this.fetchResignationList();
                 },
                 error: (err) => {
                     console.log(err);
@@ -148,7 +217,7 @@ export class Terminate implements OnInit {
 
     selectedEmployee(resignation: any) {
         console.log(resignation);
-
+        this.selectedResignDetails = resignation;
         if (resignation.resignationStatus === TransferStatus.SCHEDULED) {
             this.selectedResignationId = resignation.resignationId;
         } else {
@@ -168,6 +237,57 @@ export class Terminate implements OnInit {
         }
     }
 
+    updateResignation(){
+        try {
+            this.resignationModal = true;
+
+            this.updateResignationForm.patchValue({
+                newLastWorkingDate: this.selectedResignDetails.lastWorkingDate,
+                reason: this.selectedResignDetails.reason
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    onSubmit(){
+        try {
+            const lastDate = this.updateResignationForm.get('newLastWorkingDate')?.value;
+
+            const formatDate = this.datePipe.transform(lastDate, 'yyyy-MM-dd');
+
+            this.updateResignationForm.patchValue({
+                resignationId: this.selectedResignationId
+            })
+
+            const data = {
+                ...this.updateResignationForm.value,
+                newLastWorkingDate: formatDate
+            };
+            console.log(data);
+
+            this.apiService.updateResignation(data).subscribe({
+                next: val => {
+                    console.log(val);
+                    this.messageService.add({severity: 'success', summary: 'Success', detail: 'Resignation Details Updated Successfully'});
+                    this.resignationModal = false;
+                    this.updateResignationForm.reset();
+                    this.fetchResignationList();
+                    this.selectedResignation = [];
+                },
+                error: err => {
+                    console.log(err);
+
+                    if (err.status === 400) {
+                        this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
+                    }
+                }
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     forceResignationPopup() {
         this.confirmationService.confirm({
             header: 'Are you sure?',
@@ -181,7 +301,7 @@ export class Terminate implements OnInit {
                         next: (val) => {
                             console.log(val);
                             this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Employee resigned Successfully' });
-                            this.fetchResignationList(102);
+                            this.fetchResignationList();
                             this.selectedResignation = [];
                         },
                         error: (err) => {
@@ -219,7 +339,7 @@ export class Terminate implements OnInit {
               next: val => {
                 console.log(val);
                 this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Resignation Cancelled Successfully' });
-                this.fetchResignationList(102);
+                this.fetchResignationList();
                 this.selectedResignation = [];
               },
               error: err => {
@@ -252,6 +372,11 @@ export class Terminate implements OnInit {
 
     getMenuItems() {
         return [
+            {
+                label: 'Edit Resignation',
+                icon: 'pi pi-pencil',
+                command: () => this.updateResignation()
+            },
             {
                 label: 'Force Resignation',
                 icon: 'pi pi-bolt',
@@ -305,7 +430,7 @@ export class Terminate implements OnInit {
                 projectCode: filters?.projectCode?.[0]?.value ?? null,
                 clusterName: filters?.clusterName?.[0]?.value ?? null,
                 replacementRequired: filters?.replace?.[0]?.value ?? null,
-                resignationStatuses: filters?.status?.[0]?.value ?? null,
+                resignationStatuses: filters?.status?.[0]?.value ?? [102],
                 lastWorkingFrom: Array.isArray(dateValue) ? formatDate(dateValue[0]) : null,
                 lastWorkingTo: Array.isArray(dateValue) ? formatDate(dateValue[1]) : null
             }
@@ -316,5 +441,10 @@ export class Terminate implements OnInit {
         } catch (error) {
             console.log(error);
         }
+    }
+
+    onDialogClose(){
+        this.updateResignationForm.reset();
+        this.selectedResignation = [];
     }
 }

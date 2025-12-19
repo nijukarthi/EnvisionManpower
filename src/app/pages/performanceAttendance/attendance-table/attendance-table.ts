@@ -1,3 +1,4 @@
+import { UserGroups } from '@/models/usergroups/usergroups.enum';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
 import { Component, OnInit } from '@angular/core';
@@ -19,6 +20,10 @@ export class AttendanceTable implements OnInit {
 
   attendanceList: any;
   statuses: any[] = [];
+
+  USERGROUPS = UserGroups;
+
+  currentUser = Number(sessionStorage.getItem('userGroupId'));
 
   date: Date = new Date();
 
