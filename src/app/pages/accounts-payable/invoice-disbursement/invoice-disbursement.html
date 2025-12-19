@@ -1,23 +1,67 @@
 <div class="card">
     <div class="flex items-baseline-last justify-between">
         <h5>Invoice Disbursement</h5>
-        <p-button label="Start Disbursement" [pTooltip]="!selectedInvoiceId ? 'Select One Invoice' 
-            : (invoiceStatus !== 'UNDER_DISBURSEMENT_REVIEW' ? 'Invoice Status must be in UNDER_DISBURSEMENT_REVIEW' : '')" 
-            tooltipPosition="top" [disabled]="!selectedInvoiceId || invoiceStatus !== 'UNDER_DISBURSEMENT_REVIEW'" 
-            (onClick)="startDisbursement()" />
+        <p-button
+            label="Start Disbursement"
+            [pTooltip]="!selectedInvoiceId ? 'Select One Invoice' 
+            : (invoiceStatus !== 'UNDER_DISBURSEMENT_REVIEW' ? 'Invoice Status must be in UNDER_DISBURSEMENT_REVIEW' : '')"
+            tooltipPosition="top"
+            [disabled]="!selectedInvoiceId || invoiceStatus !== 'UNDER_DISBURSEMENT_REVIEW'"
+            (onClick)="startDisbursement()"
+        />
     </div>
     <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
-        <p-table [value]="invoiceDisbursementList" stripedRows [rowHover]="true" selectionMode="single"
-            (onRowSelect)="selectedInvoice($event.data)" (onRowUnselect)="unSelectedInvoice()"
-            dataKey="invoiceHeader.invoiceId" [tableStyle]="{'min-width': '160rem'}">
+        <p-table
+            [value]="invoiceDisbursementList"
+            stripedRows
+            [paginator]="true"
+            [rowHover]="true"
+            [rows]="pageSize"
+            [first]="first"
+            [rowsPerPageOptions]="[10, 20, 30]"
+            [lazy]="true"
+            [totalRecords]="totalRecords"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [showCurrentPageReport]="true"
+            selectionMode="single"
+            (onRowSelect)="selectedInvoice($event.data)"
+            (onRowUnselect)="unSelectedInvoice()"
+            dataKey="invoiceHeader.invoiceId"
+            [tableStyle]="{'min-width': '160rem'}"
+            (onLazyLoad)="loadDisbursement($event)"
+        >
             <ng-template #header>
                 <tr>
                     <th>SL NO</th>
                     <th>Consultancy Code</th>
                     <th>Consultancy Name</th>
-                    <th>Invoice Number</th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Invoice Number</span>
+                            <p-columnFilter type="text" field="invoiceNumber" display="menu" />
+                        </div>
+                    </th>
                     <th>Invoice Date</th>
-                    <th>Invoice Status</th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>PO Number</span>
+                            <p-columnFilter type="text" field="poNumber" display="menu" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Invoice Status</span>
+                            <p-columnFilter field="status" matchMode="equals" display="menu">
+                                <ng-template #filter let-value let-filter="filterCallback">
+                                    <p-multiselect [options]="statuses" (onChange)="filter($event.value)" placeholder="Select Statuses" class="w-full">
+                                        <ng-template let-option #item>
+                                            <p-tag [value]="option.value" [severity]="getSeverity(option.value)" />
+                                        </ng-template>
+                                    </p-multiselect>
+                                </ng-template>
+                            </p-columnFilter>
+                        </div>
+                    </th>
                     <th>POD</th>
                     <th>Seal and Sign Date by Consultancy</th>
                     <th>Submitted Date</th>
@@ -39,15 +83,15 @@
                 </tr>
             </ng-template>
             <ng-template #body let-disbursement let-i="rowIndex">
-                <tr [pSelectableRow]="disbursement">    
+                <tr [pSelectableRow]="disbursement">
                     <td>{{ i + 1 }}</td>
                     <td>{{ disbursement.consultancyCode || '-' }}</td>
                     <td>{{ disbursement.invoiceHeader.consultancy.consultancyName || '-' }}</td>
                     <td>{{ disbursement.invoiceHeader.invoiceNumber || '-' }}</td>
                     <td>{{ disbursement.invoiceHeader.invoiceDate || '-' }}</td>
+                    <td>{{disbursement.invoiceHeader.poNumber}}</td>
                     <td>
-                        <p-tag [value]="disbursement.invoiceHeader.invoiceStatus" 
-                            [severity]="getSeverity(disbursement.invoiceHeader.invoiceStatus)" />
+                        <p-tag [value]="disbursement.invoiceHeader.invoiceStatus" [severity]="getSeverity(disbursement.invoiceHeader.invoiceStatus)" />
                     </td>
                     <td>{{ disbursement.invoiceHeader.pod }}</td>
                     <td>{{ disbursement.invoiceHeader.sealAndSignDate | date:'dd-MM-yyyy' }}</td>
@@ -68,12 +112,10 @@
                     <td>{{ disbursement.paymentStatus }}</td>
                     <td>{{ disbursement.delay }}</td>
                 </tr>
-            </ng-template>  
+            </ng-template>
             <ng-template #emptymessage>
                 <tr>
-                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground);">
-                        No Records Found
-                    </td>
+                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground)">No Records Found</td>
                 </tr>
             </ng-template>
         </p-table>
