@@ -2,10 +2,12 @@
     <div class="flex items-baseline-last justify-between">
         <h5>Resignation</h5>
         <div class="flex justify-end gap-1">
-            <p-menu #menu [model]="getMenuItems()" [popup]="true" />
-            <p-button (onClick)="menu.toggle($event)" label="Actions" icon="pi pi-angle-down" 
-                iconPos="right" [disabled]="!selectedResignationId" />
-                <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
+            @if (currentUser === USERGROUPS.ADMIN || currentUser === USERGROUPS.RESOURCEMANAGER) {
+                <p-menu #menu [model]="getMenuItems()" [popup]="true" />
+                <p-button (onClick)="menu.toggle($event)" label="Actions" icon="pi pi-angle-down" 
+                    iconPos="right" [disabled]="!selectedResignationId" />
+            }
+            <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
         </div>
     </div>
     <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
@@ -89,7 +91,7 @@
                             </p-columnFilter>
                         </div>
                     </th>
-                    <th>NDC From Site Head</th>
+                    <th>NDC From Site Incharge</th>
                     <th>NDC From Consultancy</th>
                     <th>Cluster Head Approval</th>
                     <th>Department Head Approval</th>
@@ -111,12 +113,16 @@
                             [severity]="getSeverity(resignation.resignationStatus)" />
                     </td>
                     <td>
-                        <p-select [options]="noDueClearanceList" optionLabel="label" optionValue="value"
-                            inputId="no-due-clerance-sm" placeholder="Select Yes/No" appendTo="body" />
+                        <p-select [options]="noDueClearanceList" [(ngModel)]="resignation.ndcFromSiteHead" optionLabel="label" 
+                            optionValue="value" inputId="no-due-clerance-sm" placeholder="Select Yes/No" appendTo="body"
+                            (onChange)="siteInchargeNDC($event.value, resignation.resignationId)"
+                            [disabled]="currentUser !== USERGROUPS.ADMIN && currentUser !== USERGROUPS.SITEINCHARGE" />
                     </td>
                     <td>
-                        <p-select [options]="noDueClearanceList" optionLabel="label" optionValue="value"
-                            inputId="no-due-clerance-sm" placeholder="Select Yes/No" appendTo="body" />
+                        <p-select [options]="noDueClearanceList" [(ngModel)]="resignation.ndcFromConsultancy" optionLabel="label" 
+                            optionValue="value" inputId="no-due-clerance-sm" placeholder="Select Yes/No" appendTo="body"
+                            (onChange)="consultancyNDC($event.value, resignation.resignationId)"
+                            [disabled]="currentUser !== USERGROUPS.CONSULTANCY" />
                     </td>
                     <td>
                         <div class="flex items-center justify-center gap-2">
@@ -179,3 +185,25 @@
         </div>
     </ng-template>
 </p-confirmdialog>
+
+<p-dialog header="Edit Resignation" [(visible)]="resignationModal" [modal]="true" [draggable]="false"
+    [style]="{width: '50rem'}" (onHide)="onDialogClose()">
+    <form [formGroup]="updateResignationForm" (ngSubmit)="onSubmit()">
+        <div class="grid grid-cols-2 gap-2">
+            <div class="grid col-span-1 gap-1">
+                <label for="last-working-date">Last Working Date</label>
+                <p-datepicker formControlName="newLastWorkingDate" [minDate]="minDate" [showIcon]="true" [iconDisplay]="'input'" 
+                    dateFormat="yy-mm-dd" placeholder="Select Date" inputId="last-working-date" appendTo="body" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="reason">Reason</label>
+                <input type="text" pInputText formControlName="reason" id="reason" />
+            </div>
+        </div>
+        <div class="flex justify-end mt-4">
+            <button pButton pRipple type="submit">
+                <span pButtonLabel>Submit</span>
+            </button>
+        </div>
+    </form>
+</p-dialog>

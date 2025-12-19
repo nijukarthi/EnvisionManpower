@@ -90,7 +90,7 @@ export class AppMenu {
                             label: 'Manpower Approval',
                             icon: 'pi pi-ticket',
                             routerLink: ['/home/approval'],
-                            visible: this.adminUser || this.departmentUser || this.clusterUser
+                            visible: this.adminUser || this.departmentUser || this.clusterUser || this.siteInchargeUser
                         },
                         {
                             label: 'Manpower Management',
@@ -130,7 +130,7 @@ export class AppMenu {
                                     label: 'On-roll Employees',
                                     icon: 'pi pi-user',
                                     routerLink: ['/home/onroll-employees'],
-                                    visible: this.adminUser || this.resourceManagerUser
+                                    visible: this.adminUser || this.resourceManagerUser || this.siteInchargeUser || this.clusterUser || this.departmentUser
                                 },
                                 {
                                     label: 'Training',
@@ -139,7 +139,8 @@ export class AppMenu {
                                     visible: this.adminUser || this.resourceManagerUser
                                 }
                             ],
-                            visible: this.adminUser || this.consultancyUser || this.resourceManagerUser || this.guestUser
+                            visible: this.adminUser || this.consultancyUser || this.resourceManagerUser || this.guestUser || this.siteInchargeUser || 
+                                this.clusterUser || this.departmentUser
                         },
                         {
                             label: 'Performance & Attendance',
@@ -149,28 +150,30 @@ export class AppMenu {
                                     label: 'Attendance',
                                     icon: 'pi pi-book',
                                     routerLink: ['/home/attendance'],
-                                    visible: this.adminUser || this.siteInchargeUser || this.resourceManagerUser || this.clusterUser || this.departmentUser 
+                                    visible: this.adminUser || this.siteInchargeUser || this.resourceManagerUser || this.clusterUser || this.departmentUser || this.consultancyUser
                                 },
                                 {
                                     label: 'Site Performance',
                                     icon: 'pi pi-map',
                                     routerLink: ['/home/site-performance'],
-                                    visible: this.adminUser || this.siteInchargeUser || this.resourceManagerUser || this.clusterUser || this.departmentUser 
+                                    visible: this.adminUser || this.siteInchargeUser || this.resourceManagerUser || this.clusterUser || this.departmentUser || this.consultancyUser
                                 },
                                 {
                                     label: 'Transfer',
                                     icon: 'pi pi-file-export',
                                     routerLink: ['/home/transfer'],
-                                    visible: this.adminUser || this.siteInchargeUser || this.departmentUser || this.clusterUser 
+                                    visible: this.adminUser || this.siteInchargeUser || this.departmentUser || this.clusterUser || this.consultancyUser || 
+                                        this.resourceManagerUser
                                 },
                                 {
                                     label: 'Resignation',
                                     icon: 'pi pi-file-excel',
                                     routerLink: ['/home/terminate'],
-                                    visible: this.adminUser || this.siteInchargeUser || this.departmentUser || this.clusterUser
+                                    visible: this.adminUser || this.siteInchargeUser || this.departmentUser || this.clusterUser || this.consultancyUser || 
+                                        this.resourceManagerUser
                                 }
                             ],
-                                visible: this.adminUser || this.siteInchargeUser || this.departmentUser || this.clusterUser || this.resourceManagerUser
+                                visible: this.adminUser || this.siteInchargeUser || this.departmentUser || this.clusterUser || this.resourceManagerUser || this.consultancyUser
                         },  
                         {
                             label: 'Accounts Payable',

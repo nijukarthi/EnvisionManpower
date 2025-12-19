@@ -561,4 +561,24 @@ export class Apiservice {
     cancelResignation(params: any){
       return this.postMethod('candidate/siteperfomance/resignation/cancel', params);
     }
+
+    updateTransfer(params: any){
+        return this.postMethod('candidate/siteperformance/transfer/extend-dates', params);
+    }
+
+    updateResignation(params: any){
+        return this.postMethod('candidate/siteperformance/resignation/extend-date', params);
+    }
+
+    siteInchargeNDC(params: any){
+        return this.postMethod('candidate/siteperformance/resignation/update/ndc-siteincharge', params);
+    }
+
+    consultancyNDC(params: any){
+        return this.postMethod('candidate/siteperformance/resignation/update/ndc-consultancy', params);
+    }
+
+    fetchTrainingList(params: any): Observable<any>{
+        return this.postMethod('candidate/training', params);
+    }
 }

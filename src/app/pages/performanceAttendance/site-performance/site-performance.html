@@ -137,7 +137,10 @@
                     <th>Compliance</th>
                     <th>Total Sum</th>
                     <th>Rating</th>
-                    <th>Actions</th>
+                    @if (currentUser === USERGROUPS.ADMIN || currentUser === USERGROUPS.SITEINCHARGE || currentUser ===
+                    USERGROUPS.RESOURCEMANAGER) {
+                        <th>Actions</th>
+                    }
                 </tr>
             </ng-template>
             <ng-template #body let-performance let-editing="editing" let-i="rowIndex">
@@ -200,25 +203,28 @@
                             </ng-template>
                         </p-cellEditor>
                     </td>
-                    <td class="flex items-center justify-center gap-2">
-                        @if (!editing) {
-                            <button pButton pRipple type="button" icon="pi pi-pencil"
-                                pInitEditableRow rounded severity="secondary"
-                                [disabled]="isEditDisabled(performance, date)"
-                                ></button>
-                        }@else {
-                            <button pButton pRipple type="submit" icon="pi pi-check"
-                                pSaveEditableRow rounded severity="primary" (click)="submitPerformanceForm(performance)"
-                                [disabled]="isEditDisabled(performance, date)"
-                                ></button>
-                            <button pButton pRipple type="button" icon="pi pi-times"
-                                pCancelEditableRow rounded severity="danger"
-                                [disabled]="isEditDisabled(performance, date)"
-                                ></button>
-                        }
-                        <!-- <p-menu #menu [model]="getMenuItems(performance)" [popup]="true" appendTo="body" />
-                        <p-button (onClick)="menu.toggle($event)" icon="pi pi-ellipsis-v" rounded severity="secondary" /> -->
-                    </td>
+                    @if (currentUser === USERGROUPS.ADMIN || currentUser === USERGROUPS.SITEINCHARGE || currentUser ===
+                    USERGROUPS.RESOURCEMANAGER) {
+                        <td class="flex items-center justify-center gap-2">
+                            @if (!editing) {
+                                <button pButton pRipple type="button" icon="pi pi-pencil"
+                                    pInitEditableRow rounded severity="secondary"
+                                    [disabled]="isEditDisabled(performance, date)"
+                                    ></button>
+                            }@else {
+                                <button pButton pRipple type="submit" icon="pi pi-check"
+                                    pSaveEditableRow rounded severity="primary" (click)="submitPerformanceForm(performance)"
+                                    [disabled]="isEditDisabled(performance, date)"
+                                    ></button>
+                                <button pButton pRipple type="button" icon="pi pi-times"
+                                    pCancelEditableRow rounded severity="danger"
+                                    [disabled]="isEditDisabled(performance, date)"
+                                    ></button>
+                            }
+                            <!-- <p-menu #menu [model]="getMenuItems(performance)" [popup]="true" appendTo="body" />
+                            <p-button (onClick)="menu.toggle($event)" icon="pi pi-ellipsis-v" rounded severity="secondary" /> -->
+                        </td>
+                    }
                 </tr>
             </ng-template>
             <ng-template #emptymessage>

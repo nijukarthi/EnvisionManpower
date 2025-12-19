@@ -43,7 +43,7 @@ export class TrainingTable implements OnInit {
 
       console.log(data);
       
-      this.apiService.fetchOnRollCandidates(data).subscribe({
+      this.apiService.fetchTrainingList(data).subscribe({
         next: val => {
           console.log(val);
           this.trainingList = val.data.data.map((training: any) => ({

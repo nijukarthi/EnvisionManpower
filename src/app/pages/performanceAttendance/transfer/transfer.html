@@ -2,9 +2,11 @@
     <div class="flex items-baseline-last justify-between">
         <h5>Transfer</h5>
         <div class="flex justify-end gap-2">
-            <p-menu #menu [model]="getMenuItems()" [popup]="true" />
-            <p-button (onClick)="menu.toggle($event)" label="Actions" icon="pi pi-angle-down" 
-                iconPos="right" [disabled]="!selectedTransferId" />
+            @if (currentUserRole === USERGROUPS.ADMIN || currentUserRole === USERGROUPS.RESOURCEMANAGER) {
+                <p-menu #menu [model]="getMenuItems()" [popup]="true" />
+                <p-button (onClick)="menu.toggle($event)" label="Actions" icon="pi pi-angle-down" 
+                    iconPos="right" [disabled]="!selectedTransferId" />
+            }
             <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
         </div>
     </div>
@@ -47,6 +49,7 @@
                             </p-columnFilter>
                         </div>
                     </th>
+                    <th rowspan="2">Reason</th>
                     <th rowspan="2">
                         <div class="flex items-center justify-between">
                             <span>Status</span>
@@ -135,6 +138,7 @@
                     <td>{{ transfer.envisionRole.roleName }}</td>
                     <td>{{ transfer.joiningDate }}</td>
                     <td>{{ transfer.isReplacementRequired ? 'Yes' : 'No' }}</td>
+                    <td>{{ transfer.reason || '-' }}</td>
                     <td>
                         <p-tag [value]="getStatusLabel(transfer.transferStatus)" 
                             [severity]="getSeverity(transfer.transferStatus)" />
@@ -201,3 +205,31 @@
         </div>
     </ng-template>
 </p-confirmdialog>
+
+<p-dialog header="Edit Transfer" [(visible)]="updateTransferModal" [modal]="true" [draggable]="false"
+    [style]="{width: '50rem'}" (onHide)="onDialogClose()">
+    <form [formGroup]="updateTransferForm" (ngSubmit)="onSubmit()">
+        <div class="grid grid-cols-2 gap-2">
+            <div class="grid col-span-1 gap-1">
+                <label for="last-working-date">Last Working Date</label>
+                <p-datepicker formControlName="newLastWorkingDate" [minDate]="minDate" [showIcon]="true" [iconDisplay]="'input'" 
+                    dateFormat="yy-mm-dd" inputId="last-working-date" placeholder="Select Date" appendTo="body"
+                    (onSelect)="selectedLastDate($event)" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="joining-date">Joining Date</label>
+                <p-datepicker formControlName="newJoiningDate" [minDate]="minJoiningDate" [showIcon]="true" [iconDisplay]="'input'" 
+                   dateFormat="yy-mm-dd" inputId="joining-date" placeholder="Select Date" appendTo="body" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="reason">Reason</label>
+                <input type="text" pInputText formControlName="reason" id="reason" />
+            </div>
+        </div>
+        <div class="flex justify-end mt-4">
+            <button pButton pRipple type="submit">
+                <span pButtonLabel>Submit</span>
+            </button>
+        </div>
+    </form>
+</p-dialog>

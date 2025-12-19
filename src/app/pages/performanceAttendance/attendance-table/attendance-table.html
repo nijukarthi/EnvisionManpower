@@ -122,7 +122,9 @@
                     <th>Week Off</th>
                     <th>Paid Leave</th>
                     <th>Unpaid Leave</th>
-                    <th>Actions</th>
+                    @if (currentUser === USERGROUPS.ADMIN || currentUser === USERGROUPS.SITEINCHARGE || currentUser === USERGROUPS.RESOURCEMANAGER) {
+                        <th>Actions</th>
+                    }
                 </tr>
             </ng-template>
             <ng-template #body let-attendance let-editing="editing" let-i="rowIndex">
@@ -196,21 +198,24 @@
                             </ng-template>
                         </p-cellEditor>
                     </td>  
-                    <td class="flex items-center justify-center gap-2">
-                        @if (!editing) {
-                            <button pButton pRipple type="button" icon="pi pi-pencil"
-                                pInitEditableRow rounded severity="secondary"
-                                [disabled]="isEditDisabled(attendance, date)"></button>
-                        } @else {
-                            <button pButton pRipple type="submit" icon="pi pi-check"
-                                pSaveEditableRow rounded severity="primary" (click)="submitAttendanceForm(attendance)"
-                                [disabled]="isEditDisabled(attendance, date)">
-                            </button>
-                            <button pButton pRipple type="button" icon="pi pi-times"
-                                pCancelEditableRow rounded severity="danger"
-                                [disabled]="isEditDisabled(attendance, date)"></button>
-                        }
-                    </td>     
+                    @if (currentUser === USERGROUPS.ADMIN || currentUser === USERGROUPS.SITEINCHARGE || currentUser ===
+                            USERGROUPS.RESOURCEMANAGER) {
+                        <td class="flex items-center justify-center gap-2">
+                            @if (!editing) {
+                                <button pButton pRipple type="button" icon="pi pi-pencil"
+                                    pInitEditableRow rounded severity="secondary"
+                                    [disabled]="isEditDisabled(attendance, date)"></button>
+                            } @else {
+                                <button pButton pRipple type="submit" icon="pi pi-check"
+                                    pSaveEditableRow rounded severity="primary" (click)="submitAttendanceForm(attendance)"
+                                    [disabled]="isEditDisabled(attendance, date)">
+                                </button>
+                                <button pButton pRipple type="button" icon="pi pi-times"
+                                    pCancelEditableRow rounded severity="danger"
+                                    [disabled]="isEditDisabled(attendance, date)"></button>
+                            }
+                        </td>     
+                    }
                 </tr>
             </ng-template>
             <ng-template #emptymessage>
