@@ -43,8 +43,7 @@
                             <p-columnFilter type="date" field="date" display="menu" matchMode="between" [showOperator]="false">
                                 <ng-template #filter let-filter="filterCallback" let-value>
                                     <div class="flex flex-col gap-2">
-                                        <p-datepicker [ngModel]="value?.[0] || null" 
-                                            (ngModelChange)="updateRange($event, value, 0, filter)" placeholder="From Date" />
+                                        <p-datepicker [ngModel]="value?.[0] || null" (ngModelChange)="updateRange($event, value, 0, filter)" placeholder="From Date" />
 
                                         <p-datepicker [ngModel]="value?.[1] || null" (ngModelChange)="updateRange($event, value, 1, filter)" placeholder="To Date" />
                                     </div>
@@ -72,15 +71,11 @@
                     <th>
                         <div class="flex items-center justify-between">
                             <span>Submitted Date</span>
-                            <p-columnFilter type="date" field="submittedDate" display="menu" matchMode="between" 
-                                [showOperator]="false">
+                            <p-columnFilter type="date" field="submittedDate" display="menu" matchMode="between" [showOperator]="false">
                                 <ng-template #filter let-filter="filterCallback" let-value>
                                     <div class="flex flex-col gap-2">
-                                        <p-datepicker [ngModel]="value?.[0] || null"
-                                            (ngModelChange)="updateRange($event, value, 0, filter)" placeholder="From Date" />
-                                        <p-datepicker [ngModel]="value?.[1] || null"
-                                            (ngModelChange)="updateRange($event, value, 1, filter)"
-                                            placeholder="To Date" />
+                                        <p-datepicker [ngModel]="value?.[0] || null" (ngModelChange)="updateRange($event, value, 0, filter)" placeholder="From Date" />
+                                        <p-datepicker [ngModel]="value?.[1] || null" (ngModelChange)="updateRange($event, value, 1, filter)" placeholder="To Date" />
                                     </div>
                                 </ng-template>
                             </p-columnFilter>
@@ -90,13 +85,18 @@
                     <th>
                         <div class="flex items-center justify-between">
                             <span>Month</span>
-                            <p-columnFilter field="month" display="menu" [showOperator]="false"
-                                [showMatchModes]="false" [showAddButton]="false">
+                            <p-columnFilter field="month" display="menu" [showOperator]="false" [showMatchModes]="false" [showAddButton]="false">
                                 <ng-template #filter let-filter="filterCallback">
-                                    <p-datepicker view="month" dateFormat="mm/yy" [readonlyInput]="true" 
-                                        [showButtonBar]="false" [minDate]="minDate" [maxDate]="maxDate"
-                                        placeholder="Select Month" (onSelect)="filterByMonth($event, filter)"
-                                        ></p-datepicker>
+                                    <p-datepicker
+                                        view="month"
+                                        dateFormat="mm/yy"
+                                        [readonlyInput]="true"
+                                        [showButtonBar]="false"
+                                        [minDate]="minDate"
+                                        [maxDate]="maxDate"
+                                        placeholder="Select Month"
+                                        (onSelect)="filterByMonth($event, filter)"
+                                    ></p-datepicker>
                                 </ng-template>
                             </p-columnFilter>
                         </div>
@@ -104,11 +104,9 @@
                     <th>
                         <div class="flex items-center justify-between">
                             <span>Year</span>
-                            <p-columnFilter field="year" display="menu" [showOperator]="false"
-                                [showMatchModes]="false" [showAddButton]="false">
+                            <p-columnFilter field="year" display="menu" [showOperator]="false" [showMatchModes]="false" [showAddButton]="false">
                                 <ng-template #filter let-filter="filterCallback">
-                                    <p-datepicker view="year" dateFormat="yy" [readonlyInput]="true"
-                                        placeholder="Select Year" (onSelect)="filterByYear($event, filter)" />
+                                    <p-datepicker view="year" dateFormat="yy" [readonlyInput]="true" placeholder="Select Year" (onSelect)="filterByYear($event, filter)" />
                                 </ng-template>
                             </p-columnFilter>
                         </div>

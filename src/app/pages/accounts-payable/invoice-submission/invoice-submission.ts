@@ -128,8 +128,8 @@ export class InvoiceSubmission implements OnInit {
         value[index] = selectedValue;
         filter(value);
     }
-    
-    filterByMonth(selectedDate: Date, filterCallback: Function){
+
+    filterByMonth(selectedDate: Date, filterCallback: Function) {
         if (!selectedDate) {
             filterCallback(null);
             return;
@@ -140,8 +140,8 @@ export class InvoiceSubmission implements OnInit {
         filterCallback(month);
     }
 
-    filterByYear(selectedDate: Date, filterCallback: Function){
-        if(!selectedDate){
+    filterByYear(selectedDate: Date, filterCallback: Function) {
+        if (!selectedDate) {
             filterCallback(null);
             return;
         }
