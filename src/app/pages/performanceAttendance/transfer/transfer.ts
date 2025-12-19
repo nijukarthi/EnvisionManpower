@@ -24,14 +24,13 @@ export class Transfer implements OnInit {
     transferredEmployeeList: any;
 
     selectedTransfer: any[] = [];
-    statuses: any[] = [];
 
     currentUserRole = Number(sessionStorage.getItem('userGroupId'));
 
     APPROVALSTATUS = ApprovalStatus;
     USERGROUPS = UserGroups;
 
-    statusMap: any = {
+    statusMap: Record<number, { label: string; severity: string }> = {
         102: { label: 'Processing', severity: 'warn' },
         108: { label: 'Scheduled', severity: 'primary' },
         200: { label: 'Completed', severity: 'success' },
@@ -52,14 +51,13 @@ export class Transfer implements OnInit {
 
     ngOnInit(): void {
         this.fetchTransferedList(102);
+    }
 
-        this.statuses = [
-            { label: 'Processing', value: 102 },
-            { label: 'Scheduled', value: 108 },
-            { label: 'Completed', value: 200 },
-            { label: 'Rejected', value: 406 },
-            { label: 'Cancelled', value: 418 }
-        ]
+    get statuses(){
+        return Object.entries(this.statusMap).map(([key, value]) => ({
+            label: value.label,
+            value: Number(key)
+        }))
     }
 
     transferApi(data: any){

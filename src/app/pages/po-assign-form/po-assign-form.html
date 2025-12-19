@@ -36,21 +36,24 @@
             </div>
             <div class="col-span-1 gap-1">
                 <label for="po-date">PO Date</label>
-                <p-datepicker formControlName="poDate" [showIcon]="true" [iconDisplay]="'input'" inputId="po-date" appendTo="body" appFormFieldError class="block w-full" />
+                <p-datepicker formControlName="poDate" [showIcon]="true" [iconDisplay]="'input'" 
+                    inputId="po-date" appendTo="body" appFormFieldError class="block w-full" dateFormat="yy-mm-dd" />
                 @if(poDate?.invalid && (poDate?.dirty || poDate?.touched)){ @if(poDate?.hasError('required')){
                 <p-message severity="error" variant="simple" size="small" styleClass="mt-1">PO Date is required</p-message>
                 }}
             </div>
             <div class="col-span-1 gap-1">
                 <label for="po-startdate">PO Start Date</label>
-                <p-datepicker formControlName="validFrom" [showIcon]="true" [iconDisplay]="'input'" inputId="po-startdate" appendTo="body" appFormFieldError class="block w-full" />
+                <p-datepicker formControlName="validFrom" [showIcon]="true" [iconDisplay]="'input'" inputId="po-startdate" 
+                    appendTo="body" appFormFieldError class="block w-full" dateFormat="yy-mm-dd" />
                 @if(validFrom?.invalid && (validFrom?.dirty || validFrom?.touched)){ @if(validFrom?.hasError('required')){
                 <p-message severity="error" variant="simple" size="small" styleClass="mt-1">PO Start Date is required</p-message>
                 }}
             </div>
             <div class="col-span-1 gap-1">
                 <label for="po-valid">PO Valid Till</label>
-                <p-datepicker formControlName="validTo" [showIcon]="true" [iconDisplay]="'input'" inputId="po-valid" appendTo="body" appFormFieldError class="block w-full" />
+                <p-datepicker formControlName="validTo" [showIcon]="true" [iconDisplay]="'input'" inputId="po-valid" 
+                    appendTo="body" appFormFieldError class="block w-full" dateFormat="yy-mm-dd" />
                 @if(validTo?.invalid && (validTo?.dirty || validTo?.touched)){ @if(validTo?.hasError('required')){
                 <p-message severity="error" variant="simple" size="small" styleClass="mt-1">PO Valid Till is required</p-message>
                 }}
@@ -85,6 +88,9 @@
                                 <p-accordion-panel value="0">
                                     <p-accordion-header>Line Item {{ i + 1 }}</p-accordion-header>
                                     <p-accordion-content>
+                                        <div class="flex justify-end p-3">
+                                            <p-button icon="pi pi-trash" rounded severity="danger" />
+                                        </div>
                                         <div class="grid grid-cols-2 gap-2">
                                             <div class="grid col-span-1 gap-1">
                                                 <label for="spn-code">SPN Code</label>
@@ -124,7 +130,8 @@
                                             </div>
                                             <div class="grid col-span-1 gap-1">
                                                 <label for="experience">Experience</label>
-                                                <input type="text" pInputText [value]="item.selectedSpn?.experience ?? 0" id="experience" [disabled]="true" />
+                                                <input type="text" pInputText [value]="item.selectedSpn?.experience ?? 0" id="experience" 
+                                                    [disabled]="true" />
                                             </div>
                                             <div class="grid col-span-1 gap-1">
                                                 <label for="demand-code">Demand Code</label>
@@ -160,7 +167,9 @@
                                                         <th>Tax %</th>
                                                         <th>Tax Amount</th>
                                                         <th>Item Total</th>
-                                                        <th>Actions</th>
+                                                        @if (item?.newEmployeeList?.length > 1){
+                                                            <th>Actions</th>
+                                                        }
                                                     </tr>
                                                 </ng-template>
 
@@ -190,9 +199,12 @@
                                                         <td>{{ item.newEmployeeItems.controls[rowIndex].get('taxAmount')?.value | number: '1.2-2' }}</td>
                                                         <td>{{ item.newEmployeeItems.controls[rowIndex].get('itemTotal')?.value | number: '1.2-2' }}</td>
 
-                                                        <td>
-                                                            <p-button icon="pi pi-trash" severity="danger" rounded (onClick)="removeNewEmployee(i, rowIndex, row.candidateId)"> </p-button>
-                                                        </td>
+                                                        @if (item?.newEmployeeList?.length > 1) {
+                                                            <td>
+                                                                <p-button icon="pi pi-trash" severity="danger" rounded 
+                                                                    (onClick)="removeNewEmployee(i, rowIndex, row.candidateId)" />
+                                                            </td>
+                                                        }
                                                     </tr>
 
                                                     }

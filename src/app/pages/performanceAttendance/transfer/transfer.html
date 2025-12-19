@@ -1,12 +1,15 @@
 <div class="card">
     <div class="flex items-baseline-last justify-between">
         <h5>Transfer</h5>
-        <p-menu #menu [model]="getMenuItems()" [popup]="true" />
-        <p-button (onClick)="menu.toggle($event)" label="Actions" icon="pi pi-angle-down" 
-            iconPos="right" [disabled]="!selectedTransferId" />
+        <div class="flex justify-end gap-2">
+            <p-menu #menu [model]="getMenuItems()" [popup]="true" />
+            <p-button (onClick)="menu.toggle($event)" label="Actions" icon="pi pi-angle-down" 
+                iconPos="right" [disabled]="!selectedTransferId" />
+            <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
+        </div>
     </div>
     <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
-        <p-table [value]="transferredEmployeeList" showGridlines stripedRows [rowHover]="true" 
+        <p-table #dt [value]="transferredEmployeeList" showGridlines stripedRows [rowHover]="true" 
             [paginator]="true" [rows]="pageSize" [lazy]="true" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10, 20, 30]" 
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [first]="first" 
             selectionMode="single" dataKey="transferId" (onRowSelect)="selectedEmployee($event.data)" 

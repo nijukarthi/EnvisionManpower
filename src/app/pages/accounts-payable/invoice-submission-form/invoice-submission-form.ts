@@ -6,6 +6,7 @@ import { FormArray, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { FormFieldError } from '@/directives/form-field-error';
+import { UserGroups } from '@/models/usergroups/usergroups.enum';
 
 @Component({
     selector: 'app-invoice-submission-form',
@@ -25,6 +26,10 @@ export class InvoiceSubmissionForm implements OnInit {
 
     selectedEmployees: number[] = [];
 
+    UserGroups = UserGroups;
+
+    currentUser = Number(sessionStorage.getItem('userGroupId'));
+
     private fb = inject(FormBuilder);
 
     constructor(
@@ -35,7 +40,7 @@ export class InvoiceSubmissionForm implements OnInit {
     ) {}
 
     invoiceForm = this.fb.group({
-        invoiceNumber: ['', Validators.required, Validators.minLength(1), Validators.maxLength(30)],
+        invoiceNumber: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(30)]],
         poId: ['', Validators.required],
         year: [null as Date | null],
         sealAndSignDate: ['', Validators.required],

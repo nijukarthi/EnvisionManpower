@@ -149,19 +149,19 @@ export class AppMenu {
                                     label: 'Attendance',
                                     icon: 'pi pi-book',
                                     routerLink: ['/home/attendance'],
-                                    visible: this.adminUser || this.siteInchargeUser || this.resourceManagerUser
+                                    visible: this.adminUser || this.siteInchargeUser || this.resourceManagerUser || this.clusterUser || this.departmentUser 
                                 },
                                 {
                                     label: 'Site Performance',
                                     icon: 'pi pi-map',
                                     routerLink: ['/home/site-performance'],
-                                    visible: this.adminUser || this.siteInchargeUser || this.resourceManagerUser
+                                    visible: this.adminUser || this.siteInchargeUser || this.resourceManagerUser || this.clusterUser || this.departmentUser 
                                 },
                                 {
                                     label: 'Transfer',
                                     icon: 'pi pi-file-export',
                                     routerLink: ['/home/transfer'],
-                                    visible: this.adminUser || this.siteInchargeUser || this.departmentUser || this.clusterUser
+                                    visible: this.adminUser || this.siteInchargeUser || this.departmentUser || this.clusterUser 
                                 },
                                 {
                                     label: 'Resignation',

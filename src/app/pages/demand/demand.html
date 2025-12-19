@@ -165,13 +165,23 @@
                                     } }
                                 </td>
                                 <td>
-                                    <p-datepicker formControlName="plannedDeploymentDate" [minDate]="minDate" placeholder="Select Date" appendTo="body" appFormFieldError class="block w-full" (onSelect)="selectedDeploymentDate($event)" />
+                                    <p-datepicker formControlName="plannedDeploymentDate" [minDate]="minDate" 
+                                        placeholder="Select Date" appendTo="body" appFormFieldError inputStyleClass="block w-full" 
+                                        [inputStyleClass]="getDeploymentDate(rowIndex)?.invalid &&
+                                            (getDeploymentDate(rowIndex)?.dirty || getDeploymentDate(rowIndex)?.touched)
+                                            ? 'p-invalid border-[#FF5630]'
+                                            : ''"
+                                        (onSelect)="selectedDeploymentDate($event)" />
                                     @if(getDeploymentDate(rowIndex)?.invalid && (getDeploymentDate(rowIndex)?.dirty || getDeploymentDate(rowIndex)?.touched)){ @if(getDeploymentDate(rowIndex)?.hasError('required')){
                                     <p-message severity="error" variant="simple" size="small" styleClass="mt-1">PlannedDeploymentDate is required </p-message>
                                     }}
                                 </td>
                                 <td>
-                                    <p-datepicker formControlName="plannedReleaseDate" [minDate]="releaseMinDate" placeholder="Select Date" appendTo="body" appFormFieldError class="block w-full" />
+                                    <p-datepicker formControlName="plannedReleaseDate" [minDate]="releaseMinDate" 
+                                        placeholder="Select Date" appendTo="body" appFormFieldError inputStyleClass="block w-full"
+                                        [inputStyleClass]="getReleaseDate(rowIndex)?.invalid && 
+                                            (getReleaseDate(rowIndex)?.dirty || getReleaseDate(rowIndex)?.touched)
+                                            ? 'p-invalid border-[#FF5630]' : ''" />
                                     @if(getReleaseDate(rowIndex)?.invalid && (getReleaseDate(rowIndex)?.dirty || getReleaseDate(rowIndex)?.touched)){ @if(getReleaseDate(rowIndex)?.hasError('required')){
                                     <p-message severity="error" variant="simple" size="small" styleClass="mt-1">PlannedReleaseDate is required </p-message>
                                     }}

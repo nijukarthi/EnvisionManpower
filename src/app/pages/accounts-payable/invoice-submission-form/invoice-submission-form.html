@@ -54,7 +54,9 @@
             </div>
             <div class="col-span-1 gap-1">
                 <label for="invoice-date">Invoice Date</label>
-                <p-datepicker formControlName="invoiceDate" [showIcon]="true" [iconDisplay]="'input'" appendTo="body" appFormFieldError class="block w-full" placeholder="Select Date" inputId="invoice-date" />
+                <p-datepicker formControlName="invoiceDate" [showIcon]="true" [iconDisplay]="'input'" 
+                    appendTo="body" appFormFieldError class="block w-full" placeholder="Select Date" 
+                    inputId="invoice-date" dateFormat="yy-mm-dd" />
                 @if(invoiceDate?.invalid && (invoiceDate?.dirty || invoiceDate?.touched)){ @if(invoiceDate?.hasError('required')){
                 <p-message severity="error" variant="simple" size="small" styleClass="mt-1">Invoice Date is required</p-message>
                 }}
@@ -68,7 +70,9 @@
             </div>
             <div class="col-span-1 gap-1">
                 <label for="seal-date">Seal and Sign Date By Consultancy</label>
-                <p-datepicker formControlName="sealAndSignDate" [showIcon]="true" [iconDisplay]="'input'" appendTo="body" appFormFieldError class="block w-full" placeholder="Select Date" inputId="seal-date" />
+                <p-datepicker formControlName="sealAndSignDate" [showIcon]="true" [iconDisplay]="'input'" 
+                    appendTo="body" appFormFieldError class="block w-full" placeholder="Select Date" 
+                    inputId="seal-date" dateFormat="yy-mm-dd" />
                 @if(sealAndSignDate?.invalid && (sealAndSignDate?.dirty || sealAndSignDate?.touched)){ @if(sealAndSignDate?.hasError('required')){
                 <p-message severity="error" variant="simple" size="small" styleClass="mt-1">Seal and Sign Date is required</p-message>
                 }}
@@ -79,14 +83,17 @@
             </div>
             <div class="col-span-1 gap-1">
                 <label for="month">Select Month & Year</label>
-                <p-datepicker formControlName="month" view="month" dateFormat="mm/yy" [readonlyInput]="true" inputId="month" appendTo="body" appFormFieldError class="block w-full" placeholder="Select Month & Year" />
+                <p-datepicker formControlName="month" view="month" dateFormat="mm-yy" [readonlyInput]="true" 
+                    inputId="month" appendTo="body" appFormFieldError class="block w-full" placeholder="Select Month & Year" />
                 @if(month?.invalid && (month?.dirty || month?.touched)){ @if(month?.hasError('required')){
                 <p-message severity="error" variant="simple" size="small" styleClass="mt-1">Select Month & Year is required</p-message>
                 }}
             </div>
             <div class="col-span-1 gap-1">
                 <label for="submitted-date">Submitted Date</label>
-                <p-datepicker formControlName="submittedOn" [showIcon]="true" [iconDisplay]="'input'" appendTo="body" placeholder="Select Date" inputId="submitted-date" class="block w-full" />
+                <p-datepicker formControlName="submittedOn" [showIcon]="true" [iconDisplay]="'input'" 
+                    appendTo="body" placeholder="Select Date" inputId="submitted-date" class="block w-full"
+                    dateFormat="yy-mm-dd" />
             </div>
             <div class="col-span-1 gap-1">
                 <label for="submitted-to">Submitted To</label>
@@ -97,11 +104,13 @@
                 <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Submitted To cannot exceed 30 characters </p-message>
                 } }
             </div>
-            <div class="mt-6">
-                <button pButton pRipple type="button" (click)="getLineItems()">
-                    <span pButtonLabel>Get Line Items</span>
-                </button>
-            </div>
+            @if (currentUser === UserGroups.CONSULTANCY && !invoiceId) {
+                <div class="mt-6">
+                    <button pButton pRipple type="button" (click)="getLineItems()">
+                        <span pButtonLabel>Get Line Items</span>
+                    </button>
+                </div>
+            }
         </div>
     </form>
 </div>
@@ -160,14 +169,19 @@
                         <td>{{ po?.employmentDetails?.joiningDate }}</td>
                         <td>
                             @if (po.eligible) {
-                            <input type="text" pInputText formControlName="sacCode" appendTo="body" appFormFieldError class="block w-full" />
-                            @if(getsacCode(i)?.invalid && (getsacCode(i)?.dirty || getsacCode(i)?.touched)){ @if(getsacCode(i)?.hasError('required')){
-                            <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> SAC Code is required </p-message>
-                            @if (getsacCode(i)?.hasError('maxlength')) {
-                            <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> SAC Code cannot exceed 20 characters </p-message>
-                            } } } @else {
+                                <input type="text" pInputText formControlName="sacCode" appendTo="body" appFormFieldError class="block w-full" />
+                                @if(getsacCode(i)?.invalid && (getsacCode(i)?.dirty || getsacCode(i)?.touched)){ 
+                                    @if(getsacCode(i)?.hasError('required')){
+                                        <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> SAC Code is required </p-message>
+                                    }
+                                    @if (getsacCode(i)?.hasError('maxlength')) {
+                                        <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> SAC Code cannot exceed 20 characters </p-message>
+                                    }       
+                                }
+                            } 
+                            @else {
                             <span>{{ po.sacCode || '-' }}</span>
-                            }}
+                            }
                         </td>
                         <td>{{ po?.employmentDetails?.project?.siteName }}</td>
                         <td>{{ po.unitRate }}</td>
@@ -200,11 +214,13 @@
                 </ng-template>
             </p-table>
         </div>
-        <div class="flex justify-end mt-4">
-            <button pButton pRipple type="submit">
-                <span pButtonLabel>{{ invoiceId ? 'Update' : 'Submit' }}</span>
-            </button>
-        </div>
+        @if (!invoiceId) {
+            <div class="flex justify-end mt-4">
+                <button pButton pRipple type="submit">
+                    <span pButtonLabel>{{ invoiceId ? 'Update' : 'Submit' }}</span>
+                </button>
+            </div>
+        }
     </form>
 </div>
 

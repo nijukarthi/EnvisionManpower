@@ -19,8 +19,6 @@ export class Terminate implements OnInit {
     resignationListLength = 0;
     selectedResignationId = 0;
 
-    activeTab = 'processing';
-
     isEnabledBtn = false;
 
     resignationList: any;
@@ -30,13 +28,18 @@ export class Terminate implements OnInit {
     APPROVALSTATUS = ApprovalStatus;
     USERGROUPS = UserGroups;
 
-    statusMap: any = {
+    statusMap: Record<number, { label: string; severity: string }> = {
         102: { label: 'Processing', severity: 'warn' },
         108: { label: 'Scheduled', severity: 'primary' },
         200: { label: 'Completed', severity: 'success' },
         406: { label: 'Rejected', severity: 'danger' },
         418: { label: 'Cancelled', severity: 'danger' }
     };
+
+    isReplacement = [
+        { label: 'Yes', value: true },
+        { label: 'No', value: false }
+    ]
 
     constructor(
         private apiService: Apiservice,
@@ -48,10 +51,28 @@ export class Terminate implements OnInit {
         this.fetchResignationList(102);
     }
 
-    setActiveTab(tab: string, status: number) {
-        this.activeTab = tab;
-        console.log(this.activeTab);
-        this.fetchResignationList(status);
+    get statuses(){
+        return Object.entries(this.statusMap).map(([key, value]) => ({
+            label: value.label,
+            value: Number(key)
+        }))
+    }
+
+    resignationApi(data: any){
+        try {
+            this.apiService.fetchResignationList(data).subscribe({
+                next: (val) => {
+                    console.log(val);
+                    this.resignationList = val?.data?.data;
+                    this.resignationListLength = val?.data?.length ?? 0;
+                },
+                error: (err) => {
+                    console.log(err);
+                }
+            });
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     fetchResignationList(status: number) {
@@ -64,16 +85,7 @@ export class Terminate implements OnInit {
             };
             console.log(data);
 
-            this.apiService.fetchResignationList(data).subscribe({
-                next: (val) => {
-                    console.log(val);
-                    this.resignationList = val?.data?.data;
-                    this.resignationListLength = val?.data?.length ?? 0;
-                },
-                error: (err) => {
-                    console.log(err);
-                }
-            });
+            this.resignationApi(data);
         } catch (error) {
             console.log(error);
         }
@@ -261,10 +273,48 @@ export class Terminate implements OnInit {
         return this.statusMap[status]?.severity ?? 'primary';
     }
 
-    pageChange(event: any) {
-        this.first = event.first;
-        this.offSet = event.first / event.rows;
-        this.pageSize = event.rows;
-        this.fetchResignationList(102);
+    updateRange(selectedValue: any, value: any[], index: number, filter: any){
+        if(!value) value = [];
+
+        value[index] = selectedValue;
+
+        filter(value);
+    }
+
+    loadResignation(event: any){
+        try {
+            this.first = event.first;
+            this.offSet = event.first / event.rows;
+            this.pageSize = event.rows;
+
+            const filters = event.filters;
+            console.log(filters);
+
+            const formatDate = (d: any) => {
+                if(!d) return null;
+                return typeof d === 'string' ? d : d.toLocaleDateString('en-CA');
+            }
+
+            const dateValue = filters?.date?.[0]?.value;
+
+            const payload = {
+                offSet: this.offSet,
+                pageSize: this.pageSize,
+                employeeCode: filters?.employeeCode?.[0]?.value ?? null,
+                candidateName: filters?.candidateName?.[0]?.value ?? null,
+                projectCode: filters?.projectCode?.[0]?.value ?? null,
+                clusterName: filters?.clusterName?.[0]?.value ?? null,
+                replacementRequired: filters?.replace?.[0]?.value ?? null,
+                resignationStatuses: filters?.status?.[0]?.value ?? null,
+                lastWorkingFrom: Array.isArray(dateValue) ? formatDate(dateValue[0]) : null,
+                lastWorkingTo: Array.isArray(dateValue) ? formatDate(dateValue[1]) : null
+            }
+
+            console.log(payload);
+
+            this.resignationApi(payload);
+        } catch (error) {
+            console.log(error);
+        }
     }
 }
