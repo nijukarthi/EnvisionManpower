@@ -1,44 +1,94 @@
 <div class="card">
     <div class="flex items-baseline-last justify-between">
         <h5>Resignation</h5>
-        <p-menu #menu [model]="getMenuItems()" [popup]="true" />
-        <p-button (onClick)="menu.toggle($event)" label="Actions" icon="pi pi-angle-down" 
-            iconPos="right" [disabled]="!selectedResignationId" />
-    </div>
-    <div class="flex">
-        <button class="custom-btn" pButton pRipple text (click)="setActiveTab('processing', 102)"
-            [ngClass]="{ 'active-tab': activeTab === 'processing' }">
-            <i class="pi pi-stopwatch" pButtonIcon></i>
-            <span pButtonLabel>Processing</span>
-        </button>
-        <button class="custom-btn" pButton pRipple text (click)="setActiveTab('accepted', 200)"
-            [ngClass]="{ 'active-tab': activeTab === 'accepted' }">
-            <i class="pi pi-check-circle" pButtonIcon></i>
-            <span pButtonLabel>Accepted</span>
-        </button>
-        <button class="custom-btn" pButton pRipple text (click)="setActiveTab('rejected', 406)"
-            [ngClass]="{ 'active-tab': activeTab === 'rejected' }">
-            <i class="pi pi-times-circle" pButtonIcon></i>
-            <span pButtonLabel>Rejected</span>
-        </button>
+        <div class="flex justify-end gap-1">
+            <p-menu #menu [model]="getMenuItems()" [popup]="true" />
+            <p-button (onClick)="menu.toggle($event)" label="Actions" icon="pi pi-angle-down" 
+                iconPos="right" [disabled]="!selectedResignationId" />
+                <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
+        </div>
     </div>
     <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
-        <p-table [value]="resignationList" stripedRows [rowHover]="true" [paginator]="true" [rows]="pageSize"
+        <p-table #dt [value]="resignationList" stripedRows [rowHover]="true" [paginator]="true" [rows]="pageSize"
             [showCurrentPageReport]="true" [rowsPerPageOptions]="[10, 20, 30]" [totalRecords]="resignationListLength"
-            selectionMode="single" dataKey="resignationId" (onRowSelect)="selectedEmployee($event.data)" 
+            selectionMode="single" dataKey="resignationId" (onRowSelect)="selectedEmployee($event.data)" [lazy]="true"
             (onRowUnselect)="unSelectedEmployee()" [first]="first" [(selection)]="selectedResignation"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" 
-            [tableStyle]="{'min-width': '100rem'}" (onPage)="pageChange($event)">
+            [tableStyle]="{'min-width': '100rem'}" (onLazyLoad)="loadResignation($event)">
             <ng-template #header>
                 <tr>
                     <th>SL No</th>
-                    <th>Employee Code</th>
-                    <th>Employee Name</th>
-                    <th>Project Code</th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Employee Code</span>
+                            <p-columnFilter type="text" field="employeeCode" display="menu" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Employee Name</span>
+                            <p-columnFilter type="text" field="candidateName" display="menu" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Project Code</span>
+                            <p-columnFilter type="text" field="projectCode" display="menu" />
+                        </div>
+                    </th>
                     <th>Site Name</th>
-                    <th>Cluster Name</th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Cluster Name</span>
+                            <p-columnFilter type="text" field="clusterName" display="menu" />
+                        </div>
+                    </th>
                     <th>Role</th>
-                    <th>Status</th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Last Working Date</span>
+                            <p-columnFilter type="date" field="date" display="menu" matchMode="between"
+                                [showOperator]="false">
+                                <ng-template #filter let-filter="filterCallback" let-value>
+                                    <div class="flex flex-col gap-2">
+                                        <p-datepicker [ngModel]="value?.[0] || null" 
+                                            (ngModelChange)="updateRange($event, value, 0, filter)"
+                                           placeholder="From Date" />
+                                        <p-datepicker [ngModel]="value?.[1] || null"
+                                            (ngModelChange)="updateRange($event, value, 1, filter)"
+                                            placeholder="To Date" />
+                                    </div>
+                                </ng-template>
+                            </p-columnFilter>
+                        </div> 
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Is Replacement Required</span>
+                            <p-columnFilter field="replace" matchMode="equals" display="menu">
+                                <ng-template #filter let-value let-filter="filterCallback">
+                                    <p-select [options]="isReplacement" optionLabel="label" optionValue="value"
+                                       (onChange)="filter($event.value)" placeholder="Select Yes/No"
+                                        class="w-full" />
+                                </ng-template>
+                            </p-columnFilter>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Status</span>
+                            <p-columnFilter field="status" matchMode="equals" display="menu">
+                                <ng-template #filter let-value let-filter="filterCallback">
+                                    <p-multiselect [options]="statuses" (onChange)="filter($event.value)"
+                                        placeholder="Select Statuses" class="w-full">
+                                        <ng-template let-option #item>
+                                            <p-tag [value]="option.label" [severity]="getSeverity(option.value)" />
+                                        </ng-template>
+                                    </p-multiselect>
+                                </ng-template>
+                            </p-columnFilter>
+                        </div>
+                    </th>
                     <th>NDC From Site Head</th>
                     <th>NDC From Consultancy</th>
                     <th>Cluster Head Approval</th>
@@ -54,6 +104,8 @@
                     <td>{{ resignation.employmentDetails.project.siteName }}</td>
                     <td>{{ resignation.employmentDetails.cluster.clusterName }}</td>
                     <td>{{ resignation.employmentDetails.envisionRole.roleName }}</td>
+                    <td>{{ resignation.lastWorkingDate }}</td>
+                    <td>{{ resignation.replacementRequired ? 'Yes' : 'No' }}</td>
                     <td>
                         <p-tag [value]="getStatusLabel(resignation.resignationStatus)"
                             [severity]="getSeverity(resignation.resignationStatus)" />

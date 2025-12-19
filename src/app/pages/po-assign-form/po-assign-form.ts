@@ -317,11 +317,17 @@ export class PoAssignForm implements OnInit {
 
             this.apiService.fetchDemandCandidates({ demandId }).subscribe({
                 next: (val) => {
+                    console.log(val);
                     const employees = val.data;
                     const consultancyId = this.mapPOForm.get('consultancy.userId')?.value;
 
                     // Store inside THIS line item only
                     lineItem.newEmployeeList = employees.filter((e: any) => e.consultancyId === consultancyId);
+
+                    if (lineItem.newEmployeeList.length === 0) {
+                        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No Employee Found' });
+                        return;
+                    }
 
                     // Create a NEW formArray for this line
                     lineItem.newEmployeeItems = this.fb.array([]);
@@ -339,8 +345,13 @@ export class PoAssignForm implements OnInit {
                 },
 
                 error: (err) => {
+                    console.log(err);
                     lineItem.newEmployeeList = [];
                     lineItem.newEmployeeItems = this.fb.array([]);
+
+                    if (err.status === 400) {
+                        this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
+                    }
                 }
             });
         } catch (error) {
@@ -378,6 +389,11 @@ export class PoAssignForm implements OnInit {
                     const selectedConsultancy = this.mapPOForm.get('consultancy.userId')?.value;
 
                     lineItem.existingEmployeeList = existingEmployeeItems.filter((e: any) => e.consultancyId === selectedConsultancy);
+
+                    if (lineItem.existingEmployeeList.length === 0) {
+                        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No Employee Found' });
+                        return;
+                    }
 
                     lineItem.existingEmployeeItems = this.fb.array([]);
 

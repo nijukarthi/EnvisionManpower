@@ -82,7 +82,7 @@ export class PoAssignTable implements OnInit {
       case PurchaseOrderStatus.DRAFT:
         return 'primary';
       case PurchaseOrderStatus.ACTIVE:
-        return 'success';
+        return 'primary';
       case PurchaseOrderStatus.UTILIZED:
         return 'secondary';
       case PurchaseOrderStatus.SUSPENDED:

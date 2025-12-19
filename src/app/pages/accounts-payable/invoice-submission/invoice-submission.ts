@@ -15,8 +15,12 @@ export class InvoiceSubmission implements OnInit {
     pageSize = 10;
     first = 0;
     totalRecords = 0;
+
     statuses!: any[];
     invoiceSubmissionList: any;
+
+    minDate: Date | undefined;
+    maxDate: Date | undefined;
 
     USERGROUPS = UserGroups;
 
@@ -41,6 +45,11 @@ export class InvoiceSubmission implements OnInit {
             { label: 'PAYMENT_APPROVED', value: 'PAYMENT_APPROVED' },
             { label: 'PAID', value: 'PAID' }
         ];
+
+        const currentYear = new Date().getFullYear();
+
+        this.minDate = new Date(currentYear, 0, 1);
+        this.maxDate = new Date(currentYear, 11, 31);
     }
 
     invoiceSubmissionApi(data: any) {
@@ -77,8 +86,8 @@ export class InvoiceSubmission implements OnInit {
     getMenuItems(submission: any) {
         return [
             {
-                label: 'Edit',
-                icon: 'pi pi-pencil',
+                label: 'View',
+                icon: 'pi pi-eye',
                 command: () => this.router.navigate(['/home/invoice-submission', submission.invoiceId])
             },
             {
@@ -119,6 +128,29 @@ export class InvoiceSubmission implements OnInit {
         value[index] = selectedValue;
         filter(value);
     }
+    
+    filterByMonth(selectedDate: Date, filterCallback: Function){
+        if (!selectedDate) {
+            filterCallback(null);
+            return;
+        }
+
+        const month = selectedDate.getMonth() + 1;
+
+        filterCallback(month);
+    }
+
+    filterByYear(selectedDate: Date, filterCallback: Function){
+        if(!selectedDate){
+            filterCallback(null);
+            return;
+        }
+
+        const year = selectedDate.getFullYear();
+
+        filterCallback(year);
+    }
+
     loadInvoice(event: any) {
         try {
             this.first = event.first;
@@ -133,13 +165,15 @@ export class InvoiceSubmission implements OnInit {
                 return typeof d === 'string' ? d : d.toLocaleDateString('en-CA');
             };
             const dateValue = filters?.date?.[0]?.value;
+            const submittedDateValue = filters?.submittedDate?.[0]?.value;
+
             const payload = {
                 offSet: this.offSet,
                 pageSize: this.pageSize,
                 invoiceNumber: filters?.invoiceNumber?.[0]?.value ?? null,
                 statuses: filters?.status?.[0]?.value ?? null,
-                submittedOnFrom: Array.isArray(dateValue) ? formatDate(dateValue[0]) : null,
-                submittedOnTo: Array.isArray(dateValue) ? formatDate(dateValue[1]) : null,
+                submittedOnFrom: Array.isArray(submittedDateValue) ? formatDate(submittedDateValue[0]) : null,
+                submittedOnTo: Array.isArray(submittedDateValue) ? formatDate(submittedDateValue[1]) : null,
                 year: filters?.year?.[0]?.value ?? null,
                 month: filters?.month?.[0]?.value ?? null,
                 poNumber: filters?.poNumber?.[0]?.value ?? null,
