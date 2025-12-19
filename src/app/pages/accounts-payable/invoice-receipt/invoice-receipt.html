@@ -1,28 +1,151 @@
 <div class="card">
-    <h5>Invoice Receipt</h5> 
+    <h5>Invoice Receipt</h5>
     <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
-        <p-table [value]="invoiceGRNList" stripedRows [rowHover]="true" [paginator]="true" [rows]="pageSize"
-            [first]="first" [rowsPerPageOptions]="[10, 20, 30]" [lazy]="true" [totalRecords]="totalRecords"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true"
-            [tableStyle]="{'min-width': '230rem'}" (onPage)="pageChange($event)">
+        <p-table
+            [value]="invoiceGRNList"
+            stripedRows
+            [rowHover]="true"
+            [paginator]="true"
+            [rows]="pageSize"
+            [first]="first"
+            [rowsPerPageOptions]="[10, 20, 30]"
+            [lazy]="true"
+            [totalRecords]="totalRecords"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [showCurrentPageReport]="true"
+            [tableStyle]="{'min-width': '230rem'}"
+            (onPage)="pageChange($event)"
+            (onLazyLoad)="loadGRN($event)"
+        >
             <ng-template #header>
                 <tr>
                     <th>SL NO</th>
                     <th>Consultancy Name</th>
-                    <th>Invoice Number</th>
-                    <th>Invoice Date</th>
-                    <th>Invoice Status</th>
-                    <th>POD</th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Invoice Number</span>
+                            <p-columnFilter type="text" field="invoiceNumber" display="menu" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Invoice Date</span>
+                            <p-columnFilter type="date" field="date" display="menu" matchMode="between" [showOperator]="false">
+                                <ng-template #filter let-filter="filterCallback" let-value>
+                                    <div class="flex flex-col gap-2">
+                                        <p-datepicker [ngModel]="value?.[0] || null" (ngModelChange)="updateRange($event, value, 0, filter)" placeholder="From Date" />
+                                        <p-datepicker [ngModel]="value?.[1] || null" (ngModelChange)="updateRange($event, value, 1, filter)" placeholder="To Date" />
+                                    </div>
+                                </ng-template>
+                            </p-columnFilter>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Invoice Status</span>
+                            <p-columnFilter field="status" matchMode="equals" display="menu">
+                                <ng-template #filter let-value let-filter="filterCallback">
+                                    <p-multiselect [options]="statuses" (onChange)="filter($event.value)" placeholder="Select Statuses" class="w-full">
+                                        <ng-template let-option #item>
+                                            <p-tag [value]="option.value" [severity]="getSeverity(option.value)" />
+                                        </ng-template>
+                                    </p-multiselect>
+                                </ng-template>
+                            </p-columnFilter>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>PO Number</span>
+                            <p-columnFilter type="text" field="poNumber" display="menu" />
+                        </div>
+                    </th>
                     <th>Seal and Sign Date by Consultancy</th>
-                    <th>Submitted Date</th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Submitted Date</span>
+                            <p-columnFilter type="date" field="submittedDate" display="menu" matchMode="between" [showOperator]="false">
+                                <ng-template #filter let-filter="filterCallback" let-value>
+                                    <div class="flex flex-col gap-2">
+                                        <p-datepicker [ngModel]="value?.[0] || null" (ngModelChange)="updateRange($event, value, 0, filter)" placeholder="From Date" />
+                                        <p-datepicker [ngModel]="value?.[1] || null" (ngModelChange)="updateRange($event, value, 1, filter)" placeholder="To Date" />
+                                    </div>
+                                </ng-template>
+                            </p-columnFilter>
+                        </div>
+                    </th>
                     <th>Submitted To</th>
-                    <th>Month</th>
-                    <th>Year</th>
-                    <th>Grand Total</th>           
-                    <th>Recepient (Approved By)</th>
-                    <th>GRN Number</th>
-                    <th>GRN Status</th>
-                    <th>GRN Done Date</th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Month</span>
+                            <p-columnFilter field="month" display="menu" [showOperator]="false" [showMatchModes]="false" [showAddButton]="false">
+                                <ng-template #filter let-filter="filterCallback">
+                                    <p-datepicker
+                                        view="month"
+                                        dateFormat="mm/yy"
+                                        [readonlyInput]="true"
+                                        [showButtonBar]="false"
+                                        [minDate]="minDate"
+                                        [maxDate]="maxDate"
+                                        placeholder="Select Month"
+                                        (onSelect)="filterByMonth($event, filter)"
+                                    ></p-datepicker>
+                                </ng-template>
+                            </p-columnFilter>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Year</span>
+                            <p-columnFilter field="year" display="menu" [showOperator]="false" [showMatchModes]="false" [showAddButton]="false">
+                                <ng-template #filter let-filter="filterCallback">
+                                    <p-datepicker view="year" dateFormat="yy" [readonlyInput]="true" placeholder="Select Year" (onSelect)="filterByYear($event, filter)" />
+                                </ng-template>
+                            </p-columnFilter>
+                        </div>
+                    </th>
+                    <th>Grand Total</th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span> Recepient (Approved By)</span>
+                            <p-columnFilter type="text" field="recipient" display="menu" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>GRN Number</span>
+                            <p-columnFilter type="text" field="grnNumber" display="menu" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>GRN Status</span>
+                            <p-columnFilter field="grnStatuses" matchMode="equals" display="menu">
+                                <ng-template #filter let-value let-filter="filterCallback">
+                                    <p-multiselect [options]="grnStatuses" (onChange)="filter($event.value)" placeholder="Select Statuses" class="w-full">
+                                        <ng-template let-option #item>
+                                            <p-tag [value]="option.value" [severity]="getSeverity(option.value)" />
+                                        </ng-template>
+                                    </p-multiselect>
+                                </ng-template>
+                            </p-columnFilter>
+                        </div>
+                    </th>
+
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>GRN Done Date</span>
+                            <p-columnFilter type="date" field="grnDate" display="menu" matchMode="between" [showOperator]="false">
+                                <ng-template #filter let-filter="filterCallback" let-value>
+                                    <div class="flex flex-col gap-2">
+                                        <p-datepicker [ngModel]="value?.[0] || null" (ngModelChange)="updateRange($event, value, 0, filter)" placeholder="From Date" />
+
+                                        <p-datepicker [ngModel]="value?.[1] || null" (ngModelChange)="updateRange($event, value, 1, filter)" placeholder="To Date" />
+                                    </div>
+                                </ng-template>
+                            </p-columnFilter>
+                        </div>
+                    </th>
                     <th>GRN Reverse Number</th>
                     <th>GRN Reverse Reason</th>
                     <th>Actions</th>
@@ -33,15 +156,13 @@
                     <td>{{ i + 1 }}</td>
                     <td>{{ receipt.invoiceHeader.consultancy.consultancyName }}</td>
                     <td>
-                        <p-button [label]="receipt.invoiceHeader.invoiceNumber" link 
-                            (onClick)="openGRN(receipt)" />
+                        <p-button [label]="receipt.invoiceHeader.invoiceNumber" link (onClick)="openGRN(receipt)" />
                     </td>
                     <td>{{ receipt.invoiceHeader.invoiceDate | date:'dd-MM-yyyy' }}</td>
                     <td>
-                        <p-tag [value]="receipt.invoiceHeader.invoiceStatus" 
-                            [severity]="getSeverity(receipt.invoiceHeader.invoiceStatus)" />
+                        <p-tag [value]="receipt.invoiceHeader.invoiceStatus" [severity]="getSeverity(receipt.invoiceHeader.invoiceStatus)" />
                     </td>
-                    <td>{{ receipt.invoiceHeader.pod }}</td>
+                    <td>{{ receipt.invoiceHeader.poNumber }}</td>
                     <td>{{ receipt.invoiceHeader.sealAndSignDate | date:'dd-MM-yyyy' }}</td>
                     <td>{{ receipt.invoiceHeader.submittedOn }}</td>
                     <td>{{ receipt.invoiceHeader.submittedTo }}</td>
@@ -51,8 +172,7 @@
                     <td>{{ receipt.recipient || '-' }}</td>
                     <td>{{ receipt.grnNumber || '-' }}</td>
                     <td>
-                        <p-tag [value]="receipt.grnStatus || '-'" 
-                            [severity]="receipt.grnStatus ? getGRNSeverity(receipt.grnStatus) : null" />
+                        <p-tag [value]="receipt.grnStatus || '-'" [severity]="receipt.grnStatus ? getGRNSeverity(receipt.grnStatus) : null" />
                     </td>
                     <td>{{ receipt.grnDoneDate || '-' }}</td>
                     <td>{{ receipt.grnReverseNumber || '-' }}</td>
@@ -65,9 +185,7 @@
             </ng-template>
             <ng-template #emptymessage>
                 <tr>
-                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground);">
-                        No Records Found
-                    </td>
+                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground)">No Records Found</td>
                 </tr>
             </ng-template>
         </p-table>
@@ -79,7 +197,7 @@
     <p-tabs [(value)]="activeTab">
         <p-tablist>
             <p-tab value="0">Start GRN Process</p-tab>
-            <p-tab value="1" [disabled]="invoiceStatus === 'SUBMITTED'" >Complete GRN</p-tab>
+            <p-tab value="1" [disabled]="invoiceStatus === 'SUBMITTED'">Complete GRN</p-tab>
             <p-tab value="2" [disabled]="invoiceStatus === 'SUBMITTED'">GRN Reverse</p-tab>
         </p-tablist>
         <p-tabpanels>
@@ -92,11 +210,11 @@
                         </div>
                     </div>
                     @if (invoiceStatus === 'SUBMITTED') {
-                        <div class="flex justify-end mt-4">
-                            <button pButton pRipple type="submit">
-                                <span pButtonLabel>Submit</span>
-                            </button>
-                        </div>
+                    <div class="flex justify-end mt-4">
+                        <button pButton pRipple type="submit">
+                            <span pButtonLabel>Submit</span>
+                        </button>
+                    </div>
                     }
                 </form>
             </p-tabpanel>
@@ -109,16 +227,15 @@
                         </div>
                         <div class="grid col-span-1 gap-1">
                             <label for="done-date">GRN Done Date</label>
-                            <p-datepicker formControlName="grnDoneDate" [showIcon]="true" [iconDisplay]="'input'" 
-                                inputId="done-date" placeholder="Select Date" appendTo="body" />
+                            <p-datepicker formControlName="grnDoneDate" [showIcon]="true" [iconDisplay]="'input'" inputId="done-date" placeholder="Select Date" appendTo="body" />
                         </div>
                     </div>
                     @if (invoiceStatus !== 'GRN_REVERSED') {
-                        <div class="flex justify-end mt-4">
-                            <button pButton pRipple type="submit">
-                                <span pButtonLabel>Submit</span>
-                            </button>
-                        </div>
+                    <div class="flex justify-end mt-4">
+                        <button pButton pRipple type="submit">
+                            <span pButtonLabel>Submit</span>
+                        </button>
+                    </div>
                     }
                 </form>
             </p-tabpanel>
@@ -131,16 +248,15 @@
                         </div>
                         <div class="grid col-span-1 gap-1">
                             <label for="reverse-reason">GRN Reverse Reason</label>
-                            <textarea rows="5" cols="30" pTextarea formControlName="reverseReason"
-                                id="reverse-reason"></textarea>
+                            <textarea rows="5" cols="30" pTextarea formControlName="reverseReason" id="reverse-reason"></textarea>
                         </div>
                     </div>
                     @if (invoiceStatus !== 'GRN_REVERSED') {
-                        <div class="flex justify-end mt-4">
-                            <button pButton pRipple type="submit">
-                                <span pButtonLabel>Submit</span>
-                            </button>
-                        </div>
+                    <div class="flex justify-end mt-4">
+                        <button pButton pRipple type="submit">
+                            <span pButtonLabel>Submit</span>
+                        </button>
+                    </div>
                     }
                 </form>
             </p-tabpanel>
