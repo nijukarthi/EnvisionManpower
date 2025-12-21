@@ -16,7 +16,7 @@
            [first]="first" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
            [scrollable]="true" scrollHeight="500px" [totalRecords]="totalRecords" dataKey="employmentDetails.employmentId"
            [(selection)]="selectedPerformances" (onRowSelect)="selectedEmployee($event.data)" (onRowUnselect)="unSelectedEmployee()"
-           [tableStyle]="{'min-width': '250rem'}" (onLazyLoad)="loadPerformances($event)">
+           [tableStyle]="{'min-width': '400rem'}" (onLazyLoad)="loadPerformances($event)">
             <ng-template #header>
                 <tr>
                     <th>
@@ -182,6 +182,11 @@
                             </p-cellEditor>
                         </td>
                     }
+                    @empty {
+                        @for (i of performanceColumns; track $index) {
+                            <td class="text-center">-</td>
+                        }
+                    }
                     <td #pEditableColumn>
                         <p-cellEditor>
                             <ng-template #input>
@@ -209,6 +214,7 @@
                             @if (!editing) {
                                 <button pButton pRipple type="button" icon="pi pi-pencil"
                                     pInitEditableRow rounded severity="secondary"
+                                    (click)="editPerformance(performance)"
                                     [disabled]="isEditDisabled(performance, date)"
                                     ></button>
                             }@else {

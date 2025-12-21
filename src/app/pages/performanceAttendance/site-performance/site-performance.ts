@@ -20,6 +20,8 @@ export class SitePerformance implements OnInit {
   first = 0;
   totalRecords = 0;
   employmentId = 0;
+  performanceColumnCount = 9;
+  performanceColumns = Array.from({ length: this.performanceColumnCount });
   month: number | null = null;
   year: number | null = null;
 
@@ -151,6 +153,16 @@ export class SitePerformance implements OnInit {
         return 'danger';
       default: 
         return 'info';
+    }
+  }
+
+  editPerformance(performance: any){
+    const details = performance.employeePerformance.performanceDetails;
+
+    if (!details || details.length === 0) {
+      performance.employeePerformance.performanceDetails = Array.from({ length: this.performanceColumnCount }, () => ({
+        score: null
+      }));
     }
   }
 

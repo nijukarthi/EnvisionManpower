@@ -148,12 +148,16 @@ export class InvoiceDisbursement implements OnInit {
             const filters = event.filters;
             console.log(filters);
 
+            const grandTotal = filters?.total?.[0]?.value;
+
             const payload = {
                 offSet: this.offSet,
                 pageSize: this.pageSize,
                 invoiceNumber: filters?.invoiceNumber?.[0]?.value ?? null,
                 invoiceStatuses: filters?.status?.[0]?.value ?? null,
-                poNumber: filters?.poNumber?.[0]?.value ?? null
+                poNumber: filters?.poNumber?.[0]?.value ?? null,
+                minAmount: Array.isArray(grandTotal) ? grandTotal[0] : null,
+                maxAmount: Array.isArray(grandTotal) ? grandTotal[1] : null
             };
             console.log(payload);
             this.invoiceDisbursementApi(payload);

@@ -104,7 +104,23 @@
                             </p-columnFilter>
                         </div>
                     </th>
-                    <th>Grand Total</th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Grand Total</span>
+                            <p-columnFilter type="numeric" field="total" display="menu" matchMode="between"
+                                [showMatchModes]="false" [showOperator]="false" [showAddButton]="false">
+                                <ng-template #filter let-filter="filterCallback" let-value>
+                                    <div class="flex flex-col gap-2">
+                                        <p-inputNumber placeholder="Min amount" [ngModel]="value?.[0]" 
+                                           (ngModelChange)="filter([$event, value?.[1]])" mode="currency" currency="INR" />
+                                        <p-inputNumber placeholder="Max amount" [ngModel]="value?.[1]"
+                                            (ngModelChange)="filter([value?.[0], $event])" mode="currency"
+                                            currency="INR" />
+                                    </div>
+                                </ng-template>
+                            </p-columnFilter>
+                        </div>
+                    </th>
                     <th>
                         <div class="flex items-center justify-between">
                             <span> Recepient (Approved By)</span>
