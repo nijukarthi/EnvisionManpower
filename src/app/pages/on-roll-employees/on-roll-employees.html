@@ -11,7 +11,7 @@
             [rowHover]="true" [paginator]="true" [rows]="pageSize" [lazy]="true" stripedRows
             [first]="first" [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true" [totalRecords]="totalRecords" 
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" editMode="row"
-            [tableStyle]="{'min-width': '220rem'}" (onLazyLoad)="loadDemands($event)">
+            [tableStyle]="{'min-width': '250rem'}" (onLazyLoad)="loadDemands($event)">
             <ng-template #header let-columns>
                 <tr>
                     <th>SL No</th>

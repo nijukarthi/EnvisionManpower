@@ -68,7 +68,22 @@
                     <th>Submitted To</th>
                     <th>Month</th>
                     <th>Year</th>
-                    <th>Grand Total</th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Grand Total</span>
+                            <p-columnFilter type="numeric" field="total" display="menu" matchMode="between"
+                                [showMatchModes]="false" [showOperator]="false" [showAddButton]="false">
+                                <ng-template #filter let-filter="filterCallback" let-value>
+                                    <div class="flex flex-col gap-2">
+                                        <p-inputNumber [ngModel]="value?.[0]" (ngModelChange)="filter([$event, value?.[1]])"
+                                           mode="currency" currency="INR" placeholder="Min amount" />
+                                        <p-inputNumber [ngModel]="value?.[1]" (ngModelChange)="filter([value?.[0], $event])"
+                                            mode="currency" currency="INR" placeholder="Max amount" />
+                                    </div>
+                                </ng-template>
+                            </p-columnFilter>
+                        </div>
+                    </th>
                     <th>GL Code</th>
                     <th>WBS</th>
                     <th>Cost/Profit Center</th>
@@ -91,7 +106,8 @@
                     <td>{{ disbursement.invoiceHeader.invoiceDate || '-' }}</td>
                     <td>{{disbursement.invoiceHeader.poNumber}}</td>
                     <td>
-                        <p-tag [value]="disbursement.invoiceHeader.invoiceStatus" [severity]="getSeverity(disbursement.invoiceHeader.invoiceStatus)" />
+                        <p-tag [value]="disbursement.invoiceHeader.invoiceStatus" 
+                            [severity]="getSeverity(disbursement.invoiceHeader.invoiceStatus)" />
                     </td>
                     <td>{{ disbursement.invoiceHeader.pod }}</td>
                     <td>{{ disbursement.invoiceHeader.sealAndSignDate | date:'dd-MM-yyyy' }}</td>
@@ -99,18 +115,18 @@
                     <td>{{ disbursement.invoiceHeader.submittedTo }}</td>
                     <td>{{ disbursement.invoiceHeader.month }}</td>
                     <td>{{ disbursement.invoiceHeader.year }}</td>
-                    <td>{{ disbursement.invoiceHeader.grandTotal }}</td>
-                    <td>{{ disbursement.giCode }}</td>
-                    <td>{{ disbursement.wbs }}</td>
-                    <td>{{ disbursement.costProfitCenter }}</td>
-                    <td>{{ disbursement.stateLocation }}</td>
-                    <td>{{ disbursement.bankDetails }}</td>
-                    <td>{{ disbursement.pan }}</td>
-                    <td>{{ disbursement.dueDate | date:'dd-MM-yyyy' }}</td>
-                    <td>{{ disbursement.gst }}</td>
-                    <td>{{ disbursement.bookedOn }}</td>
-                    <td>{{ disbursement.paymentStatus }}</td>
-                    <td>{{ disbursement.delay }}</td>
+                    <td>{{ disbursement.invoiceHeader.grandTotal || '-' }}</td>
+                    <td>{{ disbursement.giCode || '-' }}</td>
+                    <td>{{ disbursement.wbs || '-' }}</td>
+                    <td>{{ disbursement.costProfitCenter || '-' }}</td>
+                    <td>{{ disbursement.stateLocation || '-' }}</td>
+                    <td>{{ disbursement.bankDetails || '-' }}</td>
+                    <td>{{ disbursement.pan || '-' }}</td>
+                    <td>{{ disbursement.dueDate ? (disbursement.dueDate | date:'dd-MM-yyyy') : '-' }}</td>
+                    <td>{{ disbursement.gst || '-' }}</td>
+                    <td>{{ disbursement.bookedOn || '-' }}</td>
+                    <td>{{ disbursement.paymentStatus || '-' }}</td>
+                    <td>{{ disbursement.delay || '-' }}</td>
                 </tr>
             </ng-template>
             <ng-template #emptymessage>

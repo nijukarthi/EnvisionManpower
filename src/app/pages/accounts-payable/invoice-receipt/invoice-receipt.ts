@@ -332,6 +332,7 @@ export class InvoiceReceipt implements OnInit {
             const dateValue = filters?.date?.[0]?.value;
             const submittedDateValue = filters?.submittedDate?.[0]?.value;
             const grnDoneDateValue = filters?.grnDate?.[0]?.value;
+            const grandTotal = filters?.total?.[0]?.value;
 
             const payload = {
                 offSet: this.offSet,
@@ -349,7 +350,9 @@ export class InvoiceReceipt implements OnInit {
                 grnDateFrom: Array.isArray(grnDoneDateValue) ? formatDate(grnDoneDateValue[0]) : null,
                 grnDateTo: Array.isArray(grnDoneDateValue) ? formatDate(grnDoneDateValue[1]) : null,
                 grnNumber: filters?.grnNumber?.[0]?.value ?? null,
-                recipient: filters?.recipient?.[0]?.value ?? null
+                recipient: filters?.recipient?.[0]?.value ?? null,
+                minAmount: Array.isArray(grandTotal) ? grandTotal[0] : null,
+                maxAmount: Array.isArray(grandTotal) ? grandTotal[1] : null
             };
             console.log(payload);
             this.grnApi(payload);

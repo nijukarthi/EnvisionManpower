@@ -199,8 +199,13 @@ export class CompanyUsers implements OnInit {
             this.apiService.viewCompanyUser(data).subscribe({
                 next: (val) => {
                     console.log(val);
+
+                    if (val.data.userDepartments.length === 0) {
+                        this.showDepartments = false;
+                    }
                     const departmentIds = val.data.userDepartments.map((d: any) => d.departmentId);
                     this.departmentsControl.patchValue(departmentIds);
+                    console.log(departmentIds);
 
                     const emailPrefix = val.data.email.split('@')[0];
 
@@ -270,7 +275,11 @@ export class CompanyUsers implements OnInit {
             } else if (this.actionName == 'Update') {
                 this.companyUserForm.get('email')?.enable();
                 this.companyUserForm.get('userGroupId')?.enable();
-                const data = { ...this.companyUserForm.value };
+                const emailPrefix = this.companyUserForm.get('email')?.value?.trim();
+                const data = { 
+                    ...this.companyUserForm.value,
+                    email: emailPrefix ? `${emailPrefix}@envision-energy.com` : null
+                 };
                 this.companyUserForm.get('email')?.disable();
                 this.companyUserForm.get('userGroupId')?.disable();
 
