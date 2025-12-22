@@ -1,12 +1,16 @@
 <div class="card">
     <div class="flex items-baseline-last justify-between">
         <h5>Invoice Submission</h5>
-        @if(currentUserRole === USERGROUPS.CONSULTANCY){
-        <p-button label="Add Invoice Submission" icon="pi pi-plus" routerLink="/home/invoice-submission/new" />
-        }
+        <div class="flex justify-end gap-1">
+            @if(currentUserRole === USERGROUPS.CONSULTANCY){
+            <p-button label="Add Invoice Submission" icon="pi pi-plus" routerLink="/home/invoice-submission/new" />
+            <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
+            }
+        </div>
     </div>
     <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
         <p-table
+            #dt
             [value]="invoiceSubmissionList"
             stripedRows
             [rowHover]="true"

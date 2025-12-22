@@ -1,7 +1,11 @@
 <div class="card">
-    <h5>Invoice Receipt</h5>
+    <div class="flex items-baseline-last justify-between">
+        <h5>Invoice Receipt</h5>
+        <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
+    </div>
     <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
         <p-table
+            #dt
             [value]="invoiceGRNList"
             stripedRows
             [rowHover]="true"
