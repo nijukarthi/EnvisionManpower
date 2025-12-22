@@ -4,7 +4,7 @@
         <p-button label="Add SPN" icon="pi pi-plus" (click)="addSpn()" />
     </div>
 
-    <div class="p-datatable-table border border-[var(--p-content-border-color)] rounded-lg">
+    <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
         <p-table
             [value]="spnList"
             [rowHover]="true"
@@ -15,6 +15,7 @@
             [showCurrentPageReport]="true"
             [totalRecords]="totalRecords"
             [first]="first"
+            [paginatorDropdownAppendTo]="mydiv"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
             (onPage)="pageChange($event)"
         >

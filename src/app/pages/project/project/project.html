@@ -3,10 +3,9 @@
         <h5>Projects</h5>
         <p-button label="Add Project" icon="pi pi-plus" (click)="addProject()" />
     </div>
-    <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
+    <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
         <p-table
             [value]="projectList"
-            stripedRows
             [rowHover]="true"
             [paginator]="true"
             [first]="first"
@@ -15,6 +14,7 @@
             [rowsPerPageOptions]="[10, 20, 30]"
             [showCurrentPageReport]="true"
             [totalRecords]="totalRecords"
+            [paginatorDropdownAppendTo]="mydiv"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
             (onPage)="pageChange($event)"
         >

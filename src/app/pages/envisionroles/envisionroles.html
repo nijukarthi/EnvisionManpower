@@ -4,7 +4,7 @@
         <h5>Envision Roles</h5>
         <p-button label="Add Role" icon="pi pi-plus" (click)="addRoles()" />
     </div>
-    <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
+    <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
         <p-table
             [value]="roleList"
             [rowHover]="true"
@@ -15,6 +15,7 @@
             [showCurrentPageReport]="true"
             [rowsPerPageOptions]="[10, 20, 30]"
             [totalRecords]="totalRecords"
+            [paginatorDropdownAppendTo]="mydiv"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
             (onPage)="pageChange($event)"
         >

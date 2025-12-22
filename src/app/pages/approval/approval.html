@@ -3,12 +3,12 @@
         <h5>Manpower Approval</h5>
         <p-button icon="pi pi-filter-slash" label="Clear" (click)="dt.clear()" />
     </div>
-    <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
+    <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
         <p-table [value]="demandProcessingList" #dt [(selection)]="selectedApprovalList" dataKey="id" [lazy]="true"
             [tableStyle]="{ 'min-width': '130rem' }" [paginator]="true" [rowsPerPageOptions]="[10, 20, 30]" stripedRows
             [rows]="pageSize" [rowHover]="true" [showCurrentPageReport]="true" [first]="first"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [totalRecords]="totalRecords"
-            responsiveLayout="scroll" (onLazyLoad)="loadDemands($event)"
+            responsiveLayout="scroll" (onLazyLoad)="loadDemands($event)" [paginatorDropdownAppendTo]="mydiv"
             [globalFilterFields]="['demandCode', 'spn.spnCode','spn.spnDescription','spn.experience', 'requisitionCode', 'envisionRole.roleName']">
             <ng-template #header>
                 <tr>

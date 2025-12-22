@@ -3,56 +3,58 @@
         <h5>Cost Plus Candidates</h5>
         <p-button label="Add Candidate" icon="pi pi-plus" routerLink="/home/candidates/cost-plus/new" />
     </div>
-    <p-table [value]="costPlusCandidateList" showGridlines [rowHover]="true" [paginator]="true" [rows]="pageSize" [lazy]="true"
-       [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true" [first]="first" [totalRecords]="costPlusCandidateListLength"
-       currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [tableStyle]="{'min-width': '120rem'}"
-       (onPage)="pageChange($event)">
-        <ng-template #header>
-            <tr>
-                <th>SL No</th>
-                <th>Candidate Code</th>
-                <th>Candidate Name</th>
-                <th>Contact Number</th>
-                <th>Position Applied</th>
-                <th>Current Experience</th>
-                <th>Total Experience</th>
-                <th>Highest Qualification</th>
-                <th>Qualification</th>
-                <th>Notice Period</th>
-                <th>Currently Working</th>
-                <th>Actions</th>
-            </tr>
-        </ng-template>
-        <ng-template #body let-candidate let-i="rowIndex">
-            <tr>
-                <td>{{ i + 1 }}</td>
-                <td>
-                    <p-menu #menu [model]="getMenuItems(candidate)" [popup]="true" appendTo="body" />
-                    <p-button (onClick)="menu.toggle($event)" [label]="candidate.candidateCode" variant="text" link />
-                </td>
-                <td>{{ candidate.candidateName }}</td>
-                <td>{{ candidate.phoneNumber || '-' }}</td>
-                <td>{{ candidate.positionApplied }}</td>
-                <td>{{ candidate.currentExperience }}</td>
-                <td>{{ candidate.totalExperience }}</td>
-                <td>{{ candidate.highestQualification }}</td>
-                <td>{{ candidate.qualification }}</td>
-                <td>{{ candidate.noticePeriod }}</td>
-                <td>{{ candidate.workingCurrently ? 'Yes' : 'No' }}</td>
-                <td>
-                    <p-menu #menu [model]="getMenuItems(candidate)" [popup]="true" appendTo="body" />
-                    <p-button (onClick)="menu.toggle($event)" icon="pi pi-ellipsis-v" [rounded]="true" variant="text" />
-                </td>
-            </tr>
-        </ng-template>
-        <ng-template #emptymessage>
-            <tr>
-                <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground);">
-                    No Records Found
-                </td>
-            </tr>
-        </ng-template>
-    </p-table>
+    <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
+        <p-table [value]="costPlusCandidateList" [rowHover]="true" [paginator]="true" [rows]="pageSize" [lazy]="true"
+           [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true" [first]="first" [totalRecords]="totalRecords"
+           currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [tableStyle]="{'min-width': '120rem'}"
+           [paginatorDropdownAppendTo]="mydiv" (onPage)="pageChange($event)">
+            <ng-template #header>
+                <tr>
+                    <th>SL No</th>
+                    <th>Candidate Code</th>
+                    <th>Candidate Name</th>
+                    <th>Contact Number</th>
+                    <th>Position Applied</th>
+                    <th>Current Experience</th>
+                    <th>Total Experience</th>
+                    <th>Highest Qualification</th>
+                    <th>Qualification</th>
+                    <th>Notice Period</th>
+                    <th>Currently Working</th>
+                    <th>Actions</th>
+                </tr>
+            </ng-template>
+            <ng-template #body let-candidate let-i="rowIndex">
+                <tr>
+                    <td>{{ i + 1 }}</td>
+                    <td>
+                        <p-menu #menu [model]="getMenuItems(candidate)" [popup]="true" appendTo="body" />
+                        <p-button (onClick)="menu.toggle($event)" [label]="candidate.candidateCode" variant="text" link />
+                    </td>
+                    <td>{{ candidate.candidateName }}</td>
+                    <td>{{ candidate.phoneNumber || '-' }}</td>
+                    <td>{{ candidate.positionApplied }}</td>
+                    <td>{{ candidate.currentExperience }}</td>
+                    <td>{{ candidate.totalExperience }}</td>
+                    <td>{{ candidate.highestQualification }}</td>
+                    <td>{{ candidate.qualification }}</td>
+                    <td>{{ candidate.noticePeriod }}</td>
+                    <td>{{ candidate.workingCurrently ? 'Yes' : 'No' }}</td>
+                    <td>
+                        <p-menu #menu [model]="getMenuItems(candidate)" [popup]="true" appendTo="body" />
+                        <p-button (onClick)="menu.toggle($event)" icon="pi pi-ellipsis-v" [rounded]="true" variant="text" />
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template #emptymessage>
+                <tr>
+                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground);">
+                        No Records Found
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
 </div>
 
 <p-toast position="top-center" />

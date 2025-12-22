@@ -73,7 +73,7 @@
                 </div>
                 <div class="col-span-1 gap-1">
                     <label for="lastname2">Add Manpower</label>
-                    <p-button icon="pi pi-plus" [rounded]="true" class="w-full" (onClick)="addSpnRow()" />
+                    <p-button icon="pi pi-plus" [rounded]="true" class="block w-full" (onClick)="addSpnRow()" />
                 </div>
             </div>
             <div class="mt-4">
@@ -81,7 +81,8 @@
                     <p class="font-semibold text-xl">Manpower Details</p>
                 </div>
                 <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
-                    <p-table [value]="demandDetails.controls" formArrayName="demandDetails" [rowHover]="true" [scrollable]="true" scrollHeight="400px" [tableStyle]="{'min-width': '90rem'}">
+                    <p-table [value]="demandDetails.controls" formArrayName="demandDetails" [rowHover]="true" 
+                        [scrollable]="true" scrollHeight="400px" [tableStyle]="{'min-width': '120rem'}">
                         <ng-template #header>
                             <tr>
                                 <th>SL No</th>
@@ -98,97 +99,124 @@
                         </ng-template>
                         <ng-template #body let-row let-rowIndex="rowIndex">
                             <tr [formGroupName]="rowIndex">
-                                <td>{{ rowIndex + 1 }}</td>
+                                <td>
+                                    <span>{{ rowIndex + 1 }}</span>
+                                    <div class="min-h-5"></div>
+                                </td>
                                 <td formGroupName="spn">
-                                    <p-select
-                                        [options]="spnInfoList"
-                                        formControlName="spnId"
-                                        optionLabel="spnCode"
-                                        optionValue="spnId"
-                                        [filter]="true"
-                                        filterBy="spnCode"
-                                        [showClear]="true"
-                                        placeholder="Select SPN Code"
-                                        appendTo="body"
-                                        appFormFieldError
-                                        class="block w-full"
-                                        (onChange)="selectedSpnCode($event.value, rowIndex)"
-                                    />
-                                    @if(getSpnId(rowIndex)?.invalid && (getSpnId(rowIndex)?.dirty || getSpnId(rowIndex)?.touched)){ @if(getSpnId(rowIndex)?.hasError('required')){
-                                    <p-message severity="error" variant="simple" size="small" styleClass="mt-1">Spn Code is required </p-message>
-                                    }}
+                                    <div class="flex flex-col gap-1">
+                                        <p-select
+                                            [options]="spnInfoList"
+                                            formControlName="spnId"
+                                            optionLabel="spnCode"
+                                            optionValue="spnId"
+                                            [filter]="true"
+                                            filterBy="spnCode"
+                                            [showClear]="true"
+                                            placeholder="Select SPN Code"
+                                            appendTo="body"
+                                            appFormFieldError
+                                            class="block w-full"
+                                            (onChange)="selectedSpnCode($event.value, rowIndex)"
+                                        />
+                                        <div class="min-h-5">
+                                            @if(getSpnId(rowIndex)?.invalid && (getSpnId(rowIndex)?.dirty || getSpnId(rowIndex)?.touched)){ @if(getSpnId(rowIndex)?.hasError('required')){
+                                            <p-message severity="error" variant="simple" size="small">Spn Code is required </p-message>
+                                            }}
+                                        </div>
+                                    </div>
                                 </td>
                                 <td>
-                                    <p-select
-                                        [options]="spnInfoList"
-                                        formControlName="spnDescription"
-                                        optionValue="spnId"
-                                        [filter]="true"
-                                        filterBy="spnDescription"
-                                        [showClear]="true"
-                                        placeholder="Select SPN Description"
-                                        appendTo="body"
-                                        appFormFieldError
-                                        class="block w-full"
-                                        (onChange)="selectedSpnDescription($event.value, rowIndex)"
-                                    >
-                                        <ng-template #item let-item> {{ item.spnDescription }} - ({{ item.experience }}) </ng-template>
-                                        <ng-template #selectedItem let-item> {{ item.spnDescription }} - ({{ item.experience }}) </ng-template>
-                                    </p-select>
-                                    @if(getspnDescription(rowIndex)?.invalid && (getspnDescription(rowIndex)?.dirty || getspnDescription(rowIndex)?.touched)){ @if(getspnDescription(rowIndex)?.hasError('required')){
-                                    <p-message severity="error" variant="simple" size="small" styleClass="mt-1">Spn Description required </p-message>
-                                    }}
+                                    <div class="flex flex-col gap-1">
+                                        <p-select
+                                            [options]="spnInfoList"
+                                            formControlName="spnDescription"
+                                            optionValue="spnId"
+                                            [filter]="true"
+                                            filterBy="spnDescription"
+                                            [showClear]="true"
+                                            placeholder="Select SPN Description"
+                                            appendTo="body"
+                                            appFormFieldError
+                                            class="block w-full"
+                                            (onChange)="selectedSpnDescription($event.value, rowIndex)"
+                                        >
+                                            <ng-template #item let-item> {{ item.spnDescription }} - ({{ item.experience }}) </ng-template>
+                                            <ng-template #selectedItem let-item> {{ item.spnDescription }} - ({{ item.experience }}) </ng-template>
+                                        </p-select>
+                                        <div class="min-h-5">
+                                            @if(getspnDescription(rowIndex)?.invalid && (getspnDescription(rowIndex)?.dirty || getspnDescription(rowIndex)?.touched)){ @if(getspnDescription(rowIndex)?.hasError('required')){
+                                            <p-message severity="error" variant="simple" size="small">Spn Description required </p-message>
+                                            }}
+                                        </div>
+                                    </div>
                                 </td>
                                 <td>
-                                    <p-select
-                                        [options]="spnInfoList"
-                                        formControlName="experience"
-                                        optionLabel="experience"
-                                        optionValue="spnId"
-                                        [filter]="true"
-                                        filterBy="experience"
-                                        [showClear]="true"
-                                        placeholder="Select Experience"
-                                        appendTo="body"
-                                        appFormFieldError
-                                        class="block w-full"
-                                    />
+                                    <div class="flex flex-col gap-1">
+                                        <p-select
+                                            [options]="spnInfoList"
+                                            formControlName="experience"
+                                            optionLabel="experience"
+                                            optionValue="spnId"
+                                            [filter]="true"
+                                            filterBy="experience"
+                                            [showClear]="true"
+                                            placeholder="Select Experience"
+                                            appendTo="body"
+                                            appFormFieldError
+                                            class="block w-full"
+                                        />
+                                        <div class="min-h-5"></div>
+                                    </div>
                                 </td>
                                 <td>
-                                    <input pInputText type="number" min="1" formControlName="quantity" appendTo="body" appFormFieldError class="block w-full" />
-                                    @if(getQuantityControl(rowIndex)?.invalid && (getQuantityControl(rowIndex)?.dirty || getQuantityControl(rowIndex)?.touched)){ @if(getQuantityControl(rowIndex)?.hasError('required')){
-                                    <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Quantity is required </p-message>
-                                    }@if (getQuantityControl(rowIndex)?.hasError('minlength')) {
-                                    <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Quantity must contain at least 1 characters </p-message>
-                                    } @if (getQuantityControl(rowIndex)?.hasError('maxlength')) {
-                                    <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Quantity cannot exceed 100 characters </p-message>
-                                    } }
+                                    <div class="flex flex-col gap-1">
+                                        <input pInputText type="number" min="1" formControlName="quantity" appendTo="body" appFormFieldError class="block w-full" />
+                                        <div class="min-h-5">
+                                            @if(getQuantityControl(rowIndex)?.invalid && (getQuantityControl(rowIndex)?.dirty || getQuantityControl(rowIndex)?.touched)){ @if(getQuantityControl(rowIndex)?.hasError('required')){
+                                            <p-message severity="error" variant="simple" size="small"> Quantity is required </p-message>
+                                            }@if (getQuantityControl(rowIndex)?.hasError('minlength')) {
+                                            <p-message severity="error" variant="simple" size="small"> Quantity must contain at least 1 characters </p-message>
+                                            } @if (getQuantityControl(rowIndex)?.hasError('maxlength')) {
+                                            <p-message severity="error" variant="simple" size="small"> Quantity cannot exceed 100 characters </p-message>
+                                            } }
+                                        </div>
+                                    </div>
                                 </td>
                                 <td>
-                                    <p-datepicker formControlName="plannedDeploymentDate" [minDate]="minDate" 
-                                        placeholder="Select Date" appendTo="body" appFormFieldError inputStyleClass="block w-full" 
-                                        [inputStyleClass]="getDeploymentDate(rowIndex)?.invalid &&
-                                            (getDeploymentDate(rowIndex)?.dirty || getDeploymentDate(rowIndex)?.touched)
-                                            ? 'p-invalid border-[#FF5630]'
-                                            : ''"
-                                        (onSelect)="selectedDeploymentDate($event)" />
-                                    @if(getDeploymentDate(rowIndex)?.invalid && (getDeploymentDate(rowIndex)?.dirty || getDeploymentDate(rowIndex)?.touched)){ @if(getDeploymentDate(rowIndex)?.hasError('required')){
-                                    <p-message severity="error" variant="simple" size="small" styleClass="mt-1">PlannedDeploymentDate is required </p-message>
-                                    }}
+                                    <div class="flex flex-col gap-1">
+                                        <p-datepicker formControlName="plannedDeploymentDate" [minDate]="minDate" 
+                                            placeholder="Select Date" appendTo="body" appFormFieldError inputStyleClass="block w-full" 
+                                            [inputStyleClass]="getDeploymentDate(rowIndex)?.invalid &&
+                                                (getDeploymentDate(rowIndex)?.dirty || getDeploymentDate(rowIndex)?.touched)
+                                                ? 'p-invalid border-[#FF5630]'
+                                                : ''"
+                                            (onSelect)="selectedDeploymentDate($event)" />
+                                        <div class="min-h-5">
+                                            @if(getDeploymentDate(rowIndex)?.invalid && (getDeploymentDate(rowIndex)?.dirty || getDeploymentDate(rowIndex)?.touched)){ @if(getDeploymentDate(rowIndex)?.hasError('required')){
+                                            <p-message severity="error" variant="simple" size="small">Planned Deployment Date is required </p-message>
+                                            }}
+                                        </div>
+                                    </div>
                                 </td>
                                 <td>
-                                    <p-datepicker formControlName="plannedReleaseDate" [minDate]="releaseMinDate" 
-                                        placeholder="Select Date" appendTo="body" appFormFieldError inputStyleClass="block w-full"
-                                        [inputStyleClass]="getReleaseDate(rowIndex)?.invalid && 
-                                            (getReleaseDate(rowIndex)?.dirty || getReleaseDate(rowIndex)?.touched)
-                                            ? 'p-invalid border-[#FF5630]' : ''" />
-                                    @if(getReleaseDate(rowIndex)?.invalid && (getReleaseDate(rowIndex)?.dirty || getReleaseDate(rowIndex)?.touched)){ @if(getReleaseDate(rowIndex)?.hasError('required')){
-                                    <p-message severity="error" variant="simple" size="small" styleClass="mt-1">PlannedReleaseDate is required </p-message>
-                                    }}
+                                    <div class="flex flex-col gap-1">
+                                        <p-datepicker formControlName="plannedReleaseDate" [minDate]="releaseMinDate" 
+                                            placeholder="Select Date" appendTo="body" appFormFieldError inputStyleClass="block w-full"
+                                            [inputStyleClass]="getReleaseDate(rowIndex)?.invalid && 
+                                                (getReleaseDate(rowIndex)?.dirty || getReleaseDate(rowIndex)?.touched)
+                                                ? 'p-invalid border-[#FF5630]' : ''" />
+                                                <div class="min-h-5">
+                                                    @if(getReleaseDate(rowIndex)?.invalid && (getReleaseDate(rowIndex)?.dirty || getReleaseDate(rowIndex)?.touched)){ @if(getReleaseDate(rowIndex)?.hasError('required')){
+                                                    <p-message severity="error" variant="simple" size="small">Planned Release Date is required </p-message>
+                                                    }}
+                                                </div>
+                                    </div>
                                 </td>
                                 @if (demandDetails.length > 1) {
                                 <td>
                                     <p-button icon="pi pi-trash" severity="danger" [rounded]="true" (onClick)="deleteSpnRow(rowIndex)" />
+                                    <div class="min-h-5"></div>
                                 </td>
                                 }
                             </tr>

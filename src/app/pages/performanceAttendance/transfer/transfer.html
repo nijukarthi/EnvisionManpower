@@ -10,13 +10,13 @@
             <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
         </div>
     </div>
-    <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
+    <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
         <p-table #dt [value]="transferredEmployeeList" showGridlines stripedRows [rowHover]="true" 
             [paginator]="true" [rows]="pageSize" [lazy]="true" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10, 20, 30]" 
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [first]="first" 
             selectionMode="single" dataKey="transferId" (onRowSelect)="selectedEmployee($event.data)" 
-            (onRowUnselect)="unSelectedEmployee()" [(selection)]="selectedTransfer"
-            [totalRecords]="transferredListLength" [tableStyle]="{'min-width': '170rem'}" (onLazyLoad)="loadTransfer($event)">
+            (onRowUnselect)="unSelectedEmployee()" [(selection)]="selectedTransfer" [paginatorDropdownAppendTo]="mydiv"
+            [totalRecords]="totalRecords" [tableStyle]="{'min-width': '170rem'}" (onLazyLoad)="loadTransfer($event)">
             <ng-template #header>
                 <tr>
                     <th rowspan="2">SL No</th>

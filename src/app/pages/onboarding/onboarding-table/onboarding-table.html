@@ -7,17 +7,13 @@
             <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
         </div>
     </div>
-    <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
-        <p-table #dt [columns]="cols" [value]="onboardingList" [exportHeader]="'customExportHeader'"
-            [(selection)]="selectedCandidates" [rowHover]="true" [lazy]="true" stripedRows
-            [loading]="loading" [paginator]="true" [rows]="pageSize" dataKey="employmentDetails.employmentId" selectionMode="multiple"
+    <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
+        <p-table #dt [columns]="cols" [value]="onboardingList" [exportHeader]="'customExportHeader'" [(selection)]="selectedCandidates" 
+            [rowHover]="true" [lazy]="true" stripedRows [loading]="loading" [paginator]="true" [rows]="pageSize" 
+            dataKey="employmentDetails.employmentId" selectionMode="multiple" [paginatorDropdownAppendTo]="mydiv"
             [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true" [totalRecords]="totalRecords" [first]="first"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" editMode="row"
-            [tableStyle]="{'min-width': '220rem'}" (onLazyLoad)="loadDemands($event)"
-            [globalFilterFields]="['candidateName', 'phoneNumber', 'employeeCode', 'candidateCode', 'employmentDetails.project.projectCode',
-                'employmentDetails.cluster.clusterName', 'employmentDetails.spn.spnCode', 'employmentDetails.spn.spnDescription',
-                'employmentDetails.spn.experience', 'employmentDetails.envisionRole.roleName'
-            ]">
+            [tableStyle]="{'min-width': '220rem'}" (onLazyLoad)="loadDemands($event)">
             <ng-template #header let-columns>
                 <tr>
                     <th><p-tableHeaderCheckbox /></th>

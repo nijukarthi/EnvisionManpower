@@ -8,10 +8,10 @@
             <p-button label="Map New Demand" icon="pi pi-plus" routerLink="/home/po-assign/new" />
         </div>
     </div>
-    <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
+    <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
         <p-table [value]="poList" stripedRows [rowHover]="true" [paginator]="true" [rows]="pageSize" [first]="first"
             [rowsPerPageOptions]="[10, 20, 30]" [lazy]="true" [totalRecords]="totalRecords" selectionMode="single"
-            [(selection)]="selectedPO" dataKey="poId"
+            [(selection)]="selectedPO" dataKey="poId" [paginatorDropdownAppendTo]="mydiv"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true"
             (onRowSelect)="selectedPOEmployee($event.data)" (onRowUnselect)="unSelectedEmployee()"
             [tableStyle]="{'min-width': '80rem'}" (onPage)="pageChange($event)">

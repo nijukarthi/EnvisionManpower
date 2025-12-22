@@ -10,13 +10,13 @@
             <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
         </div>
     </div>
-    <div class="border border-[var(--p-surface-200)] rounded-lg overflow-hidden">
+    <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
         <p-table #dt [value]="sitePerformancesList" stripedRows [rowHover]="true" [paginator]="true" editMode="row"
            [rows]="pageSize" [lazy]="true" [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true"
            [first]="first" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
            [scrollable]="true" scrollHeight="500px" [totalRecords]="totalRecords" dataKey="employmentDetails.employmentId"
            [(selection)]="selectedPerformances" (onRowSelect)="selectedEmployee($event.data)" (onRowUnselect)="unSelectedEmployee()"
-           [tableStyle]="{'min-width': '400rem'}" (onLazyLoad)="loadPerformances($event)">
+           [tableStyle]="{'min-width': '400rem'}" (onLazyLoad)="loadPerformances($event)" [paginatorDropdownAppendTo]="mydiv">
             <ng-template #header>
                 <tr>
                     <th>

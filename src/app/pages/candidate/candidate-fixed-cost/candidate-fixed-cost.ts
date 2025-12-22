@@ -14,7 +14,7 @@ export class CandidateFixedCost implements OnInit {
     offSet = 0;
     pageSize = 10;
     first = 0;
-    fixedCostCandidateListLength = 0;
+    totalRecords = 0;
 
     fixedCostCandidateList: any;
 
@@ -54,7 +54,7 @@ export class CandidateFixedCost implements OnInit {
             next: (val) => {
                 console.log(val);
                 this.fixedCostCandidateList = val?.data?.data;
-                this.fixedCostCandidateListLength = val?.data.length ?? 0;
+                this.totalRecords = val?.data.length ?? 0;
             },
             error: (err) => {
                 console.log(err);

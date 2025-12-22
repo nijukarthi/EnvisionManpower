@@ -1,13 +1,13 @@
 <p-fluid>
     <div class="card">
         <h5>Resource Manager Assign</h5>
-        <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
+        <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
             <p-table [value]="resourceManagerDemandList" #dt [(selection)]="selectedApprovalList" dataKey="id" [lazy]="true"
                 [tableStyle]="{ 'min-width': '120rem' }" [paginator]="true" [rowsPerPageOptions]="[10, 20, 30]"
                 stripedRows [rows]="pageSize" [rowHover]="true" [showCurrentPageReport]="true"
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [first]="first"
-                responsiveLayout="scroll" [globalFilterFields]="['spn.spnCode','spn.spnDescription','spn.experience','quantity']"
-                [totalRecords]="demandListLength" (onPage)="pageChange($event)">
+                responsiveLayout="scroll" [paginatorDropdownAppendTo]="mydiv"
+                [totalRecords]="totalRecords" (onPage)="pageChange($event)">
                 <ng-template #header>
                     <tr>
                         <th>S.No</th>
@@ -22,26 +22,6 @@
                         <th style="text-align: center;">Cluster Head Approval</th>
                         <th style="text-align: center;">Department Head Approval</th>
                         <th>Resource Manager</th>
-                    </tr>
-                    <tr>
-                        <td colspan="4"></td>
-                        <td>
-                            <input #spn type="text" (input)="dt.filter(spn.value, 'spn.spnCode', 'contains')"
-                                placeholder="search..." style="width: 9rem;margin:5px" pInputText />
-                        </td>
-                        <td>
-                            <input #spnDesc type="text" (input)="dt.filter(spnDesc.value, 'spn.spnDescription', 'contains')"
-                                placeholder="search..." style="width: 9rem;margin:5px" pInputText />
-                        </td>
-                        <td>
-                            <input #exp type="text" (input)="dt.filter(exp.value, 'spn.experience', 'contains')"
-                                placeholder="search..." style="width: 9rem;margin:5px" pInputText />
-                        </td>
-                        <td>
-                            <input #qty type="text" (input)="dt.filter(qty.value, 'quantity', 'contains')"
-                                placeholder="search..." style="width: 9rem;margin:5px" pInputText />
-                        </td>
-                        <td colspan="100%"></td>
                     </tr>
                 </ng-template>
                 <ng-template #body let-demand let-rowIndex="rowIndex">

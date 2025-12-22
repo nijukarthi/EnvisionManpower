@@ -35,7 +35,7 @@ export class CompanyUsers implements OnInit {
     first = 0;
     offSet = 0;
     pageSize = 10;
-    companyUserListLength = 0;
+    totalRecords = 0;
 
     actionName = 'Add';
 
@@ -110,7 +110,7 @@ export class CompanyUsers implements OnInit {
                 next: (val) => {
                     console.log(val);
                     this.companyUserList = val.data.data;
-                    this.companyUserListLength = val.data.length;
+                    this.totalRecords = val.data.length ?? 0;
                 },
                 error: (err) => {
                     console.log(err);

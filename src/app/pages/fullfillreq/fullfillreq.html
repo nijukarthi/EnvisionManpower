@@ -1,13 +1,13 @@
 <p-fluid>
     <div class="card">
         <h5>Assign Standard Role</h5>
-        <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
+        <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
             <p-table [value]="demandFullfillList"  #dt
                 [tableStyle]="{ 'min-width': '110rem' }" [paginator]="true" [rowsPerPageOptions]="[10, 20, 30]" stripedRows
                 [rows]="pageSize" [rowHover]="true" [showCurrentPageReport]="true" [first]="first"
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [lazy]="true"
                 responsiveLayout="scroll" (onPage)="pageChange($event)" [totalRecords]="totalRecords"
-                [globalFilterFields]="['reqId','reqBy','pcode','state','spn','spnDesc','exp','qty','planDate','planrelease',]">
+                [paginatorDropdownAppendTo]="mydiv">
                 <ng-template #header>
                     <tr>
                         <th>S.No</th>
@@ -20,21 +20,6 @@
                         <th>Planned deployment date</th>
                         <th>Planned release date</th>
                         <th>Role</th>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td>
-                        <input #spn type="text"(input)="dt.filter(spn.value, 'spn', 'contains')" placeholder="search..." style="width: 9rem;margin:5px" pInputText />
-                        </td>
-                        <td>
-                        <input #spnDesc type="text"(input)="dt.filter(spnDesc.value, 'spnDesc', 'contains')" placeholder="search..." style="width: 9rem;margin:5px" pInputText />
-                        </td>
-                        
-                        <td>
-                        <input #qty type="text"(input)="dt.filter(qty.value, 'qty', 'contains')" placeholder="search..." style="width: 9rem;margin:5px" pInputText />
-                        </td>
-                        <td colspan="100%"></td>
                     </tr>
                 </ng-template>
                 <ng-template #body let-demand let-rowIndex="rowIndex">

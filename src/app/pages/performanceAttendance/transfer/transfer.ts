@@ -17,7 +17,7 @@ export class Transfer implements OnInit {
     offSet = 0;
     pageSize = 10;
     first = 0;
-    transferredListLength = 0;
+    totalRecords = 0;
     selectedTransferId = 0;
 
     isEnableBtn = false;
@@ -84,7 +84,7 @@ export class Transfer implements OnInit {
                 next: (val) => {
                     console.log(val);
                     this.transferredEmployeeList = val?.data?.data;
-                    this.transferredListLength = val?.data?.length ?? 0;
+                    this.totalRecords = val?.data?.length ?? 0;
                 },
                 error: (err) => {
                     console.log(err);

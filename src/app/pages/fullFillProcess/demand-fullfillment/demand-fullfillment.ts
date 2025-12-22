@@ -19,7 +19,7 @@ export class DemandFullfillment implements OnInit {
   offSet = 0;
   pageSize = 10;
   first = 0;
-  demandFullfillmentListLength = 0;
+  totalRecords = 0;
 
   demandFullfillmentList: any;
   requisitionDetails: any;
@@ -134,7 +134,7 @@ export class DemandFullfillment implements OnInit {
         next: val => {
           console.log(val);
           this.demandFullfillmentList = val?.data?.data;
-          this.demandFullfillmentListLength = val.data.length;
+          this.totalRecords = val.data.length ?? 0;
         },
         error: err => {
           console.log(err);
