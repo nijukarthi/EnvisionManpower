@@ -1,17 +1,21 @@
 <div class="card">
     <div class="flex items-baseline-last justify-between">
         <h5>Invoice Disbursement</h5>
-        <p-button
-            label="Start Disbursement"
-            [pTooltip]="!selectedInvoiceId ? 'Select One Invoice' 
-            : (invoiceStatus !== 'UNDER_DISBURSEMENT_REVIEW' ? 'Invoice Status must be in UNDER_DISBURSEMENT_REVIEW' : '')"
-            tooltipPosition="top"
-            [disabled]="!selectedInvoiceId || invoiceStatus !== 'UNDER_DISBURSEMENT_REVIEW'"
-            (onClick)="startDisbursement()"
-        />
+        <div class="flex justify-end gap-1">
+            <p-button
+                label="Start Disbursement"
+                [pTooltip]="!selectedInvoiceId ? 'Select One Invoice' 
+                : (invoiceStatus !== 'UNDER_DISBURSEMENT_REVIEW' ? 'Invoice Status must be in UNDER_DISBURSEMENT_REVIEW' : '')"
+                tooltipPosition="top"
+                [disabled]="!selectedInvoiceId || invoiceStatus !== 'UNDER_DISBURSEMENT_REVIEW'"
+                (onClick)="startDisbursement()"
+            />
+            <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
+        </div>
     </div>
     <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
         <p-table
+            #dt
             [value]="invoiceDisbursementList"
             stripedRows
             [paginator]="true"
