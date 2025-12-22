@@ -18,7 +18,7 @@ export class Terminate implements OnInit {
     offSet = 0;
     pageSize = 10;
     first = 0;
-    resignationListLength = 0;
+    totalRecords = 0;
     selectedResignationId = 0;
 
     isEnabledBtn = false;
@@ -84,7 +84,7 @@ export class Terminate implements OnInit {
                 next: (val) => {
                     console.log(val);
                     this.resignationList = val?.data?.data;
-                    this.resignationListLength = val?.data?.length ?? 0;
+                    this.totalRecords = val?.data?.length ?? 0;
                 },
                 error: (err) => {
                     console.log(err);

@@ -6,11 +6,11 @@
             <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
         </div>
     </div>
-    <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
+    <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
         <p-table #dt [columns]="cols" dataKey="candidateId" [value]="onrollEmployeeList" [exportHeader]="'customExportHeader'" 
-            [rowHover]="true" [paginator]="true" [rows]="pageSize" [lazy]="true" stripedRows
-            [first]="first" [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true" [totalRecords]="totalRecords" 
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" editMode="row"
+            [rowHover]="true" [paginator]="true" [rows]="pageSize" [lazy]="true" stripedRows [first]="first" editMode="row"
+            [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true" [totalRecords]="totalRecords" 
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [paginatorDropdownAppendTo]="mydiv"
             [tableStyle]="{'min-width': '250rem'}" (onLazyLoad)="loadDemands($event)">
             <ng-template #header let-columns>
                 <tr>

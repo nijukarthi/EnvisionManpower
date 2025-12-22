@@ -1,10 +1,10 @@
 <div class="card">
     <h5>Manpower FulFillment</h5>
-    <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
+    <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
         <p-table [value]="demandFullfillmentList" [rowHover]="true" [paginator]="true" [lazy]="true" [first]="first"
             [rows]="pageSize" [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true" (onPage)="pageChange($event)"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" stripedRows 
-            [totalRecords]="demandFullfillmentListLength" [tableStyle]="{'min-width': '140rem'}">
+            [paginatorDropdownAppendTo]="mydiv" [totalRecords]="totalRecords" [tableStyle]="{'min-width': '140rem'}">
             <ng-template #header>
                 <tr>
                     <th>SI No</th>

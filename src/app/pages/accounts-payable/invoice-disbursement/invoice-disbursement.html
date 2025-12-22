@@ -13,7 +13,7 @@
             <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
         </div>
     </div>
-    <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
+    <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
         <p-table
             #dt
             [value]="invoiceDisbursementList"
@@ -31,6 +31,7 @@
             (onRowSelect)="selectedInvoice($event.data)"
             (onRowUnselect)="unSelectedInvoice()"
             dataKey="invoiceHeader.invoiceId"
+            [paginatorDropdownAppendTo]="mydiv"
             [tableStyle]="{'min-width': '160rem'}"
             (onLazyLoad)="loadDisbursement($event)"
         >

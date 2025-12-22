@@ -14,7 +14,7 @@ export class CandidateCostPlus implements OnInit {
   offSet = 0;
   pageSize = 10;
   first = 0;
-  costPlusCandidateListLength = 0;
+  totalRecords = 0;
 
   costPlusCandidateList: any;
 
@@ -51,7 +51,7 @@ export class CandidateCostPlus implements OnInit {
         next: val => {
           console.log(val);
           this.costPlusCandidateList = val?.data?.data;
-          this.costPlusCandidateListLength = val?.data.length;
+          this.totalRecords = val?.data.length ?? 0;
         }, 
         error: err => {
           console.log(err);

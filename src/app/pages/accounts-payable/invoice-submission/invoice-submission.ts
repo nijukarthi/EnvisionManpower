@@ -186,11 +186,4 @@ export class InvoiceSubmission implements OnInit {
             console.log(error);
         }
     }
-
-    pageChange(event: any) {
-        this.first = event.first;
-        this.offSet = event.first / event.rows;
-        this.pageSize = event.rows;
-        this.fetchInvoiceSubmissionList();
-    }
 }

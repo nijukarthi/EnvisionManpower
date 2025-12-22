@@ -3,7 +3,7 @@
         <h5>Invoice Receipt</h5>
         <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
     </div>
-    <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
+    <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
         <p-table
             #dt
             [value]="invoiceGRNList"
@@ -17,8 +17,8 @@
             [totalRecords]="totalRecords"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
             [showCurrentPageReport]="true"
+            [paginatorDropdownAppendTo]="mydiv"
             [tableStyle]="{'min-width': '230rem'}"
-            (onPage)="pageChange($event)"
             (onLazyLoad)="loadGRN($event)"
         >
             <ng-template #header>

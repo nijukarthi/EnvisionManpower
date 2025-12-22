@@ -8,7 +8,7 @@
             }
         </div>
     </div>
-    <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
+    <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
         <p-table
             #dt
             [value]="invoiceSubmissionList"
@@ -23,7 +23,7 @@
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
             [totalRecords]="totalRecords"
             [tableStyle]="{'min-width': '150rem'}"
-            (onPage)="pageChange($event)"
+            [paginatorDropdownAppendTo]="mydiv"
             (onLazyLoad)="loadInvoice($event)"
         >
             <ng-template #header>
@@ -100,7 +100,8 @@
                                         [maxDate]="maxDate"
                                         placeholder="Select Month"
                                         (onSelect)="filterByMonth($event, filter)"
-                                    ></p-datepicker>
+                                    >
+                                    </p-datepicker>
                                 </ng-template>
                             </p-columnFilter>
                         </div>

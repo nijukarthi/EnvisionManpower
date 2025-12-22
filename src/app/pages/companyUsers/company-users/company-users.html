@@ -3,17 +3,18 @@
         <h5>Company Users</h5>
         <p-button label="Add Users" icon="pi pi-plus" (click)="addUser()" />
     </div>
-    <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
+    <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
         <p-table
             [value]="companyUserList"
             [rowHover]="true"
             [first]="first"
             [lazy]="true"
-            [totalRecords]="companyUserListLength"
+            [totalRecords]="totalRecords"
             [paginator]="true"
             [rows]="pageSize"
             [rowsPerPageOptions]="[10, 20, 30]"
             [showCurrentPageReport]="true"
+            [paginatorDropdownAppendTo]="mydiv"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
             (onPage)="pageChange($event)"
         >

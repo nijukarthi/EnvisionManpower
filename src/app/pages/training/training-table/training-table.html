@@ -3,27 +3,13 @@
         <h5>Training</h5>
         <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
     </div>
-    <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
+    <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
         <p-table
-            #dt
-            [value]="trainingList"
-            showGridlines
-            [rowHover]="true"
-            [paginator]="true"
-            [rows]="pageSize"
-            [lazy]="true"
-            stripedRows
-            [showCurrentPageReport]="true"
-            [rowsPerPageOptions]="[10, 20, 30]"
-            [totalRecords]="trainingListLength"
-            [first]="first"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-            editMode="row"
-            dataKey="candidateId"
-            [tableStyle]="{'min-width': '130rem'}"
-            (onPage)="pageChange($event)"
-            (onLazyLoad)="loadTraining($event)"
-        >
+            #dt [value]="trainingList" showGridlines [rowHover]="true" [paginator]="true" [rows]="pageSize" [lazy]="true"
+            stripedRows [showCurrentPageReport]="true" [rowsPerPageOptions]="[10, 20, 30]" [totalRecords]="totalRecords"
+            [first]="first" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" editMode="row"
+            dataKey="candidateId" [tableStyle]="{'min-width': '130rem'}" [paginatorDropdownAppendTo]="mydiv"
+            (onLazyLoad)="loadTraining($event)">
             <ng-template #header>
                 <tr>
                     <th rowspan="2">SL No</th>

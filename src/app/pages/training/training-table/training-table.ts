@@ -15,7 +15,7 @@ export class TrainingTable implements OnInit {
     first = 0;
 
     trainingList: any;
-    trainingListLength = 0;
+    totalRecords = 0;
 
     trainingStatusList = [
         {
@@ -50,7 +50,7 @@ export class TrainingTable implements OnInit {
                             validTill: null
                         }
                     }));
-                    this.trainingListLength = val?.data.length;
+                    this.totalRecords = val?.data.length ?? 0;
                 },
                 error: (err) => {
                     console.log(err);
@@ -107,13 +107,6 @@ export class TrainingTable implements OnInit {
         } catch (error) {
             console.log(error);
         }
-    }
-
-    pageChange(event: any) {
-        this.first = event.first;
-        this.offSet = event.first / event.rows;
-        this.pageSize = event.rows;
-        this.fetchActiveTrainingList();
     }
 
     updateRange(selectedValue: any, value: any[], index: number, filter: any) {
