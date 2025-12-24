@@ -152,7 +152,7 @@
                     <td #pEditableColumn>
                         <p-cellEditor>
                             <ng-template #input>
-                                <p-inputnumber [(ngModel)]="attendance.totalWorkingDays" [useGrouping]="false" />
+                                <p-inputnumber #totalWorkingDaysInput [(ngModel)]="attendance.totalWorkingDays" [useGrouping]="false" />
                             </ng-template>
                             <ng-template #output>
                                 {{ attendance.totalWorkingDays }}
@@ -162,7 +162,7 @@
                     <td #pEditableColumn>
                         <p-cellEditor>
                             <ng-template #input>
-                                <p-inputnumber [(ngModel)]="attendance.presentDays" [useGrouping]="false" />
+                                <p-inputnumber #presentDaysInput [(ngModel)]="attendance.presentDays" [useGrouping]="false" />
                             </ng-template>
                             <ng-template #output>
                                 {{ attendance.presentDays }}
@@ -172,7 +172,7 @@
                     <td #pEditableColumn>
                         <p-cellEditor>
                             <ng-template #input>
-                                <p-inputnumber [(ngModel)]="attendance.weekOff" [useGrouping]="false" />
+                                <p-inputnumber #weekOffInput [(ngModel)]="attendance.weekOff" [useGrouping]="false" />
                             </ng-template>
                             <ng-template #output>
                                 {{ attendance.weekOff }}
@@ -182,7 +182,7 @@
                     <td #pEditableColumn>
                         <p-cellEditor>
                             <ng-template #input>
-                                <p-inputnumber [(ngModel)]="attendance.paidLeaves" [useGrouping]="false" />
+                                <p-inputnumber #paidLeavesInput [(ngModel)]="attendance.paidLeaves" [useGrouping]="false" />
                             </ng-template>
                             <ng-template #output>      
                                 {{ attendance.paidLeaves }}
@@ -192,7 +192,7 @@
                     <td #pEditableColumn>
                         <p-cellEditor>
                             <ng-template #input>
-                                <p-inputnumber [(ngModel)]="attendance.absentDays" [useGrouping]="false" />
+                                <p-inputnumber #absentDaysInput [(ngModel)]="attendance.absentDays" [useGrouping]="false" />
                             </ng-template>
                             <ng-template #output>
                                 {{ attendance.absentDays }}
@@ -205,6 +205,7 @@
                             @if (!editing) {
                                 <button pButton pRipple type="button" icon="pi pi-pencil"
                                     pInitEditableRow rounded severity="secondary"
+                                    (click)="editAttendanceRow(attendance)"
                                     [disabled]="isEditDisabled(attendance, date)"></button>
                             } @else {
                                 <button pButton pRipple type="submit" icon="pi pi-check"

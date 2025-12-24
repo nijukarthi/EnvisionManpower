@@ -173,8 +173,9 @@
                         <td #pEditableColumn>
                             <p-cellEditor>
                                 <ng-template #input>
-                                    <p-inputnumber [(ngModel)]="detail.score" (ngModelChange)="calculateTotalScore(performance)"
-                                        [useGrouping]="false" [min]="0" [max]="10" />
+                                    <p-inputnumber #scoreInput [(ngModel)]="detail.score"
+                                        (ngModelChange)="calculateTotalScore(performance)"
+                                        [useGrouping]="false" [min]="0" [max]="10" placeholder="Enter score (1-10)" />
                                 </ng-template>
                                 <ng-template #output>
                                     {{ detail.score || '-' }}

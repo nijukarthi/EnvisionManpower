@@ -1,7 +1,7 @@
 import { UserGroups } from '@/models/usergroups/usergroups.enum';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { FormArray, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MenuItem, MessageService } from 'primeng/api';
@@ -13,6 +13,9 @@ import { MenuItem, MessageService } from 'primeng/api';
   styleUrl: './site-performance.scss'
 })
 export class SitePerformance implements OnInit {
+  @ViewChildren('scoreInput', { read: ElementRef })
+    scoreInputs!: QueryList<ElementRef>;
+
   openTerminateModal = false;
 
   offSet = 0;
@@ -108,6 +111,17 @@ export class SitePerformance implements OnInit {
           console.log(val);
           this.sitePerformancesList = val?.data?.data;
           this.totalRecords = val?.data?.length ?? 0;
+
+          this.sitePerformancesList = this.sitePerformancesList.map((p: any)=> ({
+            ...p,
+            employeePerformance: {
+              ...p.employeePerformance,
+              performanceDetails: p.employeePerformance.performanceDetails.map((detail: any) => ({
+                ...detail,
+                score: detail.score === 0 ? null : detail.score
+              }))
+            }
+          }))
         },
         error: err => {
           console.log(err);
@@ -164,6 +178,17 @@ export class SitePerformance implements OnInit {
         score: null
       }));
     }
+
+    setTimeout(() => {
+      const firstEmptyIndex = details.findIndex((d: any) => d.score === null);
+      const inputs = this.scoreInputs.toArray();
+
+      const target = inputs[firstEmptyIndex >= 0 ? firstEmptyIndex : 0];
+
+      const nativeInput = target?.nativeElement.querySelector('input');
+
+      nativeInput?.focus();
+    });
   }
 
   calculateTotalScore(performance: any){
