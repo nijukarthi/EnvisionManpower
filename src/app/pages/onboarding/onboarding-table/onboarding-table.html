@@ -85,6 +85,8 @@
                             <p-columnFilter type="text" field="roleName" display="menu" />
                         </div>
                     </th>
+                    <th>Current Experience</th>
+                    <th>Total Experience</th>
                     <th>
                         <div class="flex items-center justify-between">
                             <span>Status</span>
@@ -146,6 +148,8 @@
                     <td>{{ onboarding.employmentDetails.spn.spnDescription || '-' }}</td>
                     <td>{{ onboarding.employmentDetails.spn.experience || '-' }}</td>
                     <td>{{ onboarding.employmentDetails.envisionRole.roleName || '-' }}</td>
+                    <td>{{ onboarding.employmentDetails.currentExperience || '-' }}</td>
+                    <td>{{ onboarding.employmentDetails.totalExperience || '-' }}</td>
                     <td>
                         <p-tag [value]="onboarding.employmentDetails.employmentStatus"
                             [severity]="getSeverity(onboarding.employmentDetails.employmentStatus)" />

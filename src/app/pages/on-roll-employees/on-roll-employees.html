@@ -9,7 +9,7 @@
     <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
         <p-table #dt [columns]="cols" dataKey="candidateId" [value]="onrollEmployeeList" [exportHeader]="'customExportHeader'" 
             [rowHover]="true" [paginator]="true" [rows]="pageSize" [lazy]="true" stripedRows [first]="first" editMode="row"
-            [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true" [totalRecords]="totalRecords" 
+            [rowsPerPageOptions]="[10, 20, 30, 40, 50]" [showCurrentPageReport]="true" [totalRecords]="totalRecords" 
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [paginatorDropdownAppendTo]="mydiv"
             [tableStyle]="{'min-width': '250rem'}" (onLazyLoad)="loadDemands($event)">
             <ng-template #header let-columns>
@@ -82,6 +82,8 @@
                             <p-columnFilter type="text" field="roleName" display="menu" />
                         </div>
                     </th>
+                    <th>Current Experience</th>
+                    <th>Total Experience</th>
                     <th>
                         <div class="flex items-center justify-between">
                             <span>Status</span>
@@ -117,6 +119,7 @@
                             </p-columnFilter>
                         </div>
                     </th>
+                    <th>Last Working Date</th>
                     <th>
                         <div class="flex items-center justify-between">
                             <span>Contact Number</span>
@@ -145,6 +148,8 @@
                     <td>{{ onroll.employmentDetails.spn.spnDescription || '-' }}</td>
                     <td>{{ onroll.employmentDetails.spn.experience || '-' }}</td>
                     <td>{{ onroll.employmentDetails.envisionRole.roleName || '-' }}</td>
+                    <td>{{ onroll.employmentDetails.currentExperience || '-' }}</td>
+                    <td>{{ onroll.employmentDetails.totalExperience || '-' }}</td>
                     <td>
                         <p-tag [value]="onroll.employmentDetails.employmentStatus"
                             [severity]="getSeverity(onroll.employmentDetails.employmentStatus)" />
@@ -175,6 +180,7 @@
                             </ng-template>
                         </p-cellEditor>
                     </td>
+                    <td>{{ onroll.employmentDetails.lastWorkingDate || '-' }}</td>
                     <td #pEditableColumn>
                         <p-cellEditor>
                             <ng-template #input>

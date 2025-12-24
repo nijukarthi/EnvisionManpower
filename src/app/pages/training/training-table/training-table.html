@@ -6,9 +6,9 @@
     <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
         <p-table
             #dt [value]="trainingList" showGridlines [rowHover]="true" [paginator]="true" [rows]="pageSize" [lazy]="true"
-            stripedRows [showCurrentPageReport]="true" [rowsPerPageOptions]="[10, 20, 30]" [totalRecords]="totalRecords"
+            stripedRows [showCurrentPageReport]="true" [rowsPerPageOptions]="[10, 20, 30, 40, 50]" [totalRecords]="totalRecords"
             [first]="first" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" editMode="row"
-            dataKey="candidateId" [tableStyle]="{'min-width': '130rem'}" [paginatorDropdownAppendTo]="mydiv"
+            dataKey="candidateId" [tableStyle]="{'min-width': '150rem'}" [paginatorDropdownAppendTo]="mydiv"
             (onLazyLoad)="loadTraining($event)">
             <ng-template #header>
                 <tr>
@@ -69,6 +69,8 @@
                             </p-columnFilter>
                         </div>
                     </th>
+                    <th rowspan="2">Current Experience</th>
+                    <th rowspan="2">Total Experience</th>
                     <th colspan="4" style="text-align: center">GWO</th>
                     <th rowspan="2" style="text-align: center">Actions</th>
                 </tr>
@@ -129,6 +131,8 @@
                     <td>{{ training.employmentDetails.envisionRole.roleName || '-' }}</td>
                     <td>{{ training.phoneNumber || '-' }}</td>
                     <td>{{ training.employmentDetails.joiningDate || '-' }}</td>
+                    <td>{{ training.employmentDetails.currentExperience || '-' }}</td>
+                    <td>{{ training.employmentDetails.totalExperience || '-' }}</td>
                     <td #pEditableColumn>
                         <p-cellEditor>
                             <ng-template #input>

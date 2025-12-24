@@ -169,7 +169,15 @@ export class SitePerformance implements OnInit {
   calculateTotalScore(performance: any){
     const detail = performance.employeePerformance.performanceDetails;
 
-    performance.employeePerformance.totalScore = detail.reduce((sum: number, item: any) => sum + item.score, 0);
+    const total = detail.reduce((sum: number, item: any) => sum + (Number(item.score) || 0), 0);
+
+    performance.employeePerformance.totalScore = total;
+
+    performance.employeePerformance.remarks = 
+      total >= 80 ? 'A' :
+      total >= 60 ? 'B+' :
+      total >= 40 ? 'B' :
+      total >= 20 ? 'C' : 'D';
   }
 
   submitPerformanceForm(performance: any){
