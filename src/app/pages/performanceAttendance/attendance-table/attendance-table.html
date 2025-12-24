@@ -8,11 +8,11 @@
         </div>
     </div>
     <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
-        <p-table #dt dataKey="candidate.candidateId" [value]="attendanceList" stripedRows [rowHover]="true" [paginator]="true" 
+        <p-table #dt dataKey="candidate.candidateId" [value]="attendanceList" [rowHover]="true" [paginator]="true" 
             [first]="first" editMode="row" [rows]="pageSize" [lazy]="true" [rowsPerPageOptions]="[10, 20, 30]" 
             [showCurrentPageReport]="true" [scrollable]="true" scrollHeight="500px" [totalRecords]="totalRecords"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" 
-            [paginatorDropdownAppendTo]="mydiv" [tableStyle]="{'min-width': '180rem'}" (onLazyLoad)="loadDemands($event)">
+            [paginatorDropdownAppendTo]="mydiv" [tableStyle]="{'min-width': '230rem'}" (onLazyLoad)="loadDemands($event)">
             <ng-template #header>
                 <tr>
                     <th>SL NO</th>
@@ -124,7 +124,7 @@
                     <th>Paid Leave</th>
                     <th>Unpaid Leave</th>
                     @if (currentUser === USERGROUPS.ADMIN || currentUser === USERGROUPS.SITEINCHARGE || currentUser === USERGROUPS.RESOURCEMANAGER) {
-                        <th>Actions</th>
+                        <th alignFrozen="right" pFrozenColumn>Actions</th>
                     }
                 </tr>
             </ng-template>
@@ -201,7 +201,7 @@
                     </td>  
                     @if (currentUser === USERGROUPS.ADMIN || currentUser === USERGROUPS.SITEINCHARGE || currentUser ===
                             USERGROUPS.RESOURCEMANAGER) {
-                        <td class="flex items-center justify-center gap-2">
+                        <td class="flex items-center justify-center gap-2" alignFrozen="right" pFrozenColumn>
                             @if (!editing) {
                                 <button pButton pRipple type="button" icon="pi pi-pencil"
                                     pInitEditableRow rounded severity="secondary"

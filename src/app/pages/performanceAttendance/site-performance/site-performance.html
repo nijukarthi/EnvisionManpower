@@ -11,7 +11,7 @@
         </div>
     </div>
     <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
-        <p-table #dt [value]="sitePerformancesList" stripedRows [rowHover]="true" [paginator]="true" editMode="row"
+        <p-table #dt [value]="sitePerformancesList" [rowHover]="true" [paginator]="true" editMode="row"
            [rows]="pageSize" [lazy]="true" [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true"
            [first]="first" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
            [scrollable]="true" scrollHeight="500px" [totalRecords]="totalRecords" dataKey="employmentDetails.employmentId"
@@ -139,7 +139,7 @@
                     <th>Rating</th>
                     @if (currentUser === USERGROUPS.ADMIN || currentUser === USERGROUPS.SITEINCHARGE || currentUser ===
                     USERGROUPS.RESOURCEMANAGER) {
-                        <th>Actions</th>
+                        <th alignFrozen="right" pFrozenColumn>Actions</th>
                     }
                 </tr>
             </ng-template>
@@ -201,7 +201,8 @@
                     <td #pEditableColumn>
                         <p-cellEditor>
                             <ng-template #input>
-                                <input type="text" pInputText [(ngModel)]="performance.employeePerformance.remarks" />
+                                <input type="text" pInputText [(ngModel)]="performance.employeePerformance.remarks"
+                                    [disabled]="true" />
                             </ng-template>
                             <ng-template #output>
                                 {{ performance.employeePerformance.remarks ?? '-' }}
@@ -210,7 +211,7 @@
                     </td>
                     @if (currentUser === USERGROUPS.ADMIN || currentUser === USERGROUPS.SITEINCHARGE || currentUser ===
                     USERGROUPS.RESOURCEMANAGER) {
-                        <td class="flex items-center justify-center gap-2">
+                        <td class="flex items-center justify-center gap-2" pFrozenColumn alignFrozen="right">
                             @if (!editing) {
                                 <button pButton pRipple type="button" icon="pi pi-pencil"
                                     pInitEditableRow rounded severity="secondary"
