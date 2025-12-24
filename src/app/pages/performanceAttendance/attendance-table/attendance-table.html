@@ -206,15 +206,15 @@
                                 <button pButton pRipple type="button" icon="pi pi-pencil"
                                     pInitEditableRow rounded severity="secondary"
                                     (click)="editAttendanceRow(attendance)"
-                                    [disabled]="isEditDisabled(attendance, date)"></button>
+                                    [disabled]="isEditDisabled(attendance, date)"  [ngClass]="{ 'cursor-not-allowed': isEditDisabled(attendance, date) }"></button>
                             } @else {
                                 <button pButton pRipple type="submit" icon="pi pi-check"
                                     pSaveEditableRow rounded severity="primary" (click)="submitAttendanceForm(attendance)"
-                                    [disabled]="isEditDisabled(attendance, date)">
+                                    [disabled]="isEditDisabled(attendance, date)" [ngClass]="{ 'cursor-not-allowed': isEditDisabled(attendance, date) }">
                                 </button>
                                 <button pButton pRipple type="button" icon="pi pi-times"
                                     pCancelEditableRow rounded severity="danger"
-                                    [disabled]="isEditDisabled(attendance, date)"></button>
+                                    [disabled]="isEditDisabled(attendance, date)" [ngClass]="{ 'cursor-not-allowed': isEditDisabled(attendance, date) }"  (click)="cancelEdit(attendance)"></button>
                             }
                         </td>     
                     }

@@ -1,7 +1,8 @@
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MessageService } from 'primeng/api';
+import { Table } from 'primeng/table';
 
 @Component({
     selector: 'app-training-table',
@@ -27,6 +28,9 @@ export class TrainingTable implements OnInit {
             value: false
         }
     ];
+
+  editingRow: any | null = null;
+  @ViewChild('dt') dt!: Table;
 
     constructor(
         private apiService: Apiservice,
@@ -157,5 +161,19 @@ export class TrainingTable implements OnInit {
         } catch (error) {
             console.log(error);
         }
+    }
+
+    editAttendanceRow(training: any) {
+        if (this.editingRow && this.editingRow !== training) {
+            this.dt.cancelRowEdit(this.editingRow);
+        }
+
+        this.editingRow = training;
+        training.editing = true;
+    }
+
+    cancelEdit(attendance: any) {
+        this.dt.cancelRowEdit(attendance);
+        this.editingRow = null;
     }
 }

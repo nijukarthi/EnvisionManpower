@@ -167,11 +167,11 @@
                     </td>
                     <td class="flex items-center justify-center gap-2">
                         @if (!editing) {
-                        <button pButton pRipple type="button" icon="pi pi-pencil" pInitEditableRow rounded severity="secondary"></button>
+                        <button pButton pRipple type="button" icon="pi pi-pencil" pInitEditableRow rounded severity="secondary" (click)="editAttendanceRow(training)"></button>
 
                         } @else {
                         <button pButton pRipple type="submit" icon="pi pi-check" pSaveEditableRow rounded severity="primary" (click)="submitTrainingForm(training)"></button>
-                        <button pButton pRipple type="button" icon="pi pi-times" pCancelEditableRow rounded severity="danger"></button>
+                        <button pButton pRipple type="button" icon="pi pi-times" pCancelEditableRow rounded severity="danger" (click)="cancelEdit(training)"></button>
                         }
                     </td>
                 </tr>

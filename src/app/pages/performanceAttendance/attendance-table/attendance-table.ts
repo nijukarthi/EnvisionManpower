@@ -3,6 +3,7 @@ import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MessageService } from 'primeng/api';
+import { Table } from 'primeng/table';
 
 @Component({
   selector: 'app-attendance-table',
@@ -32,6 +33,8 @@ export class AttendanceTable implements OnInit {
   currentUser = Number(sessionStorage.getItem('userGroupId'));
 
   date: Date = new Date();
+  editingRow: any | null = null;
+  @ViewChild('dt') dt!: Table;
 
   constructor(private apiService: Apiservice, private messageService: MessageService){}
 
@@ -100,19 +103,34 @@ export class AttendanceTable implements OnInit {
     }
   }
 
+
   editAttendanceRow(attendance: any){
-    setTimeout(() => {
-      const fields = [
-        { value: attendance.totalWorkingDays, ref: this.totalWorkingDaysInput },
-        { value: attendance.presentDays, ref: this.presentDaysInput },
-        { value: attendance.weekOff, ref: this.weekOffInput },
-        { value: attendance.paidLeaves, ref: this.paidLeavesInput },
-        { value: attendance.absentDays, ref: this.absentDaysInput }
-      ]
-      const target = fields.find(f => f.value === 0) || fields[0];
-      target.ref?.nativeElement.querySelector('input')?.focus();
-    });
+    if (this.editingRow && this.editingRow !== attendance) {
+    this.dt.cancelRowEdit(this.editingRow);
   }
+
+  this.editingRow = attendance;
+  attendance.editing = true;
+  setTimeout(() => {
+    const fields = [
+      { value: attendance.totalWorkingDays, ref: this.totalWorkingDaysInput },
+      { value: attendance.presentDays, ref: this.presentDaysInput },
+      { value: attendance.weekOff, ref: this.weekOffInput },
+      { value: attendance.paidLeaves, ref: this.paidLeavesInput },
+      { value: attendance.absentDays, ref: this.absentDaysInput }
+    ];
+
+    const target = fields.find(f => f.value === 0) || fields[0];
+    target.ref?.nativeElement.querySelector('input')?.focus();
+  });
+  }
+
+  cancelEdit(attendance: any) {
+   this.dt.cancelRowEdit(attendance);
+    this.editingRow = null;
+}
+
+
 // https://angular.dev/tools/cli/build#configuring-commonjs-dependencies
   submitAttendanceForm(attendance: any){
     try {

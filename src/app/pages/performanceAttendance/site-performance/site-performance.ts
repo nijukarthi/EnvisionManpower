@@ -1,10 +1,11 @@
 import { UserGroups } from '@/models/usergroups/usergroups.enum';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
-import { Component, ElementRef, inject, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { FormArray, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MenuItem, MessageService } from 'primeng/api';
+import { Table } from 'primeng/table';
 
 @Component({
   selector: 'app-site-performance',
@@ -42,6 +43,8 @@ export class SitePerformance implements OnInit {
 
   private fb = inject(FormBuilder);
   private router = inject(Router);
+  editingRow: any | null = null;
+  @ViewChild('dt') dt!: Table;
 
   resignationRequestForm = this.fb.group({
     resignationDetails: this.fb.array([this.resignEmployee()])
@@ -171,6 +174,13 @@ export class SitePerformance implements OnInit {
   }
 
   editPerformance(performance: any){
+     if (this.editingRow && this.editingRow !== performance) {
+    this.dt.cancelRowEdit(this.editingRow);
+  }
+
+  this.editingRow = performance;
+  performance.editing = true;
+
     const details = performance.employeePerformance.performanceDetails;
 
     if (!details || details.length === 0) {
@@ -191,6 +201,10 @@ export class SitePerformance implements OnInit {
     });
   }
 
+ cancelEdit(performance: any) {
+   this.dt.cancelRowEdit(performance);
+    this.editingRow = null;
+}
   calculateTotalScore(performance: any){
     const detail = performance.employeePerformance.performanceDetails;
 
