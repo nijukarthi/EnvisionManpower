@@ -1,7 +1,7 @@
 import { UserGroups } from '@/models/usergroups/usergroups.enum';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MessageService } from 'primeng/api';
 
 @Component({
@@ -11,6 +11,12 @@ import { MessageService } from 'primeng/api';
   styleUrl: './attendance-table.scss'
 })
 export class AttendanceTable implements OnInit {
+  @ViewChild('totalWorkingDaysInput', { read: ElementRef }) totalWorkingDaysInput!: ElementRef;
+  @ViewChild('presentDaysInput', { read: ElementRef }) presentDaysInput!: ElementRef;
+  @ViewChild('weekOffInput', { read: ElementRef }) weekOffInput!: ElementRef;
+  @ViewChild('paidLeavesInput', { read: ElementRef }) paidLeavesInput!: ElementRef;
+  @ViewChild('absentDaysInput', { read: ElementRef }) absentDaysInput!: ElementRef;
+
   offSet = 0;
   pageSize = 10;
   first = 0;
@@ -94,6 +100,20 @@ export class AttendanceTable implements OnInit {
     }
   }
 
+  editAttendanceRow(attendance: any){
+    setTimeout(() => {
+      const fields = [
+        { value: attendance.totalWorkingDays, ref: this.totalWorkingDaysInput },
+        { value: attendance.presentDays, ref: this.presentDaysInput },
+        { value: attendance.weekOff, ref: this.weekOffInput },
+        { value: attendance.paidLeaves, ref: this.paidLeavesInput },
+        { value: attendance.absentDays, ref: this.absentDaysInput }
+      ]
+      const target = fields.find(f => f.value === 0) || fields[0];
+      target.ref?.nativeElement.querySelector('input')?.focus();
+    });
+  }
+// https://angular.dev/tools/cli/build#configuring-commonjs-dependencies
   submitAttendanceForm(attendance: any){
     try {
       console.log(attendance);

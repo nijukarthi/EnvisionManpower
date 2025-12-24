@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { MenuItem, MessageService } from 'primeng/api';
 import { AppMenuitem } from './app.menuitem';
 import { Apiservice } from '@/service/apiservice/apiservice';
@@ -32,7 +32,7 @@ export class AppMenu {
     consultancyUser = false;
     guestUser = false;
 
-    constructor(private apiService: Apiservice) { }
+    constructor(private apiService: Apiservice, private router: Router) { }
 
     ngOnInit() {
        
@@ -83,14 +83,22 @@ export class AppMenu {
                         {
                             label: 'Manpower Request',
                             icon: 'pi pi-calendar',
-                            routerLink: ['/home/demand'],
-                            visible: !!this.adminUser || !!this.siteInchargeUser
+                            visible: !!this.adminUser || !!this.siteInchargeUser,
+                            command: () => {
+                                if (!this.siteInchargeUser) {
+                                    this.router.navigate(['/home/demand'])
+                                }
+                            }
                         },
                         {
                             label: 'Manpower Approval',
                             icon: 'pi pi-ticket',
-                            routerLink: ['/home/approval'],
-                            visible: this.adminUser || this.departmentUser || this.clusterUser || this.siteInchargeUser
+                            visible: this.adminUser || this.departmentUser || this.clusterUser || this.siteInchargeUser,
+                            command: () => {
+                                if (!this.siteInchargeUser) {
+                                    this.router.navigate(['/home/approval'])
+                                }
+                            }
                         },
                         {
                             label: 'Manpower Management',
@@ -129,8 +137,12 @@ export class AppMenu {
                                 {
                                     label: 'On-roll Employees',
                                     icon: 'pi pi-user',
-                                    routerLink: ['/home/onroll-employees'],
-                                    visible: this.adminUser || this.resourceManagerUser || this.siteInchargeUser || this.clusterUser || this.departmentUser
+                                    visible: this.adminUser || this.resourceManagerUser || this.siteInchargeUser || this.clusterUser || this.departmentUser,
+                                    command: () => {
+                                        if (!this.siteInchargeUser) {
+                                            this.router.navigate(['/home/onroll-employees'])
+                                        }
+                                    }
                                 },
                                 {
                                     label: 'Training',
@@ -161,16 +173,26 @@ export class AppMenu {
                                 {
                                     label: 'Transfer',
                                     icon: 'pi pi-file-export',
-                                    routerLink: ['/home/transfer'],
                                     visible: this.adminUser || this.siteInchargeUser || this.departmentUser || this.clusterUser || this.consultancyUser || 
-                                        this.resourceManagerUser
+                                        this.resourceManagerUser,
+                                    disabled: this.siteInchargeUser,
+                                    command: () => {
+                                        if (!this.siteInchargeUser) {
+                                            this.router.navigate(['/home/transfer'])
+                                        }
+                                    }
                                 },
                                 {
                                     label: 'Resignation',
                                     icon: 'pi pi-file-excel',
-                                    routerLink: ['/home/terminate'],
                                     visible: this.adminUser || this.siteInchargeUser || this.departmentUser || this.clusterUser || this.consultancyUser || 
-                                        this.resourceManagerUser
+                                        this.resourceManagerUser,
+                                    disabled: this.siteInchargeUser,
+                                    command: () => {
+                                        if (!this.siteInchargeUser) {
+                                            this.router.navigate(['/home/terminate'])
+                                        }
+                                    }
                                 }
                             ],
                                 visible: this.adminUser || this.siteInchargeUser || this.departmentUser || this.clusterUser || this.resourceManagerUser || this.consultancyUser
