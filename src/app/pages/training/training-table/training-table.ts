@@ -11,12 +11,15 @@ import { Table } from 'primeng/table';
     styleUrl: './training-table.scss'
 })
 export class TrainingTable implements OnInit {
+    @ViewChild('dt') dt!: Table;
+
     offSet = 0;
     pageSize = 10;
     first = 0;
+    totalRecords = 0;
 
     trainingList: any;
-    totalRecords = 0;
+    editingRow: any | null = null;
 
     trainingStatusList = [
         {
@@ -28,9 +31,6 @@ export class TrainingTable implements OnInit {
             value: false
         }
     ];
-
-  editingRow: any | null = null;
-  @ViewChild('dt') dt!: Table;
 
     constructor(
         private apiService: Apiservice,

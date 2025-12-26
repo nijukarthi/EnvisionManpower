@@ -217,16 +217,21 @@
                                 <button pButton pRipple type="button" icon="pi pi-pencil"
                                     pInitEditableRow rounded severity="secondary"
                                     (click)="editPerformance(performance)"
-                                    [disabled]="isEditDisabled(performance, date)" [ngClass]="{ 'cursor-not-allowed': isEditDisabled(performance, date) }"
+                                    [disabled]="isEditDisabled(performance, date)" 
+                                    [ngClass]="{ 'cursor-not-allowed': isEditDisabled(performance, date) }"
                                     ></button>
                             }@else {
                                 <button pButton pRipple type="submit" icon="pi pi-check"
-                                    pSaveEditableRow rounded severity="primary" (click)="submitPerformanceForm(performance)"
-                                    [disabled]="isEditDisabled(performance, date)" [ngClass]="{ 'cursor-not-allowed': isEditDisabled(performance, date) }"
+                                    pSaveEditableRow rounded severity="primary" 
+                                    (click)="submitPerformanceForm(performance)"
+                                    [disabled]="isEditDisabled(performance, date)" 
+                                    [ngClass]="{ 'cursor-not-allowed': isEditDisabled(performance, date) }"
                                     ></button>
                                 <button pButton pRipple type="button" icon="pi pi-times"
                                     pCancelEditableRow rounded severity="danger"
-                                    [disabled]="isEditDisabled(performance, date)" (click)="cancelEdit(performance)" [ngClass]="{ 'cursor-not-allowed': isEditDisabled(performance, date) }"
+                                    [disabled]="isEditDisabled(performance, date)" 
+                                    (click)="cancelEdit(performance)" 
+                                    [ngClass]="{ 'cursor-not-allowed': isEditDisabled(performance, date) }"
                                     ></button>
                             }
                             <!-- <p-menu #menu [model]="getMenuItems(performance)" [popup]="true" appendTo="body" />

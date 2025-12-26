@@ -16,6 +16,7 @@ import { Table } from 'primeng/table';
 export class SitePerformance implements OnInit {
   @ViewChildren('scoreInput', { read: ElementRef })
     scoreInputs!: QueryList<ElementRef>;
+  @ViewChild('dt') dt!: Table;
 
   openTerminateModal = false;
 
@@ -33,6 +34,7 @@ export class SitePerformance implements OnInit {
   employeeDetails: any;
   statuses: any[] = [];
   selectedPerformances: any[] = [];
+  editingRow: any | null = null;
 
   date: Date = new Date();
   minDate: Date | undefined;
@@ -43,8 +45,6 @@ export class SitePerformance implements OnInit {
 
   private fb = inject(FormBuilder);
   private router = inject(Router);
-  editingRow: any | null = null;
-  @ViewChild('dt') dt!: Table;
 
   resignationRequestForm = this.fb.group({
     resignationDetails: this.fb.array([this.resignEmployee()])
@@ -174,12 +174,12 @@ export class SitePerformance implements OnInit {
   }
 
   editPerformance(performance: any){
-     if (this.editingRow && this.editingRow !== performance) {
-    this.dt.cancelRowEdit(this.editingRow);
-  }
+    if (this.editingRow && this.editingRow !== performance) {
+      this.dt.cancelRowEdit(this.editingRow);
+    }
 
-  this.editingRow = performance;
-  performance.editing = true;
+    this.editingRow = performance;
+    performance.editing = true;
 
     const details = performance.employeePerformance.performanceDetails;
 
@@ -201,10 +201,11 @@ export class SitePerformance implements OnInit {
     });
   }
 
- cancelEdit(performance: any) {
-   this.dt.cancelRowEdit(performance);
+  cancelEdit(performance: any) {
+    this.dt.cancelRowEdit(performance);
     this.editingRow = null;
-}
+  }
+
   calculateTotalScore(performance: any){
     const detail = performance.employeePerformance.performanceDetails;
 
