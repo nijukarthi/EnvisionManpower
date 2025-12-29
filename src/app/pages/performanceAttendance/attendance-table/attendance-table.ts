@@ -116,6 +116,39 @@ export class AttendanceTable implements OnInit {
     }
   }
 
+  isAdminOrRM(): boolean{
+    return this.currentUser === UserGroups.ADMIN || this.currentUser === UserGroups.RESOURCEMANAGER;
+  }
+
+  isSiteIncharge(){
+    return this.currentUser === UserGroups.SITEINCHARGE;
+  }
+
+  siteInchargeAccess(){
+    if(!this.date || this.totalDays === null) return false;
+
+    const today = new Date();
+
+    const isCurretMonth = today.getMonth() === this.date.getMonth() &&
+      today.getFullYear() === this.date.getFullYear()
+
+    if(!isCurretMonth) return false;
+
+    const day = today.getDate();
+    return day >= 20 && day <= this.totalDays;
+  }
+
+  showEditBtn(){
+    if (this.isAdminOrRM()) {
+      return true;
+    }
+
+    if (this.isSiteIncharge()) {
+      return this.siteInchargeAccess();
+    }
+
+    return false;
+  }
 
   editAttendanceRow(attendance: any){
     if (this.editingRow && this.editingRow !== attendance) {

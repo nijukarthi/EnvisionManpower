@@ -59,7 +59,7 @@ export class DemandFullfillment implements OnInit {
         icon: 'pi pi-eye',
         command: () => { 
           this.stepService.setActiveStep(stepName);
-          this.router.navigate(['/home/demand-fullfillment/steps'], 
+          this.router.navigate(['/home/manpower-fulfillment/steps'], 
           {
             state: {
               requesitionId: demand.requesitionId,
@@ -105,7 +105,7 @@ export class DemandFullfillment implements OnInit {
       return;
     }
     this.stepService.setActiveStep(stepName);
-    this.router.navigate(['/home/demand-fullfillment/steps'],
+    this.router.navigate(['/home/manpower-fulfillment/steps'],
       {
         state: {
           requesitionId: demand.requesitionId,

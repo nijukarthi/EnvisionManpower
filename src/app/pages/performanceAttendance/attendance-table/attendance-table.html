@@ -2,6 +2,7 @@
     <div class="flex items-baseline-last justify-between">
         <h5>Attendance</h5>
         <div class="flex gap-2">
+            <label class="mt-1 text-lg">Month:</label>
             <p-datepicker view="month" [(ngModel)]="date" dateFormat="mm/yy" [readonlyInput]="true" 
                 placeholder="Pick a month" (onSelect)="fetchAttendanceList()" />
             <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
@@ -123,9 +124,7 @@
                     <th>Week Off</th>
                     <th>Paid Leave</th>
                     <th>Unpaid Leave</th>
-                    @if (currentUser === USERGROUPS.ADMIN || currentUser === USERGROUPS.SITEINCHARGE || currentUser === USERGROUPS.RESOURCEMANAGER) {
-                        <th alignFrozen="right" pFrozenColumn>Actions</th>
-                    }
+                    <th alignFrozen="right" pFrozenColumn>Actions</th>
                 </tr>
             </ng-template>
             <ng-template #body let-attendance let-editing="editing" let-i="rowIndex">
@@ -200,29 +199,22 @@
                             </ng-template>
                         </p-cellEditor>
                     </td>  
-                    @if (currentUser === USERGROUPS.ADMIN || currentUser === USERGROUPS.SITEINCHARGE || currentUser ===
-                            USERGROUPS.RESOURCEMANAGER) {
-                        <td class="flex items-center justify-center gap-2" alignFrozen="right" pFrozenColumn>
-                            @if (!editing) {
-                                <button pButton pRipple type="button" icon="pi pi-pencil"
-                                    pInitEditableRow rounded severity="secondary"
-                                    (click)="editAttendanceRow(attendance)"
-                                    [disabled]="isEditDisabled(attendance, date)"  
-                                    [ngClass]="{ 'cursor-not-allowed': isEditDisabled(attendance, date) }"></button>
-                            } @else {
-                                <button pButton pRipple type="submit" icon="pi pi-check"
-                                    pSaveEditableRow rounded severity="primary" (click)="submitAttendanceForm(attendance)"
-                                    [disabled]="isEditDisabled(attendance, date)" 
-                                    [ngClass]="{ 'cursor-not-allowed': isEditDisabled(attendance, date) }">
-                                </button>
-                                <button pButton pRipple type="button" icon="pi pi-times"
-                                    pCancelEditableRow rounded severity="danger"
-                                    [disabled]="isEditDisabled(attendance, date)" 
-                                    [ngClass]="{ 'cursor-not-allowed': isEditDisabled(attendance, date) }"  
-                                    (click)="cancelEdit(attendance)"></button>
-                            }
-                        </td>     
-                    }
+                    <td class="flex items-center justify-center gap-2" alignFrozen="right" pFrozenColumn>
+                        @if (!editing) {
+                            <button pButton pRipple type="button" icon="pi pi-pencil"
+                                pInitEditableRow rounded severity="secondary"
+                                (click)="editAttendanceRow(attendance)"
+                            ></button>
+                        } @else {
+                            <button pButton pRipple type="submit" icon="pi pi-check"
+                                pSaveEditableRow rounded severity="primary" (click)="submitAttendanceForm(attendance)"
+                            >
+                            </button>
+                            <button pButton pRipple type="button" icon="pi pi-times"
+                                pCancelEditableRow rounded severity="danger" 
+                                (click)="cancelEdit(attendance)"></button>
+                        }
+                    </td>     
                 </tr>
             </ng-template>
             <ng-template #emptymessage>

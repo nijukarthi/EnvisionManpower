@@ -29,6 +29,7 @@ export class SitePerformance implements OnInit {
   performanceColumns = Array.from({ length: this.performanceColumnCount });
   month: number | null = null;
   year: number | null = null;
+  totalDays: number | null = null;
 
   sitePerformancesList: any;
   employeeDetails: any;
@@ -141,10 +142,16 @@ export class SitePerformance implements OnInit {
     }
   }
 
+  getDaysInMonth(month: number, year: number){
+    return new Date(year, month, 0).getDate();
+  }
+
   fetchCandidateSitePerformance(){
     try {
       this.month = this.date ? this.date.getMonth() + 1 : null;
       this.year = this.date ? this.date.getFullYear() : null;
+
+      this.totalDays = this.month && this.year ? this.getDaysInMonth(this.month, this.year) : null;
 
       const data = {
         offSet: this.offSet,
@@ -308,6 +315,40 @@ export class SitePerformance implements OnInit {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  isAdminOrRM(): boolean {
+    return this.currentUser === UserGroups.ADMIN || this.currentUser === UserGroups.RESOURCEMANAGER;
+  }
+
+  isSiteIncharge(){
+    return this.currentUser === UserGroups.SITEINCHARGE;
+  }
+
+  siteInchargeAccess(){
+    if(!this.date || this.totalDays === null) return false;
+
+    const today = new Date();
+
+    const isCurretMonth = today.getMonth() === this.date.getMonth() &&
+      today.getFullYear() === this.date.getFullYear()
+
+    if(!isCurretMonth) return false;
+
+    const day = today.getDate();
+    return day >=20 && day <= this.totalDays;
+  }
+
+  showEditBtn(){
+    if (this.isAdminOrRM()) {
+      return true;
+    }
+
+    if(this.isSiteIncharge()){
+      return this.siteInchargeAccess()
+    }
+
+    return false;
   }
 
   isEditDisabled(performance: any, date: Date): boolean {

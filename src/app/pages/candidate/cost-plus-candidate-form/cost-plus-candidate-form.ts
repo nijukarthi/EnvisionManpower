@@ -316,7 +316,7 @@ export class CostPlusCandidateForm implements OnInit {
                         console.log(val);
                         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Candidate Created Successfully' });
                         setTimeout(() => {
-                            this.router.navigate(['/home/candidate/cost-plus']);
+                            this.router.navigate(['/home/candidates/cost-plus']);
                         }, 2000);
                     },
                     error: (err) => {
@@ -329,7 +329,7 @@ export class CostPlusCandidateForm implements OnInit {
                         console.log(val);
                         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Candidate Updated Successfully' });
                         setTimeout(() => {
-                            this.router.navigate(['/home/candidate/cost-plus']);
+                            this.router.navigate(['/home/candidates/cost-plus']);
                         }, 2000);
                     },
                     error: (err) => {
@@ -377,7 +377,7 @@ export class CostPlusCandidateForm implements OnInit {
                     console.log(val);
                     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Candidate Salary Details Updated Successfully' });
                     setTimeout(() => {
-                        this.router.navigate(['/home/candidate/cost-plus']);
+                        this.router.navigate(['/home/candidates/cost-plus']);
                     }, 2000);
                 },
                 error: (err) => {

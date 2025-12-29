@@ -2,6 +2,7 @@
     <div class="flex items-baseline-last justify-between">
         <h5>Site Performance</h5>
         <div class="flex justify-end gap-1">
+            <label class="mt-1 text-lg">Month:</label>
             <p-datepicker view="month" [(ngModel)]="date" dateFormat="mm/yy" [readonlyInput]="true" 
                 placeholder="Pick a month" (onSelect)="fetchCandidateSitePerformance()" />
             <p-menu #menu [model]="getMenuItems()" [popup]="true" />
@@ -137,10 +138,7 @@
                     <th>Compliance</th>
                     <th>Total Sum</th>
                     <th>Rating</th>
-                    @if (currentUser === USERGROUPS.ADMIN || currentUser === USERGROUPS.SITEINCHARGE || currentUser ===
-                    USERGROUPS.RESOURCEMANAGER) {
-                        <th alignFrozen="right" pFrozenColumn>Actions</th>
-                    }
+                    <th alignFrozen="right" pFrozenColumn>Actions</th>
                 </tr>
             </ng-template>
             <ng-template #body let-performance let-editing="editing" let-i="rowIndex">
@@ -210,34 +208,23 @@
                             </ng-template>
                         </p-cellEditor>
                     </td>
-                    @if (currentUser === USERGROUPS.ADMIN || currentUser === USERGROUPS.SITEINCHARGE || currentUser ===
-                    USERGROUPS.RESOURCEMANAGER) {
-                        <td class="flex items-center justify-center gap-2" pFrozenColumn alignFrozen="right">
-                            @if (!editing) {
-                                <button pButton pRipple type="button" icon="pi pi-pencil"
-                                    pInitEditableRow rounded severity="secondary"
-                                    (click)="editPerformance(performance)"
-                                    [disabled]="isEditDisabled(performance, date)" 
-                                    [ngClass]="{ 'cursor-not-allowed': isEditDisabled(performance, date) }"
-                                    ></button>
-                            }@else {
-                                <button pButton pRipple type="submit" icon="pi pi-check"
-                                    pSaveEditableRow rounded severity="primary" 
-                                    (click)="submitPerformanceForm(performance)"
-                                    [disabled]="isEditDisabled(performance, date)" 
-                                    [ngClass]="{ 'cursor-not-allowed': isEditDisabled(performance, date) }"
-                                    ></button>
-                                <button pButton pRipple type="button" icon="pi pi-times"
-                                    pCancelEditableRow rounded severity="danger"
-                                    [disabled]="isEditDisabled(performance, date)" 
-                                    (click)="cancelEdit(performance)" 
-                                    [ngClass]="{ 'cursor-not-allowed': isEditDisabled(performance, date) }"
-                                    ></button>
-                            }
-                            <!-- <p-menu #menu [model]="getMenuItems(performance)" [popup]="true" appendTo="body" />
-                            <p-button (onClick)="menu.toggle($event)" icon="pi pi-ellipsis-v" rounded severity="secondary" /> -->
-                        </td>
-                    }
+                    <td class="flex items-center justify-center gap-2" pFrozenColumn alignFrozen="right">
+                        @if (!editing) {
+                            <button pButton pRipple type="button" icon="pi pi-pencil"
+                                pInitEditableRow rounded severity="secondary"
+                                (click)="editPerformance(performance)"
+                                ></button>
+                        }@else {
+                            <button pButton pRipple type="submit" icon="pi pi-check"
+                                pSaveEditableRow rounded severity="primary" 
+                                (click)="submitPerformanceForm(performance)"
+                                ></button>
+                            <button pButton pRipple type="button" icon="pi pi-times"
+                                pCancelEditableRow rounded severity="danger"
+                                (click)="cancelEdit(performance)" 
+                                ></button>
+                        }
+                    </td>
                 </tr>
             </ng-template>
             <ng-template #emptymessage>
