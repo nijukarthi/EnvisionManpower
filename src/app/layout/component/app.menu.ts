@@ -86,7 +86,7 @@ export class AppMenu {
                             visible: !!this.adminUser || !!this.siteInchargeUser,
                             command: () => {
                                 if (!this.siteInchargeUser) {
-                                    this.router.navigate(['/home/demand'])
+                                    this.router.navigate(['/home/manpower-request'])
                                 }
                             }
                         },
@@ -96,7 +96,7 @@ export class AppMenu {
                             visible: this.adminUser || this.departmentUser || this.clusterUser || this.siteInchargeUser,
                             command: () => {
                                 if (!this.siteInchargeUser) {
-                                    this.router.navigate(['/home/approval'])
+                                    this.router.navigate(['/home/manpower-approval'])
                                 }
                             }
                         },
@@ -107,7 +107,7 @@ export class AppMenu {
                                 {
                                     label: 'Assign Resource Manager',
                                     icon: 'pi pi-address-book',
-                                    routerLink: ['/home/manager'],
+                                    routerLink: ['/home/assign-resource-manager'],
                                     visible: this.adminUser
                                 },
                                 {
@@ -119,7 +119,7 @@ export class AppMenu {
                                 {
                                     label: 'Manpower Fulfillment',
                                     icon: 'pi pi-history',
-                                    routerLink: ['/home/demand-fullfillment'],
+                                    routerLink: ['/home/manpower-fulfillment'],
                                     visible: this.consultancyUser || this.adminUser || this.resourceManagerUser || this.guestUser
                                 },
                                 {
@@ -190,7 +190,7 @@ export class AppMenu {
                                     disabled: this.siteInchargeUser,
                                     command: () => {
                                         if (!this.siteInchargeUser) {
-                                            this.router.navigate(['/home/terminate'])
+                                            this.router.navigate(['/home/resignation'])
                                         }
                                     }
                                 }
@@ -239,13 +239,13 @@ export class AppMenu {
                                         {
                                             label: 'Fixed Cost',
                                             icon: 'pi pi-wallet',
-                                            routerLink: ['/home/candidate/fixed-cost'],
+                                            routerLink: ['/home/candidates/fixed-cost'],
                                             visible: this.adminUser || this.consultancyUser
                                         },
                                         {
                                             label: 'Cost Plus',
                                             icon: 'pi pi-receipt',
-                                            routerLink: ['/home/candidate/cost-plus'],
+                                            routerLink: ['/home/candidates/cost-plus'],
                                             visible: this.adminUser || this.consultancyUser
                                         }
                                     ],
@@ -286,7 +286,7 @@ export class AppMenu {
                                 {
                                     label: 'Envision Roles',
                                     icon: 'pi pi-book',
-                                    routerLink: ['/home/envisionRoles']
+                                    routerLink: ['/home/envision-roles']
                                 },
                                 {
                                     label: 'Cluster',

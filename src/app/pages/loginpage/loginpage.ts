@@ -117,7 +117,7 @@ export class Loginpage {
                     error: err => {
                       this.registerScreen = false;
                         this.loginScreen = true;
-                        this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
+                        this.messageService.add({ severity: 'error', summary: 'Error', detail: err?.error?.detail });
                     }
                 })
                 }else{
@@ -212,14 +212,14 @@ export class Loginpage {
                 sessionStorage.setItem("userName", val.data.userName);
                 sessionStorage.setItem('userGroupId', val.data.userGroupId);
                 if (val.data.userGroupId === UserGroups.CLUSTERHEAD || val.data.userGroupId === UserGroups.DEPARTMENTHEAD) {
-                    this.route.navigate(['/home/approval']);
+                    this.route.navigate(['/home/manpower-approval']);
                 } else if(val.data.userGroupId === UserGroups.CONSULTANCY){
                     this.route.navigate(['/home/consultancies']);
                 } else if (val.data.userGroupId === UserGroups.GUESTUSER) {
-                    this.route.navigate(['/home/demand-fullfillment']);
+                    this.route.navigate(['/home/manpower-fulfillment']);
                 }
                 else {
-                    this.route.navigate(['/home/demand']);
+                    this.route.navigate(['/home/manpower-request']);
                 }
             },
             error: err => {

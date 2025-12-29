@@ -16,6 +16,7 @@ import { Table } from 'primeng/table';
 export class SitePerformance implements OnInit {
   @ViewChildren('scoreInput', { read: ElementRef })
     scoreInputs!: QueryList<ElementRef>;
+  @ViewChild('dt') dt!: Table;
 
   openTerminateModal = false;
 
@@ -28,11 +29,13 @@ export class SitePerformance implements OnInit {
   performanceColumns = Array.from({ length: this.performanceColumnCount });
   month: number | null = null;
   year: number | null = null;
+  totalDays: number | null = null;
 
   sitePerformancesList: any;
   employeeDetails: any;
   statuses: any[] = [];
   selectedPerformances: any[] = [];
+  editingRow: any | null = null;
 
   date: Date = new Date();
   minDate: Date | undefined;
@@ -43,8 +46,6 @@ export class SitePerformance implements OnInit {
 
   private fb = inject(FormBuilder);
   private router = inject(Router);
-  editingRow: any | null = null;
-  @ViewChild('dt') dt!: Table;
 
   resignationRequestForm = this.fb.group({
     resignationDetails: this.fb.array([this.resignEmployee()])
@@ -141,10 +142,16 @@ export class SitePerformance implements OnInit {
     }
   }
 
+  getDaysInMonth(month: number, year: number){
+    return new Date(year, month, 0).getDate();
+  }
+
   fetchCandidateSitePerformance(){
     try {
       this.month = this.date ? this.date.getMonth() + 1 : null;
       this.year = this.date ? this.date.getFullYear() : null;
+
+      this.totalDays = this.month && this.year ? this.getDaysInMonth(this.month, this.year) : null;
 
       const data = {
         offSet: this.offSet,
@@ -174,12 +181,12 @@ export class SitePerformance implements OnInit {
   }
 
   editPerformance(performance: any){
-     if (this.editingRow && this.editingRow !== performance) {
-    this.dt.cancelRowEdit(this.editingRow);
-  }
+    if (this.editingRow && this.editingRow !== performance) {
+      this.dt.cancelRowEdit(this.editingRow);
+    }
 
-  this.editingRow = performance;
-  performance.editing = true;
+    this.editingRow = performance;
+    performance.editing = true;
 
     const details = performance.employeePerformance.performanceDetails;
 
@@ -201,10 +208,11 @@ export class SitePerformance implements OnInit {
     });
   }
 
- cancelEdit(performance: any) {
-   this.dt.cancelRowEdit(performance);
+  cancelEdit(performance: any) {
+    this.dt.cancelRowEdit(performance);
     this.editingRow = null;
-}
+  }
+
   calculateTotalScore(performance: any){
     const detail = performance.employeePerformance.performanceDetails;
 
@@ -307,6 +315,40 @@ export class SitePerformance implements OnInit {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  isAdminOrRM(): boolean {
+    return this.currentUser === UserGroups.ADMIN || this.currentUser === UserGroups.RESOURCEMANAGER;
+  }
+
+  isSiteIncharge(){
+    return this.currentUser === UserGroups.SITEINCHARGE;
+  }
+
+  siteInchargeAccess(){
+    if(!this.date || this.totalDays === null) return false;
+
+    const today = new Date();
+
+    const isCurretMonth = today.getMonth() === this.date.getMonth() &&
+      today.getFullYear() === this.date.getFullYear()
+
+    if(!isCurretMonth) return false;
+
+    const day = today.getDate();
+    return day >=20 && day <= this.totalDays;
+  }
+
+  showEditBtn(){
+    if (this.isAdminOrRM()) {
+      return true;
+    }
+
+    if(this.isSiteIncharge()){
+      return this.siteInchargeAccess()
+    }
+
+    return false;
   }
 
   isEditDisabled(performance: any, date: Date): boolean {

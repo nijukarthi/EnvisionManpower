@@ -152,71 +152,21 @@ export class OnRollEmployees implements OnInit {
   }
 
   exportToExcel() {
-  const data = {
-    offSet: 0,
-    pageSize: this.totalRecords // 44
-  };
+    const data = {
+      offSet: 0,
+      pageSize: this.totalRecords,
+      export: true
+    };
 
-  this.apiService.fetchOnRollCandidates(data).subscribe({
-    next: (val) => {
-      const fullData = val?.data?.data || [];
+    this.apiService.fetchOnRollCandidates(data).subscribe({
+      next: (val) => {
+        console.log(val);
 
-      const formattedData = fullData.map((item: any) => {
-        return {
-          'Employee Code': item.employeeCode,
-          'Employee Name': item.candidateName,
-          'Project Code': item.employmentDetails?.project?.projectCode,
-          'Site Name': item.employmentDetails?.project?.siteName,
-          'Cluster Name': item.employmentDetails?.cluster?.clusterName,
-          'SPN Code': item.employmentDetails?.spn?.spnCode,
-          'SPN Description': item.employmentDetails?.spn?.spnDescription,
-          'Experience': item.employmentDetails?.spn?.experience,
-          'Role': item.employmentDetails?.envisionRole?.roleName,
-          'Expected DOJ': item.employmentDetails?.expectedJoiningDate,
-          'Actual DOJ': item.employmentDetails?.joiningDate,
-          'Contact Number': item.phoneNumber,
-          'Emergency Contact Number': item.alternativeNumber,
-          'UAN': item.uan,
-          'Aadhar Number': item.aadharNumber
-        };
-      });
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Excel file successfully send to email' });
 
-      this.downloadExcel(formattedData);
-    }
-  });
-}
-
-downloadExcel(data: any[]) {
-  const worksheet = XLSX.utils.json_to_sheet(data);
-  const workbook = {
-    Sheets: { 'Onroll Employees': worksheet },
-    SheetNames: ['Onroll Employees']
-  };
-
-  const excelBuffer = XLSX.write(workbook, {
-    bookType: 'xlsx',
-    type: 'array'
-  });
-
-  const blob = new Blob(
-    [excelBuffer],
-    { type: 'application/octet-stream' }
-  );
-
-  saveAs(blob, 'Onroll_Employees.xlsx');
-}
-
-
-  // exportToExcel(){
-  //   this.onrollEmployeeList.map((item: any) => {
-  //     const obj: any = {};
-  //     this.cols.forEach(col => {
-  //       obj[col.header] = this.getNestedValue(item, col.field);
-  //     });
-  //     return obj;
-  //   });
-  //   this.table.exportCSV({ selectionOnly: false });
-  // }
+      }
+    });
+  }
 
   updateOnrollDetails(onroll: any){
     try {

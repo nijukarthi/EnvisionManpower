@@ -71,7 +71,7 @@ export class Register implements OnInit {
         this.authService.fetchUserProfile().subscribe({
             next: val => {
                 console.log(val);
-                this.router.navigate(['/home/demand']);
+                this.router.navigate(['/home/manpower-request']);
             },
             error: err => {
                 console.log(err);

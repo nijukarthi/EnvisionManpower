@@ -17,11 +17,13 @@ export class AttendanceTable implements OnInit {
   @ViewChild('weekOffInput', { read: ElementRef }) weekOffInput!: ElementRef;
   @ViewChild('paidLeavesInput', { read: ElementRef }) paidLeavesInput!: ElementRef;
   @ViewChild('absentDaysInput', { read: ElementRef }) absentDaysInput!: ElementRef;
+  @ViewChild('dt') dt!: Table;
 
   offSet = 0;
   pageSize = 10;
   first = 0;
   totalRecords = 0;
+  totalDays: number | null = null;
   month: number | null = null;
   year: number | null = null;
 
@@ -34,23 +36,28 @@ export class AttendanceTable implements OnInit {
 
   date: Date = new Date();
   editingRow: any | null = null;
-  @ViewChild('dt') dt!: Table;
 
   constructor(private apiService: Apiservice, private messageService: MessageService){}
 
   ngOnInit(): void {
-      this.fetchAttendanceList();
-      this.statuses = [
-        { label: 'ACTIVE', value: 'ACTIVE' },
-        { label: 'TRANSFERRED', value: 'TRANSFERRED' },
-        { label: 'RESIGNED', value: 'RESIGNED' }
-      ]
+    this.fetchAttendanceList();
+    this.statuses = [
+      { label: 'ACTIVE', value: 'ACTIVE' },
+      { label: 'TRANSFERRED', value: 'TRANSFERRED' },
+      { label: 'RESIGNED', value: 'RESIGNED' }
+    ]
+  }
+
+  getDaysInMonth(month: number, year: number){
+    return new Date(year, month, 0).getDate();
   }
 
   fetchAttendanceList(){
     try {
       this.month = this.date ? this.date.getMonth() + 1: null;
       this.year = this.date ? this.date.getFullYear() : null;
+
+      this.totalDays = this.month && this.year ? this.getDaysInMonth(this.month, this.year) : null;
 
       const data = {
         offSet: this.offSet,
@@ -73,6 +80,12 @@ export class AttendanceTable implements OnInit {
           console.log(val);
           this.attendanceList = val?.data?.data;
           this.totalRecords = val?.data?.length ?? 0;
+
+          if (this.totalDays) {
+            this.attendanceList.forEach((attendance: any) => {
+              attendance.totalWorkingDays = this.totalDays;
+            })
+          }
         },
         error: err => {
           console.log(err);
@@ -103,32 +116,66 @@ export class AttendanceTable implements OnInit {
     }
   }
 
+  isAdminOrRM(): boolean{
+    return this.currentUser === UserGroups.ADMIN || this.currentUser === UserGroups.RESOURCEMANAGER;
+  }
+
+  isSiteIncharge(){
+    return this.currentUser === UserGroups.SITEINCHARGE;
+  }
+
+  siteInchargeAccess(){
+    if(!this.date || this.totalDays === null) return false;
+
+    const today = new Date();
+
+    const isCurretMonth = today.getMonth() === this.date.getMonth() &&
+      today.getFullYear() === this.date.getFullYear()
+
+    if(!isCurretMonth) return false;
+
+    const day = today.getDate();
+    return day >= 20 && day <= this.totalDays;
+  }
+
+  showEditBtn(){
+    if (this.isAdminOrRM()) {
+      return true;
+    }
+
+    if (this.isSiteIncharge()) {
+      return this.siteInchargeAccess();
+    }
+
+    return false;
+  }
 
   editAttendanceRow(attendance: any){
     if (this.editingRow && this.editingRow !== attendance) {
-    this.dt.cancelRowEdit(this.editingRow);
-  }
+      this.dt.cancelRowEdit(this.editingRow);
+    }
 
-  this.editingRow = attendance;
-  attendance.editing = true;
-  setTimeout(() => {
-    const fields = [
-      { value: attendance.totalWorkingDays, ref: this.totalWorkingDaysInput },
-      { value: attendance.presentDays, ref: this.presentDaysInput },
-      { value: attendance.weekOff, ref: this.weekOffInput },
-      { value: attendance.paidLeaves, ref: this.paidLeavesInput },
-      { value: attendance.absentDays, ref: this.absentDaysInput }
-    ];
+    this.editingRow = attendance;
+    attendance.editing = true;
+    console.log(attendance);
+    setTimeout(() => {
+      const fields = [
+        { value: attendance.totalWorkingDays, ref: this.totalWorkingDaysInput },
+        { value: attendance.presentDays, ref: this.presentDaysInput },
+        { value: attendance.weekOff, ref: this.weekOffInput },
+        { value: attendance.paidLeaves, ref: this.paidLeavesInput },
+        { value: attendance.absentDays, ref: this.absentDaysInput }
+      ];
 
-    const target = fields.find(f => f.value === 0) || fields[0];
-    target.ref?.nativeElement.querySelector('input')?.focus();
-  });
+      const target = fields.find(f => f.value === 0) || fields[0];
+      target.ref?.nativeElement.querySelector('input')?.focus();
+    });
   }
 
   cancelEdit(attendance: any) {
-   this.dt.cancelRowEdit(attendance);
+    this.dt.cancelRowEdit(attendance);
     this.editingRow = null;
-}
+  }
 
 
 // https://angular.dev/tools/cli/build#configuring-commonjs-dependencies

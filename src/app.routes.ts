@@ -58,18 +58,30 @@ export const appRoutes: Routes = [
         component: AppLayout,
         children: [
             { 
-                path: 'demand', 
+                path: 'manpower-request', 
                 component: Demand, 
                 canActivate: [authGuard]
             },
             { 
-                path: 'approval', 
+                path: 'manpower-approval', 
                 component: Approval,
                 canActivate: [authGuard]
             },
-            { path: 'assign-role', component: Fullfillreq, canActivate: [authGuard]},
-            { path: 'consultancies', component: ConsultancyTable, canActivate: [authGuard] },
-            { path: 'consultancies/new', component: ConsultancyForm, canActivate: [authGuard] },
+            { 
+                path: 'assign-role', 
+                component: Fullfillreq, 
+                canActivate: [authGuard]
+            },
+            { 
+                path: 'consultancies', 
+                component: ConsultancyTable, 
+                canActivate: [authGuard]
+            },
+            { 
+                path: 'consultancies/new', 
+                component: ConsultancyForm, 
+                canActivate: [authGuard]
+            },
             { path: 'consultancies/:id', component: ConsultancyForm, canActivate: [authGuard] },
             { path: 'departments', component: DepartmentTable, canActivate: [authGuard] },
             { path: 'spn', component: SpnTable, canActivate: [authGuard] },
@@ -77,14 +89,14 @@ export const appRoutes: Routes = [
             { path: 'usergroups', component:  UsergroupTable, canActivate: [authGuard] },
             { path: 'users', component: CompanyUsers, canActivate: [authGuard] },
             { path: 'clusters', component: Cluster, canActivate: [authGuard] },
-            { path: 'manager', component: ResourceManagerAssign, canActivate: [authGuard] },
+            { path: 'assign-resource-manager', component: ResourceManagerAssign, canActivate: [authGuard] },
             { path: 'projects', component: Project, canActivate: [authGuard]},
-            { path: 'envisionRoles', component: Envisionroles, canActivate: [authGuard] },
+            { path: 'envision-roles', component: Envisionroles, canActivate: [authGuard] },
             { path: 'interviewers', component: Interviewer, canActivate: [authGuard] },
             { path: 'uikit', canActivate: [authGuard], loadChildren: () => import('./app/pages/uikit/uikit.routes') },
             { path: 'documentation', component: Documentation, canActivate: [authGuard] },
-            { path: 'demand-fullfillment', component: DemandFullfillment, canActivate: [authGuard] },
-            { path: 'demand-fullfillment/steps', component: Steps, canActivate: [authGuard] },
+            { path: 'manpower-fulfillment', component: DemandFullfillment, canActivate: [authGuard] },
+            { path: 'manpower-fulfillment/steps', component: Steps, canActivate: [authGuard] },
             { path: 'po-assign', component: PoAssignTable, canActivate: [authGuard] },
             { path: 'po-assign/new', component: PoAssignForm, canActivate: [authGuard] },
             { path: 'po-assign/:id', component: PoAssignEditForm, canActivate: [authGuard] },
@@ -95,7 +107,7 @@ export const appRoutes: Routes = [
             { path: 'site-performance', component: SitePerformance, canActivate: [authGuard] },
             { path: 'transfer/update', component: TransferForm, canActivate: [authGuard] },
             { path: 'transfer', component: Transfer, canActivate: [authGuard] },
-            { path: 'terminate', component: Terminate, canActivate: [authGuard]},
+            { path: 'resignation', component: Terminate, canActivate: [authGuard]},
             { path: 'invoice-submission', component: InvoiceSubmission, canActivate: [authGuard] },
             { path: 'invoice-submission/new', component: InvoiceSubmissionForm, canActivate: [authGuard] },
             { path: 'invoice-submission/:id', component: InvoiceSubmissionForm, canActivate: [authGuard] },
@@ -105,8 +117,8 @@ export const appRoutes: Routes = [
             { path: 'candidates/fixed-cost/:id', component: FixedCostCandidateForm, canActivate: [authGuard] },
             { path: 'candidates/cost-plus/new', component: CostPlusCandidateForm, canActivate: [authGuard] },
             { path: 'candidates/cost-plus/:id', component: CostPlusCandidateForm, canActivate: [authGuard] },
-            { path: 'candidate/fixed-cost', component: CandidateFixedCost, canActivate: [authGuard] },
-            { path: 'candidate/cost-plus', component: CandidateCostPlus, canActivate: [authGuard] },
+            { path: 'candidates/fixed-cost', component: CandidateFixedCost, canActivate: [authGuard] },
+            { path: 'candidates/cost-plus', component: CandidateCostPlus, canActivate: [authGuard] },
             { path: 'pages', canActivate: [authGuard], loadChildren: () => import('./app/pages/pages.routes') }
         ]
     },
