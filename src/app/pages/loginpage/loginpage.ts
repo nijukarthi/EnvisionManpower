@@ -211,6 +211,7 @@ export class Loginpage {
                 console.log(val);
                 sessionStorage.setItem("userName", val.data.userName);
                 sessionStorage.setItem('userGroupId', val.data.userGroupId);
+                sessionStorage.setItem('userEmail', val.data.email);
                 if (val.data.userGroupId === UserGroups.CLUSTERHEAD || val.data.userGroupId === UserGroups.DEPARTMENTHEAD) {
                     this.route.navigate(['/home/manpower-approval']);
                 } else if(val.data.userGroupId === UserGroups.CONSULTANCY){

@@ -23,13 +23,13 @@
                     <th rowspan="2">
                         <div class="flex items-center justify-between">
                             <span>Employee Code</span>
-                            <p-columnFilter type="text" field="employeeCode" display="menu" />
+                            <p-columnFilter type="text" field="employeeCode" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
                     <th rowspan="2">
                         <div class="flex items-center justify-between">
                             <span>Employee Name</span>
-                            <p-columnFilter type="text" field="candidateName" display="menu" />
+                            <p-columnFilter type="text" field="candidateName" display="menu" [showAddButton]="false" />
                         </div>
                     </th>              
                     <th colspan="6" style="text-align: center;">Transfer From</th>
@@ -37,7 +37,7 @@
                     <th rowspan="2">
                         <div class="flex items-center justify-between">
                             <span>Is Replacement Required</span>
-                            <p-columnFilter field="replace" matchMode="equals" display="menu">
+                            <p-columnFilter field="replace" matchMode="equals" display="menu" [showAddButton]="false">
                                 <ng-template #filter let-value let-filter="filterCallback">
                                     <p-select [options]="isReplacement" optionValue="value" (onChange)="filter($event.value)" 
                                         placeholder="Select Yes/No" class="w-full">
@@ -53,7 +53,7 @@
                     <th rowspan="2">
                         <div class="flex items-center justify-between">
                             <span>Status</span>
-                            <p-columnFilter field="status" matchMode="equals" display="menu">
+                            <p-columnFilter field="status" matchMode="equals" display="menu" [showAddButton]="false">
                                 <ng-template #filter let-value let-filter="filterCallback">
                                     <p-multiselect [options]="statuses" (onChange)="filter($event.value)"
                                         placeholder="Select Statuses" class="w-full">
@@ -80,7 +80,7 @@
                     <th>
                         <div class="flex items-center justify-between">
                             <span>Cluster Name</span>
-                            <p-columnFilter type="text" field="clusterName" display="menu" />
+                            <p-columnFilter type="text" field="clusterName" display="menu" [showAddButton]="false" />
                         </div>     
                     </th>
                     <th>Role</th>
@@ -96,7 +96,7 @@
                     <th>
                         <div class="flex items-center justify-between">
                             <span>Cluster Name</span>
-                            <p-columnFilter type="text" field="clusterName" display="menu" />
+                            <p-columnFilter type="text" field="clusterName" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
                     <th>Role</th>
@@ -104,7 +104,7 @@
                         <div class="flex items-center justify-between">
                             <span>Joining Date</span>
                             <p-columnFilter type="date" field="date" display="menu" matchMode="between"
-                                [showOperator]="false">
+                                [showOperator]="false" [showAddButton]="false">
                                 <ng-template #filter let-filter="filterCallback" let-value>
                                     <div class="flex flex-col gap-2">
                                         <p-datepicker [ngModel]="value?.[0] || null" 
