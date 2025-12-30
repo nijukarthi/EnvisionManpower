@@ -33,7 +33,7 @@ export class Loginpage {
   ngOnInit(): void {
     sessionStorage.clear();
     this.loginUserForm = this.fb.group({
-      email: [''],
+      email: ['',(Validators.required,Validators.email)],
     })
 
     this.userOtpForm = this.fb.group({
@@ -42,7 +42,7 @@ export class Loginpage {
     })
 
     this.interviewerForm = this.fb.group({
-        phoneNumber: ['']
+        phoneNumber: ['',Validators.required]
     })
 
     this.interviewerOtpForm = this.fb.group({
@@ -199,6 +199,8 @@ export class Loginpage {
                         }
                     }
                 })
+            }else{
+                this.messageService.add({severity: 'error', summary: 'Error', detail: 'Please Enter Mobile Number'})
             }
         } catch (error) {
             console.log(error);
