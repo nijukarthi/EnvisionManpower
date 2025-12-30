@@ -581,4 +581,8 @@ export class Apiservice {
     fetchTrainingList(params: any): Observable<any>{
         return this.postMethod('candidate/training', params);
     }
+
+    uploadSitePerformanceExcel(params: any){
+        return this.postMethod('candidate/siteperformance/upload', params);
+    }
 }

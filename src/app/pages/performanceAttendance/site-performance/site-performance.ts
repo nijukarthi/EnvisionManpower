@@ -4,8 +4,9 @@ import { Shared } from '@/service/shared';
 import { Component, ElementRef, inject, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { FormArray, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
-import { MenuItem, MessageService } from 'primeng/api';
+import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
+import { ConfirmDialog } from 'primeng/confirmdialog';
 
 @Component({
   selector: 'app-site-performance',
@@ -17,6 +18,7 @@ export class SitePerformance implements OnInit {
   @ViewChildren('scoreInput', { read: ElementRef })
     scoreInputs!: QueryList<ElementRef>;
   @ViewChild('dt') dt!: Table;
+  @ViewChild('excelInput') excelInput!: ElementRef<HTMLInputElement>;
 
   openTerminateModal = false;
 
@@ -42,6 +44,7 @@ export class SitePerformance implements OnInit {
   minDate: Date | undefined;
 
   currentUser = Number(sessionStorage.getItem('userGroupId'));
+  currentUserEmail = sessionStorage.getItem('userEmail');
 
   USERGROUPS = UserGroups;
 
@@ -64,13 +67,26 @@ export class SitePerformance implements OnInit {
     return this.resignationRequestForm.get('resignationDetails') as FormArray;
   }
   
-  constructor(private apiService: Apiservice, private messageService: MessageService){}
+  constructor(private apiService: Apiservice, private messageService: MessageService,
+    private confirmationService: ConfirmationService){}
 
   getMenuItems(){
     return [
       {
+        label: 'Import',
+        icon: 'pi pi-download',
+        visible: this.currentUser === UserGroups.ADMIN || this.currentUser === UserGroups.RESOURCEMANAGER,
+        command: () => this.openExcelPicker()
+      },
+      {
+        label: 'Export to Excel',
+        icon: 'pi pi-upload',
+        command: () => this.exportToExcel()
+      },
+      {
         label: 'Transfer',
         icon: 'pi pi-file-export',
+        disabled: !this.employeeDetails,
         command: () => this.router.navigate(['/home/transfer/update'], {
           state: {
             employeeDetails: this.employeeDetails
@@ -80,6 +96,7 @@ export class SitePerformance implements OnInit {
       {
         label: 'Resignation',
         icon: 'pi pi-file-excel',
+        disabled: !this.employeeDetails,
         command: () => this.resignateEmployee()
       }
     ]
@@ -168,27 +185,98 @@ export class SitePerformance implements OnInit {
     }
   }
 
-  exportToExcel(){
+  openExcelPicker(){
+    this.excelInput.nativeElement.click();
+  }
+
+  excelSelected(event: Event){
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+
+    if(!file) return;
+
+    this.importExcel(file);
+
+    input.value = '';
+  }
+
+  importExcel(file: File){
     try {
-      const data = {
-        ...this.filteredData,
+      const payload = {
         month: this.month,
-        year: this.year,
-        export: true
-      };
+        year: this.year
+      }
 
-      console.log(data);
+      console.log(payload);
 
-      this.apiService.fetchCandidateSitePerformance(data).subscribe({
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('payload', new Blob([JSON.stringify(payload)], { type: 'application/json' }));
+
+      this.apiService.uploadSitePerformanceExcel(formData).subscribe({
         next: val => {
           console.log(val);
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Excel file successfully send to email' });
-        }
-      });
+          this.fetchCandidateSitePerformance();
 
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Excel uploaded successfully'
+          });
+        },
+        error: err => {
+          console.log(err);
+
+          if (err.status === 400) {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
+          }
+        }
+      })
     } catch (error) {
       console.log(error);
     }
+  }
+
+  exportToExcel(){
+    const emailText = this.currentUserEmail ?? 'your email address';
+
+    this.confirmationService.confirm({
+      message: `The Excel file will be sent to ${emailText}. Do you want to proceed?`,
+      header: 'Confirmation',
+      closable: true,
+      closeOnEscape: true,
+      icon: 'pi pi-exclamation-triangle',
+      rejectButtonProps: {
+        label:'Cancel',
+        severity:'secondary',
+        outlined:true,
+      },
+      acceptButtonProps: {
+        label:'OK',
+      },
+      accept:() => {
+        try {
+          const data = {
+            ...this.filteredData,
+            month: this.month,
+            year: this.year,
+            export: true
+          };
+
+          console.log(data);
+
+          this.apiService.fetchCandidateSitePerformance(data).subscribe({
+            next: val => {
+              console.log(val);
+              this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Excel file successfully send to email' });
+            }
+          });
+
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    })  
   }
 
   getSeverity(status: string){

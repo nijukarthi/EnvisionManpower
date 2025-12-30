@@ -21,31 +21,31 @@
                     <th>
                         <div class="flex items-center justify-between">
                             <span>Employee Code</span>
-                            <p-columnFilter type="text" field="employeeCode" display="menu" />
+                            <p-columnFilter type="text" field="employeeCode" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
                     <th>
                         <div class="flex items-center justify-between">
                             <span>Temp EMP Code</span>
-                            <p-columnFilter type="text" field="candidateCode" display="menu" />
+                            <p-columnFilter type="text" field="candidateCode" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
                     <th>
                         <div class="flex items-center justify-between">
                             <span>Employee Name</span>
-                            <p-columnFilter type="text" field="candidateName" display="menu" />
+                            <p-columnFilter type="text" field="candidateName" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
                     <th>
                         <div class="flex items-center justify-between">
                             <span>Consultancy Name</span>
-                            <p-columnFilter type="text" field="consultancyName" display="menu" />
+                            <p-columnFilter type="text" field="consultancyName" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
                     <th>
                         <div class="flex items-center justify-between">
                             <span>Demand Code</span>
-                            <p-columnFilter type="text" field="demandCode" display="menu" />
+                            <p-columnFilter type="text" field="demandCode" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
                     <th>
@@ -58,31 +58,31 @@
                     <th>
                         <div class="flex items-center justify-between">
                             <span>Cluster Name</span>
-                            <p-columnFilter type="text" field="clusterName" display="menu" />
+                            <p-columnFilter type="text" field="clusterName" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
                     <th>
                         <div class="flex items-center justify-between">
-                            <span>SPN Code</span>
-                            <p-columnFilter type="text" field="spnCode" display="menu" />
+                            <span>SPN Code</span> 
+                            <p-columnFilter type="text" field="spnCode" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
                     <th>
                         <div class="flex items-center justify-between">
                             <span>SPN Description</span>
-                            <p-columnFilter type="text" field="spnDescription" display="menu" />
+                            <p-columnFilter type="text" field="spnDescription" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
                     <th>
                         <div class="flex items-center justify-between">
                             <span>Experience</span>
-                            <p-columnFilter type="text" field="experience" display="menu" />
+                            <p-columnFilter type="text" field="experience" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
                     <th>
                         <div class="flex items-center justify-between">
                             <span>Role</span>
-                            <p-columnFilter type="text" field="roleName" display="menu" />
+                            <p-columnFilter type="text" field="roleName" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
                     <th>Current Experience</th>
@@ -90,7 +90,7 @@
                     <th>
                         <div class="flex items-center justify-between">
                             <span>Status</span>
-                            <p-columnFilter field="status" matchMode="equals" display="menu">
+                            <p-columnFilter field="status" matchMode="equals" display="menu" [showAddButton]="false">
                                 <ng-template #filter let-value let-filter="filterCallback">
                                     <p-multiselect [options]="statuses" (onChange)="filter($event.value)"
                                         placeholder="Select Statuses" class="w-full">
@@ -107,7 +107,7 @@
                         <div class="flex items-center justify-between">
                             <span>Actual DOJ</span>
                             <p-columnFilter type="date" field="date" display="menu" matchMode="between"
-                                [showOperator]="false">
+                                [showOperator]="false" [showAddButton]="false">
                                 <ng-template #filter let-filter="filterCallback" let-value>
                                     <div class="flex flex-col gap-2">
                                         <p-datepicker [ngModel]="value?.[0] || null" (ngModelChange)="updateRange($event, value, 0, filter)" 
@@ -122,7 +122,7 @@
                     <th>
                         <div class="flex items-center justify-between">
                             <span>Contact Number</span>
-                            <p-columnFilter type="text" field="phoneNumber" display="menu" />
+                            <p-columnFilter type="text" field="phoneNumber" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
                     <th>Emergency Contact Number</th>
