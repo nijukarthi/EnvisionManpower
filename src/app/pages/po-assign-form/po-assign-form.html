@@ -124,14 +124,18 @@
                                                     (onChange)="selectedSpnCode($event.value)"
                                                     placeholder="Select SPN Description"
                                                 >
-                                                    <ng-template #item let-item> {{ item.spnDescription }} - ({{ item.experience }}) </ng-template>
-                                                    <ng-template #selectedItem let-item> {{ item.spnDescription }} - ({{ item.experience }}) </ng-template>
+                                                    <ng-template #item let-item> 
+                                                        {{ item.spnDescription }} - ({{ item.experience }}) 
+                                                    </ng-template>
+                                                    <ng-template #selectedItem let-item> 
+                                                        {{ item.spnDescription }} - ({{ item.experience }}) 
+                                                    </ng-template>
                                                 </p-select>
                                             </div>
                                             <div class="grid col-span-1 gap-1">
                                                 <label for="experience">Experience</label>
-                                                <input type="text" pInputText [value]="item.selectedSpn?.experience ?? 0" id="experience" 
-                                                    [disabled]="true" />
+                                                <input type="text" pInputText [value]="item.selectedSpn?.experience ?? 0" 
+                                                    id="experience" [disabled]="true" />
                                             </div>
                                             <div class="grid col-span-1 gap-1">
                                                 <label for="demand-code">Demand Code</label>

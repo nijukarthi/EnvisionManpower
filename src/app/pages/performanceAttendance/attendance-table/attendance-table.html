@@ -5,6 +5,7 @@
             <label class="mt-1 text-lg">Month:</label>
             <p-datepicker view="month" [(ngModel)]="date" dateFormat="mm/yy" [readonlyInput]="true" 
                 placeholder="Pick a month" (onSelect)="fetchAttendanceList()" />
+            <p-button icon="pi pi-external-link" label="Export to Excel" (onClick)="exportToExcel()" />
             <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
         </div>
     </div>
@@ -184,7 +185,7 @@
                             <ng-template #input>
                                 <p-inputnumber #paidLeavesInput [(ngModel)]="attendance.paidLeaves" [useGrouping]="false" />
                             </ng-template>
-                            <ng-template #output>      
+                            <ng-template #output>
                                 {{ attendance.paidLeaves }}
                             </ng-template>
                         </p-cellEditor>

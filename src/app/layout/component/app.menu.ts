@@ -137,12 +137,8 @@ export class AppMenu {
                                 {
                                     label: 'On-roll Employees',
                                     icon: 'pi pi-user',
-                                    visible: this.adminUser || this.resourceManagerUser || this.siteInchargeUser || this.clusterUser || this.departmentUser,
-                                    command: () => {
-                                        if (!this.siteInchargeUser) {
-                                            this.router.navigate(['/home/onroll-employees'])
-                                        }
-                                    }
+                                    routerLink:['/home/onroll-employees'],
+                                    visible: this.adminUser || this.resourceManagerUser || this.siteInchargeUser || this.clusterUser || this.departmentUser
                                 },
                                 {
                                     label: 'Training',
@@ -173,26 +169,16 @@ export class AppMenu {
                                 {
                                     label: 'Transfer',
                                     icon: 'pi pi-file-export',
+                                    routerLink: this.siteInchargeUser ? '' : ['/home/transfer'],
                                     visible: this.adminUser || this.siteInchargeUser || this.departmentUser || this.clusterUser || this.consultancyUser || 
-                                        this.resourceManagerUser,
-                                    disabled: this.siteInchargeUser,
-                                    command: () => {
-                                        if (!this.siteInchargeUser) {
-                                            this.router.navigate(['/home/transfer'])
-                                        }
-                                    }
+                                        this.resourceManagerUser
                                 },
                                 {
                                     label: 'Resignation',
                                     icon: 'pi pi-file-excel',
+                                    routerLink: this.siteInchargeUser ? '' : ['/home/resignation'],
                                     visible: this.adminUser || this.siteInchargeUser || this.departmentUser || this.clusterUser || this.consultancyUser || 
-                                        this.resourceManagerUser,
-                                    disabled: this.siteInchargeUser,
-                                    command: () => {
-                                        if (!this.siteInchargeUser) {
-                                            this.router.navigate(['/home/resignation'])
-                                        }
-                                    }
+                                        this.resourceManagerUser
                                 }
                             ],
                                 visible: this.adminUser || this.siteInchargeUser || this.departmentUser || this.clusterUser || this.resourceManagerUser || this.consultancyUser
