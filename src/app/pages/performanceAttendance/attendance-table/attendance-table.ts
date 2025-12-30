@@ -29,6 +29,7 @@ export class AttendanceTable implements OnInit {
 
   attendanceList: any;
   statuses: any[] = [];
+  filteredData: any;
 
   USERGROUPS = UserGroups;
 
@@ -41,6 +42,7 @@ export class AttendanceTable implements OnInit {
 
   ngOnInit(): void {
     this.fetchAttendanceList();
+
     this.statuses = [
       { label: 'ACTIVE', value: 'ACTIVE' },
       { label: 'TRANSFERRED', value: 'TRANSFERRED' },
@@ -54,11 +56,12 @@ export class AttendanceTable implements OnInit {
 
   fetchAttendanceList(){
     try {
-      this.month = this.date ? this.date.getMonth() + 1: null;
-      this.year = this.date ? this.date.getFullYear() : null;
+      if(!this.date) return;
 
-      this.totalDays = this.month && this.year ? this.getDaysInMonth(this.month, this.year) : null;
-
+      this.month = this.date.getMonth() + 1;
+      this.year = this.date.getFullYear();
+      this.totalDays = this.getDaysInMonth(this.month, this.year);
+      
       const data = {
         offSet: this.offSet,
         pageSize: this.pageSize,
@@ -246,7 +249,7 @@ export class AttendanceTable implements OnInit {
 
       const dateValue = filters?.date?.[0]?.value;
 
-      const payload = {
+      this.filteredData = {
         offSet: this.offSet,
         pageSize: this.pageSize,
         month: this.month,
@@ -267,9 +270,32 @@ export class AttendanceTable implements OnInit {
         joiningDateTo: Array.isArray(dateValue) ? formatDate(dateValue[1]) : null
       }
 
-      console.log(payload);
+      console.log(this.filteredData);
 
-      this.attendanceApi(payload);
+      this.attendanceApi(this.filteredData);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  exportToExcel(){
+    try {
+        const data = {
+          ...this.filteredData,
+          month: this.month,
+          year: this.year,
+          export: true
+        }
+
+        console.log(data);
+
+        this.apiService.fetchAttendanceList(data).subscribe({
+          next: val => {
+            console.log(val);
+
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Excel file successfully send to email' });
+          }
+        })
     } catch (error) {
       console.log(error);
     }

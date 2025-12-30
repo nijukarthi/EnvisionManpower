@@ -8,6 +8,7 @@
             <p-menu #menu [model]="getMenuItems()" [popup]="true" />
             <p-button (onClick)="menu.toggle($event)" label="Actions" icon="pi pi-angle-down" iconPos="right"
                 [disabled]="!employeeDetails" />
+            <p-button icon="pi pi-external-link" label="Export to Excel" (click)="exportToExcel()" />
             <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
         </div>
     </div>

@@ -36,6 +36,7 @@ export class SitePerformance implements OnInit {
   statuses: any[] = [];
   selectedPerformances: any[] = [];
   editingRow: any | null = null;
+  filteredData: any;
 
   date: Date = new Date();
   minDate: Date | undefined;
@@ -162,6 +163,29 @@ export class SitePerformance implements OnInit {
       console.log(data);
 
       this.performanceApi(data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  exportToExcel(){
+    try {
+      const data = {
+        ...this.filteredData,
+        month: this.month,
+        year: this.year,
+        export: true
+      };
+
+      console.log(data);
+
+      this.apiService.fetchCandidateSitePerformance(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Excel file successfully send to email' });
+        }
+      });
+
     } catch (error) {
       console.log(error);
     }
@@ -386,7 +410,7 @@ export class SitePerformance implements OnInit {
 
       const dateValue = filters?.date?.[0]?.value;
 
-      const payload = {
+      this.filteredData = {
         offSet: this.offSet,
         pageSize: this.pageSize,
         month: this.month,
@@ -407,9 +431,9 @@ export class SitePerformance implements OnInit {
         joiningDateTo: Array.isArray(dateValue) ? formatDate(dateValue[1]) : null
       }
 
-      console.log(payload);
+      console.log(this.filteredData);
 
-      this.performanceApi(payload);
+      this.performanceApi(this.filteredData);
     } catch (error) {
       console.log(error);
     }

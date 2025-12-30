@@ -1,7 +1,10 @@
 <div class="card">
     <div class="flex items-baseline-last justify-between">
         <h5>Training</h5>
-        <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
+        <div class="flex gap-2">
+            <p-button icon="pi pi-external-link" label="Export to Excel" (click)="exportToExcel()"/>
+            <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
+        </div>
     </div>
     <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
         <p-table
@@ -188,3 +191,4 @@
         </p-table>
     </div>
 </div>
+<p-toast />

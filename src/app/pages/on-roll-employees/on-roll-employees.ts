@@ -30,6 +30,7 @@ export class OnRollEmployees implements OnInit {
 
   onrollEmployeeList: any;
   onrollPpeDetails: any;
+  filteredData: any;
 
   private fb = inject(FormBuilder);
 
@@ -152,20 +153,24 @@ export class OnRollEmployees implements OnInit {
   }
 
   exportToExcel() {
-    const data = {
-      offSet: 0,
-      pageSize: this.totalRecords,
-      export: true
-    };
-
-    this.apiService.fetchOnRollCandidates(data).subscribe({
-      next: (val) => {
-        console.log(val);
-
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Excel file successfully send to email' });
-
-      }
-    });
+    try {   
+      const data = {
+        ...this.filteredData,
+        export: true
+      };
+  
+      console.log(data);
+  
+      this.apiService.fetchOnRollCandidates(data).subscribe({
+        next: (val) => {
+          console.log(val);
+  
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Excel file successfully send to email' });
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   updateOnrollDetails(onroll: any){
@@ -311,7 +316,7 @@ export class OnRollEmployees implements OnInit {
 
       const dateValue = filters?.date?.[0]?.value;
 
-      const payload = {
+      this.filteredData = {
         offSet: this.offSet,
         pageSize: this.pageSize,
         employeeCode: filters?.employeeCode?.[0]?.value ?? null,
@@ -331,9 +336,9 @@ export class OnRollEmployees implements OnInit {
         joiningDateTo: Array.isArray(dateValue) ? formatDate(dateValue[1]) : null 
       }
 
-      console.log(payload);
+      console.log(this.filteredData);
 
-      this.onrollEmployeeApi(payload);
+      this.onrollEmployeeApi(this.filteredData);
     } catch (error) {
       console.log(error);
     }

@@ -20,6 +20,7 @@ export class TrainingTable implements OnInit {
 
     trainingList: any;
     editingRow: any | null = null;
+    filteredData: any;
 
     trainingStatusList = [
         {
@@ -85,6 +86,27 @@ export class TrainingTable implements OnInit {
         return status?.label || '-';
     }
 
+    exportToExcel(){
+        try {        
+            const data = {
+                ...this.filteredData,
+                export: true
+            };
+    
+            console.log(data);
+    
+            this.apiService.fetchTrainingList(data).subscribe({
+                next:(val)=>{
+                    console.log(val);
+                }
+            });
+
+            this.messageService.add({ severity:'success', summary: 'Success', detail:'Excel file successfully send to email' });
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     submitTrainingForm(training: any) {
         try {
             console.log(training);
@@ -136,7 +158,7 @@ export class TrainingTable implements OnInit {
             const validFrom = filters?.validFrom?.[0]?.value;
             const validTill = filters?.validTill?.[0]?.value;
 
-            const payload = {
+            this.filteredData = {
                 offSet: this.offSet,
                 pageSize: this.pageSize,
                 candidateName: filters?.candidateName?.[0]?.value ?? null,
@@ -155,9 +177,9 @@ export class TrainingTable implements OnInit {
                 validTillStart: Array.isArray(validTill) ? formatDate(validTill[0]) : null,
                 validTillEnd: Array.isArray(validTill) ? formatDate(validTill[1]) : null
             };
-            console.log(payload);
+            console.log(this.filteredData);
 
-            this.trainingApi(payload);
+            this.trainingApi(this.filteredData);
         } catch (error) {
             console.log(error);
         }
