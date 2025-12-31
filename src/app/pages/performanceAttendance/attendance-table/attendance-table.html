@@ -3,8 +3,7 @@
         <h5>Attendance</h5>
         <div class="flex gap-2">
             <label class="mt-1 text-lg">Month:</label>
-            <p-datepicker view="month" [(ngModel)]="date" dateFormat="mm/yy" [readonlyInput]="true" 
-                placeholder="Pick a month" (onSelect)="fetchAttendanceList()" />
+            <p-datepicker view="month" [(ngModel)]="date" dateFormat="mm/yy" [readonlyInput]="true" [minDate]="minDate" placeholder="Pick a month" (onSelect)="fetchAttendanceList()" />
             <p-menu #menu [model]="getMenuItems()" [popup]="true" />
             <p-button (onClick)="menu.toggle($event)" label="Actions" icon="pi pi-angle-down" iconPos="right" />
             <input #excelInput type="file" accept=".xls,.xlsx" hidden (change)="excelSelected($event)" />
@@ -12,11 +11,26 @@
         </div>
     </div>
     <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
-        <p-table #dt dataKey="candidate.candidateId" [value]="attendanceList" [rowHover]="true" [paginator]="true" 
-            [first]="first" editMode="row" [rows]="pageSize" [lazy]="true" [rowsPerPageOptions]="[10, 20, 30]" 
-            [showCurrentPageReport]="true" [scrollable]="true" scrollHeight="500px" [totalRecords]="totalRecords"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" 
-            [paginatorDropdownAppendTo]="mydiv" [tableStyle]="{'min-width': '230rem'}" (onLazyLoad)="loadDemands($event)">
+        <p-table
+            #dt
+            dataKey="candidate.candidateId"
+            [value]="attendanceList"
+            [rowHover]="true"
+            [paginator]="true"
+            [first]="first"
+            editMode="row"
+            [rows]="pageSize"
+            [lazy]="true"
+            [rowsPerPageOptions]="[10, 20, 30]"
+            [showCurrentPageReport]="true"
+            [scrollable]="true"
+            scrollHeight="500px"
+            [totalRecords]="totalRecords"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [paginatorDropdownAppendTo]="mydiv"
+            [tableStyle]="{'min-width': '230rem'}"
+            (onLazyLoad)="loadDemands($event)"
+        >
             <ng-template #header>
                 <tr>
                     <th>SL NO</th>
@@ -90,17 +104,12 @@
                     <th>
                         <div class="flex items-center justify-between">
                             <span>Joining Date</span>
-                            <p-columnFilter type="date" field="date" display="menu" matchMode="between"
-                                [showOperator]="false" [showAddButton]="false">
+                            <p-columnFilter type="date" field="date" display="menu" matchMode="between" [showOperator]="false" [showAddButton]="false">
                                 <ng-template #filter let-filter="filterCallback" let-value>
                                     <div class="flex flex-col gap-2">
-                                        <p-datepicker [ngModel]="value?.[0] || null" 
-                                            (ngModelChange)="updateRange($event, value, 0, filter)"
-                                            placeholder="From Date" />
+                                        <p-datepicker [ngModel]="value?.[0] || null" (ngModelChange)="updateRange($event, value, 0, filter)" placeholder="From Date" />
 
-                                        <p-datepicker [ngModel]="value?.[1] || null"
-                                            (ngModelChange)="updateRange($event, value, 1, filter)"
-                                            placeholder="To Date" />
+                                        <p-datepicker [ngModel]="value?.[1] || null" (ngModelChange)="updateRange($event, value, 1, filter)" placeholder="To Date" />
                                     </div>
                                 </ng-template>
                             </p-columnFilter>
@@ -112,8 +121,7 @@
                             <span>Status</span>
                             <p-columnFilter field="status" matchMode="equals" display="menu" [showAddButton]="false">
                                 <ng-template #filter let-value let-filter="filterCallback">
-                                    <p-multiselect [options]="statuses" (onChange)="filter($event.value)"
-                                        placeholder="Select Statuses" class="w-full">
+                                    <p-multiselect [options]="statuses" (onChange)="filter($event.value)" placeholder="Select Statuses" class="w-full">
                                         <ng-template let-option #item>
                                             <p-tag [value]="option.value" [severity]="getSeverity(option.value)" />
                                         </ng-template>
@@ -137,39 +145,33 @@
                     <td>{{ attendance.candidate?.candidateCode || '-' }}</td>
                     <td>{{ attendance.candidate?.candidateName || '-' }}</td>
                     <td>{{ attendance.candidate.consultancy.consultancyName || '-' }}</td>
-                    <td>{{ attendance.employmentDetails.project.projectCode || '-' }}</td>               
-                    <td>{{ attendance.employmentDetails.project.siteName || '-' }}</td>               
-                    <td>{{ attendance.employmentDetails.cluster.clusterName || '-' }}</td>               
+                    <td>{{ attendance.employmentDetails.project.projectCode || '-' }}</td>
+                    <td>{{ attendance.employmentDetails.project.siteName || '-' }}</td>
+                    <td>{{ attendance.employmentDetails.cluster.clusterName || '-' }}</td>
                     <td>{{ attendance.employmentDetails?.spn?.spnCode || '-' }}</td>
                     <td>{{ attendance.employmentDetails?.spn?.spnDescription }}</td>
                     <td>{{ attendance.employmentDetails?.spn?.experience }}</td>
-                    <td>{{ attendance.employmentDetails.envisionRole.roleName || '-' }}</td>  
+                    <td>{{ attendance.employmentDetails.envisionRole.roleName || '-' }}</td>
                     <td>{{ attendance.candidate.phoneNumber || '-' }}</td>
                     <td>{{ attendance.employmentDetails.joiningDate || '-' }}</td>
                     <td>{{ attendance.employmentDetails.lastWorkingDate || '-' }}</td>
                     <td>
-                        <p-tag [value]="attendance.employmentDetails.employmentStatus" 
-                            [severity]="getSeverity(attendance.employmentDetails.employmentStatus)" />
-                    </td> 
+                        <p-tag [value]="attendance.employmentDetails.employmentStatus" [severity]="getSeverity(attendance.employmentDetails.employmentStatus)" />
+                    </td>
                     <td #pEditableColumn>
                         <p-cellEditor>
                             <ng-template #input>
-                                <p-inputnumber #totalWorkingDaysInput [(ngModel)]="attendance.totalWorkingDays" 
-                                    [useGrouping]="false" [disabled]="true" />
+                                <p-inputnumber #totalWorkingDaysInput [(ngModel)]="attendance.totalWorkingDays" [useGrouping]="false" [disabled]="true" />
                             </ng-template>
-                            <ng-template #output>
-                                {{ attendance.totalWorkingDays }}
-                            </ng-template>
+                            <ng-template #output> {{ attendance.totalWorkingDays }} </ng-template>
                         </p-cellEditor>
-                    </td>                          
+                    </td>
                     <td #pEditableColumn>
                         <p-cellEditor>
                             <ng-template #input>
                                 <p-inputnumber #presentDaysInput [(ngModel)]="attendance.presentDays" [useGrouping]="false" />
                             </ng-template>
-                            <ng-template #output>
-                                {{ attendance.presentDays }}
-                            </ng-template>
+                            <ng-template #output> {{ attendance.presentDays }} </ng-template>
                         </p-cellEditor>
                     </td>
                     <td #pEditableColumn>
@@ -177,54 +179,38 @@
                             <ng-template #input>
                                 <p-inputnumber #weekOffInput [(ngModel)]="attendance.weekOff" [useGrouping]="false" />
                             </ng-template>
-                            <ng-template #output>
-                                {{ attendance.weekOff }}
-                            </ng-template>
+                            <ng-template #output> {{ attendance.weekOff }} </ng-template>
                         </p-cellEditor>
-                    </td>                          
+                    </td>
                     <td #pEditableColumn>
                         <p-cellEditor>
                             <ng-template #input>
                                 <p-inputnumber #paidLeavesInput [(ngModel)]="attendance.paidLeaves" [useGrouping]="false" />
                             </ng-template>
-                            <ng-template #output>
-                                {{ attendance.paidLeaves }}
-                            </ng-template>
+                            <ng-template #output> {{ attendance.paidLeaves }} </ng-template>
                         </p-cellEditor>
-                    </td>                   
+                    </td>
                     <td #pEditableColumn>
                         <p-cellEditor>
                             <ng-template #input>
                                 <p-inputnumber #absentDaysInput [(ngModel)]="attendance.absentDays" [useGrouping]="false" />
                             </ng-template>
-                            <ng-template #output>
-                                {{ attendance.absentDays }}
-                            </ng-template>
+                            <ng-template #output> {{ attendance.absentDays }} </ng-template>
                         </p-cellEditor>
-                    </td>  
+                    </td>
                     <td class="flex items-center justify-center gap-2" alignFrozen="right" pFrozenColumn>
                         @if (!editing) {
-                            <button pButton pRipple type="button" icon="pi pi-pencil"
-                                pInitEditableRow rounded severity="secondary"
-                                (click)="editAttendanceRow(attendance)"
-                            ></button>
+                        <button pButton pRipple type="button" icon="pi pi-pencil" pInitEditableRow rounded severity="secondary" (click)="editAttendanceRow(attendance)"></button>
                         } @else {
-                            <button pButton pRipple type="submit" icon="pi pi-check"
-                                pSaveEditableRow rounded severity="primary" (click)="submitAttendanceForm(attendance)"
-                            >
-                            </button>
-                            <button pButton pRipple type="button" icon="pi pi-times"
-                                pCancelEditableRow rounded severity="danger" 
-                                (click)="cancelEdit(attendance)"></button>
+                        <button pButton pRipple type="submit" icon="pi pi-check" pSaveEditableRow rounded severity="primary" (click)="submitAttendanceForm(attendance)"></button>
+                        <button pButton pRipple type="button" icon="pi pi-times" pCancelEditableRow rounded severity="danger" (click)="cancelEdit(attendance)"></button>
                         }
-                    </td>     
+                    </td>
                 </tr>
             </ng-template>
             <ng-template #emptymessage>
                 <tr>
-                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground);">
-                        No Records Found
-                    </td>
+                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground)">No Records Found</td>
                 </tr>
             </ng-template>
         </p-table>

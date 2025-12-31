@@ -126,8 +126,8 @@ export class SitePerformance implements OnInit {
             { label: 'RESIGNED', value: 'RESIGNED' }
         ];
 
-        const today = new Date();
-        this.minDate = new Date(today);
+        const currentYear = new Date().getFullYear();
+        this.minDate = new Date(currentYear, 0, 1);
     }
 
     performanceApi(data: any) {

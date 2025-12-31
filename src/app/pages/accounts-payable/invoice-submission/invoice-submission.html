@@ -44,8 +44,7 @@
                     <th>
                         <div class="flex items-center justify-between">
                             <span>Invoice Date</span>
-                            <p-columnFilter type="date" field="date" display="menu" matchMode="between" 
-                                [showOperator]="false" [showAddButton]="false">
+                            <p-columnFilter type="date" field="date" display="menu" matchMode="between" [showOperator]="false" [showAddButton]="false">
                                 <ng-template #filter let-filter="filterCallback" let-value>
                                     <div class="flex flex-col gap-2">
                                         <p-datepicker [ngModel]="value?.[0] || null" (ngModelChange)="updateRange($event, value, 0, filter)" placeholder="From Date" />
@@ -76,8 +75,7 @@
                     <th>
                         <div class="flex items-center justify-between">
                             <span>Submitted Date</span>
-                            <p-columnFilter type="date" field="submittedDate" display="menu" matchMode="between" 
-                                [showOperator]="false" [showAddButton]="false">
+                            <p-columnFilter type="date" field="submittedDate" display="menu" matchMode="between" [showOperator]="false" [showAddButton]="false">
                                 <ng-template #filter let-filter="filterCallback" let-value>
                                     <div class="flex flex-col gap-2">
                                         <p-datepicker [ngModel]="value?.[0] || null" (ngModelChange)="updateRange($event, value, 0, filter)" placeholder="From Date" />
@@ -93,16 +91,7 @@
                             <span>Month</span>
                             <p-columnFilter field="month" display="menu" [showOperator]="false" [showMatchModes]="false" [showAddButton]="false">
                                 <ng-template #filter let-filter="filterCallback">
-                                    <p-datepicker
-                                        view="month"
-                                        dateFormat="mm/yy"
-                                        [readonlyInput]="true"
-                                        [showButtonBar]="false"
-                                        [minDate]="minDate"
-                                        [maxDate]="maxDate"
-                                        placeholder="Select Month"
-                                        (onSelect)="filterByMonth($event, filter)"
-                                    >
+                                    <p-datepicker view="month" dateFormat="mm/yy" [readonlyInput]="true" [showButtonBar]="false" [minDate]="minDate" [maxDate]="maxDate" placeholder="Select Month" (onSelect)="filterByMonth($event, filter)">
                                     </p-datepicker>
                                 </ng-template>
                             </p-columnFilter>
