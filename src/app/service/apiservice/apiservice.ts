@@ -585,4 +585,8 @@ export class Apiservice {
     uploadSitePerformanceExcel(params: any){
         return this.postMethod('candidate/siteperformance/upload', params);
     }
+
+    uploadAttendanceExcel(params: any){
+        return this.postMethod('candidate/siteattendance/upload', params);
+    }
 }

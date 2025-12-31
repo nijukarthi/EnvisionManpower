@@ -7,6 +7,7 @@
                 placeholder="Pick a month" (onSelect)="fetchAttendanceList()" />
             <p-menu #menu [model]="getMenuItems()" [popup]="true" />
             <p-button (onClick)="menu.toggle($event)" label="Actions" icon="pi pi-angle-down" iconPos="right" />
+            <input #excelInput type="file" accept=".xls,.xlsx" hidden (change)="excelSelected($event)" />
             <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
         </div>
     </div>
