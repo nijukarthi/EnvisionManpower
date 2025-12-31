@@ -18,6 +18,7 @@ export class AttendanceTable implements OnInit {
   @ViewChild('paidLeavesInput', { read: ElementRef }) paidLeavesInput!: ElementRef;
   @ViewChild('absentDaysInput', { read: ElementRef }) absentDaysInput!: ElementRef;
   @ViewChild('dt') dt!: Table;
+  @ViewChild('excelInput') excelInput!: ElementRef<HTMLInputElement>
 
   offSet = 0;
   pageSize = 10;
@@ -55,7 +56,8 @@ export class AttendanceTable implements OnInit {
     return [
       {
         label: 'Import',
-        icon: 'pi pi-download'
+        icon: 'pi pi-download',
+        command: () => this.openExcelPicker()
       },
       {
         label: 'Export to Excel',
@@ -299,6 +301,54 @@ export class AttendanceTable implements OnInit {
       console.log(this.filteredData);
 
       this.attendanceApi(this.filteredData);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  openExcelPicker(){
+    this.excelInput.nativeElement.click();
+  }
+
+  excelSelected(event: Event){
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+
+    if(!file) return;
+
+    this.importExcel(file);
+
+    input.value = '';
+  }
+
+  importExcel(file: File){
+    try {
+      const payload = {
+        month: this.month,
+        year: this.year
+      }
+
+      console.log(payload);
+
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('payload', new Blob([JSON.stringify(payload)], { type: 'application/json' }));
+
+      this.apiService.uploadAttendanceExcel(formData).subscribe({
+        next: val => {
+          console.log(val);
+          this.fetchAttendanceList();
+
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Excel uploaded successfully' });
+        },
+        error: err => {
+          console.log(err);
+
+          if (err.status === 400) {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
+          }
+        }
+      })
     } catch (error) {
       console.log(error);
     }
