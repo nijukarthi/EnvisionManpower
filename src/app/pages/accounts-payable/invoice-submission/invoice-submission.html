@@ -32,19 +32,20 @@
                     <th>
                         <div class="flex items-center justify-between">
                             <span>Invoice Number</span>
-                            <p-columnFilter type="text" field="invoiceNumber" display="menu" />
+                            <p-columnFilter type="text" field="invoiceNumber" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
                     <th>
                         <div class="flex items-center justify-between">
                             <span>PO Number</span>
-                            <p-columnFilter type="text" field="poNumber" display="menu" />
+                            <p-columnFilter type="text" field="poNumber" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
                     <th>
                         <div class="flex items-center justify-between">
                             <span>Invoice Date</span>
-                            <p-columnFilter type="date" field="date" display="menu" matchMode="between" [showOperator]="false">
+                            <p-columnFilter type="date" field="date" display="menu" matchMode="between" 
+                                [showOperator]="false" [showAddButton]="false">
                                 <ng-template #filter let-filter="filterCallback" let-value>
                                     <div class="flex flex-col gap-2">
                                         <p-datepicker [ngModel]="value?.[0] || null" (ngModelChange)="updateRange($event, value, 0, filter)" placeholder="From Date" />
@@ -58,7 +59,7 @@
                     <th>
                         <div class="flex items-center justify-between">
                             <span>Invoice Status</span>
-                            <p-columnFilter field="status" matchMode="equals" display="menu">
+                            <p-columnFilter field="status" matchMode="equals" display="menu" [showAddButton]="false">
                                 <ng-template #filter let-value let-filter="filterCallback">
                                     <p-multiselect [options]="statuses" (onChange)="filter($event.value)" placeholder="Select Statuses" class="w-full">
                                         <ng-template let-option #item>
@@ -75,7 +76,8 @@
                     <th>
                         <div class="flex items-center justify-between">
                             <span>Submitted Date</span>
-                            <p-columnFilter type="date" field="submittedDate" display="menu" matchMode="between" [showOperator]="false">
+                            <p-columnFilter type="date" field="submittedDate" display="menu" matchMode="between" 
+                                [showOperator]="false" [showAddButton]="false">
                                 <ng-template #filter let-filter="filterCallback" let-value>
                                     <div class="flex flex-col gap-2">
                                         <p-datepicker [ngModel]="value?.[0] || null" (ngModelChange)="updateRange($event, value, 0, filter)" placeholder="From Date" />

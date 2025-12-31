@@ -326,6 +326,17 @@ export class OnboardingTable implements OnInit {
     }
   }
 
+  getFilterValues(filters: any, field: string): string[] | null{
+    const rules = filters?.[field];
+    if(!Array.isArray(rules)) return null;
+
+    const values = rules
+      .map(rule => rule?.value)
+      .filter(v => v !== null && v !== '');
+
+    return values.length ? values : null;
+  }
+
   loadDemands(event: any){
     try {
       this.first = event.first;
@@ -350,7 +361,7 @@ export class OnboardingTable implements OnInit {
         candidateName: filters?.candidateName?.[0]?.value ?? null,
         consultancyName: filters?.consultancyName?.[0]?.value ?? null,
         demandCode: filters?.demandCode?.[0]?.value ?? null,
-        projectCode: filters?.projectCode?.[0]?.value ?? null,
+        projectCode: this.getFilterValues(filters, 'projectCode'),
         clusterName: filters?.clusterName?.[0]?.value ?? null,
         spnCode: filters?.spnCode?.[0]?.value ?? null,
         spnDescription: filters?.spnDescription?.[0]?.value ?? null,

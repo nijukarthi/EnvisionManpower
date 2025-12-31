@@ -2,7 +2,7 @@ import { UserGroups } from '@/models/usergroups/usergroups.enum';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 
 @Component({
@@ -38,7 +38,8 @@ export class AttendanceTable implements OnInit {
   date: Date = new Date();
   editingRow: any | null = null;
 
-  constructor(private apiService: Apiservice, private messageService: MessageService){}
+  constructor(private apiService: Apiservice, private messageService: MessageService, 
+    private confirmationService: ConfirmationService){}
 
   ngOnInit(): void {
     this.fetchAttendanceList();
@@ -47,6 +48,20 @@ export class AttendanceTable implements OnInit {
       { label: 'ACTIVE', value: 'ACTIVE' },
       { label: 'TRANSFERRED', value: 'TRANSFERRED' },
       { label: 'RESIGNED', value: 'RESIGNED' }
+    ]
+  }
+
+  getMenuItems(){
+    return [
+      {
+        label: 'Import',
+        icon: 'pi pi-download'
+      },
+      {
+        label: 'Export to Excel',
+        icon: 'pi pi-upload',
+        command: () => this.exportToExcel()
+      }
     ]
   }
 
@@ -230,6 +245,17 @@ export class AttendanceTable implements OnInit {
     return status !== 'ACTIVE' && date > last;
   } 
 
+  getFilterValues(filters: any, field: string): string[] | null{
+    const rules = filters?.[field];
+    if(!Array.isArray(rules)) return null;
+
+    const values = rules
+      .map(rule => rule?.value)
+      .filter(v => v !== null && v !== '');
+
+    return values.length ? values : null;
+  }
+
   loadDemands(event: any){
     try {
       this.first = event.first;
@@ -258,7 +284,7 @@ export class AttendanceTable implements OnInit {
         candidateCode: filters?.candidateCode?.[0]?.value ?? null,
         candidateName: filters?.candidateName?.[0]?.value ?? null,
         consultancyName: filters?.consultancyName?.[0]?.value ?? null,
-        projectCode: filters?.projectCode?.[0]?.value ?? null,
+        projectCode: this.getFilterValues(filters, 'projectCode'),
         clusterName: filters?.clusterName?.[0]?.value ?? null,
         spnCode: filters?.spnCode?.[0]?.value ?? null,
         spnDescription: filters?.spnDescription?.[0]?.value ?? null,

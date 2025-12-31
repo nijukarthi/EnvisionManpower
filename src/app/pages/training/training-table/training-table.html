@@ -19,50 +19,51 @@
                     <th rowspan="2">
                         <div class="flex items-center justify-between">
                             <span>Employee Code</span>
-                            <p-columnFilter type="text" field="employeeCode" display="menu" />
+                            <p-columnFilter type="text" field="employeeCode" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
                     <th rowspan="2">
                         <div class="flex items-center justify-between">
                             <span>Temp EMP Code</span>
-                            <p-columnFilter type="text" field="tempEMPCode" display="menu" />
+                            <p-columnFilter type="text" field="tempEMPCode" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
                     <th rowspan="2">
                         <div class="flex items-center justify-between">
                             <span>Employee Name</span>
-                            <p-columnFilter type="text" field="candidateName" display="menu" />
+                            <p-columnFilter type="text" field="candidateName" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
                     <th rowspan="2">
                         <div class="flex items-center justify-between">
                             <span>Project Code</span>
-                            <p-columnFilter type="text" field="projectCode" display="menu" />
+                            <p-columnFilter type="text" field="projectCode" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
                     <th rowspan="2">Site Name</th>
                     <th rowspan="2">
                         <div class="flex items-center justify-between">
                             <span>Cluster Name</span>
-                            <p-columnFilter type="text" field="clusterName" display="menu" />
+                            <p-columnFilter type="text" field="clusterName" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
                     <th rowspan="2">
                         <div class="flex items-center justify-between">
                             <span>Role</span>
-                            <p-columnFilter type="text" field="envisionRoleName" display="menu" />
+                            <p-columnFilter type="text" field="envisionRoleName" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
                     <th rowspan="2">
                         <div class="flex items-center justify-between">
                             <span>Contact Number</span>
-                            <p-columnFilter type="text" field="phoneNumber" display="menu" />
+                            <p-columnFilter type="text" field="phoneNumber" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
                     <th rowspan="2">
                         <div class="flex items-center justify-between">
                             <span>Joining Date</span>
-                            <p-columnFilter type="date" field="date" display="menu" matchMode="between" [showOperator]="false">
+                            <p-columnFilter type="date" field="date" display="menu" matchMode="between" 
+                                [showOperator]="false" [showAddButton]="false">
                                 <ng-template #filter let-filter="filterCallback" let-value>
                                     <div class="flex flex-col gap-2">
                                         <p-datepicker [ngModel]="value?.[0] || null" (ngModelChange)="updateRange($event, value, 0, filter)" placeholder="From Date" />
@@ -81,7 +82,7 @@
                     <th>
                         <div class="flex items-center justify-between">
                             <span>Training Status</span>
-                            <p-columnFilter field="status" matchMode="equals" display="menu">
+                            <p-columnFilter field="status" matchMode="equals" display="menu" [showAddButton]="false">
                                 <ng-template #filter let-value let-filter="filterCallback">
                                     <p-select [options]="trainingStatusList" optionLabel="label" optionValue="value" (onChange)="filter($event.value)" placeholder="Select Statuses" class="w-full"> </p-select>
                                 </ng-template>
@@ -91,13 +92,14 @@
                     <th>
                         <div class="flex items-center justify-between">
                             <span>Winda Id</span>
-                            <p-columnFilter type="text" field="winda" display="menu" />
+                            <p-columnFilter type="text" field="winda" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
                     <th>
                         <div class="flex items-center justify-between">
                             <span>Valid From</span>
-                            <p-columnFilter type="date" field="validFrom" display="menu" matchMode="between" [showOperator]="false">
+                            <p-columnFilter type="date" field="validFrom" display="menu" matchMode="between" 
+                                [showOperator]="false" [showAddButton]="false">
                                 <ng-template #filter let-filter="filterCallback" let-value>
                                     <div class="flex flex-col gap-2">
                                         <p-datepicker [ngModel]="value?.[0] || null" (ngModelChange)="updateRange($event, value, 0, filter)" placeholder="From Date" />
@@ -110,7 +112,8 @@
                     <th>
                         <div class="flex items-center justify-between">
                             <span>Valid Till</span>
-                            <p-columnFilter type="date" field="validTill" display="menu" matchMode="between" [showOperator]="false">
+                            <p-columnFilter type="date" field="validTill" display="menu" matchMode="between" 
+                                [showOperator]="false" [showAddButton]="false">
                                 <ng-template #filter let-filter="filterCallback" let-value>
                                     <div class="flex flex-col gap-2">
                                         <p-datepicker [ngModel]="value?.[0] || null" (ngModelChange)="updateRange($event, value, 0, filter)" placeholder="From Date" />
