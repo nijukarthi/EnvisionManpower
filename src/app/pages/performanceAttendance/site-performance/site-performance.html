@@ -3,8 +3,7 @@
         <h5>Site Performance</h5>
         <div class="flex justify-end gap-1">
             <label class="mt-1 text-lg">Month:</label>
-            <p-datepicker view="month" [(ngModel)]="date" dateFormat="mm/yy" [readonlyInput]="true" 
-                placeholder="Pick a month" (onSelect)="fetchCandidateSitePerformance()" />
+            <p-datepicker view="month" [(ngModel)]="date" dateFormat="mm/yy" [readonlyInput]="true" placeholder="Pick a month" (onSelect)="fetchCandidateSitePerformance()" />
             <p-menu #menu [model]="getMenuItems()" [popup]="true" />
             <p-button (onClick)="menu.toggle($event)" label="Actions" icon="pi pi-angle-down" iconPos="right" />
             <input #excelInput type="file" accept=".xls,.xlsx" hidden (change)="excelSelected($event)" />
@@ -12,12 +11,29 @@
         </div>
     </div>
     <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
-        <p-table #dt [value]="sitePerformancesList" [rowHover]="true" [paginator]="true" editMode="row"
-           [rows]="pageSize" [lazy]="true" [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true"
-           [first]="first" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-           [scrollable]="true" scrollHeight="500px" [totalRecords]="totalRecords" dataKey="employmentDetails.employmentId"
-           [(selection)]="selectedPerformances" (onRowSelect)="selectedEmployee($event.data)" (onRowUnselect)="unSelectedEmployee()"
-           [tableStyle]="{'min-width': '400rem'}" (onLazyLoad)="loadPerformances($event)" [paginatorDropdownAppendTo]="mydiv">
+        <p-table
+            #dt
+            [value]="sitePerformancesList"
+            [rowHover]="true"
+            [paginator]="true"
+            editMode="row"
+            [rows]="pageSize"
+            [lazy]="true"
+            [rowsPerPageOptions]="[10, 20, 30]"
+            [showCurrentPageReport]="true"
+            [first]="first"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [scrollable]="true"
+            scrollHeight="500px"
+            [totalRecords]="totalRecords"
+            dataKey="employmentDetails.employmentId"
+            [(selection)]="selectedPerformances"
+            (onRowSelect)="selectedEmployee($event.data)"
+            (onRowUnselect)="unSelectedEmployee()"
+            [tableStyle]="{'min-width': '400rem'}"
+            (onLazyLoad)="loadPerformances($event)"
+            [paginatorDropdownAppendTo]="mydiv"
+        >
             <ng-template #header>
                 <tr>
                     <th>
@@ -90,8 +106,7 @@
                             <span>Status</span>
                             <p-columnFilter field="status" matchMode="equals" display="menu" [showAddButton]="false">
                                 <ng-template #filter let-value let-filter="filterCallback">
-                                    <p-multiselect [options]="statuses" (onChange)="filter($event.value)"
-                                        placeholder="Select Statuses" class="w-full">
+                                    <p-multiselect [options]="statuses" (onChange)="filter($event.value)" placeholder="Select Statuses" class="w-full">
                                         <ng-template #item let-option>
                                             <p-tag [value]="option.value" [severity]="getSeverity(option.value)" />
                                         </ng-template>
@@ -103,16 +118,11 @@
                     <th>
                         <div class="flex items-center justify-between">
                             <span>Joining Date</span>
-                            <p-columnFilter type="date" field="date" display="menu" matchMode="between"
-                                [showOperator]="false" [showAddButton]="false">
+                            <p-columnFilter type="date" field="date" display="menu" matchMode="between" [showOperator]="false" [showAddButton]="false">
                                 <ng-template #filter let-value let-filter="filterCallback">
                                     <div class="flex flex-col gap-2">
-                                        <p-datepicker [ngModel]="value?.[0] || null" 
-                                            (ngModelChange)="updateRange($event, value, 0, filter)"
-                                            placeholder="From Date" />
-                                        <p-datepicker [ngModel]="value?.[1] || null" 
-                                            (ngModelChange)="updateRange($event, value, 1, filter)"
-                                            placeholder="To Date" />
+                                        <p-datepicker [ngModel]="value?.[0] || null" (ngModelChange)="updateRange($event, value, 0, filter)" placeholder="From Date" />
+                                        <p-datepicker [ngModel]="value?.[1] || null" (ngModelChange)="updateRange($event, value, 1, filter)" placeholder="To Date" />
                                     </div>
                                 </ng-template>
                             </p-columnFilter>
@@ -159,8 +169,7 @@
                     <td>{{ performance.employmentDetails?.spn?.experience }}</td>
                     <td>{{ performance.employmentDetails.envisionRole.roleName || '-' }}</td>
                     <td>
-                        <p-tag [value]="performance.employmentDetails.employmentStatus"
-                            [severity]="getSeverity(performance.employmentDetails.employmentStatus)" />
+                        <p-tag [value]="performance.employmentDetails.employmentStatus" [severity]="getSeverity(performance.employmentDetails.employmentStatus)" />
                     </td>
                     <td>{{ performance.employmentDetails.joiningDate || '-' }}</td>
                     <td>{{ performance.employmentDetails.lastWorkingDate || '-' }}</td>
@@ -168,94 +177,66 @@
                     <td>{{ performance.employmentDetails.siteIncharge.userName || '-' }}</td>
                     <td>{{ performance.candidate.qualification || '-' }}</td>
                     @for (detail of performance.employeePerformance.performanceDetails; track $index) {
-                        <td #pEditableColumn>
-                            <p-cellEditor>
-                                <ng-template #input>
-                                    <p-inputnumber #scoreInput [(ngModel)]="detail.score"
-                                        (ngModelChange)="calculateTotalScore(performance)"
-                                        [useGrouping]="false" [min]="0" [max]="10" placeholder="Enter score (1-10)" />
-                                </ng-template>
-                                <ng-template #output>
-                                    {{ detail.score || '-' }}
-                                </ng-template>
-                            </p-cellEditor>
-                        </td>
-                    }
-                    @empty {
-                        @for (i of performanceColumns; track $index) {
-                            <td class="text-center">-</td>
-                        }
-                    }
                     <td #pEditableColumn>
                         <p-cellEditor>
                             <ng-template #input>
-                                <p-inputnumber [(ngModel)]="performance.employeePerformance.totalScore"
-                                    [disabled]="true" />
+                                <p-inputnumber #scoreInput [(ngModel)]="detail.score" (ngModelChange)="calculateTotalScore(performance)" [useGrouping]="false" [min]="0" [max]="10" placeholder="Enter score (1-10)" />
                             </ng-template>
-                            <ng-template #output>
-                                {{ performance.employeePerformance.totalScore || '-' }}
+                            <ng-template #output> {{ detail.score || '-' }} </ng-template>
+                        </p-cellEditor>
+                    </td>
+                    } @empty { @for (i of performanceColumns; track $index) {
+                    <td class="text-center">-</td>
+                    } }
+                    <td #pEditableColumn>
+                        <p-cellEditor>
+                            <ng-template #input>
+                                <p-inputnumber [(ngModel)]="performance.employeePerformance.totalScore" [disabled]="true" />
                             </ng-template>
+                            <ng-template #output> {{ performance.employeePerformance.totalScore || '-' }} </ng-template>
                         </p-cellEditor>
                     </td>
                     <td #pEditableColumn>
                         <p-cellEditor>
                             <ng-template #input>
-                                <input type="text" pInputText [(ngModel)]="performance.employeePerformance.remarks"
-                                    [disabled]="true" />
+                                <input type="text" pInputText [(ngModel)]="performance.employeePerformance.remarks" [disabled]="true" />
                             </ng-template>
-                            <ng-template #output>
-                                {{ performance.employeePerformance.remarks ?? '-' }}
-                            </ng-template>
+                            <ng-template #output> {{ performance.employeePerformance.remarks ?? '-' }} </ng-template>
                         </p-cellEditor>
                     </td>
                     <td class="flex items-center justify-center gap-2" pFrozenColumn alignFrozen="right">
                         @if (!editing) {
-                            <button pButton pRipple type="button" icon="pi pi-pencil"
-                                pInitEditableRow rounded severity="secondary"
-                                (click)="editPerformance(performance)"
-                                ></button>
+                        <button pButton pRipple type="button" icon="pi pi-pencil" pInitEditableRow rounded severity="secondary" (click)="editPerformance(performance)"></button>
                         }@else {
-                            <button pButton pRipple type="submit" icon="pi pi-check"
-                                pSaveEditableRow rounded severity="primary" 
-                                (click)="submitPerformanceForm(performance)"
-                                ></button>
-                            <button pButton pRipple type="button" icon="pi pi-times"
-                                pCancelEditableRow rounded severity="danger"
-                                (click)="cancelEdit(performance)" 
-                                ></button>
+                        <button pButton pRipple type="submit" icon="pi pi-check" pSaveEditableRow rounded severity="primary" (click)="submitPerformanceForm(performance)"></button>
+                        <button pButton pRipple type="button" icon="pi pi-times" pCancelEditableRow rounded severity="danger" (click)="cancelEdit(performance)"></button>
                         }
                     </td>
                 </tr>
             </ng-template>
             <ng-template #emptymessage>
                 <tr>
-                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground);">
-                        No Records Found
-                    </td>
+                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground)">No Records Found</td>
                 </tr>
             </ng-template>
         </p-table>
     </div>
 </div>
 
-<p-dialog header="Resignation Acceptance" [(visible)]="openTerminateModal" [modal]="true" [draggable]="false"
-    [style]="{width: '50rem'}" (onHide)="onDialogClose()">
+<p-dialog header="Resignation Acceptance" [(visible)]="openTerminateModal" [modal]="true" [draggable]="false" [style]="{width: '50rem'}" (onHide)="onDialogClose()">
     <form [formGroup]="resignationRequestForm" (ngSubmit)="onSubmit()">
         <div class="grid grid-cols-2 gap-2" formArrayName="resignationDetails">
             @for (item of resignationDetails.controls; track $index; let i = $index) {
-                <ng-container [formGroupName]="i">
-                    <div class="col-span-1 col-start-1 gap-1 grid">
-                        <label for="last-working-date">Last Working Date</label>
-                        <p-datepicker formControlName="lastWorkingDate" [minDate]="minDate" [showIcon]="true" [iconDisplay]="'input'"  
-                            inputId="last-working-date" placeholder="Select Date" appendTo="body" />
-                    </div>
-                    <div class="col-span-1 gap-1 grid">
-                        <label for="replacement">Replacement Required?</label>
-                        <p-select [options]="isReplacement" formControlName="replacementRequired"
-                            optionLabel="label" optionValue="value" (onChange)="replacementChange($event.value)"
-                            inputId="replacement" placeholder="Select Yes/No" appendTo="body" />
-                    </div>
-                </ng-container>
+            <ng-container [formGroupName]="i">
+                <div class="col-span-1 col-start-1 gap-1 grid">
+                    <label for="last-working-date">Last Working Date</label>
+                    <p-datepicker formControlName="lastWorkingDate" [minDate]="minDate" [showIcon]="true" [iconDisplay]="'input'" inputId="last-working-date" placeholder="Select Date" appendTo="body" />
+                </div>
+                <div class="col-span-1 gap-1 grid">
+                    <label for="replacement">Replacement Required?</label>
+                    <p-select [options]="isReplacement" formControlName="replacementRequired" optionLabel="label" optionValue="value" (onChange)="replacementChange($event.value)" inputId="replacement" placeholder="Select Yes/No" appendTo="body" />
+                </div>
+            </ng-container>
             }
         </div>
         <div class="flex justify-end mt-4">
