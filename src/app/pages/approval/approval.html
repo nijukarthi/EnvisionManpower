@@ -17,31 +17,31 @@
                     <th>
                         <div class="flex items-center justify-between">
                             <span>Demand Code</span>
-                            <p-columnFilter type="text" field="demandCode" display="menu" />
+                            <p-columnFilter type="text" field="demandCode" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
                     <th>
                         <div class="flex items-center justify-between">
                             <span>SPN Code</span>
-                            <p-columnFilter type="text" field="spnCode" display="menu" />
+                            <p-columnFilter type="text" field="spnCode" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
                     <th>
                         <div class="flex items-center justify-between">
                             <span>SPN Description</span>
-                            <p-columnFilter type="text" field="spnDescription" display="menu" />
+                            <p-columnFilter type="text" field="spnDescription" display="menu" [showAddButton]="false" />
                         </div>    
                     </th>
                     <th>
                         <div class="flex items-center justify-between">
                             <span>Experience</span>
-                            <p-columnFilter type="text" field="experience" display="menu" />
+                            <p-columnFilter type="text" field="experience" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
                     <th>
                         <div class="flex items-center justify-between">
                             <span>Role</span>
-                            <p-columnFilter type="text" field="role" display="menu" />
+                            <p-columnFilter type="text" field="role" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
                     <th>Quantity</th>
@@ -51,7 +51,7 @@
                     <th>
                         <div class="flex items-center  justify-between">
                             <span>Demand Status</span>
-                            <p-columnFilter field="status" matchMode="equals" display="menu">
+                            <p-columnFilter field="status" matchMode="equals" display="menu" [showAddButton]="false">
                                 <ng-template #filter let-value let-filter="filterCallback">
                                     <p-multiselect [options]="statuses" (onChange)="filter($event.value)"
                                         placeholder="Select Statuses" class="w-full">

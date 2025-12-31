@@ -5,7 +5,8 @@
             <label class="mt-1 text-lg">Month:</label>
             <p-datepicker view="month" [(ngModel)]="date" dateFormat="mm/yy" [readonlyInput]="true" 
                 placeholder="Pick a month" (onSelect)="fetchAttendanceList()" />
-            <p-button icon="pi pi-external-link" label="Export to Excel" (onClick)="exportToExcel()" />
+            <p-menu #menu [model]="getMenuItems()" [popup]="true" />
+            <p-button (onClick)="menu.toggle($event)" label="Actions" icon="pi pi-angle-down" iconPos="right" />
             <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
         </div>
     </div>
@@ -230,3 +231,4 @@
 </div>
 
 <p-toast />
+<p-confirmdialog />
