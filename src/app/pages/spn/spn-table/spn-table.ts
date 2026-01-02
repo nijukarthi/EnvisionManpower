@@ -26,7 +26,10 @@ export class SpnTable implements OnInit {
 
     spnId: number | null = null;
 
+    menuItems: any[] = [];
+
     spnList: any;
+    selectedSpn: any;
 
     private fb = inject(FormBuilder);
 
@@ -45,6 +48,7 @@ export class SpnTable implements OnInit {
     });
 
     ngOnInit(): void {
+        this.menuItems = this.getMenuItems();
         this.fetchActiveSpn();
     }
 
@@ -62,17 +66,23 @@ export class SpnTable implements OnInit {
         return this.spnForm.get('experience');
     }
 
-    getMenuItems(spn: any) {
+    getMenuItems() {
         return [
             {
                 label: 'Edit',
                 icon: 'pi pi-pencil',
-                command: () => this.editSpn(spn)
+                command: () => {
+                    if(!this.selectedSpn) return;
+                    this.editSpn(this.selectedSpn);
+                }
             },
             {
                 label: 'Delete',
                 icon: 'pi pi-trash',
-                command: () => this.deleteSpn(spn)
+                command: () => {
+                    if(!this.selectedSpn) return;
+                    this.deleteSpn(this.selectedSpn);
+                }
             }
         ];
     }
@@ -219,6 +229,11 @@ export class SpnTable implements OnInit {
                 }
             }
         });
+    }
+
+    spnMenu(event: Event, menu: any, spn: any){
+        this.selectedSpn = spn;
+        menu.toggle(event);
     }
 
     pageChange(event: any) {

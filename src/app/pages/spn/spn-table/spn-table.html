@@ -35,8 +35,8 @@
                     <td>{{ spn.spnDescription }}</td>
                     <td>{{ spn.experience }}</td>
                     <td>
-                        <p-menu #menu [model]="getMenuItems(spn)" [popup]="true" appendTo="body" />
-                        <p-button (click)="menu.toggle($event)" icon="pi pi-ellipsis-v" [rounded]="true" variant="text" />
+                        <p-menu #menu [model]="menuItems" [popup]="true" appendTo="body" />
+                        <p-button (click)="spnMenu($event, menu, spn)" icon="pi pi-ellipsis-v" [rounded]="true" variant="text" />
                     </td>
                 </tr>
             </ng-template>
