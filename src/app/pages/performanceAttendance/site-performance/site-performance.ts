@@ -45,6 +45,8 @@ export class SitePerformance implements OnInit {
     date: Date = new Date();
     minDate: Date | undefined;
 
+    menuItems: any[] = [];
+
     currentUser = Number(sessionStorage.getItem('userGroupId'));
     currentUserEmail = sessionStorage.getItem('userEmail');
 
@@ -121,6 +123,7 @@ export class SitePerformance implements OnInit {
 
     ngOnInit(): void {
         this.fetchCandidateSitePerformance();
+        this.menuItems = this.getMenuItems();
 
         this.statuses = [
             { label: 'ACTIVE', value: 'ACTIVE' },
