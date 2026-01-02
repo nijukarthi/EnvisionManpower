@@ -40,6 +40,8 @@ export class SitePerformance implements OnInit {
     editingRow: any | null = null;
     filteredData: any;
 
+    backupRow: any = null;
+
     date: Date = new Date();
     minDate: Date | undefined;
 
@@ -126,8 +128,7 @@ export class SitePerformance implements OnInit {
             { label: 'RESIGNED', value: 'RESIGNED' }
         ];
 
-        const currentYear = new Date().getFullYear();
-        this.minDate = new Date(currentYear, 0, 1);
+        this.minDate = new Date(2025, 0, 1);
     }
 
     performanceApi(data: any) {
@@ -299,7 +300,7 @@ export class SitePerformance implements OnInit {
         if (this.editingRow && this.editingRow !== performance) {
             this.dt.cancelRowEdit(this.editingRow);
         }
-
+        this.backupRow = JSON.parse(JSON.stringify(performance));
         this.editingRow = performance;
         performance.editing = true;
 
@@ -324,8 +325,11 @@ export class SitePerformance implements OnInit {
     }
 
     cancelEdit(performance: any) {
+        Object.assign(performance, this.backupRow);
+
         this.dt.cancelRowEdit(performance);
         this.editingRow = null;
+        this.backupRow = null;
     }
 
     calculateTotalScore(performance: any) {
