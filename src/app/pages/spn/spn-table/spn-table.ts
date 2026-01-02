@@ -72,7 +72,7 @@ export class SpnTable implements OnInit {
                 label: 'Edit',
                 icon: 'pi pi-pencil',
                 command: () => {
-                    if(!this.selectedSpn) return;
+                    if (!this.selectedSpn) return;
                     this.editSpn(this.selectedSpn);
                 }
             },
@@ -80,7 +80,7 @@ export class SpnTable implements OnInit {
                 label: 'Delete',
                 icon: 'pi pi-trash',
                 command: () => {
-                    if(!this.selectedSpn) return;
+                    if (!this.selectedSpn) return;
                     this.deleteSpn(this.selectedSpn);
                 }
             }
@@ -231,7 +231,7 @@ export class SpnTable implements OnInit {
         });
     }
 
-    spnMenu(event: Event, menu: any, spn: any){
+    spnMenu(event: Event, menu: any, spn: any) {
         this.selectedSpn = spn;
         menu.toggle(event);
     }
