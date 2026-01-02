@@ -9,17 +9,17 @@
                 <tr>
                     <th>SI No</th>
                     <th>User Group Name</th>
-                    <th class="flex justify-center">Actions</th>
+                    <!-- <th class="flex justify-center">Actions</th> -->
                 </tr>
             </ng-template>
             <ng-template #body let-usergroup let-i="rowIndex">
                 <tr>
                     <td>{{ i + 1 }}</td>
                     <td>{{ usergroup.userGroupName }}</td>
-                    <td class="flex justify-center">
+                    <!-- <td class="flex justify-center">
                         <p-menu #menu [model]="getMenuItems(usergroup)" [popup]="true" appendTo="body" />
                         <p-button (click)="menu.toggle($event)" icon="pi pi-ellipsis-v" [rounded]="true" variant="text" />
-                    </td>
+                    </td> -->
                 </tr>
             </ng-template>
             <ng-template #emptymessage>

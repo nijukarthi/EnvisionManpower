@@ -18,6 +18,9 @@ export class Project implements OnInit {
 
     projectId: number | null = null;
 
+    menuItems: any[] = [];
+    selectedProject: any;
+
     UserGroups = UserGroups;
 
     first = 0;
@@ -94,21 +97,22 @@ export class Project implements OnInit {
     }
 
     ngOnInit(): void {
+        this.menuItems = this.getMenuItems();
         this.fetchActiveProjects();
         this.fetchActiveDepartments();
     }
 
-    getMenuItems(project: any) {
+    getMenuItems() {
         return [
             {
                 label: 'Edit',
                 icon: 'pi pi-pencil',
-                command: () => this.editProject(project)
+                command: () => this.editProject(this.selectedProject)
             },
             {
                 label: 'Delete',
                 icon: 'pi pi-trash',
-                command: () => this.deleteProject(project)
+                command: () => this.deleteProject(this.selectedProject)
             }
         ];
     }
@@ -397,6 +401,11 @@ export class Project implements OnInit {
                 }
             }
         });
+    }
+
+    projectMenu(event: Event, menu: any, project: any) {
+        this.selectedProject = project;
+        menu.toggle(event);
     }
 
     pageChange(event: any) {
