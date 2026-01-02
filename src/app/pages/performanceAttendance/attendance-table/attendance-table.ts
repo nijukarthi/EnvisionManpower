@@ -31,8 +31,10 @@ export class AttendanceTable implements OnInit {
     minDate: Date | undefined;
 
     attendanceList: any;
-    statuses: any[] = [];
     filteredData: any;
+
+    statuses: any[] = [];
+    menuItems: any[] = [];
 
     USERGROUPS = UserGroups;
 
@@ -49,6 +51,7 @@ export class AttendanceTable implements OnInit {
     ) {}
 
     ngOnInit(): void {
+        this.menuItems = this.getMenuItems();
         this.fetchAttendanceList();
 
         this.statuses = [
@@ -57,15 +60,16 @@ export class AttendanceTable implements OnInit {
             { label: 'RESIGNED', value: 'RESIGNED' }
         ];
 
-        const currentYear = new Date().getFullYear();
-        this.minDate = new Date(currentYear, 0, 1);
+        this.minDate = new Date(2025, 0, 1);
     }
 
     getMenuItems() {
+        console.log('getMenuItems called');
         return [
             {
                 label: 'Import',
                 icon: 'pi pi-download',
+                visible: this.currentUser === UserGroups.ADMIN || this.currentUser === UserGroups.RESOURCEMANAGER,
                 command: () => this.openExcelPicker()
             },
             {
