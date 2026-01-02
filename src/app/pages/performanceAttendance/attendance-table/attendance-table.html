@@ -161,7 +161,8 @@
                     <td #pEditableColumn>
                         <p-cellEditor>
                             <ng-template #input>
-                                <p-inputnumber #totalWorkingDaysInput [(ngModel)]="attendance.totalWorkingDays" [useGrouping]="false" [disabled]="true" />
+                                <p-inputnumber #totalWorkingDaysInput [(ngModel)]="attendance.totalWorkingDays" 
+                                    [useGrouping]="false" [disabled]="true" />
                             </ng-template>
                             <ng-template #output> {{ attendance.totalWorkingDays }} </ng-template>
                         </p-cellEditor>
@@ -200,10 +201,13 @@
                     </td>
                     <td class="flex items-center justify-center gap-2" alignFrozen="right" pFrozenColumn>
                         @if (!editing) {
-                        <button pButton pRipple type="button" icon="pi pi-pencil" pInitEditableRow rounded severity="secondary" (click)="editAttendanceRow(attendance)"></button>
+                        <button pButton pRipple type="button" icon="pi pi-pencil" 
+                            pInitEditableRow rounded severity="secondary" (click)="editAttendanceRow(attendance)"></button>
                         } @else {
-                        <button pButton pRipple type="submit" icon="pi pi-check" pSaveEditableRow rounded severity="primary" (click)="submitAttendanceForm(attendance)"></button>
-                        <button pButton pRipple type="button" icon="pi pi-times" pCancelEditableRow rounded severity="danger" (click)="cancelEdit(attendance)"></button>
+                        <button pButton pRipple type="submit" icon="pi pi-check" 
+                            pSaveEditableRow rounded severity="primary" (click)="submitAttendanceForm(attendance)"></button>
+                        <button pButton pRipple type="button" icon="pi pi-times" 
+                            pCancelEditableRow rounded severity="danger" (click)="cancelEdit(attendance)"></button>
                         }
                     </td>
                 </tr>

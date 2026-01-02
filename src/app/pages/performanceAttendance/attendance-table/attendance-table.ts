@@ -201,6 +201,11 @@ export class AttendanceTable implements OnInit {
     }
 
     cancelEdit(attendance: any) {
+        attendance.presentDays = 0;
+        attendance.weekOff = 0;
+        attendance.paidLeaves = 0;
+        attendance.absentDays = 0;
+
         this.dt.cancelRowEdit(attendance);
         this.editingRow = null;
     }
