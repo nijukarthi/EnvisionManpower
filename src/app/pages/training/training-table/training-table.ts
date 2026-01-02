@@ -22,6 +22,8 @@ export class TrainingTable implements OnInit {
     editingRow: any | null = null;
     filteredData: any;
 
+    backupRow: any = null;
+
     trainingStatusList = [
         {
             label: 'Yes',
@@ -86,22 +88,22 @@ export class TrainingTable implements OnInit {
         return status?.label || '-';
     }
 
-    exportToExcel(){
-        try {        
+    exportToExcel() {
+        try {
             const data = {
                 ...this.filteredData,
                 export: true
             };
-    
+
             console.log(data);
-    
+
             this.apiService.fetchTrainingList(data).subscribe({
-                next:(val)=>{
+                next: (val) => {
                     console.log(val);
                 }
             });
 
-            this.messageService.add({ severity:'success', summary: 'Success', detail:'Excel file successfully send to email' });
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Excel file successfully send to email' });
         } catch (error) {
             console.log(error);
         }
@@ -189,13 +191,17 @@ export class TrainingTable implements OnInit {
         if (this.editingRow && this.editingRow !== training) {
             this.dt.cancelRowEdit(this.editingRow);
         }
+        this.backupRow = JSON.parse(JSON.stringify(training));
 
         this.editingRow = training;
         training.editing = true;
     }
 
     cancelEdit(attendance: any) {
+        Object.assign(attendance, this.backupRow);
+
         this.dt.cancelRowEdit(attendance);
         this.editingRow = null;
+        this.backupRow = null;
     }
 }
