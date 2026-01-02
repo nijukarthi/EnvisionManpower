@@ -3,20 +3,36 @@
         <h5>Transfer</h5>
         <div class="flex justify-end gap-2">
             @if (currentUserRole === USERGROUPS.ADMIN || currentUserRole === USERGROUPS.RESOURCEMANAGER) {
-                <p-menu #menu [model]="getMenuItems()" [popup]="true" />
-                <p-button (onClick)="menu.toggle($event)" label="Actions" icon="pi pi-angle-down" 
-                    iconPos="right" [disabled]="!selectedTransferId" />
+            <p-menu #menu [model]="menuItems" [popup]="true" />
+            <p-button (onClick)="menu.toggle($event)" label="Actions" icon="pi pi-angle-down" iconPos="right" [disabled]="!selectedTransferId" />
             }
             <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
         </div>
     </div>
     <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
-        <p-table #dt [value]="transferredEmployeeList" showGridlines stripedRows [rowHover]="true" 
-            [paginator]="true" [rows]="pageSize" [lazy]="true" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10, 20, 30]" 
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [first]="first" 
-            selectionMode="single" dataKey="transferId" (onRowSelect)="selectedEmployee($event.data)" 
-            (onRowUnselect)="unSelectedEmployee()" [(selection)]="selectedTransfer" [paginatorDropdownAppendTo]="mydiv"
-            [totalRecords]="totalRecords" [tableStyle]="{'min-width': '170rem'}" (onLazyLoad)="loadTransfer($event)">
+        <p-table
+            #dt
+            [value]="transferredEmployeeList"
+            showGridlines
+            stripedRows
+            [rowHover]="true"
+            [paginator]="true"
+            [rows]="pageSize"
+            [lazy]="true"
+            [showCurrentPageReport]="true"
+            [rowsPerPageOptions]="[10, 20, 30]"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [first]="first"
+            selectionMode="single"
+            dataKey="transferId"
+            (onRowSelect)="selectedEmployee($event.data)"
+            (onRowUnselect)="unSelectedEmployee()"
+            [(selection)]="selectedTransfer"
+            [paginatorDropdownAppendTo]="mydiv"
+            [totalRecords]="totalRecords"
+            [tableStyle]="{'min-width': '170rem'}"
+            (onLazyLoad)="loadTransfer($event)"
+        >
             <ng-template #header>
                 <tr>
                     <th rowspan="2">SL No</th>
@@ -31,19 +47,16 @@
                             <span>Employee Name</span>
                             <p-columnFilter type="text" field="candidateName" display="menu" [showAddButton]="false" />
                         </div>
-                    </th>              
-                    <th colspan="6" style="text-align: center;">Transfer From</th>
-                    <th colspan="6" style="text-align: center;">Transfer To</th>
+                    </th>
+                    <th colspan="6" style="text-align: center">Transfer From</th>
+                    <th colspan="6" style="text-align: center">Transfer To</th>
                     <th rowspan="2">
                         <div class="flex items-center justify-between">
                             <span>Is Replacement Required</span>
                             <p-columnFilter field="replace" matchMode="equals" display="menu" [showAddButton]="false">
                                 <ng-template #filter let-value let-filter="filterCallback">
-                                    <p-select [options]="isReplacement" optionValue="value" (onChange)="filter($event.value)" 
-                                        placeholder="Select Yes/No" class="w-full">
-                                        <ng-template let-option #item>
-                                            {{ option.label }}
-                                        </ng-template>
+                                    <p-select [options]="isReplacement" optionValue="value" (onChange)="filter($event.value)" placeholder="Select Yes/No" class="w-full">
+                                        <ng-template let-option #item> {{ option.label }} </ng-template>
                                     </p-select>
                                 </ng-template>
                             </p-columnFilter>
@@ -55,8 +68,7 @@
                             <span>Status</span>
                             <p-columnFilter field="status" matchMode="equals" display="menu" [showAddButton]="false">
                                 <ng-template #filter let-value let-filter="filterCallback">
-                                    <p-multiselect [options]="statuses" (onChange)="filter($event.value)"
-                                        placeholder="Select Statuses" class="w-full">
+                                    <p-multiselect [options]="statuses" (onChange)="filter($event.value)" placeholder="Select Statuses" class="w-full">
                                         <ng-template let-option #item>
                                             <p-tag [value]="option.label" [severity]="getSeverity(option.value)" />
                                         </ng-template>
@@ -81,7 +93,7 @@
                         <div class="flex items-center justify-between">
                             <span>Cluster Name</span>
                             <p-columnFilter type="text" field="clusterName" display="menu" [showAddButton]="false" />
-                        </div>     
+                        </div>
                     </th>
                     <th>Role</th>
                     <th>Last Working Date</th>
@@ -103,16 +115,11 @@
                     <th>
                         <div class="flex items-center justify-between">
                             <span>Joining Date</span>
-                            <p-columnFilter type="date" field="date" display="menu" matchMode="between"
-                                [showOperator]="false" [showAddButton]="false">
+                            <p-columnFilter type="date" field="date" display="menu" matchMode="between" [showOperator]="false" [showAddButton]="false">
                                 <ng-template #filter let-filter="filterCallback" let-value>
                                     <div class="flex flex-col gap-2">
-                                        <p-datepicker [ngModel]="value?.[0] || null" 
-                                            (ngModelChange)="updateRange($event, value, 0, filter)"
-                                            placeholder="From Date" />
-                                        <p-datepicker [ngModel]="value?.[1] || null" 
-                                            (ngModelChange)="updateRange($event, value, 1, filter)"
-                                            placeholder="To Date" />
+                                        <p-datepicker [ngModel]="value?.[0] || null" (ngModelChange)="updateRange($event, value, 0, filter)" placeholder="From Date" />
+                                        <p-datepicker [ngModel]="value?.[1] || null" (ngModelChange)="updateRange($event, value, 1, filter)" placeholder="To Date" />
                                     </div>
                                 </ng-template>
                             </p-columnFilter>
@@ -140,38 +147,27 @@
                     <td>{{ transfer.isReplacementRequired ? 'Yes' : 'No' }}</td>
                     <td>{{ transfer.reason || '-' }}</td>
                     <td>
-                        <p-tag [value]="getStatusLabel(transfer.transferStatus)" 
-                            [severity]="getSeverity(transfer.transferStatus)" />
+                        <p-tag [value]="getStatusLabel(transfer.transferStatus)" [severity]="getSeverity(transfer.transferStatus)" />
                     </td>
                     <td class="flex items-center justify-center gap-2">
                         @if (transfer.stateHeadApproval.approvalStatus === APPROVALSTATUS.ACCEPTED) {
-                            <p-button icon="pi pi-check" severity="primary" rounded [disabled]="true" />
+                        <p-button icon="pi pi-check" severity="primary" rounded [disabled]="true" />
                         } @else if (transfer.stateHeadApproval.approvalStatus === APPROVALSTATUS.REJECTED) {
-                            <p-button icon="pi pi-times" severity="danger" rounded [disabled]="true" />
-                        }
-                        @if (transfer.stateHeadApproval.approvalStatus === APPROVALSTATUS.PENDING) {
-                            <p-button icon="pi pi-check" severity="primary" rounded 
-                               [disabled]="currentUserRole === USERGROUPS.DEPARTMENTHEAD" 
-                               (onClick)="clusterHeadApproval(transfer.transferId, 'Accepted')" />
-                            <p-button icon="pi pi-times" severity="danger" rounded 
-                                [disabled]="currentUserRole === USERGROUPS.DEPARTMENTHEAD" 
-                                (onClick)="clusterHeadApproval(transfer.transferId, 'Rejected')" />
+                        <p-button icon="pi pi-times" severity="danger" rounded [disabled]="true" />
+                        } @if (transfer.stateHeadApproval.approvalStatus === APPROVALSTATUS.PENDING) {
+                        <p-button icon="pi pi-check" severity="primary" rounded [disabled]="currentUserRole === USERGROUPS.DEPARTMENTHEAD" (onClick)="clusterHeadApproval(transfer.transferId, 'Accepted')" />
+                        <p-button icon="pi pi-times" severity="danger" rounded [disabled]="currentUserRole === USERGROUPS.DEPARTMENTHEAD" (onClick)="clusterHeadApproval(transfer.transferId, 'Rejected')" />
                         }
                     </td>
                     <td>
                         <div class="flex items-center justify-center gap-2">
                             @if (transfer.departmentHeadApproval.approvalStatus === APPROVALSTATUS.ACCEPTED) {
-                                <p-button icon="pi pi-check" severity="primary" rounded [disabled]="true" />
+                            <p-button icon="pi pi-check" severity="primary" rounded [disabled]="true" />
                             } @else if (transfer.departmentHeadApproval.approvalStatus === APPROVALSTATUS.REJECTED) {
-                                <p-button icon="pi pi-times" severity="danger" rounded [disabled]="true" />
-                            }
-                            @if (transfer.departmentHeadApproval.approvalStatus === APPROVALSTATUS.PENDING) {
-                                <p-button icon="pi pi-check" severity="primary" rounded 
-                                    [disabled]="currentUserRole === USERGROUPS.CLUSTERHEAD" 
-                                    (onClick)="departmentHeadApproval(transfer.transferId, 'Accepted')" />
-                                <p-button icon="pi pi-times" severity="danger" rounded 
-                                    [disabled]="currentUserRole === USERGROUPS.CLUSTERHEAD" 
-                                    (onClick)="departmentHeadApproval(transfer.transferId, 'Rejected')" />
+                            <p-button icon="pi pi-times" severity="danger" rounded [disabled]="true" />
+                            } @if (transfer.departmentHeadApproval.approvalStatus === APPROVALSTATUS.PENDING) {
+                            <p-button icon="pi pi-check" severity="primary" rounded [disabled]="currentUserRole === USERGROUPS.CLUSTERHEAD" (onClick)="departmentHeadApproval(transfer.transferId, 'Accepted')" />
+                            <p-button icon="pi pi-times" severity="danger" rounded [disabled]="currentUserRole === USERGROUPS.CLUSTERHEAD" (onClick)="departmentHeadApproval(transfer.transferId, 'Rejected')" />
                             }
                         </div>
                     </td>
@@ -179,9 +175,7 @@
             </ng-template>
             <ng-template #emptymessage>
                 <tr>
-                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground);">
-                        No Records Found
-                    </td>
+                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground)">No Records Found</td>
                 </tr>
             </ng-template>
         </p-table>
@@ -206,20 +200,26 @@
     </ng-template>
 </p-confirmdialog>
 
-<p-dialog header="Edit Transfer" [(visible)]="updateTransferModal" [modal]="true" [draggable]="false"
-    [style]="{width: '50rem'}" (onHide)="onDialogClose()">
+<p-dialog header="Edit Transfer" [(visible)]="updateTransferModal" [modal]="true" [draggable]="false" [style]="{width: '50rem'}" (onHide)="onDialogClose()">
     <form [formGroup]="updateTransferForm" (ngSubmit)="onSubmit()">
         <div class="grid grid-cols-2 gap-2">
             <div class="grid col-span-1 gap-1">
                 <label for="last-working-date">Last Working Date</label>
-                <p-datepicker formControlName="newLastWorkingDate" [minDate]="minDate" [showIcon]="true" [iconDisplay]="'input'" 
-                    dateFormat="yy-mm-dd" inputId="last-working-date" placeholder="Select Date" appendTo="body"
-                    (onSelect)="selectedLastDate($event)" />
+                <p-datepicker
+                    formControlName="newLastWorkingDate"
+                    [minDate]="minDate"
+                    [showIcon]="true"
+                    [iconDisplay]="'input'"
+                    dateFormat="yy-mm-dd"
+                    inputId="last-working-date"
+                    placeholder="Select Date"
+                    appendTo="body"
+                    (onSelect)="selectedLastDate($event)"
+                />
             </div>
             <div class="grid col-span-1 gap-1">
                 <label for="joining-date">Joining Date</label>
-                <p-datepicker formControlName="newJoiningDate" [minDate]="minJoiningDate" [showIcon]="true" [iconDisplay]="'input'" 
-                   dateFormat="yy-mm-dd" inputId="joining-date" placeholder="Select Date" appendTo="body" />
+                <p-datepicker formControlName="newJoiningDate" [minDate]="minJoiningDate" [showIcon]="true" [iconDisplay]="'input'" dateFormat="yy-mm-dd" inputId="joining-date" placeholder="Select Date" appendTo="body" />
             </div>
             <div class="grid col-span-1 gap-1">
                 <label for="reason">Reason</label>

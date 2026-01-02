@@ -31,6 +31,8 @@ export class Terminate implements OnInit {
 
     selectedResignation: any[] = [];
 
+    menuItems: any[] = [];
+
     minDate: Date | undefined;
 
     private fb = inject(FormBuilder);
@@ -49,13 +51,13 @@ export class Terminate implements OnInit {
     isReplacement = [
         { label: 'Yes', value: true },
         { label: 'No', value: false }
-    ]
+    ];
 
     updateResignationForm = this.fb.group({
         resignationId: [0],
         newLastWorkingDate: [''],
         reason: ['']
-    })
+    });
 
     constructor(
         private apiService: Apiservice,
@@ -65,20 +67,21 @@ export class Terminate implements OnInit {
     ) {}
 
     ngOnInit(): void {
+        this.menuItems = this.getMenuItems();
         this.fetchResignationList();
 
         const today = new Date();
         this.minDate = new Date(today);
     }
 
-    get statuses(){
+    get statuses() {
         return Object.entries(this.statusMap).map(([key, value]) => ({
             label: value.label,
             value: Number(key)
-        }))
+        }));
     }
 
-    resignationApi(data: any){
+    resignationApi(data: any) {
         try {
             this.apiService.fetchResignationList(data).subscribe({
                 next: (val) => {
@@ -110,54 +113,54 @@ export class Terminate implements OnInit {
         }
     }
 
-    siteInchargeNDC(selectedValue: boolean, resignationId: number){
+    siteInchargeNDC(selectedValue: boolean, resignationId: number) {
         console.log(selectedValue);
 
         const data = {
             resignationId: resignationId,
             updateNdc: selectedValue
-        }
+        };
 
         console.log(data);
 
         this.apiService.siteInchargeNDC(data).subscribe({
-            next: val => {
+            next: (val) => {
                 console.log(val);
                 this.messageService.add({ severity: 'success', summary: 'Success', detail: 'NDC Updated Successfully' });
                 this.fetchResignationList();
             },
-            error: err => {
+            error: (err) => {
                 console.log(err);
 
                 if (err.status === 400) {
                     this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
                 }
             }
-        })
+        });
     }
 
-    consultancyNDC(selectedValue: boolean, resignationId: number){
+    consultancyNDC(selectedValue: boolean, resignationId: number) {
         const data = {
             resignationId: resignationId,
             updateNdc: selectedValue
-        }
+        };
 
         console.log(data);
 
         this.apiService.consultancyNDC(data).subscribe({
-            next: val => {
+            next: (val) => {
                 console.log(val);
                 this.messageService.add({ severity: 'success', summary: 'Success', detail: 'NDC Updated Successfully' });
                 this.fetchResignationList();
             },
-            error: err => {
+            error: (err) => {
                 console.log(err);
 
                 if (err.status === 400) {
                     this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
                 }
             }
-        })
+        });
     }
 
     clusterHeadApproval(resignationId: number, type: 'Accepted' | 'Rejected') {
@@ -237,20 +240,20 @@ export class Terminate implements OnInit {
         }
     }
 
-    updateResignation(){
+    updateResignation() {
         try {
             this.resignationModal = true;
 
             this.updateResignationForm.patchValue({
                 newLastWorkingDate: this.selectedResignDetails.lastWorkingDate,
                 reason: this.selectedResignDetails.reason
-            })
+            });
         } catch (error) {
             console.log(error);
         }
     }
 
-    onSubmit(){
+    onSubmit() {
         try {
             const lastDate = this.updateResignationForm.get('newLastWorkingDate')?.value;
 
@@ -258,7 +261,7 @@ export class Terminate implements OnInit {
 
             this.updateResignationForm.patchValue({
                 resignationId: this.selectedResignationId
-            })
+            });
 
             const data = {
                 ...this.updateResignationForm.value,
@@ -267,22 +270,22 @@ export class Terminate implements OnInit {
             console.log(data);
 
             this.apiService.updateResignation(data).subscribe({
-                next: val => {
+                next: (val) => {
                     console.log(val);
-                    this.messageService.add({severity: 'success', summary: 'Success', detail: 'Resignation Details Updated Successfully'});
+                    this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Resignation Details Updated Successfully' });
                     this.resignationModal = false;
                     this.updateResignationForm.reset();
                     this.fetchResignationList();
                     this.selectedResignation = [];
                 },
-                error: err => {
+                error: (err) => {
                     console.log(err);
 
                     if (err.status === 400) {
                         this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
                     }
                 }
-            })
+            });
         } catch (error) {
             console.log(error);
         }
@@ -308,8 +311,8 @@ export class Terminate implements OnInit {
                             console.log(err);
 
                             if (err.status === 400) {
-                              this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
-                              this.selectedResignation = [];
+                                this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
+                                this.selectedResignation = [];
                             }
                         }
                     });
@@ -323,40 +326,40 @@ export class Terminate implements OnInit {
         });
     }
 
-    cancelResignationPopup(){
-      console.log('cancel request');
-      this.confirmationService.confirm({
-        header: 'Are you sure?',
-        accept: () => {
-          try {
-            const data = {
-              id: this.selectedResignationId
-            }
+    cancelResignationPopup() {
+        console.log('cancel request');
+        this.confirmationService.confirm({
+            header: 'Are you sure?',
+            accept: () => {
+                try {
+                    const data = {
+                        id: this.selectedResignationId
+                    };
 
-            console.log(data);
+                    console.log(data);
 
-            this.apiService.cancelResignation(data).subscribe({
-              next: val => {
-                console.log(val);
-                this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Resignation Cancelled Successfully' });
-                this.fetchResignationList();
-                this.selectedResignation = [];
-              },
-              error: err => {
-                console.log(err);
+                    this.apiService.cancelResignation(data).subscribe({
+                        next: (val) => {
+                            console.log(val);
+                            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Resignation Cancelled Successfully' });
+                            this.fetchResignationList();
+                            this.selectedResignation = [];
+                        },
+                        error: (err) => {
+                            console.log(err);
 
-                if (err.status === 400) {
-                  this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
-                  this.selectedResignation = [];
+                            if (err.status === 400) {
+                                this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
+                                this.selectedResignation = [];
+                            }
+                        }
+                    });
+                } catch (error) {
+                    console.log(error);
                 }
-              }
-            })
-          } catch (error) {
-            console.log(error);
-          }
-        },
-        reject: () => this.isEnabledBtn = false
-      })
+            },
+            reject: () => (this.isEnabledBtn = false)
+        });
     }
 
     noDueClearanceList = [
@@ -398,15 +401,15 @@ export class Terminate implements OnInit {
         return this.statusMap[status]?.severity ?? 'primary';
     }
 
-    updateRange(selectedValue: any, value: any[], index: number, filter: any){
-        if(!value) value = [];
+    updateRange(selectedValue: any, value: any[], index: number, filter: any) {
+        if (!value) value = [];
 
         value[index] = selectedValue;
 
         filter(value);
     }
 
-    loadResignation(event: any){
+    loadResignation(event: any) {
         try {
             this.first = event.first;
             this.offSet = event.first / event.rows;
@@ -416,9 +419,9 @@ export class Terminate implements OnInit {
             console.log(filters);
 
             const formatDate = (d: any) => {
-                if(!d) return null;
+                if (!d) return null;
                 return typeof d === 'string' ? d : d.toLocaleDateString('en-CA');
-            }
+            };
 
             const dateValue = filters?.date?.[0]?.value;
 
@@ -433,7 +436,7 @@ export class Terminate implements OnInit {
                 resignationStatuses: filters?.status?.[0]?.value ?? [102],
                 lastWorkingFrom: Array.isArray(dateValue) ? formatDate(dateValue[0]) : null,
                 lastWorkingTo: Array.isArray(dateValue) ? formatDate(dateValue[1]) : null
-            }
+            };
 
             console.log(payload);
 
@@ -443,7 +446,7 @@ export class Terminate implements OnInit {
         }
     }
 
-    onDialogClose(){
+    onDialogClose() {
         this.updateResignationForm.reset();
         this.selectedResignation = [];
     }

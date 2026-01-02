@@ -31,6 +31,8 @@ export class Transfer implements OnInit {
 
     selectedTransfer: any[] = [];
 
+    menuItems: any[] = [];
+
     private fb = inject(FormBuilder);
 
     currentUserRole = Number(sessionStorage.getItem('userGroupId'));
@@ -49,14 +51,14 @@ export class Transfer implements OnInit {
     isReplacement = [
         { label: 'Yes', value: true },
         { label: 'No', value: false }
-    ]
+    ];
 
     updateTransferForm = this.fb.group({
         transferId: [0],
         newLastWorkingDate: [''],
         newJoiningDate: [''],
         reason: ['']
-    })
+    });
 
     constructor(
         private apiService: Apiservice,
@@ -65,20 +67,21 @@ export class Transfer implements OnInit {
     ) {}
 
     ngOnInit(): void {
+        this.menuItems = this.getMenuItems();
         this.fetchTransferedList();
 
         const today = new Date();
         this.minDate = new Date(today);
     }
 
-    get statuses(){
+    get statuses() {
         return Object.entries(this.statusMap).map(([key, value]) => ({
             label: value.label,
             value: Number(key)
-        }))
+        }));
     }
 
-    transferApi(data: any){
+    transferApi(data: any) {
         try {
             this.apiService.fetchTransferredEmployeeList(data).subscribe({
                 next: (val) => {
@@ -102,7 +105,7 @@ export class Transfer implements OnInit {
                 pageSize: this.pageSize,
                 transferStatuses: [102]
             };
-            
+
             this.transferApi(data);
         } catch (error) {
             console.log(error);
@@ -168,8 +171,7 @@ export class Transfer implements OnInit {
         if (transfer.transferStatus === TransferStatus.SCHEDULED) {
             this.selectedTransferId = transfer.transferId;
         } else {
-            this.messageService.add({ severity: 'error', summary: 'Error', 
-              detail: 'Scheduled transfer request can only be force & cancel transfer' });
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Scheduled transfer request can only be force & cancel transfer' });
         }
     }
 
@@ -177,7 +179,7 @@ export class Transfer implements OnInit {
         this.selectedTransferId = 0;
     }
 
-    updateTransfer(){
+    updateTransfer() {
         try {
             this.updateTransferModal = true;
 
@@ -185,13 +187,13 @@ export class Transfer implements OnInit {
                 newLastWorkingDate: this.selectedTransferDetails.transferFrom.lastWorkingDate,
                 newJoiningDate: this.selectedTransferDetails.joiningDate,
                 reason: this.selectedTransferDetails.reason
-            })
+            });
         } catch (error) {
             console.log(error);
         }
     }
 
-    selectedLastDate(lastDate: Date){
+    selectedLastDate(lastDate: Date) {
         const nextDay = new Date(lastDate);
         nextDay.setDate(nextDay.getDate() + 1);
 
@@ -201,17 +203,17 @@ export class Transfer implements OnInit {
         this.updateTransferForm.get('newJoiningDate')?.reset();
     }
 
-    onSubmit(){
+    onSubmit() {
         try {
             this.updateTransferForm.patchValue({
                 transferId: this.selectedTransferId
-            })
+            });
             const data = this.updateTransferForm.value;
 
             console.log(data);
 
             this.apiService.updateTransfer(data).subscribe({
-                next: val => {
+                next: (val) => {
                     console.log(val);
                     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Transfer Details Updated Successfully' });
                     this.updateTransferModal = false;
@@ -219,14 +221,14 @@ export class Transfer implements OnInit {
                     this.selectedTransfer = [];
                     this.fetchTransferedList();
                 },
-                error: err => {
+                error: (err) => {
                     console.log(err);
 
                     if (err.status === 400) {
                         this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
                     }
                 }
-            })
+            });
         } catch (error) {
             console.log(error);
         }
@@ -251,9 +253,9 @@ export class Transfer implements OnInit {
                         error: (err) => {
                             console.log(err);
 
-                            if (err.status === 400) {      
-                              this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
-                              this.selectedTransfer = [];
+                            if (err.status === 400) {
+                                this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
+                                this.selectedTransfer = [];
                             }
                         }
                     });
@@ -267,39 +269,39 @@ export class Transfer implements OnInit {
         });
     }
 
-    cancelTransferPopup(){
-      console.log('cancel request');
-      this.confirmationService.confirm({
-        header: 'Are you sure?',
-        accept: () => {
-          try {
-            const data = {
-              id: this.selectedTransferId
-            }
-            console.log(data);
+    cancelTransferPopup() {
+        console.log('cancel request');
+        this.confirmationService.confirm({
+            header: 'Are you sure?',
+            accept: () => {
+                try {
+                    const data = {
+                        id: this.selectedTransferId
+                    };
+                    console.log(data);
 
-            this.apiService.cancelTransfer(data).subscribe({
-              next: val => {
-                console.log(val);
-                this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Transfer Cancelled Successfully' });
-                this.fetchTransferedList();
-                this.selectedTransfer = [];
-              },
-              error: err => {
-                console.log(err);
+                    this.apiService.cancelTransfer(data).subscribe({
+                        next: (val) => {
+                            console.log(val);
+                            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Transfer Cancelled Successfully' });
+                            this.fetchTransferedList();
+                            this.selectedTransfer = [];
+                        },
+                        error: (err) => {
+                            console.log(err);
 
-                if (err.status === 400) {
-                  this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
-                  this.selectedTransfer = [];
+                            if (err.status === 400) {
+                                this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
+                                this.selectedTransfer = [];
+                            }
+                        }
+                    });
+                } catch (error) {
+                    console.log(error);
                 }
-              }
-            })
-          } catch (error) {
-            console.log(error);
-          }
-        },
-        reject: () => this.isEnableBtn = false
-      })
+            },
+            reject: () => (this.isEnableBtn = false)
+        });
     }
 
     typedValue(event: any) {
@@ -340,30 +342,30 @@ export class Transfer implements OnInit {
         return this.statusMap[status]?.severity ?? 'primary';
     }
 
-    updateRange(selectedValue: any, value: any[], index: number, filter: any){
-        if(!value) value = [];
+    updateRange(selectedValue: any, value: any[], index: number, filter: any) {
+        if (!value) value = [];
 
         value[index] = selectedValue;
 
         filter(value);
     }
 
-    loadTransfer(event: any){
-        try {         
+    loadTransfer(event: any) {
+        try {
             this.first = event.first;
             this.offSet = event.first / event.rows;
             this.pageSize = event.rows;
-    
+
             const filters = event.filters;
             console.log(filters);
 
             const formatDate = (d: any) => {
-                if(!d) return null;
+                if (!d) return null;
                 return typeof d === 'string' ? d : d.toLocaleDateString('en-CA');
-            }
+            };
 
             const dateValue = filters?.date?.[0]?.value;
-    
+
             const payload = {
                 offSet: this.offSet,
                 pageSize: this.pageSize,
@@ -375,8 +377,8 @@ export class Transfer implements OnInit {
                 replacementRequired: filters?.replace?.[0]?.value ?? null,
                 joiningFrom: Array.isArray(dateValue) ? formatDate(dateValue[0]) : null,
                 joiningTo: Array.isArray(dateValue) ? formatDate(dateValue[1]) : null
-            }
-    
+            };
+
             console.log(payload);
 
             this.transferApi(payload);
@@ -385,7 +387,7 @@ export class Transfer implements OnInit {
         }
     }
 
-    onDialogClose(){
+    onDialogClose() {
         this.updateTransferForm.reset();
         this.selectedTransfer = [];
     }
