@@ -22,6 +22,11 @@ export class CompanyUsers implements OnInit {
 
     selectedDepartments: number[] = [];
 
+    menuItems: any[] = [];
+    selectedCompanyUsers: any;
+
+    filteredData: any;
+
     userId: number | null = null;
 
     private fb = inject(FormBuilder);
@@ -57,6 +62,7 @@ export class CompanyUsers implements OnInit {
 
     ngOnInit(): void {
         this.fetchActiveCompanyUsers();
+        this.menuItems = this.getMenuItems();
     }
 
     get userName() {
@@ -75,42 +81,13 @@ export class CompanyUsers implements OnInit {
         return this.companyUserForm.get('userDepartments') as FormArray;
     }
 
-    getMenuItems(user: any) {
-        const items = [
-            {
-                label: 'Edit',
-                icon: 'pi pi-pencil',
-                command: () => this.editUser(user)
-            },
-            {
-                label: 'Delete',
-                icon: 'pi pi-trash',
-                command: () => this.deleteUser(user)
-            }
-        ];
-
-        return user.isDefault ? items.filter((item: any) => item.label !== 'Delete') : items;
-    }
-
-    pageChange(event: any) {
-        console.log(event);
-        this.first = event.first;
-        this.offSet = event.first / event.rows;
-        this.pageSize = event.rows;
-        this.fetchActiveCompanyUsers();
-    }
-
-    fetchActiveCompanyUsers() {
+    companyUsersApi(data: any) {
         try {
-            let data = {
-                offSet: this.offSet,
-                pageSize: this.pageSize
-            };
             this.apiService.fetchActiveCompanyUsers(data).subscribe({
                 next: (val) => {
                     console.log(val);
-                    this.companyUserList = val.data.data;
-                    this.totalRecords = val.data.length ?? 0;
+                    this.companyUserList = val?.data?.data;
+                    this.totalRecords = val?.data?.length ?? 0;
                 },
                 error: (err) => {
                     console.log(err);
@@ -120,6 +97,21 @@ export class CompanyUsers implements OnInit {
                     }
                 }
             });
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    fetchActiveCompanyUsers() {
+        try {
+            let data = {
+                offSet: this.offSet,
+                pageSize: this.pageSize
+            };
+
+            console.log(data);
+
+            this.companyUsersApi(data);
         } catch (error) {
             console.log(error);
             this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Please Try Again!' });
@@ -268,7 +260,7 @@ export class CompanyUsers implements OnInit {
                         console.log(error);
 
                         if (error.status === 400) {
-                            this.messageService.add({severity: 'error', summary: 'Error', detail: error.error.detail});
+                            this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error.detail });
                         }
                     }
                 });
@@ -276,10 +268,10 @@ export class CompanyUsers implements OnInit {
                 this.companyUserForm.get('email')?.enable();
                 this.companyUserForm.get('userGroupId')?.enable();
                 const emailPrefix = this.companyUserForm.get('email')?.value?.trim();
-                const data = { 
+                const data = {
                     ...this.companyUserForm.value,
                     email: emailPrefix ? `${emailPrefix}@envision-energy.com` : null
-                 };
+                };
                 this.companyUserForm.get('email')?.disable();
                 this.companyUserForm.get('userGroupId')?.disable();
 
@@ -302,7 +294,7 @@ export class CompanyUsers implements OnInit {
                         console.log(err);
 
                         if (err.status === 400) {
-                            this.messageService.add({severity: 'error', summary: 'Error', detail: err.error.detail});
+                            this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
                         }
                     }
                 });
@@ -348,6 +340,53 @@ export class CompanyUsers implements OnInit {
                 }
             }
         });
+    }
+
+    companyUserMenu(event: Event, menu: any, companyUsers: any) {
+        this.selectedCompanyUsers = companyUsers;
+        menu.toggle(event);
+
+        this.menuItems[1].visible = !companyUsers.isDefault;
+    }
+
+    getMenuItems() {
+        return [
+            {
+                label: 'Edit',
+                icon: 'pi pi-pencil',
+                command: () => this.editUser(this.selectedCompanyUsers)
+            },
+            {
+                label: 'Delete',
+                icon: 'pi pi-trash',
+                command: () => this.deleteUser(this.selectedCompanyUsers)
+            }
+        ];
+    }
+
+    loadCompanyUser(event: any) {
+        try {
+            this.first = event.first;
+            this.offSet = event.first / event.rows;
+            this.pageSize = event.rows;
+
+            const filters = event.filters;
+            console.log(filters);
+
+            this.filteredData = {
+                offSet: this.offSet,
+                pageSize: this.pageSize,
+                userName: filters?.userName?.[0]?.value ?? null,
+                email: filters?.email?.[0]?.value ?? null,
+                userGroupName: filters?.userGroupName?.[0]?.value ?? null
+            };
+
+            console.log(this.filteredData);
+
+            this.companyUsersApi(this.filteredData);
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     onDialogClose() {

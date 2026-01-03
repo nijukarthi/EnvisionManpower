@@ -1,10 +1,14 @@
 <div class="card">
     <div class="flex items-baseline-last justify-between">
         <h5>Company Users</h5>
-        <p-button label="Add Users" icon="pi pi-plus" (click)="addUser()" />
+        <div class="flex gap-2">
+            <p-button label="Add Users" icon="pi pi-plus" (click)="addUser()" />
+            <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
+        </div>
     </div>
     <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
         <p-table
+            #dt
             [value]="companyUserList"
             [rowHover]="true"
             [first]="first"
@@ -16,14 +20,29 @@
             [showCurrentPageReport]="true"
             [paginatorDropdownAppendTo]="mydiv"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-            (onPage)="pageChange($event)"
+            (onLazyLoad)="loadCompanyUser($event)"
         >
             <ng-template #header>
                 <tr>
                     <th>SI No</th>
-                    <th>User Name</th>
-                    <th>Email</th>
-                    <th>User Group Name</th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>User Name</span>
+                            <p-columnFilter type="text" field="userName" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Email</span>
+                            <p-columnFilter type="text" field="email" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span> User Group Name</span>
+                            <p-columnFilter type="text" field="userGroupName" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
                     <th>Actions</th>
                 </tr>
             </ng-template>
@@ -34,8 +53,8 @@
                     <td>{{ user.email }}</td>
                     <td>{{ user.userGroupName }}</td>
                     <td>
-                        <p-menu #menu [model]="getMenuItems(user)" [popup]="true" appendTo="body" />
-                        <p-button (click)="menu.toggle($event)" icon="pi pi-ellipsis-v" [rounded]="true" variant="text" />
+                        <p-menu #menu [model]="menuItems" [popup]="true" appendTo="body" />
+                        <p-button (click)="companyUserMenu($event,menu,user)" icon="pi pi-ellipsis-v" [rounded]="true" variant="text" />
                     </td>
                 </tr>
             </ng-template>
@@ -66,17 +85,13 @@
                     <input type="text" pInputText id="email" formControlName="email" appFormFieldError class="block w-full" />
                     <p-inputgroup-addon>&#64;envision-energy.com</p-inputgroup-addon>
                 </p-inputgroup>
-                @if(email?.invalid && (email?.dirty || email?.touched)){ 
-                    @if(email?.hasError('required')){
-                        <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Email is required </p-message>
-                    }
-                    @if (email?.hasError('maxlength')) {
-                    <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Email cannot exceed 80 characters </p-message>
-                    } 
-                    @if (email?.hasError('pattern')) {
-                        <p-message severity="error" variant="simple" size="small" styleClass="mt-1">Invalid Email Address</p-message>                    
-                    }
-                }
+                @if(email?.invalid && (email?.dirty || email?.touched)){ @if(email?.hasError('required')){
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Email is required </p-message>
+                } @if (email?.hasError('maxlength')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Email cannot exceed 80 characters </p-message>
+                } @if (email?.hasError('pattern')) {
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1">Invalid Email Address</p-message>
+                } }
             </div>
             <div class="grid col-span-1 gap-1">
                 <label for="user-group">User Group</label>
