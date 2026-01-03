@@ -31,8 +31,8 @@
                     <td>{{ i + 1 }}</td>
                     <td>{{ role.roleName }}</td>
                     <td>
-                        <p-menu #menu [model]="getMenuItems(role)" [popup]="true" appendTo="body" />
-                        <p-button (onClick)="menu.toggle($event)" icon="pi pi-ellipsis-v" [rounded]="true" text="variant" />
+                        <p-menu #menu [model]="menuItems" [popup]="true" appendTo="body" />
+                        <p-button (onClick)="envisionrolesMenu($event,menu,envisionrolesMenu)" icon="pi pi-ellipsis-v" [rounded]="true" text="variant" />
                     </td>
                 </tr>
             </ng-template>

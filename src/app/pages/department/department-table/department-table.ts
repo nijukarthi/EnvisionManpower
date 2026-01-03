@@ -25,6 +25,9 @@ export class DepartmentTable implements OnInit {
 
     actionName: any = 'Save';
 
+    menuItems: any[] = [];
+    selectedDepartment: any;
+
     constructor(
         private messageService: MessageService,
         private apiService: Apiservice,
@@ -34,6 +37,7 @@ export class DepartmentTable implements OnInit {
     ) {}
 
     ngOnInit(): void {
+        this.menuItems = this.getMenuItems();
         this.departmentForm = this.fb.group({
             departmentId: [],
             departmentName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(80)]],
@@ -52,17 +56,17 @@ export class DepartmentTable implements OnInit {
         return this.departmentForm.get('departmentHead.userId');
     }
 
-    getMenuItems(category: any) {
+    getMenuItems() {
         return [
             {
                 label: 'Edit',
                 icon: 'pi pi-pencil',
-                command: () => this.editDepartment(category)
+                command: () => this.editDepartment(this.selectedDepartment)
             },
             {
                 label: 'Delete',
                 icon: 'pi pi-trash',
-                command: () => this.deleteDepartment(category)
+                command: () => this.deleteDepartment(this.selectedDepartment)
             }
         ];
     }
@@ -250,5 +254,10 @@ export class DepartmentTable implements OnInit {
             closeOnEscape: true,
             dismissableMask: true
         });
+    }
+
+    departmentMenu(event: Event, menu: any, department: any) {
+        this.selectedDepartment = department;
+        menu.toggle(event);
     }
 }

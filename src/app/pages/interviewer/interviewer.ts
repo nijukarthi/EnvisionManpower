@@ -14,7 +14,14 @@ import { FormFieldError } from '@/directives/form-field-error';
 export class Interviewer implements OnInit {
     offSet = 0;
     pageSize = 10;
+    totalRecords = 0;
     userId: number | null = null;
+
+    first = 0;
+    filteredData: any;
+
+    menuItems: any[] = [];
+    selectedInterviewer: any;
 
     interviewerList: any;
 
@@ -46,21 +53,39 @@ export class Interviewer implements OnInit {
 
     ngOnInit(): void {
         this.fetchActiveInterviewers();
+        this.menuItems = this.getMenuItems();
     }
 
-    getMenuItems(interviewer: any) {
+    getMenuItems() {
         return [
             {
                 label: 'Edit',
                 icon: 'pi pi-pencil',
-                command: () => this.editInterviewer(interviewer)
+                command: () => this.editInterviewer(this.selectedInterviewer)
             },
             {
                 label: 'Delete',
                 icon: 'pi pi-trash',
-                command: () => this.deleteInterviewer(interviewer)
+                command: () => this.deleteInterviewer(this.selectedInterviewer)
             }
         ];
+    }
+
+    interviewerApi(data: any) {
+        try {
+            this.apiService.fetchActiveInterviewers(data).subscribe({
+                next: (val) => {
+                    console.log(val);
+                    this.interviewerList = val.data.data;
+                    this.totalRecords = val?.data?.length ?? 0;
+                },
+                error: (err) => {
+                    console.log(err);
+                }
+            });
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     fetchActiveInterviewers() {
@@ -70,15 +95,9 @@ export class Interviewer implements OnInit {
                 pageSize: this.pageSize
             };
 
-            this.apiService.fetchActiveInterviewers(data).subscribe({
-                next: (val) => {
-                    console.log(val);
-                    this.interviewerList = val.data.data;
-                },
-                error: (err) => {
-                    console.log(err);
-                }
-            });
+            console.log(data);
+
+            this.interviewerApi(data);
         } catch (error) {
             console.log(error);
         }
@@ -198,6 +217,33 @@ export class Interviewer implements OnInit {
                 }
             }
         });
+    }
+
+    interviewerMenu(event: Event, menu: any, interviewer: any) {
+        this.selectedInterviewer = interviewer;
+        menu.toggle(event);
+    }
+
+    loadInterviewer(event: any) {
+        try {
+            this.first = event.first;
+            this.offSet = event.first / event.rows;
+            this.pageSize = event.rows;
+
+            const filters = event.filters;
+            console.log(filters);
+
+            this.filteredData = {
+                offSet: this.offSet,
+                pageSize: this.pageSize,
+                search: filters?.interviewer?.[0]?.value ?? null
+            };
+
+            console.log(this.filteredData);
+            this.interviewerApi(this.filteredData);
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     onDialogClose() {

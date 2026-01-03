@@ -28,6 +28,8 @@ export class Cluster implements OnInit {
     userList: any[] = [];
     clusterForm: any;
 
+    menuItems: any[] = [];
+    selectedCluster: any;
     constructor(
         private messageService: MessageService,
         private apiService: Apiservice,
@@ -37,6 +39,7 @@ export class Cluster implements OnInit {
     ) {}
 
     ngOnInit(): void {
+        this.menuItems = this.getMenuItems();
         this.clusterForm = this.fb.group({
             clusterId: [0],
             clusterName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
@@ -60,17 +63,17 @@ export class Cluster implements OnInit {
         return this.clusterForm.get('clusterHead.userId');
     }
 
-    getMenuItems(cluster: any) {
+    getMenuItems() {
         return [
             {
                 label: 'Edit',
                 icon: 'pi pi-pencil',
-                command: () => this.editCluster(cluster)
+                command: () => this.editCluster(this.selectedCluster)
             },
             {
                 label: 'Delete',
                 icon: 'pi pi-trash',
-                command: () => this.deleteCluster(cluster)
+                command: () => this.deleteCluster(this.selectedCluster)
             }
         ];
     }
@@ -239,6 +242,11 @@ export class Cluster implements OnInit {
                 }
             }
         });
+    }
+
+    clusterMenu(event: Event, menu: any, cluster: any) {
+        this.selectedCluster = cluster;
+        menu.toggle(event);
     }
 
     onDialogClose() {

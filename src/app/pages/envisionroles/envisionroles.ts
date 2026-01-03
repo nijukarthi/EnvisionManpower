@@ -18,6 +18,9 @@ export class Envisionroles {
     first = 0;
     totalRecords = 0;
 
+    menuItems: any[] = [];
+    selectedEnvisionroles: any;
+
     openNewRoleyPopup = false;
     roleId: any;
     roleList: any;
@@ -33,6 +36,7 @@ export class Envisionroles {
     ) {}
 
     ngOnInit(): void {
+        this.menuItems = this.getMenuItems();
         this.roleForm = this.fb.group({
             roleId: [''],
             roleName: ['', Validators.required]
@@ -43,17 +47,17 @@ export class Envisionroles {
         return this.roleForm.get('roleName');
     }
 
-    getMenuItems(role: any) {
+    getMenuItems() {
         return [
             {
                 label: 'Edit',
                 icon: 'pi pi-pencil',
-                command: () => this.editRole(role)
+                command: () => this.editRole(this.selectedEnvisionroles)
             },
             {
                 label: 'Delete',
                 icon: 'pi pi-trash',
-                command: () => this.deleteRole(role)
+                command: () => this.deleteRole(this.selectedEnvisionroles)
             }
         ];
     }
@@ -215,6 +219,11 @@ export class Envisionroles {
                 this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Role Deleted Successfully' });
             }
         });
+    }
+
+    envisionrolesMenu(event: Event, menu: any, envisionroles: any) {
+        this.selectedEnvisionroles = envisionroles;
+        menu.toggle(event);
     }
 
     onDialogClose() {
