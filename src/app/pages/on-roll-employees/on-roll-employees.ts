@@ -29,6 +29,7 @@ export class OnRollEmployees implements OnInit {
     onrollEmployeeList: any;
     onrollPpeDetails: any;
     filteredData: any;
+    editingRow: any | null = null;
 
     currentUserEmail = sessionStorage.getItem('userEmail');
 
@@ -208,9 +209,7 @@ export class OnRollEmployees implements OnInit {
                     joiningDate: formatDate(onroll.employmentDetails.joiningDate)
                 },
                 phoneNumber: onroll.phoneNumber,
-                alternativeNumber: onroll.alternativeNumber,
-                uan: onroll.uan,
-                aadharNumber: onroll.aadharNumber
+                alternativeNumber: onroll.alternativeNumber
             };
 
             console.log(data);
@@ -220,7 +219,7 @@ export class OnRollEmployees implements OnInit {
                     console.log(val);
                     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Candidate Details Updated Successfully' });
                     setTimeout(() => {
-                        this.fetchActiveOnrollEmployees();
+                        this.onrollEmployeeApi(this.filteredData);
                     }, 1000);
                 },
                 error: (err) => {
@@ -393,6 +392,21 @@ export class OnRollEmployees implements OnInit {
             default:
                 return 'primary';
         }
+    }
+
+    editOnrollRow(onroll: any){
+        if (this.editingRow && this.editingRow !== onroll) {
+            this.table.cancelRowEdit(this.editingRow);
+        }
+
+        this.editingRow = onroll;
+        onroll.editing = true;
+    }
+
+    cancelEdit(onroll: any){
+        this.onrollEmployeeApi(this.filteredData);
+        this.table.cancelRowEdit(onroll);
+        this.editingRow = null;
     }
 
     onDialogClose() {

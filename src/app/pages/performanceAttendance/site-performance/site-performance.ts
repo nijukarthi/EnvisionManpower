@@ -40,8 +40,6 @@ export class SitePerformance implements OnInit {
     editingRow: any | null = null;
     filteredData: any;
 
-    backupRow: any = null;
-
     date: Date = new Date();
     minDate: Date | undefined;
 
@@ -303,7 +301,7 @@ export class SitePerformance implements OnInit {
         if (this.editingRow && this.editingRow !== performance) {
             this.dt.cancelRowEdit(this.editingRow);
         }
-        this.backupRow = JSON.parse(JSON.stringify(performance));
+
         this.editingRow = performance;
         performance.editing = true;
 
@@ -328,11 +326,9 @@ export class SitePerformance implements OnInit {
     }
 
     cancelEdit(performance: any) {
-        Object.assign(performance, this.backupRow);
-
+        this.performanceApi(this.filteredData);
         this.dt.cancelRowEdit(performance);
         this.editingRow = null;
-        this.backupRow = null;
     }
 
     calculateTotalScore(performance: any) {
@@ -364,7 +360,7 @@ export class SitePerformance implements OnInit {
                 next: (val) => {
                     console.log(val);
                     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Successfully Updated Site Performance Details' });
-                    this.fetchCandidateSitePerformance();
+                    this.performanceApi(this.filteredData);
                 },
                 error: (err) => {
                     console.log(err);
