@@ -22,8 +22,6 @@ export class TrainingTable implements OnInit {
     editingRow: any | null = null;
     filteredData: any;
 
-    backupRow: any = null;
-
     trainingStatusList = [
         {
             label: 'Yes',
@@ -126,7 +124,7 @@ export class TrainingTable implements OnInit {
                 next: (val) => {
                     console.log(val);
                     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Candidate GWO Training Details Updated Successfully' });
-                    this.fetchActiveTrainingList();
+                    this.trainingApi(this.filteredData);
                 },
                 error: (err) => {
                     console.log(err);
@@ -191,17 +189,14 @@ export class TrainingTable implements OnInit {
         if (this.editingRow && this.editingRow !== training) {
             this.dt.cancelRowEdit(this.editingRow);
         }
-        this.backupRow = JSON.parse(JSON.stringify(training));
 
         this.editingRow = training;
         training.editing = true;
     }
 
-    cancelEdit(attendance: any) {
-        Object.assign(attendance, this.backupRow);
-
-        this.dt.cancelRowEdit(attendance);
+    cancelEdit(training: any) {
+        this.trainingApi(this.filteredData);
+        this.dt.cancelRowEdit(training);
         this.editingRow = null;
-        this.backupRow = null;
     }
 }

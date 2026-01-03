@@ -187,9 +187,12 @@ export class AttendanceTable implements OnInit {
             this.dt.cancelRowEdit(this.editingRow);
         }
 
+        console.log(attendance);
+
         this.editingRow = attendance;
         attendance.editing = true;
         console.log(attendance);
+
         setTimeout(() => {
             const fields = [
                 { value: attendance.totalWorkingDays, ref: this.totalWorkingDaysInput },
@@ -204,11 +207,19 @@ export class AttendanceTable implements OnInit {
         });
     }
 
+    attendanceChange(attendance: any, field: string, value: any){
+        attendance[field] = value ?? 0;
+
+        const total = (attendance.presentDays || 0) + (attendance.weekOff || 0) + 
+            (attendance.paidLeaves || 0) + (attendance.absentDays || 0);
+
+        if (total > attendance.effectiveEmploymentDays) {
+            this.messageService.add({ severity: 'warn', summary: 'Invalid Entry', detail: `Total days cannot exceed ${attendance.effectiveEmploymentDays}` });
+        }
+    }
+
     cancelEdit(attendance: any) {
-        attendance.presentDays = 0;
-        attendance.weekOff = 0;
-        attendance.paidLeaves = 0;
-        attendance.absentDays = 0;
+        this.attendanceApi(this.filteredData);
 
         this.dt.cancelRowEdit(attendance);
         this.editingRow = null;
@@ -238,7 +249,7 @@ export class AttendanceTable implements OnInit {
                 next: (val) => {
                     console.log(val);
                     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Successfully Updated Attendance Details' });
-                    this.fetchAttendanceList();
+                    this.attendanceApi(this.filteredData);
                 },
                 error: (err) => {
                     console.log(err);

@@ -25,7 +25,7 @@
             [totalRecords]="totalRecords"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
             [paginatorDropdownAppendTo]="mydiv"
-            [tableStyle]="{'min-width': '250rem'}"
+            [tableStyle]="{'min-width': '280rem'}"
             (onLazyLoad)="loadDemands($event)"
         >
             <ng-template #header let-columns>
@@ -161,7 +161,8 @@
                     <td>{{ onroll.employmentDetails.currentExperience || '-' }}</td>
                     <td>{{ onroll.employmentDetails.totalExperience || '-' }}</td>
                     <td>
-                        <p-tag [value]="onroll.employmentDetails.employmentStatus" [severity]="getSeverity(onroll.employmentDetails.employmentStatus)" />
+                        <p-tag [value]="onroll.employmentDetails.employmentStatus" 
+                            [severity]="getSeverity(onroll.employmentDetails.employmentStatus)" />
                     </td>
                     <td #pEditableColumn>
                         <p-cellEditor>
@@ -237,10 +238,12 @@
                     </td>
                     <td class="flex items-center justify-center gap-2">
                         @if (!editing) {
-                        <button pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil" rounded severity="secondary"></button>
+                        <button pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil" 
+                            rounded severity="secondary" (click)="editOnrollRow(onroll)"></button>
                         }@else {
                         <button pButton pRipple type="button" pSaveEditableRow icon="pi pi-check" rounded severity="primary" (click)="updateOnrollDetails(onroll)"></button>
-                        <button pButton pRipple type="button" pCancelEditableRow icon="pi pi-times" rounded severity="danger"></button>
+                        <button pButton pRipple type="button" pCancelEditableRow icon="pi pi-times" rounded severity="danger"
+                            (click)="cancelEdit(onroll)"></button>
                         }
                     </td>
                 </tr>

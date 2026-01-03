@@ -13,7 +13,7 @@
             dataKey="employmentDetails.employmentId" selectionMode="multiple" [paginatorDropdownAppendTo]="mydiv"
             [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true" [totalRecords]="totalRecords" [first]="first"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" editMode="row"
-            [tableStyle]="{'min-width': '220rem'}" (onLazyLoad)="loadDemands($event)">
+            [tableStyle]="{'min-width': '280rem'}" (onLazyLoad)="loadDemands($event)">
             <ng-template #header let-columns>
                 <tr>
                     <th><p-tableHeaderCheckbox /></th>
@@ -240,13 +240,16 @@
                     <td class="flex items-center justify-center gap-2">
                         @if (!editing) {
                             <button pButton pRipple type="button" pInitEditableRow
-                                icon="pi pi-pencil" rounded severity="secondary"></button>
+                                icon="pi pi-pencil" rounded severity="secondary" 
+                                (click)="editOnboardingRow(onboarding)"></button>
                         }
                         @else {
                             <button pButton pRipple type="button" pSaveEditableRow
-                                icon="pi pi-check" rounded severity="success" (click)="submitOnboardingForm(onboarding)"></button>
+                                icon="pi pi-check" rounded severity="success" 
+                                (click)="submitOnboardingForm(onboarding)"></button>
                             <button pButton pRipple type="button" pCancelEditableRow
-                                icon="pi pi-times" rounded severity="danger"></button>
+                                icon="pi pi-times" rounded severity="danger"
+                                (click)="cancelEdit(onboarding)"></button>
                         }
                     </td>
                 </tr>

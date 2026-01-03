@@ -3,6 +3,7 @@ import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder } from '@angular/forms';
+import { dt } from '@primeuix/themes';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 
@@ -31,6 +32,8 @@ export class OnboardingTable implements OnInit {
   onboardingList: any;
   selectedCandidates: any[] = [];
   ppeDetailsList: any;
+  filteredData: any;
+  editingRow: any | null = null;
 
   private fb = inject(FormBuilder);
 
@@ -288,9 +291,7 @@ export class OnboardingTable implements OnInit {
         joiningDate: onboardingForm.employmentDetails.joiningDate
       },
       phoneNumber: onboardingForm.phoneNumber,
-      alternativeNumber: onboardingForm.alternativeNumber,
-      uan: onboardingForm.uan,
-      aadharNumber: onboardingForm.aadharNumber
+      alternativeNumber: onboardingForm.alternativeNumber
     };
 
     console.log(data);
@@ -300,7 +301,7 @@ export class OnboardingTable implements OnInit {
         console.log(val);
         this.messageService.add({severity: 'success', summary: 'Success', detail: 'Candidate Details Updated Successfully'});
         setTimeout(() => {       
-          this.fetchOnboardingCandidateList();
+          this.onboardingApi(this.filteredData);
         }, 1000);
       },
       error: err => {
@@ -353,7 +354,7 @@ export class OnboardingTable implements OnInit {
 
       const dateValue = filters?.date?.[0]?.value;
 
-      const payload = {
+      this.filteredData = {
         offSet: this.offSet,
         pageSize: this.pageSize,
         employeeCode: filters?.employeeCode?.[0]?.value ?? null,
@@ -372,12 +373,27 @@ export class OnboardingTable implements OnInit {
         joiningDateFrom: Array.isArray(dateValue) ? formDate(dateValue[0]) : null,
         joiningDateTo: Array.isArray(dateValue) ? formDate(dateValue[1]) : null
       }
-      console.log(payload);
+      console.log(this.filteredData);
 
-      this.onboardingApi(payload);
+      this.onboardingApi(this.filteredData);
     } catch (error) {
       console.log(error);
     }
+  }
+
+  editOnboardingRow(onboarding: any){
+    if (this.editingRow && this.editingRow !== onboarding) {
+      this.table.cancelRowEdit(this.editingRow);
+    }
+
+    this.editingRow = onboarding;
+    onboarding.editing = true;
+  }
+
+  cancelEdit(onboarding: any){
+    this.onboardingApi(this.filteredData);
+    this.table.cancelRowEdit(onboarding);
+    this.editingRow = null;
   }
 
   updateRange(selectedValue: any, value: any[], index: number, filter: any) {
