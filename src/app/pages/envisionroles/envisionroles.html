@@ -2,10 +2,14 @@
 <div class="card">
     <div class="flex items-baseline-last justify-between">
         <h5>Envision Roles</h5>
-        <p-button label="Add Role" icon="pi pi-plus" (click)="addRoles()" />
+        <div class="flex gap-2">
+            <p-button label="Add Role" icon="pi pi-plus" (click)="addRoles()" />
+            <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
+        </div>
     </div>
     <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
         <p-table
+            #dt
             [value]="roleList"
             [rowHover]="true"
             [paginator]="true"
@@ -17,12 +21,17 @@
             [totalRecords]="totalRecords"
             [paginatorDropdownAppendTo]="mydiv"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-            (onPage)="pageChange($event)"
+            (onLazyLoad)="loadEnvisionroles($event)"
         >
             <ng-template #header>
                 <tr>
                     <th>SI No</th>
-                    <th>Role Name</th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Role Name</span>
+                            <p-columnFilter type="text" field="roleName" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
                     <th>Actions</th>
                 </tr>
             </ng-template>

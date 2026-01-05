@@ -1,10 +1,14 @@
 <div class="card">
     <div class="flex items-baseline-last justify-between">
         <h5>Projects</h5>
-        <p-button label="Add Project" icon="pi pi-plus" (click)="addProject()" />
+        <div class="flex gap-2">
+            <p-button label="Add Project" icon="pi pi-plus" (click)="addProject()" />
+            <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
+        </div>
     </div>
     <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
         <p-table
+            #dt
             [value]="projectList"
             [rowHover]="true"
             [paginator]="true"
@@ -16,18 +20,53 @@
             [totalRecords]="totalRecords"
             [paginatorDropdownAppendTo]="mydiv"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-            (onPage)="pageChange($event)"
+            (onLazyLoad)="loadProject($event)"
         >
             <ng-template #header>
                 <tr>
                     <th>SL No</th>
-                    <th>Project Code</th>
-                    <th>Site Name</th>
-                    <th>Cluster Name</th>
-                    <th>Cluster Head</th>
-                    <th>Department</th>
-                    <th>Department Head</th>
-                    <th>Site Incharge</th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Project Code</span>
+                            <p-columnFilter type="text" field="projectCode" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span> Site Name</span>
+                            <p-columnFilter type="text" field="siteName" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span> Cluster Name</span>
+                            <p-columnFilter type="text" field="clusterName" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span> Cluster Head</span>
+                            <p-columnFilter type="text" field="clusterHead" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span> Department</span>
+                            <p-columnFilter type="text" field="departmentName" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Department Head</span>
+                            <p-columnFilter type="text" field="departmentHead" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Site Incharge</span>
+                            <p-columnFilter type="text" field="siteIncharge" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
                     <th>Actions</th>
                 </tr>
             </ng-template>

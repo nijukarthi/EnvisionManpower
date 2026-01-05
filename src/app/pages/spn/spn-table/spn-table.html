@@ -21,7 +21,7 @@
             [first]="first"
             [paginatorDropdownAppendTo]="mydiv"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-            (onPage)="pageChange($event)"
+            (onLazyLoad)="pageChange($event)"
         >
             <ng-template #header>
                 <tr>
@@ -38,7 +38,12 @@
                             <p-columnFilter type="text" field="spnDescription" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
-                    <th>Experience</th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Experience</span>
+                            <p-columnFilter type="text" field="experience" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
                     <th>Actions</th>
                 </tr>
             </ng-template>

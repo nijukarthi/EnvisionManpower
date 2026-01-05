@@ -28,6 +28,8 @@ export class Project implements OnInit {
     pageSize = 10;
     totalRecords = 0;
 
+    filteredData: any;
+
     actionName = '';
     siteName = '';
 
@@ -117,19 +119,31 @@ export class Project implements OnInit {
         ];
     }
 
+    projectApi(data: any) {
+        try {
+            this.apiService.fetchActiveProjects(data).subscribe({
+                next: (val) => {
+                    console.log(val);
+                    this.projectList = val?.data.data;
+                    this.totalRecords = val?.data.length ?? 0;
+                },
+                error: (err) => {
+                    console.log(err);
+                }
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     fetchActiveProjects() {
         try {
             let data = {
                 offSet: this.offSet,
                 pageSize: this.pageSize
             };
-            this.apiService.fetchActiveProjects(data).subscribe({
-                next: (val) => {
-                    console.log(val);
-                    this.projectList = val?.data.data;
-                    this.totalRecords = val?.data.length ?? 0;
-                }
-            });
+            console.log(data);
+            this.projectApi(data);
         } catch (error) {
             console.log(error);
         }
@@ -408,13 +422,31 @@ export class Project implements OnInit {
         menu.toggle(event);
     }
 
-    pageChange(event: any) {
-        this.first = event.first;
-        this.offSet = event.first / event.rows;
-        this.pageSize = event.rows;
-        console.log(this.offSet);
-        console.log(this.pageSize);
-        this.fetchActiveProjects();
+    loadProject(event: any) {
+        try {
+            this.first = event.first;
+            this.offSet = event.first / event.rows;
+            this.pageSize = event.rows;
+
+            const filters = event.filters;
+            console.log(filters);
+
+            this.filteredData = {
+                offSet: this.offSet,
+                pageSize: this.pageSize,
+                projectCode: filters?.projectCode?.[0]?.value ?? null,
+                siteName: filters?.siteName?.[0]?.value ?? null,
+                clusterName: filters?.clusterName?.[0]?.value ?? null,
+                clusterHead: filters?.clusterHead?.[0]?.value ?? null,
+                departmentName: filters?.departmentName?.[0]?.value ?? null,
+                departmentHead: filters?.departmentHead?.[0]?.value ?? null,
+                siteIncharge: filters?.siteIncharge?.[0]?.value ?? null
+            };
+            console.log(this.filteredData);
+            this.projectApi(this.filteredData);
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     onDialogClose() {

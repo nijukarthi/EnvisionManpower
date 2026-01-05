@@ -21,6 +21,7 @@ export class SpnTable implements OnInit {
     pageSize = 10;
     first = 0;
     totalRecords = 0;
+    filteredData: any;
 
     actionName = '';
 
@@ -87,6 +88,23 @@ export class SpnTable implements OnInit {
         ];
     }
 
+    spnApi(data: any) {
+        try {
+            this.apiService.fetchActiveSpns(data).subscribe({
+                next: (val) => {
+                    console.log(val);
+                    this.spnList = val?.data.data;
+                    this.totalRecords = val?.data.length ?? 0;
+                },
+                error: (err) => {
+                    console.log(err);
+                }
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     addSpn() {
         try {
             this.openSpn = true;
@@ -102,13 +120,8 @@ export class SpnTable implements OnInit {
                 offSet: this.offSet,
                 pageSize: this.pageSize
             };
-            this.apiService.fetchActiveSpns(data).subscribe({
-                next: (val) => {
-                    console.log(val);
-                    this.spnList = val?.data.data;
-                    this.totalRecords = val?.data.length ?? 0;
-                }
-            });
+
+            this.spnApi(data);
         } catch (error) {
             console.log(error);
         }
@@ -237,10 +250,27 @@ export class SpnTable implements OnInit {
     }
 
     pageChange(event: any) {
-        this.first = event.first;
-        this.offSet = event.first / event.rows;
-        this.pageSize = event.rows;
-        this.fetchActiveSpn();
+        try {
+            this.first = event.first;
+            this.offSet = event.first / event.rows;
+            this.pageSize = event.rows;
+
+            const filters = event.filters;
+            console.log(filters);
+
+            this.filteredData = {
+                offSet: this.offSet,
+                pageSize: this.pageSize,
+                spnCode: filters?.spnCode?.[0]?.value ?? null,
+                spnDescription: filters?.spnDescription?.[0]?.value ?? null,
+                experience: filters?.experience?.[0]?.value ?? null
+            };
+
+            console.log(this.filteredData);
+            this.spnApi(this.filteredData);
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     onDialogClose() {
