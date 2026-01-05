@@ -27,7 +27,7 @@ export class Apiservice {
         return this.postMethod('auth/user/verify-otp', params);
     }
 
-    sendInterviewerOtp(params: any) {
+    sendInterviewerOtp(params: any): Observable<any>{
         return this.postMethod('auth/guestuser/send-otp', params);
     }
 
