@@ -18,6 +18,8 @@ export class Envisionroles {
     first = 0;
     totalRecords = 0;
 
+    filteredData: any;
+
     menuItems: any[] = [];
     selectedEnvisionroles: any;
 
@@ -62,6 +64,23 @@ export class Envisionroles {
         ];
     }
 
+    envisionrolesApi(data: any) {
+        try {
+            this.apiService.fetchActiveEnvRole(data).subscribe({
+                next: (val) => {
+                    console.log(val);
+                    this.roleList = val.data.data;
+                    this.totalRecords = val?.data.length ?? 0;
+                },
+                error: (err) => {
+                    console.log(err);
+                }
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     addRoles() {
         try {
             this.openNewRoleyPopup = true;
@@ -72,20 +91,18 @@ export class Envisionroles {
     }
 
     fetchActiveEnvRole() {
-        const data = {
-            offSet: this.offSet,
-            pageSize: this.pageSize
-        };
-        this.apiService.fetchActiveEnvRole(data).subscribe({
-            next: (val) => {
-                console.log(val);
-                this.roleList = val.data.data;
-                this.totalRecords = val?.data.length ?? 0;
-            },
-            error: (err) => {
-                console.log(err);
-            }
-        });
+        try {
+            const data = {
+                offSet: this.offSet,
+                pageSize: this.pageSize
+            };
+
+            console.log(data);
+
+            this.envisionrolesApi(data);
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     editRole(roleId: number) {
@@ -231,10 +248,25 @@ export class Envisionroles {
         this.roleForm.reset();
     }
 
-    pageChange(event: any) {
-        this.first = event.first;
-        this.offSet = event.first / event.rows;
-        this.pageSize = event.rows;
-        this.fetchActiveEnvRole();
+    loadEnvisionroles(event: any) {
+        try {
+            this.first = event.first;
+            this.offSet = event.first / event.rows;
+            this.pageSize = event.rows;
+
+            const filters = event.filters;
+            console.log(filters);
+
+            this.filteredData = {
+                offSet: this.offSet,
+                pageSize: this.pageSize,
+                search: filters?.roleName?.[0]?.value ?? null
+            };
+
+            console.log(this.filteredData);
+            this.envisionrolesApi(this.filteredData);
+        } catch (error) {
+            console.log(error);
+        }
     }
 }
