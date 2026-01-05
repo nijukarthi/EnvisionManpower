@@ -69,19 +69,21 @@
             <div class="grid grid-cols-1">
                 <div class="bg-surface-0 dark:bg-surface-900 p-12 rounded-3xl">
                     <h5 class="font-medium">Confirm you are you</h5>
-                    <p>We sent an email with a verification code to {{ loginUserResponse.data.email }}</p>
+                    <p>We sent an email with a verification code to {{ loginUserResponse.email }}</p>
                     <p>Enter it below to confirm your email.</p>
                     <form [formGroup]="userOtpForm" >
                         <div class="grid grid-cols-1 gap-1">
                             <div class="col-span-1 grid">
                                 <label for="v-code" class="text-lg">Verification code</label>
-                                <p-inputotp id="v-code" formControlName="otp" [length]="6" [mask]="true" [integerOnly]="true" size="large" style="--p-inputotp-gap: 1.5rem;" />
+                                <p-inputotp id="v-code" formControlName="otp" [length]="6" [integerOnly]="true" size="large" style="--p-inputotp-gap: 1.5rem;" />
                             </div>
 
                             <button type="submit" pButton pRipple (click)="verifyOtp()">
                                 <span pButtonLabel>Verify</span>
                             </button>
-                            <p-button label="Resend Code" variant="outlined" severity="secondary" styleClass="w-full mt-2" />
+                            <p-button [label]="otpTimeLeft !== '00:00' ? `Resend Code in ${otpTimeLeft}` : 'Resend Code'" 
+                                variant="outlined" severity="secondary" 
+                                styleClass="w-full mt-2" [disabled]="otpTimeLeft !== '00:00'" (click)="onSubmitUsers('email')" />
                             <h6 class="font-light">Didn't get the code?</h6>
                             <ul class="list-disc list-inside leading-relaxed -mt-3">
                                 <li>Codes can take up to 5 minutes to arrive.</li>
@@ -101,21 +103,21 @@
         <div class="grid grid-cols-1">
             <div class="bg-surface-0 dark:bg-surface-900 p-12 rounded-3xl">
                 <h5 class="font-medium">Confirm you are you</h5>
-                <p>We sent an sms with a verification code to {{ loginUserResponse.data.email }}</p>
+                <p>We sent an sms with a verification code to {{ loginUserResponse.email }}</p>
                 <p>Enter it below to confirm your Mobile Number.</p>
                 <form [formGroup]="interviewerOtpForm" (ngSubmit)="verifyInterviewerOtp()">
                     <div class="grid grid-cols-1 gap-1">
                         <div class="col-span-1 grid">
                             <label for="v-code" class="text-lg">Verification code</label>
-                            <p-inputotp id="v-code" formControlName="otp" [length]="6" [mask]="true"
+                            <p-inputotp id="v-code" formControlName="otp" [length]="6"
                                 [integerOnly]="true" size="large" style="--p-inputotp-gap: 1.5rem;" />
                         </div>
 
                         <button type="submit" pButton pRipple>
                             <span pButtonLabel>Verify</span>
                         </button>
-                        <p-button label="Resend Code" variant="outlined" severity="secondary"
-                            styleClass="w-full mt-2" />
+                        <p-button [label]="otpTimeLeft !== '00:00' ? `Resend Code in ${otpTimeLeft}` : 'Resend Code'" variant="outlined" 
+                            severity="secondary" styleClass="w-full mt-2" (onClick)="submitInterviewer()" />
                         <h6 class="font-light">Didn't get the code?</h6>
                         <ul class="list-disc list-inside leading-relaxed -mt-3">
                             <li>Codes can take up to 5 minutes to arrive.</li>

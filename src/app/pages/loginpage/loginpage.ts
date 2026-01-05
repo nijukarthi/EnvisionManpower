@@ -49,14 +49,10 @@ export class Loginpage {
         phoneNumber: [''],
         otp: ['', Validators.required]
     })
-
-     const nav = this.route.getCurrentNavigation();
-        console.log(history.state);
-        this.otpTimeLeft = history.state.otpTimeLeft;
-        console.log('OTP Time Left:', this.otpTimeLeft);
   }
 
-   otpTimer(expireByString: string){
+    otpTimer(expireByString: string){
+        console.log(expireByString);
         const expireBy = new Date(expireByString).getTime();
         console.log("expireBy:", expireBy);
 
@@ -76,6 +72,7 @@ export class Loginpage {
             const seconds = totalSeconds % 60;
 
             this.otpTimeLeft = `${this.pad(minutes)}:${this.pad(seconds)}`;
+            // console.log(this.otpTimeLeft);
         }, 1000)
     }
 
@@ -106,7 +103,7 @@ export class Loginpage {
                             console.log(val);
                             this.registerScreen = true;
                             this.loginScreen = false;
-                            this.loginUserResponse = val;
+                            this.loginUserResponse = val.data;
                             this.otpTimer(this.loginUserResponse.expireBy);
                             return;
                            /*  this.route.navigate(['/register']) */
@@ -185,7 +182,7 @@ export class Loginpage {
                         console.log(val);
                         this.loginScreen = false;
                         this.registerInterviewerScreen = true;
-                        this.loginUserResponse = val;
+                        this.loginUserResponse = val.data;
                         this.otpTimer(this.loginUserResponse.expireBy);
                         return;
                     },
@@ -234,31 +231,30 @@ export class Loginpage {
     verifyOtp(){
         try{
             if(this.userOtpForm.valid){
-              this.userOtpForm.patchValue({
-            email: this.loginUserResponse.data.email
-        })
-        console.log(this.userOtpForm.value);
+                this.userOtpForm.patchValue({
+                    email: this.loginUserResponse.email
+                })
+                console.log(this.userOtpForm.value);
 
-        this.apiService.verifyUserOtp(this.userOtpForm.value).subscribe({
-            next: (val: any) => {
-              if(val.status == 200){
-                console.log(val);
-                sessionStorage.setItem('token', val.data.token);
-                this.fetchUserProfile();
-              }
-            },
-            error: err => {
-              this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
+                this.apiService.verifyUserOtp(this.userOtpForm.value).subscribe({
+                    next: (val: any) => {
+                    if(val.status == 200){
+                        console.log(val);
+                        sessionStorage.setItem('token', val.data.token);
+                        this.fetchUserProfile();
+                    }
+                    },
+                    error: err => {
+                        console.log(err);
+                        this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
 
-            }
-        })
-            }else{
-            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Please Enter OTP' });
-
+                    }
+                })
+            }   else{
+                this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Please Enter OTP' });
             }
         }catch(e){
             this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Please Try Again' });
-
         }
         
     }
@@ -268,7 +264,7 @@ export class Loginpage {
             console.log(this.interviewerOtpForm.value);
             if (this.interviewerOtpForm.valid) {
                 this.interviewerOtpForm.patchValue({
-                    phoneNumber: this.loginUserResponse.data.email
+                    phoneNumber: this.loginUserResponse.email
                 })
 
                 const data = this.interviewerOtpForm.value;
