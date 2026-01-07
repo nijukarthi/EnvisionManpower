@@ -63,12 +63,12 @@ export class PoAssignTable implements OnInit {
     return [
       {
         label: 'View',
-        icon: 'pi pi-eye',
-        command: () => this.router.navigate(['/home/po-assign', po.poId])
+        icon: 'pi pi-eye'
       },
       {
         label: 'Edit',
-        icon: 'pi pi-pencil'
+        icon: 'pi pi-pencil',
+        command: () => this.router.navigate(['/home/po-assign', po.poId])
       },
       {
         label: 'Delete',
