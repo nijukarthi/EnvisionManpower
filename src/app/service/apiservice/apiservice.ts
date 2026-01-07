@@ -589,4 +589,8 @@ export class Apiservice {
     uploadAttendanceExcel(params: any){
         return this.postMethod('candidate/siteattendance/upload', params);
     }
+
+    updatePurchaseOrder(params: any){
+        return this.postMethod('requesition/purchaseorder/edit', params);
+    }
 }

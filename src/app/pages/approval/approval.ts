@@ -50,6 +50,12 @@ export class Approval implements OnInit {
     406: { label: 'Rejected', severity: 'danger' }
   }
 
+  filters = {
+    status: [{ value: [102], matchMode: 'equals' }]
+  };
+
+  selectedStatuses: number[] = [102];
+
   constructor(private fb: FormBuilder, private apiService: Apiservice, private messageService: MessageService) {}
 
   ngOnInit(): void {

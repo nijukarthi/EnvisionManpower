@@ -1,12 +1,15 @@
 <div class="card">
     <div class="flex items-baseline-last justify-between">
-        <h5>Manpower Approval</h5>
+        <div class="flex items-start gap-2">
+            <h5>Manpower Approval</h5>
+            <!-- <p-tag value="Processing" [rounded]="true" class="mt-1" /> -->
+        </div>
         <p-button icon="pi pi-filter-slash" label="Clear" (click)="dt.clear()" />
     </div>
     <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
         <p-table [value]="demandProcessingList" #dt [(selection)]="selectedApprovalList" dataKey="id" [lazy]="true"
             [tableStyle]="{ 'min-width': '130rem' }" [paginator]="true" [rowsPerPageOptions]="[10, 20, 30]" stripedRows
-            [rows]="pageSize" [rowHover]="true" [showCurrentPageReport]="true" [first]="first"
+            [rows]="pageSize" [rowHover]="true" [showCurrentPageReport]="true" [first]="first" [filters]="filters"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [totalRecords]="totalRecords"
             responsiveLayout="scroll" (onLazyLoad)="loadDemands($event)" [paginatorDropdownAppendTo]="mydiv"
             [globalFilterFields]="['demandCode', 'spn.spnCode','spn.spnDescription','spn.experience', 'requisitionCode', 'envisionRole.roleName']">
@@ -54,7 +57,7 @@
                             <p-columnFilter field="status" matchMode="equals" display="menu" [showAddButton]="false">
                                 <ng-template #filter let-value let-filter="filterCallback">
                                     <p-multiselect [options]="statuses" (onChange)="filter($event.value)"
-                                        placeholder="Select Statuses" class="w-full">
+                                        [(ngModel)]="selectedStatuses" placeholder="Select Statuses" class="w-full">
                                         <ng-template let-option #item>
                                             <p-tag [value]="option.label" [severity]="getSeverity(option.value)" />
                                         </ng-template>

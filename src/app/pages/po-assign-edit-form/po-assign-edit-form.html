@@ -5,14 +5,14 @@
     </div>
     <form [formGroup]="updatePOForm" (ngSubmit)="onSubmit()">
         <div class="grid grid-cols-2 gap-2">
-            <div class="grid col-span-1 gap-1" formGroupName="consultancy">
+            <div class="grid col-span-1 gap-1">
                 <label for="consultancy-name">Consultancy Name</label>
                 <input type="text" pInputText [value]="poDetails?.consultancy?.consultancyName" 
                     id="consultancy-name" [disabled]="true" />
             </div>
             <div class="grid col-span-1 gap-1">
                 <label for="po-number">PO Number</label>
-                <input type="text" pInputText formControlName="poNumber" id="po-number" />
+                <input type="text" pInputText [value]="poDetails?.poNumber" id="po-number" [disabled]="true" />
             </div>
             <div class="grid col-span-1 gap-1">
                 <label for="po-date">PO Date</label>
@@ -43,68 +43,67 @@
 
 <div class="card">
     <h5>Line Items</h5>
-    <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
-        <p-table [value]="poLineItemsList" stripedRows [rowHover]="true">
-            <ng-template #header>
-                <tr>
-                    <th>SL NO</th>
-                    <th>Employee Code</th>
-                    <th>Employee Name</th>
-                    <th>Duration Allowed</th>
-                    <th>Unit Price</th>
-                    <th>Tax Rate %</th>
-                    <th>Tax Amount</th>
-                    <th>Item Total</th>
-                    <th>Actions</th>
-                </tr>
-            </ng-template>
-            <ng-template #body let-item let-editing="editing" let-i="rowIndex">
-                <tr>
-                    <td>{{ i + 1 }}</td>
-                    <td>{{ item.candidate.employeeCode }}</td>
-                    <td>{{ item.candidate.candidateName }}</td>
-                    <td [pEditableColumn]="item.monthsAllowed" pEditableColumnField="monthsAllowed">
-                        <p-cellEditor>
-                            <ng-template #input>
-                                <input type="text" pInputText [(ngModel)]="item.monthsAllowed" fluid />
-                            </ng-template>
-                            <ng-template #output>
-                                {{ item.monthsAllowed }}
-                            </ng-template>
-                        </p-cellEditor>
-                    </td>
-                    <td [pEditableColumn]="item.unitRate" pEditableColumnField="unitRate">
-                        <p-cellEditor>
-                            <ng-template #input>
-                                <input type="text" pInputText [(ngModel)]="item.unitRate"
-                                    (ngModelChange)="calculateTax(item)" fluid />
-                            </ng-template>
-                            <ng-template #output>
-                                {{ item.unitRate }}
-                            </ng-template>
-                        </p-cellEditor>
-                    </td>
-                    <td [pEditableColumn]="item.taxRate" pEditableColumnField="taxRate">
-                        <p-cellEditor>
-                            <ng-template #input>
-                                <input type="text" pInputText [(ngModel)]="item.taxRate"
-                                    (ngModelChange)="calculateTax(item)" fluid />
-                            </ng-template>
-                            <ng-template #output>
-                                {{ item.taxRate }}
-                            </ng-template>
-                        </p-cellEditor>
-                    </td>
-                    <td>{{ item.taxAmount }}</td>
-                    <td>{{ item.lineTotal }}</td>
-                    <td>
-                        <p-button icon="pi pi-trash" severity="danger" rounded />
-                    </td>
-                </tr>
-            </ng-template>
-            <ng-template #emptymessage>
-                <tr></tr>
-            </ng-template>
-        </p-table>
-    </div>
+    <form [formGroup]="updatePOForm" (ngSubmit)="onSubmit()">
+        <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
+            <p-table [value]="poLineItemsList" formArrayName="items" [tableStyle]="{'min-width': '70rem'}"
+                [rowHover]="true">
+                <ng-template #header>
+                    <tr>
+                        <th>SL NO</th>
+                        <th>Employee Code</th>
+                        <th>Employee Name</th>
+                        <th>Month Utilized</th>
+                        <th>Month Allowed</th>
+                        <th>Unit Price</th>
+                        <th>Tax Rate %</th>
+                        <th>Tax Amount</th>
+                        <th>Item Total</th>
+                        <th>Actions</th>
+                    </tr>
+                </ng-template>
+                <ng-template #body let-item let-editing="editing" let-i="rowIndex">
+                    <tr [pEditableRow]="item" [formGroupName]="i">
+                        <td>{{ i + 1 }}</td>
+                        <td>{{ item.candidate.employeeCode }}</td>
+                        <td>{{ item.candidate.candidateName }}</td>
+                        <td>{{ item.monthsUtilized }}</td>
+                        <td>
+                            <p-inputnumber formControlName="monthsAllowed" (onInput)="calculateTax(i)"
+                                [useGrouping]="false" />
+                        </td>
+                        <td>
+                            <p-inputnumber formControlName="unitRate" (onInput)="calculateTax(i)"
+                                [useGrouping]="false" />
+                        </td>
+                        <td>
+                            <p-inputnumber formControlName="taxRate" (onInput)="calculateTax(i)" 
+                                useGrouping]="false" />
+                        </td>
+                        <td>{{ poLineItems.at(i).get('taxAmount')?.value || 0 }}</td>
+                        <td>{{ poLineItems.at(i).get('lineTotal')?.value || 0 }}</td>
+                        <td>
+                            <p-button [icon]="poLineItems.at(i).get('remove')?.value ? 'pi pi-undo' : 'pi pi-trash'" 
+                                [severity]="poLineItems.at(i).get('remove')?.value ? 'secondary' : 'danger'" rounded 
+                                [pTooltip]="poLineItems.at(i).get('remove')?.value ? 'Undo' : ''" tooltipPosition="top" 
+                                (onClick)="removePOLineItem(i)" />
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template #emptymessage>
+                    <tr>
+                        <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground);">
+                            No Records Found
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+        <div class="flex justify-end mt-4">
+            <button pButton pRipple type="submit">
+                <span pButtonLabel>Update</span>
+            </button>
+        </div>
+    </form>
 </div>
+
+<p-toast />

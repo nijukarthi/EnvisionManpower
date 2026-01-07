@@ -2,8 +2,9 @@ import { PurchaseOrderStatus } from '@/models/purchase-order-status/purchase-ord
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
 import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-po-assign-edit-form',
@@ -21,18 +22,30 @@ export class PoAssignEditForm implements OnInit {
   private fb = inject(FormBuilder);
 
   updatePOForm = this.fb.group({
-    poNumber: [0],
-    consultancy: this.fb.group({
-      userId: [0]
-    }),
+    poId: [0],
     poDate: [''],
     validFrom: [''],
     validTo: [''],
-    totalValue: [0],
     items: this.fb.array([])
   })
 
-  constructor(private apiService: Apiservice, private route: ActivatedRoute){}
+  get poLineItems(){
+    return this.updatePOForm.get('items') as FormArray;
+  }
+
+  updatePOLineItems(item: any){
+    return this.fb.group({
+      candidateId: [item.candidate.candidateId],
+      monthsAllowed: [item.monthsAllowed],
+      unitRate: [item.unitRate],
+      taxRate: [item.taxRate],
+      taxAmount: [item.taxAmount],
+      lineTotal: [item.lineTotal],
+      remove: [false]
+    })
+  }
+
+  constructor(private apiService: Apiservice, private route: ActivatedRoute, private messageService: MessageService){}
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(param => {
@@ -55,6 +68,7 @@ export class PoAssignEditForm implements OnInit {
         next: val => {
           console.log(val);
           this.poDetails = val?.data;
+          this.populateItems();
           const converted = {
             ...val?.data,
             poDate: new Date(val?.data.poDate),
@@ -63,8 +77,6 @@ export class PoAssignEditForm implements OnInit {
           }
           this.updatePOForm.patchValue(converted);
           this.poLineItemsList = val?.data?.items;
-
-          this.poLineItemsList.forEach((item: any) => this.calculateTax(item));
 
           const start = new Date(val?.data.validFrom);
           const end = new Date(val?.data.validTo);
@@ -83,16 +95,98 @@ export class PoAssignEditForm implements OnInit {
     }
   }
 
-  calculateTax(item: any){
-    // console.log(item);
-    const unitPrice = item.unitRate;
-    const taxRate = item.taxRate;
+  populateItems(){
+    const formArray = this.poLineItems;
+    formArray.clear();
 
-    item.taxAmount = (unitPrice * (taxRate / 100)) + unitPrice;
+    this.poDetails?.items.forEach((item: any) => {
+      formArray.push(this.updatePOLineItems(item))
+    })
+  }
+
+  calculateTax(index: number){
+    const rowGroup = this.poLineItems.at(index) as FormGroup;
+
+    const monthsAllowed = rowGroup.get('monthsAllowed')?.value || 0;
+    const unitPrice = rowGroup.get('unitRate')?.value || 0;
+    const taxRate = rowGroup.get('taxRate')?.value || 0;
+
+    const taxAmount = (unitPrice * (taxRate / 100)) + unitPrice;
+    const lineTotal = monthsAllowed * taxAmount;
+
+    rowGroup.patchValue({
+      taxAmount,
+      lineTotal
+    })
+  }
+
+  getChangedLineItems(){
+    return this.poLineItems.controls
+      .map((control, index) => ({
+        control,
+        value: this.poLineItems.getRawValue()[index]
+      }))
+      .filter(item => item.control.dirty);
   }
 
   onSubmit(){
+    try {
+      console.log(this.updatePOForm.getRawValue());
 
+      const changedItems = this.getChangedLineItems().map(item => ({
+        candidateId: item.value.candidateId,
+        monthsAllowed: item.value.monthsAllowed,
+        unitRate: item.value.unitRate,
+        taxRate: item.value.taxRate,
+        remove: item.value.remove
+      }));
+      console.log(changedItems);
+
+      const data = {
+        ...this.updatePOForm.getRawValue(),
+        items: changedItems
+      };
+
+      console.log(data);
+
+      this.apiService.updatePurchaseOrder(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Purchase Order Updated Successfully' });
+        },
+        error: err => {
+          console.log(err);
+
+          if (err.status === 400) {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
+          }
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  removePOLineItem(index: number){
+    try {
+      const rowGroup = this.poLineItems.at(index) as FormGroup;
+
+      const isRemoved = rowGroup.get('remove')?.value;
+
+      rowGroup.patchValue({
+        remove: !isRemoved
+      })
+
+      console.log(rowGroup.value);
+
+      if (!isRemoved) {
+        rowGroup.disable({ emitEvent: false });
+      } else {
+        rowGroup.enable({ emitEvent: true })
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   getSeverity(status: string){
