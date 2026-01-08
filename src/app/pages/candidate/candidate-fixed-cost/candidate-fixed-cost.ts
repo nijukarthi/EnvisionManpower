@@ -44,23 +44,33 @@ export class CandidateFixedCost implements OnInit {
         ];
     }
 
+    fixedCostCandidatesApi(data: any){
+        try {
+            this.apiService.fetchActiveFixedCostCandidates(data).subscribe({
+                next: (val) => {
+                    console.log(val);
+                    this.fixedCostCandidateList = val?.data?.data;
+                    this.totalRecords = val?.data.length ?? 0;
+                },
+                error: (err) => {
+                    console.log(err);
+                },
+                complete: () => console.log('Complete signal')
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     fetchActiveFixedCostCandidates() {
         const data = {
             offSet: this.offSet,
             pageSize: this.pageSize
         };
 
-        this.apiService.fetchActiveFixedCostCandidates(data).subscribe({
-            next: (val) => {
-                console.log(val);
-                this.fixedCostCandidateList = val?.data?.data;
-                this.totalRecords = val?.data.length ?? 0;
-            },
-            error: (err) => {
-                console.log(err);
-            },
-            complete: () => console.log('Complete signal')
-        });
+        console.log(data);
+
+        this.fixedCostCandidatesApi(data);
     }
 
     deleteFixedCostCandidate(candidate: any) {
@@ -105,10 +115,29 @@ export class CandidateFixedCost implements OnInit {
         });
     }
 
-    pageChange(event: any) {
-        this.first = event.first;
-        this.offSet = event.first / event.rows;
-        this.pageSize = event.rows;
-        this.fetchActiveFixedCostCandidates();
+    loadFixedCost(event: any){
+        try {
+            this.first = event.first;
+            this.offSet = event.first / event.rows;
+            this.pageSize = event.rows;
+
+            const filters = event.filters;
+            console.log(filters);
+
+            const payload = {
+                offSet: this.offSet,
+                pageSize: this.pageSize,
+                candidateCode: filters?.candidateCode?.[0]?.value ?? null,
+                employeeCode: filters?.employeeCode?.[0]?.value ?? null,
+                candidateName: filters?.candidateName?.[0]?.value ?? null,
+                phoneNumber: filters?.phoneNumber?.[0]?.value ?? null
+            };
+
+            console.log(payload);
+
+            this.fixedCostCandidatesApi(payload);
+        } catch (error) {
+            console.log(error);
+        }
     }
 }
