@@ -1,10 +1,14 @@
 <div class="card">
     <div class="flex items-baseline-last justify-between">
         <h5>Fixed Cost Candidates</h5>
-        <p-button label="Add Candidate" icon="pi pi-plus" routerLink="/home/candidates/fixed-cost/new" />
+        <div class="flex gap-1">
+            <p-button label="Add Candidate" icon="pi pi-plus" routerLink="/home/candidates/fixed-cost/new" />
+            <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
+        </div>
     </div>
     <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
         <p-table
+            #dt
             [value]="fixedCostCandidateList"
             [rowHover]="true"
             [paginator]="true"
@@ -13,18 +17,39 @@
             [rows]="pageSize"
             [rowsPerPageOptions]="[10, 20, 30]"
             [showCurrentPageReport]="true"
-            (onPage)="pageChange($event)"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
             [totalRecords]="totalRecords"
             [paginatorDropdownAppendTo]="mydiv"
+            (onLazyLoad)="loadFixedCost($event)"
             [tableStyle]="{'min-width': '100rem'}"
         >
             <ng-template #header>
                 <tr>
                     <th>SI NO</th>
-                    <th>Candidate Code</th>
-                    <th>Candidate Name</th>
-                    <th>Contact Number</th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Candidate Code</span>
+                            <p-columnFilter type="text" field="candidateCode" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Employee Code</span>
+                            <p-columnFilter type="text" field="employeeCode" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Candidate Name</span>
+                            <p-columnFilter type="text" field="candidateName" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Contact Number</span>
+                            <p-columnFilter type="text" field="phoneNumber" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
                     <th>Position Applied</th>
                     <th>Current Experience</th>
                     <th>Total Experience</th>
@@ -42,6 +67,7 @@
                         <p-menu #menu [model]="getMenuItems(candidate)" [popup]="true" appendTo="body" />
                         <p-button (click)="menu.toggle($event)" [label]="candidate.candidateCode" variant="text" link />
                     </td>
+                    <td>{{ candidate.employeeCode }}</td>
                     <td>{{ candidate.candidateName }}</td>
                     <td>{{ candidate.phoneNumber || '-' }}</td>
                     <td>{{ candidate.positionApplied }}</td>
