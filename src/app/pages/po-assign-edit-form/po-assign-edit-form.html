@@ -17,17 +17,17 @@
             <div class="grid col-span-1 gap-1">
                 <label for="po-date">PO Date</label>
                 <p-datepicker formControlName="poDate" [showIcon]="true" [iconDisplay]="'input'" 
-                    inputId="po-date" dateFormat="yy-mm-dd" />
+                    inputId="po-date" dateFormat="yy-mm-dd" (onSelect)="selectedPODate($event)" />
             </div>
             <div class="grid col-span-1 gap-1">
                 <label for="po-start-date">PO Start Date</label>
                 <p-datepicker formControlName="validFrom" [showIcon]="true" [iconDisplay]="'input'" 
-                    inputId="po-start-date" dateFormat="yy-mm-dd" />
+                    [minDate]="minPODate" inputId="po-start-date" dateFormat="yy-mm-dd" (onSelect)="selectedPOStartDate($event)" />
             </div>
             <div class="grid col-span-1 gap-1">
                 <label for="po-valid-to">PO Valid Till</label>
                 <p-datepicker formControlName="validTo" [showIcon]="true" [iconDisplay]="'input'" 
-                    inputId="po-valid-to" dateFormat="yy-mm-dd" />
+                    [minDate]="minPOStartDate" inputId="po-valid-to" dateFormat="yy-mm-dd" />
             </div>
             <div class="grid col-span-1 gap-1">
                 <label for="duration">Duration</label>
@@ -45,13 +45,16 @@
     <h5>Line Items</h5>
     <form [formGroup]="updatePOForm" (ngSubmit)="onSubmit()">
         <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
-            <p-table [value]="poLineItemsList" formArrayName="items" [tableStyle]="{'min-width': '70rem'}"
+            <p-table [value]="poLineItemsList" formArrayName="items" [tableStyle]="{'min-width': '100rem'}"
                 [rowHover]="true">
                 <ng-template #header>
                     <tr>
                         <th>SL NO</th>
                         <th>Employee Code</th>
                         <th>Employee Name</th>
+                        <th>SPN Code</th>
+                        <th>SPN Description</th>
+                        <th>Experience</th>
                         <th>Month Utilized</th>
                         <th>Month Allowed</th>
                         <th>Unit Price</th>
@@ -66,6 +69,9 @@
                         <td>{{ i + 1 }}</td>
                         <td>{{ item.candidate.employeeCode }}</td>
                         <td>{{ item.candidate.candidateName }}</td>
+                        <td>{{ item?.employmentDetails?.spn?.spnCode || '-' }}</td>
+                        <td>{{ item?.employmentDetails?.spn?.spnDescription || '-' }}</td>
+                        <td>{{ item?.employmentDetails?.spn?.experience || '-' }}</td>
                         <td>{{ item.monthsUtilized }}</td>
                         <td>
                             <p-inputnumber formControlName="monthsAllowed" (onInput)="calculateTax(i)"

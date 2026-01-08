@@ -70,6 +70,12 @@
                             <p-columnFilter type="text" field="projectCode" display="menu" />
                         </div>
                     </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Site Incharge</span>
+                            <p-columnFilter type="text" field="siteInchargeName" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
                     <th>Site Name</th>
                     <th>
                         <div class="flex items-center justify-between">
@@ -162,6 +168,7 @@
                     <td>{{ performance.candidate?.candidateName || '-' }}</td>
                     <td>{{ performance.candidate?.consultancy?.consultancyName || '-' }}</td>
                     <td>{{ performance.employmentDetails.project.projectCode || '-' }}</td>
+                    <td>{{ performance.employmentDetails.siteIncharge.userName || '-' }}</td>
                     <td>{{ performance.employmentDetails.project.siteName || '-' }}</td>
                     <td>{{ performance.employmentDetails.cluster.clusterName || '-' }}</td>
                     <td>{{ performance.employmentDetails?.spn?.spnCode || '-' }}</td>

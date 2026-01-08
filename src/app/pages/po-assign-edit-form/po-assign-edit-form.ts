@@ -19,6 +19,9 @@ export class PoAssignEditForm implements OnInit {
   poDetails: any;
   poLineItemsList: any;
 
+  minPODate: Date | undefined;
+  minPOStartDate: Date | undefined;
+
   private fb = inject(FormBuilder);
 
   updatePOForm = this.fb.group({
@@ -95,6 +98,16 @@ export class PoAssignEditForm implements OnInit {
     }
   }
 
+  selectedPODate(poDate: Date){
+    console.log(poDate);
+    this.minPODate = poDate;
+  }
+
+  selectedPOStartDate(poStartDate: Date){
+    console.log(poStartDate);
+    this.minPOStartDate = poStartDate;
+  }
+
   populateItems(){
     const formArray = this.poLineItems;
     formArray.clear();
@@ -117,7 +130,16 @@ export class PoAssignEditForm implements OnInit {
     rowGroup.patchValue({
       taxAmount,
       lineTotal
-    })
+    });
+
+    let total = 0;
+
+    this.poLineItems.controls.forEach((ctrl: any) => {
+      total += ctrl.get('lineTotal').value || 0;
+      // console.log(total);
+      this.poDetails.totalValue = total;
+    });
+
   }
 
   getChangedLineItems(){
@@ -149,19 +171,19 @@ export class PoAssignEditForm implements OnInit {
 
       console.log(data);
 
-      this.apiService.updatePurchaseOrder(data).subscribe({
-        next: val => {
-          console.log(val);
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Purchase Order Updated Successfully' });
-        },
-        error: err => {
-          console.log(err);
+      // this.apiService.updatePurchaseOrder(data).subscribe({
+      //   next: val => {
+      //     console.log(val);
+      //     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Purchase Order Updated Successfully' });
+      //   },
+      //   error: err => {
+      //     console.log(err);
 
-          if (err.status === 400) {
-            this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
-          }
-        }
-      })
+      //     if (err.status === 400) {
+      //       this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
+      //     }
+      //   }
+      // })
     } catch (error) {
       console.log(error);
     }
@@ -175,7 +197,10 @@ export class PoAssignEditForm implements OnInit {
 
       rowGroup.patchValue({
         remove: !isRemoved
-      })
+      }, { emitEvent: true });
+
+      rowGroup.markAsDirty();
+      rowGroup.get('remove')?.markAsDirty();
 
       console.log(rowGroup.value);
 

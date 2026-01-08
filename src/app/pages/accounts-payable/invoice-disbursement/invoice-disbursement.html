@@ -2,14 +2,17 @@
     <div class="flex items-baseline-last justify-between">
         <h5>Invoice Disbursement</h5>
         <div class="flex justify-end gap-1">
-            <p-button
+            <p-menu #menu [model]="menuItems" [popup]="true" />
+            <p-button (onClick)="menu.toggle($event)" label="Actions" icon="pi pi-angle-down" iconPos="right"
+                [disabled]="!selectedInvoiceId" />
+            <!-- <p-button
                 label="Start Disbursement"
                 [pTooltip]="!selectedInvoiceId ? 'Select One Invoice' 
                 : (invoiceStatus !== 'UNDER_DISBURSEMENT_REVIEW' ? 'Invoice Status must be in UNDER_DISBURSEMENT_REVIEW' : '')"
                 tooltipPosition="top"
                 [disabled]="!selectedInvoiceId || invoiceStatus !== 'UNDER_DISBURSEMENT_REVIEW'"
                 (onClick)="startDisbursement()"
-            />
+            /> -->
             <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
         </div>
     </div>

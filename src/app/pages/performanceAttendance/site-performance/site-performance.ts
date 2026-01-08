@@ -6,7 +6,6 @@ import { FormArray, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
-import { ConfirmDialog } from 'primeng/confirmdialog';
 
 @Component({
     selector: 'app-site-performance',
@@ -387,11 +386,13 @@ export class SitePerformance implements OnInit {
     selectedEmployee(performance: any) {
         console.log(performance);
         this.employeeDetails = performance.employmentDetails;
+        this.menuItems = this.getMenuItems();
         console.log(this.employeeDetails);
     }
 
     unSelectedEmployee() {
         this.employeeDetails = null;
+        this.menuItems = this.getMenuItems();
         console.log(this.employeeDetails);
     }
 
@@ -516,6 +517,7 @@ export class SitePerformance implements OnInit {
                 candidateName: filters?.candidateName?.[0]?.value ?? null,
                 consultancyName: filters?.consultancyName?.[0]?.value ?? null,
                 projectCode: this.getFilterValues(filters, 'projectCode'),
+                siteInchargeName: filters?.siteInchargeName?.[0]?.value ?? null,
                 clusterName: filters?.clusterName?.[0]?.value ?? null,
                 spnCode: filters?.spnCode?.[0]?.value ?? null,
                 spnDescription: filters?.spnDescription?.[0]?.value ?? null,

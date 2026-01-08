@@ -54,6 +54,12 @@
                             <p-columnFilter type="text" field="projectCode" display="menu" />
                         </div>
                     </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Site Incharge</span>
+                            <p-columnFilter type="text" field="siteInchargeName" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
                     <th>Site Name</th>
                     <th>
                         <div class="flex items-center justify-between">
@@ -142,6 +148,7 @@
                     <td>{{ onboarding.consultancy.consultancyName }}</td>
                     <td>{{ onboarding.employmentDetails?.demand?.demandCode || '-' }}</td>
                     <td>{{ onboarding.employmentDetails.project.projectCode }}</td>
+                    <td>{{ onboarding.employmentDetails.siteIncharge.userName || '-' }}</td>
                     <td>{{ onboarding.employmentDetails.project.siteName ?? '-' }}</td>
                     <td>{{ onboarding.employmentDetails.cluster.clusterName || '-' }}</td>
                     <td>{{ onboarding.employmentDetails.spn.spnCode || '-' }}</td>

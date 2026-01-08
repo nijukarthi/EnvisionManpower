@@ -19,6 +19,9 @@ export class PoAssignForm implements OnInit {
     selectedExistingSpnId = 0;
     duration = 0;
 
+    minPODate: Date | undefined;
+    minPOStartDate: Date | undefined;
+
     consultancyList: any;
     spnInfoList: any;
     selectedSpn: any = {
@@ -114,6 +117,16 @@ export class PoAssignForm implements OnInit {
         } catch (error) {
             console.log(error);
         }
+    }
+
+    selectedPODate(poDate: Date){
+        console.log(poDate);
+        this.minPODate = poDate;
+    }
+
+    selectedPOStartDate(poStartDate: Date){
+        console.log(poStartDate);
+        this.minPOStartDate = poStartDate;
     }
 
     updateDuration() {
@@ -229,18 +242,20 @@ export class PoAssignForm implements OnInit {
         }
     }
 
-    selectedSpnCode(spnId: number) {
+    selectedSpnCode(spnId: number, item: any) {
         console.log(spnId);
         this.selectedSpnId = spnId;
-        this.selectedSpn = this.spnInfoList.find((spn: any) => spn.spnId === spnId);
+        item.selectedSpnId = spnId;
+        item.selectedSpn = this.spnInfoList.find((spn: any) => spn.spnId === spnId);
         console.log(this.selectedSpn);
 
         this.fetchDemandDetails();
     }
 
-    selectedExistingSpnCode(spnId: number, lineIndex: number) {
+    selectedExistingSpnCode(spnId: number, lineIndex: number, item: any) {
         this.selectedExistingSpnId = spnId;
-        this.selectedExistingSpn = this.spnInfoList.find((spn: any) => spn.spnId === spnId);
+        item.selectedExistingSpnId = spnId;
+        item.selectedExistingSpn = this.spnInfoList.find((spn: any) => spn.spnId === spnId);
         console.log(this.selectedSpn);
 
         this.fetchSpnCandidates(lineIndex);

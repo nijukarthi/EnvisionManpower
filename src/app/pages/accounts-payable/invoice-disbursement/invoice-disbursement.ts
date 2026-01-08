@@ -18,9 +18,10 @@ export class InvoiceDisbursement implements OnInit {
     invoiceStatus = '';
 
     invoiceDisbursementList: any;
-
     totalRecords: any;
+
     statuses!: any[];
+    menuItems: any[] = [];
 
     constructor(
         private apiService: Apiservice,
@@ -29,6 +30,8 @@ export class InvoiceDisbursement implements OnInit {
 
     ngOnInit(): void {
         this.fetchDisbursementList();
+        this.menuItems = this.getMenuItems();
+
         this.statuses = [
             { label: 'SUBMITTED', value: 'SUBMITTED' },
             { label: 'GRN_IN_PROCESS', value: 'GRN_IN_PROCESS' },
@@ -42,6 +45,17 @@ export class InvoiceDisbursement implements OnInit {
             { label: 'PAID', value: 'PAID' }
         ];
     }
+
+    getMenuItems(){
+        return [
+            {
+                label: 'Start Disbursement',
+                icon: '',
+                command: () => this.startDisbursement()
+            }
+        ]
+    }
+
     invoiceDisbursementApi(data: any) {
         try {
             this.apiService.fetchDisbursementList(data).subscribe({
@@ -139,6 +153,7 @@ export class InvoiceDisbursement implements OnInit {
                 return 'primary';
         }
     }
+
     loadDisbursement(event: any) {
         try {
             this.first = event.first;
