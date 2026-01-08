@@ -5,7 +5,8 @@
         <div class="mb-4 flex items-center gap-2">
             <span class="font-bold">Demand Code:</span>
             <span>
-                <p-tag [value]="employeeDetails?.employeeDetails?.demand?.demandCode ?? 'Not Found'" [severity]="employeeDetails?.employeeDetails?.demand === null ? 'danger' : 'secondary'" />
+                <p-tag [value]="employeeDetails?.employeeDetails?.demand?.demandCode ?? 'Not Found'" 
+                    [severity]="employeeDetails?.employeeDetails?.demand === null ? 'danger' : 'secondary'" />
             </span>
         </div>
 

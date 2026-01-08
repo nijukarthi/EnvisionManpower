@@ -310,6 +310,7 @@ export class AttendanceTable implements OnInit {
                 candidateName: filters?.candidateName?.[0]?.value ?? null,
                 consultancyName: filters?.consultancyName?.[0]?.value ?? null,
                 projectCode: this.getFilterValues(filters, 'projectCode'),
+                siteInchargeName: filters?.siteInchargeName?.[0]?.value ?? null,
                 clusterName: filters?.clusterName?.[0]?.value ?? null,
                 spnCode: filters?.spnCode?.[0]?.value ?? null,
                 spnDescription: filters?.spnDescription?.[0]?.value ?? null,
