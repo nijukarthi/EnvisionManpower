@@ -593,4 +593,12 @@ export class Apiservice {
     updatePurchaseOrder(params: any){
         return this.postMethod('requesition/purchaseorder/edit', params);
     }
+
+    bookDisbursement(params: any){
+        return this.postMethod('requesition/invoice/disbursement/book', params);
+    }
+
+    logoutUser(params: any){
+        return this.postMethod('auth/logout', params);
+    }
 }

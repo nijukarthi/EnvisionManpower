@@ -295,7 +295,7 @@ export class AppMenu {
                         {
                             label: 'Logout',
                             icon: 'pi pi-sign-out',
-                            routerLink: ['/']
+                            command: () => this.logoutUser()
                         },
 
                     ]
@@ -304,6 +304,15 @@ export class AppMenu {
         }
         catch(e){
 
+        }
+    }
+
+    logoutUser(){
+        try {
+            this.apiService.logoutUser('');
+            this.router.navigate(['/']);
+        } catch (error) {
+            console.log(error);
         }
     }
 
