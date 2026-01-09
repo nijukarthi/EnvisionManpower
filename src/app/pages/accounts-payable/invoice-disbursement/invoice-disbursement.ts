@@ -1,6 +1,7 @@
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 
 @Component({
@@ -15,6 +16,9 @@ export class InvoiceDisbursement implements OnInit {
     first = 0;
     selectedInvoiceId = 0;
 
+    openDisbursementBooking = false;
+    openPaymentApproving = false;
+
     invoiceStatus = '';
 
     invoiceDisbursementList: any;
@@ -22,6 +26,17 @@ export class InvoiceDisbursement implements OnInit {
 
     statuses!: any[];
     menuItems: any[] = [];
+
+    private fb = inject(FormBuilder);
+
+    bookDisbursementForm = this.fb.group({
+        invoiceId: [0],
+        geoLocation: [''],
+        wbs: [''],
+        costProfitCenter: [''],
+        dueDate: [''],
+        bookedOn: ['']
+    })
 
     constructor(
         private apiService: Apiservice,
@@ -50,8 +65,46 @@ export class InvoiceDisbursement implements OnInit {
         return [
             {
                 label: 'Start Disbursement',
-                icon: '',
-                command: () => this.startDisbursement()
+                icon: 'pi pi-play',
+                command: () => {
+                    if (this.invoiceStatus !== 'UNDER_DISBURSEMENT_REVIEW') {
+                        this.messageService.add({ 
+                            severity: 'warn', 
+                            summary: 'Action Not Allowed', 
+                            detail: 'Invoice Status must be UNDER_DISBURSEMENT_REVIEW' 
+                        });
+                        return;
+                    }
+                    this.startDisbursement();
+                }
+            },
+            {
+                label: 'Book Disbursement',
+                icon: 'pi pi-book',
+                command: () => {
+                    if (this.invoiceStatus !== 'DISBURSEMENT_IN_PROGRESS') {
+                        this.messageService.add({
+                            severity: 'warn',
+                            summary: 'Action Not Allowed',
+                            detail: 'Invoice Status must be DISBURSEMENT_IN_PROGRESS'
+                        });
+                        return;
+                    }
+                    this.openBookDisbursement();
+                }
+            },
+            {
+                label: 'Approve Payment',
+                icon: 'pi pi-money-bill',
+                command: () => this.openPaymentApprove()
+            },
+            {
+                label: 'Return to GRN',
+                icon: 'pi pi-undo'
+            },
+            {
+                label: 'Mark as Paid',
+                icon: 'pi pi-verified'
             }
         ]
     }
@@ -122,6 +175,53 @@ export class InvoiceDisbursement implements OnInit {
                     }
                 }
             });
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    openBookDisbursement(){
+        try {
+            this.openDisbursementBooking = true;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    openPaymentApprove(){
+        try {
+            this.openPaymentApproving = true;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    submitBookDisbursement(){
+        try {
+            console.log(this.bookDisbursementForm.value);
+
+            const data = {
+                ...this.bookDisbursementForm.value,
+                invoiceId: this.selectedInvoiceId
+            }
+
+            console.log(data);
+
+            this.apiService.bookDisbursement(data).subscribe({
+                next: val => {
+                    console.log(val);
+                    this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Invoice Under Disbursement Review' });
+                    this.openDisbursementBooking = false;
+                    this.bookDisbursementForm.reset();
+                },
+                error: err => {
+                    console.log(err);
+
+                    if (err.status === 400) {
+                        this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
+                    }
+                }
+            })
         } catch (error) {
             console.log(error);
         }

@@ -4,15 +4,8 @@
         <div class="flex justify-end gap-1">
             <p-menu #menu [model]="menuItems" [popup]="true" />
             <p-button (onClick)="menu.toggle($event)" label="Actions" icon="pi pi-angle-down" iconPos="right"
-                [disabled]="!selectedInvoiceId" />
-            <!-- <p-button
-                label="Start Disbursement"
-                [pTooltip]="!selectedInvoiceId ? 'Select One Invoice' 
-                : (invoiceStatus !== 'UNDER_DISBURSEMENT_REVIEW' ? 'Invoice Status must be in UNDER_DISBURSEMENT_REVIEW' : '')"
-                tooltipPosition="top"
-                [disabled]="!selectedInvoiceId || invoiceStatus !== 'UNDER_DISBURSEMENT_REVIEW'"
-                (onClick)="startDisbursement()"
-            /> -->
+                [disabled]="!selectedInvoiceId" [pTooltip]="!selectedInvoiceId ? 'Select One Invoice' : ''"
+                tooltipPosition="top" />
             <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
         </div>
     </div>
@@ -124,7 +117,7 @@
                     <td>{{ disbursement.invoiceHeader.month }}</td>
                     <td>{{ disbursement.invoiceHeader.year }}</td>
                     <td>{{ disbursement.invoiceHeader.grandTotal || '-' }}</td>
-                    <td>{{ disbursement.giCode || '-' }}</td>
+                    <td>{{ disbursement.geoLocation || '-' }}</td>
                     <td>{{ disbursement.wbs || '-' }}</td>
                     <td>{{ disbursement.costProfitCenter || '-' }}</td>
                     <td>{{ disbursement.stateLocation || '-' }}</td>
@@ -147,3 +140,39 @@
 </div>
 
 <p-toast />
+
+<p-dialog header="Book Disbursement" [modal]="true" [(visible)]="openDisbursementBooking" [style]="{ width: '50rem' }">
+    <form [formGroup]="bookDisbursementForm" (ngSubmit)="submitBookDisbursement()">
+        <div class="grid grid-cols-2 gap-1">
+            <div class="grid col-span-1 gap-1">
+                <label for="geo-location">Geo Location</label>
+                <input type="text" formControlName="geoLocation" pInputText id="geo-location" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="wbs">WBS</label>
+                <input type="text" formControlName="wbs" pInputText id="wbs" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="cost-profit-center">Cost Profit Center</label>
+                <input type="text" formControlName="costProfitCenter" pInputText id="cost-profit-center" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="due-date">Due Date</label>
+                <p-datepicker formControlName="dueDate" [showIcon]="true" [iconDisplay]="'input'" inputId="due-date" appendTo="body"
+                    placeholder="Select Date" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="booked-on">Booked On</label>
+                <p-datepicker formControlName="bookedOn" [showIcon]="true" [iconDisplay]="'input'" inputId="booked-on" appendTo="body" 
+                    placeholder="Select Date" />
+            </div>
+        </div>
+        <div class="flex justify-end mt-3">
+            <button pButton pRipple type="submit">
+                <span pButtonLabel>Submit</span>
+            </button>
+        </div>
+    </form>
+</p-dialog>
+
+<p-dialog header=""></p-dialog>
