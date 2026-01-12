@@ -1,5 +1,6 @@
 import { UserGroups } from '@/models/usergroups/usergroups.enum';
 import { Apiservice } from '@/service/apiservice/apiservice';
+import { Auth } from '@/service/auth/auth';
 import { Shared } from '@/service/shared';
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
@@ -14,7 +15,6 @@ import { TabsModule } from 'primeng/tabs';
   styleUrl: './loginpage.scss'
 })
 export class Loginpage {
-
   enteredLoginUserEmail = '';
   otpTimeLeft = '';
   loginUserResponse: any;
@@ -28,7 +28,9 @@ export class Loginpage {
 
   UserGroups = UserGroups;
 
-  constructor(private messageService: MessageService, private apiService: Apiservice, private fb: FormBuilder,private route:Router) { }
+  constructor(private messageService: MessageService, 
+    private apiService: Apiservice, private fb: FormBuilder,
+    private route:Router, private authService: Auth) { }
 
   ngOnInit(): void {
     sessionStorage.clear();
@@ -241,6 +243,14 @@ export class Loginpage {
                     if(val.status == 200){
                         console.log(val);
                         sessionStorage.setItem('token', val.data.token);
+
+                        const loginTime = new Date().getTime();
+                        const expiryTime = loginTime + (8 * 60 * 60 * 1000);
+                        console.log(expiryTime);
+
+                        sessionStorage.setItem('tokenExpiry', expiryTime.toString());
+
+                        this.authService.startSessionTimer(expiryTime);
                         this.fetchUserProfile();
                     }
                     },

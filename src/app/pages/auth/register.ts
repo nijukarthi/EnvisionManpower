@@ -80,31 +80,31 @@ export class Register implements OnInit {
     }
 
     verifyOtp(){
-        try{
-            if(this.userOtpForm.valid){
+        // try{
+        //     if(this.userOtpForm.valid){
 
-            }else{
-            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Please Enter OTP' });
+        //     }else{
+        //     this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Please Enter OTP' });
 
-            }
-        }catch(e){
-            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Please Try Again' });
+        //     }
+        // }catch(e){
+        //     this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Please Try Again' });
 
-        }
-        this.userOtpForm.patchValue({
-            email: 'ari.g@cloute.co.in'
-        })
-        console.log(this.userOtpForm.value);
+        // }
+        // this.userOtpForm.patchValue({
+        //     email: 'ari.g@cloute.co.in'
+        // })
+        // console.log(this.userOtpForm.value);
 
-        this.authService.verifyUserOtp(this.userOtpForm.value).subscribe({
-            next: (val: any) => {
-                console.log(val);
-                sessionStorage.setItem('token', val.token);
-                this.fetchUserProfile();
-            },
-            error: err => {
-                console.log(err);
-            }
-        })
+        // this.authService.verifyUserOtp(this.userOtpForm.value).subscribe({
+        //     next: (val: any) => {
+        //         console.log(val);
+        //         sessionStorage.setItem('token', val.token);
+        //         this.fetchUserProfile();
+        //     },
+        //     error: err => {
+        //         console.log(err);
+        //     }
+        // })
     }
 }   

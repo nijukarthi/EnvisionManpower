@@ -598,6 +598,18 @@ export class Apiservice {
         return this.postMethod('requesition/invoice/disbursement/book', params);
     }
 
+    approvePayment(params: any){
+        return this.postMethod('requesition/invoice/disbursement/approve-payment', params);
+    }
+
+    returnGRN(params: any){
+        return this.postMethod('requesition/invoice/disbursement/return-grn', params);
+    }
+
+    paymentMarked(params: any){
+        return this.postMethod('requesition/invoice/disbursement/mark-paid', params);
+    }
+
     logoutUser(params: any){
         return this.postMethod('auth/logout', params);
     }
