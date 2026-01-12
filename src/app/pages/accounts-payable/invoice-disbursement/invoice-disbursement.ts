@@ -18,6 +18,8 @@ export class InvoiceDisbursement implements OnInit {
 
     openDisbursementBooking = false;
     openPaymentApproving = false;
+    openPaidMarking = false;
+    openGRNReturning = false;
 
     invoiceStatus = '';
 
@@ -36,6 +38,23 @@ export class InvoiceDisbursement implements OnInit {
         costProfitCenter: [''],
         dueDate: [''],
         bookedOn: ['']
+    })
+
+    approvePaymentForm = this.fb.group({
+        invoiceId: [0],
+        paymentDate: [''],
+        paymentReferenceNo: ['']
+    })
+
+    grnReturnForm = this.fb.group({
+        invoiceId: [0],
+        reasonForReturn: ['']
+    })
+
+    paymentMarkedForm = this.fb.group({
+        invoiceId: [0],
+        paymentDate: [''],
+        paymentReferenceNo: ['']
     })
 
     constructor(
@@ -100,11 +119,13 @@ export class InvoiceDisbursement implements OnInit {
             },
             {
                 label: 'Return to GRN',
-                icon: 'pi pi-undo'
+                icon: 'pi pi-undo',
+                command: () => this.openGRNReturn()
             },
             {
                 label: 'Mark as Paid',
-                icon: 'pi pi-verified'
+                icon: 'pi pi-verified',
+                command: () => this.openPaymentMark()
             }
         ]
     }
@@ -196,6 +217,22 @@ export class InvoiceDisbursement implements OnInit {
         }
     }
 
+    openGRNReturn(){
+        try {
+            this.openGRNReturning = true;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    openPaymentMark(){
+        try {
+            this.openPaidMarking = true;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     submitBookDisbursement(){
         try {
             console.log(this.bookDisbursementForm.value);
@@ -213,6 +250,93 @@ export class InvoiceDisbursement implements OnInit {
                     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Invoice Under Disbursement Review' });
                     this.openDisbursementBooking = false;
                     this.bookDisbursementForm.reset();
+                },
+                error: err => {
+                    console.log(err);
+
+                    if (err.status === 400) {
+                        this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
+                    }
+                }
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    submitPaymentApprove(){
+        try {
+            console.log(this.approvePaymentForm.value);
+
+            const data = {
+                ...this.approvePaymentForm.value,
+                invoiceId: this.selectedInvoiceId
+            };
+
+            this.apiService.approvePayment(data).subscribe({
+                next: val => {
+                    console.log(val);
+                    this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Payment Approved Successfully' });
+                    this.openPaymentApproving = false;
+                    this.approvePaymentForm.reset();
+                },
+                error: err => {
+                    console.log(err);
+
+                    if (err.status === 400) {
+                        this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
+                    }
+                }
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    submitReturnGRN(){
+        try {
+            console.log(this.grnReturnForm.value);
+
+            const data = {
+                ...this.grnReturnForm.value,
+                invoiceId: this.selectedInvoiceId
+            }
+
+            this.apiService.returnGRN(data).subscribe({
+                next: val => {
+                    console.log(val);
+                    this.messageService.add({ severity: 'success', summary: 'Success', detail: 'GRN Returned Successfully' });
+                    this.openGRNReturning = false;
+                    this.grnReturnForm.reset();
+                },
+                error: err => {
+                    console.log(err);
+
+                    if (err.status === 400) {
+                        this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
+                    }
+                }
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    submitPaymentMarked(){
+        try {
+            console.log(this.paymentMarkedForm.value);
+
+            const data = {
+                ...this.paymentMarkedForm.value,
+                invoiceId: this.selectedInvoiceId
+            }
+
+            this.apiService.paymentMarked(data).subscribe({
+                next: val => {
+                    console.log(val);
+                    this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Payment Marked Successfully' });
+                    this.openPaidMarking = false;
+                    this.paymentMarkedForm.reset();
                 },
                 error: err => {
                     console.log(err);

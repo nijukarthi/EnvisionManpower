@@ -4,7 +4,7 @@
         <div class="flex justify-end gap-1">
             <p-menu #menu [model]="menuItems" [popup]="true" />
             <p-button (onClick)="menu.toggle($event)" label="Actions" icon="pi pi-angle-down" iconPos="right"
-                [disabled]="!selectedInvoiceId" [pTooltip]="!selectedInvoiceId ? 'Select One Invoice' : ''"
+                [pTooltip]="!selectedInvoiceId ? 'Select One Invoice' : ''"
                 tooltipPosition="top" />
             <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
         </div>
@@ -175,4 +175,61 @@
     </form>
 </p-dialog>
 
-<p-dialog header=""></p-dialog>
+<p-dialog header="Approve Payment" [modal]="true" [(visible)]="openPaymentApproving" [style]="{ width: '50rem' }">
+    <form [formGroup]="approvePaymentForm" (ngSubmit)="submitPaymentApprove()">
+        <div class="grid grid-cols-2 gap-1">
+            <div class="grid col-span-1 gap-1">
+                <label for="payment-date">Payment Date</label>
+                <p-datepicker formControlName="paymentDate" [showIcon]="true" [iconDisplay]="'input'" appendTo="body" 
+                   placeholder="Select Date" inputId="payment-date" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="payment-reference-number">Payment Reference Number</label>
+                <input type="text" formControlName="paymentReferenceNo" pInputText id="payment-reference-number" />
+            </div>
+        </div>
+        <div class="flex justify-end mt-3">
+            <button pButton pRipple type="submit">
+                <span pButtonLabel>Submit</span>
+            </button>
+        </div>
+    </form>
+</p-dialog>
+
+<p-dialog header="Return to GRN" [modal]="true" [(visible)]="openGRNReturning" [style]="{ width: '30rem' }">
+    <form [formGroup]="grnReturnForm" (ngSubmit)="submitReturnGRN()">
+        <div class="grid grid-cols-1 gap-1">
+            <div class="grid col-span-1 gap-1">
+                <label for="reason">Reason For Return</label>
+                <input type="text" formControlName="reasonForReturn" pInputText id="reason" />
+            </div>
+        </div>
+        <div class="flex justify-end mt-3">
+            <button pButton pRipple type="submit">
+                <span pButtonLabel>Submit</span>
+            </button>
+        </div>
+    </form>
+</p-dialog>
+
+
+<p-dialog header="Mark As Paid" [modal]="true" [(visible)]="openPaidMarking" [style]="{ width: '50rem' }">
+    <form [formGroup]="paymentMarkedForm" (ngSubmit)="submitPaymentMarked()">
+        <div class="grid grid-cols-2 gap-1">
+            <div class="grid col-span-1 gap-1">
+                <label for="payment-date">Payment Date</label>
+                <p-datepicker formControlName="paymentDate" [showIcon]="true" [iconDisplay]="'input'" appendTo="body" 
+                    placeholder="Select Date" inputId="payment-date" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="payment-reference-number">Payment Reference Number</label>
+                <input formControlName="paymentReferenceNo" type="text" pInputText id="payment-reference-number" />
+            </div>
+        </div>
+        <div class="flex justify-end mt-3">
+            <button pButton pRipple type="submit">
+                <span pButtonLabel>Submit</span>
+            </button>
+        </div>
+    </form>
+</p-dialog>
