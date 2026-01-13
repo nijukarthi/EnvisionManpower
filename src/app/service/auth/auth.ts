@@ -54,7 +54,7 @@ export class Auth {
 
   logout(){
     try {
-      this.apiService.logoutUser('');
+      this.apiService.logoutUser('').subscribe();
       this.clearSession();
       this.router.navigate(['/']);
     } catch (error) {

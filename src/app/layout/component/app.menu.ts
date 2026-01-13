@@ -309,7 +309,7 @@ export class AppMenu {
 
     logoutUser(){
         try {
-            this.apiService.logoutUser('');
+            this.apiService.logoutUser('').subscribe();
             this.router.navigate(['/']);
         } catch (error) {
             console.log(error);

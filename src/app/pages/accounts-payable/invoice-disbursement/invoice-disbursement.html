@@ -4,7 +4,7 @@
         <div class="flex justify-end gap-1">
             <p-menu #menu [model]="menuItems" [popup]="true" />
             <p-button (onClick)="menu.toggle($event)" label="Actions" icon="pi pi-angle-down" iconPos="right"
-                [pTooltip]="!selectedInvoiceId ? 'Select One Invoice' : ''"
+                [disabled]="!selectedInvoiceId" [pTooltip]="!selectedInvoiceId ? 'Select One Invoice' : ''"
                 tooltipPosition="top" />
             <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
         </div>
@@ -24,6 +24,7 @@
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
             [showCurrentPageReport]="true"
             selectionMode="single"
+            [(selection)]="selectedInvDisb"
             (onRowSelect)="selectedInvoice($event.data)"
             (onRowUnselect)="unSelectedInvoice()"
             dataKey="invoiceHeader.invoiceId"
@@ -126,8 +127,15 @@
                     <td>{{ disbursement.dueDate ? (disbursement.dueDate | date:'dd-MM-yyyy') : '-' }}</td>
                     <td>{{ disbursement.gst || '-' }}</td>
                     <td>{{ disbursement.bookedOn || '-' }}</td>
-                    <td>{{ disbursement.paymentStatus || '-' }}</td>
-                    <td>{{ disbursement.delay || '-' }}</td>
+                    <td>
+                        @if (disbursement.paymentStatus?.trim()) {
+                            <p-tag [value]="disbursement.paymentStatus" 
+                                [severity]="getPaymentSeverity(disbursement.paymentStatus)" />
+                        } @else {
+                            -
+                        }
+                    </td>
+                    <td>{{ disbursement.reasonForDelay || '-' }}</td>
                 </tr>
             </ng-template>
             <ng-template #emptymessage>
@@ -201,7 +209,7 @@
         <div class="grid grid-cols-1 gap-1">
             <div class="grid col-span-1 gap-1">
                 <label for="reason">Reason For Return</label>
-                <input type="text" formControlName="reasonForReturn" pInputText id="reason" />
+                <textarea rows="4" formControlName="reasonForReturn" pTextarea id="reason"></textarea>
             </div>
         </div>
         <div class="flex justify-end mt-3">
@@ -224,6 +232,10 @@
             <div class="grid col-span-1 gap-1">
                 <label for="payment-reference-number">Payment Reference Number</label>
                 <input formControlName="paymentReferenceNo" type="text" pInputText id="payment-reference-number" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="reason">Reason</label>
+                <textarea rows="4" pTextarea id="reason"></textarea>
             </div>
         </div>
         <div class="flex justify-end mt-3">
