@@ -28,6 +28,7 @@ export class InvoiceDisbursement implements OnInit {
 
     statuses!: any[];
     menuItems: any[] = [];
+    selectedInvDisb: any[] = [];
 
     private fb = inject(FormBuilder);
 
@@ -115,17 +116,47 @@ export class InvoiceDisbursement implements OnInit {
             {
                 label: 'Approve Payment',
                 icon: 'pi pi-money-bill',
-                command: () => this.openPaymentApprove()
+                command: () => {
+                    if (this.invoiceStatus !== 'DISBURSEMENT_IN_PROGRESS') {
+                        this.messageService.add({
+                            severity: 'warn',
+                            summary: 'Action Not Allowed',
+                            detail: 'Invoice Status must be DISBURSEMENT_IN_PROGRESS'
+                        });
+                        return;
+                    }
+                    this.openPaymentApprove();
+                }
             },
             {
                 label: 'Return to GRN',
                 icon: 'pi pi-undo',
-                command: () => this.openGRNReturn()
+                command: () => {
+                    if (this.invoiceStatus !== 'UNDER_DISBURSEMENT_REVIEW') {
+                        this.messageService.add({
+                            severity: 'warn',
+                            summary: 'Action Not Allowed',
+                            detail: 'Invoice Status must be UNDER_DISBURSEMENT_REVIEW'
+                        });
+                        return;
+                    }
+                    this.openGRNReturn();
+                }
             },
             {
                 label: 'Mark as Paid',
                 icon: 'pi pi-verified',
-                command: () => this.openPaymentMark()
+                command: () => {
+                    if (this.invoiceStatus !== 'PAYMENT_APPROVED') {
+                        this.messageService.add({
+                            severity: 'warn',
+                            summary: 'Action Not Allowed',
+                            detail: 'Invoice Status must be PAYMENT_APPROVED'
+                        });
+                        return;
+                    }
+                    this.openPaymentMark();
+                }
             }
         ]
     }
@@ -279,12 +310,15 @@ export class InvoiceDisbursement implements OnInit {
                     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Payment Approved Successfully' });
                     this.openPaymentApproving = false;
                     this.approvePaymentForm.reset();
+                    this.fetchDisbursementList();
+                    this.selectedInvDisb = [];
                 },
                 error: err => {
                     console.log(err);
 
                     if (err.status === 400) {
                         this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
+                        this.selectedInvDisb = [];
                     }
                 }
             })
@@ -308,12 +342,15 @@ export class InvoiceDisbursement implements OnInit {
                     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'GRN Returned Successfully' });
                     this.openGRNReturning = false;
                     this.grnReturnForm.reset();
+                    this.fetchDisbursementList();
+                    this.selectedInvDisb = [];
                 },
                 error: err => {
                     console.log(err);
 
                     if (err.status === 400) {
                         this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
+                        this.selectedInvDisb = [];
                     }
                 }
             })
@@ -337,12 +374,15 @@ export class InvoiceDisbursement implements OnInit {
                     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Payment Marked Successfully' });
                     this.openPaidMarking = false;
                     this.paymentMarkedForm.reset();
+                    this.fetchDisbursementList();
+                    this.selectedInvDisb = [];
                 },
                 error: err => {
                     console.log(err);
 
                     if (err.status === 400) {
                         this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
+                        this.selectedInvDisb = [];
                     }
                 }
             })
@@ -372,6 +412,21 @@ export class InvoiceDisbursement implements OnInit {
             case 'PAYMENT_APPROVED':
                 return 'success';
             case 'PAID':
+                return 'success';
+            default:
+                return 'primary';
+        }
+    }
+
+    getPaymentSeverity(status: string){
+        if(!status) return undefined;
+        
+        switch (status){
+            case 'NOT_INITIATED':
+                return 'warn';
+            case 'IN_PROGRESS':
+                return 'primary';
+            case 'COMPLETED':
                 return 'success';
             default:
                 return 'primary';
