@@ -16,6 +16,8 @@ export class Auth {
 
   private readonly IDLE_TIMEOUT = 15 * 60 * 1000;
 
+  currentUserId = Number(sessionStorage.getItem('userId'));
+
   constructor(private apiService: Apiservice, private router: Router){}
 
   startSessionTimer(expiryTime: number){
@@ -38,7 +40,9 @@ export class Auth {
     this.clearIdleTimer();
 
     this.idleTimer = setTimeout(() => {
-      this.logout();
+      if (this.currentUserId !== 1) {      
+        this.logout();
+      }
     }, this.IDLE_TIMEOUT);
   }
 

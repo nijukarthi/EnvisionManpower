@@ -175,7 +175,7 @@
                             [severity]="getSeverity(attendance.employmentDetails.employmentStatus)" />
                     </td>
                     <td>{{ attendance?.updatedBy?.userName || '-' }}</td>
-                    <td>{{ attendance?.updatedOn ? (attendance?.updatedOn | date: 'MMM d, y, h:mm') : '-' }}</td>
+                    <td>{{ attendance?.updatedOn ? (attendance?.updatedOn | date: 'MMM d, y, h:mm a') : '-' }}</td>
                     <td>{{ attendance.totalWorkingDays }}</td>
                     <td>{{ attendance.effectiveEmploymentDays }}</td>
                     <td #pEditableColumn>

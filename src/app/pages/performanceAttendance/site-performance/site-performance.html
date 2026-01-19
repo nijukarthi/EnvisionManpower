@@ -188,7 +188,7 @@
                     <td>{{ performance.candidate.qualification || '-' }}</td>
                     <td>{{ performance?.employeePerformance?.updatedBy?.userName || '-' }}</td>
                     <td>{{ performance?.employeePerformance?.updatedOn 
-                        ? (performance?.employeePerformance?.updatedOn | date: 'MMM d, y, h:mm')
+                        ? (performance?.employeePerformance?.updatedOn | date: 'MMM d, y, h:mm a')
                         : '-' }}</td>
                     @for (detail of performance.employeePerformance.performanceDetails; track $index) {
                     <td #pEditableColumn>
