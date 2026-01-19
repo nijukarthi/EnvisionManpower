@@ -141,6 +141,8 @@
                             </p-columnFilter>
                         </div>
                     </th>
+                    <th>Updated By</th>
+                    <th>Updated On</th>
                     <th>Total No. of Days</th>
                     <th>Effective Working Days</th>
                     <th>Present Days</th>
@@ -172,6 +174,8 @@
                         <p-tag [value]="attendance.employmentDetails.employmentStatus" 
                             [severity]="getSeverity(attendance.employmentDetails.employmentStatus)" />
                     </td>
+                    <td>{{ attendance?.updatedBy?.userName || '-' }}</td>
+                    <td>{{ attendance?.updatedOn ? (attendance?.updatedOn | date: 'MMM d, y, h:mm') : '-' }}</td>
                     <td>{{ attendance.totalWorkingDays }}</td>
                     <td>{{ attendance.effectiveEmploymentDays }}</td>
                     <td #pEditableColumn>

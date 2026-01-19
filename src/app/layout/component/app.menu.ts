@@ -290,7 +290,12 @@ export class AppMenu {
                                     routerLink: ['/home/interviewers']
                                 }
                             ],
-                                visible: this.adminUser
+                                visible: this.adminUser || this.resourceManagerUser
+                        },
+                        {
+                            label: 'Audit Log',
+                            icon: 'pi pi-file',
+                            routerLink: ['/home/logs']
                         },
                         {
                             label: 'Logout',
