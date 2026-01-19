@@ -1,0 +1,41 @@
+<div class="card">
+    <h5>Logs</h5>
+    <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
+        <p-table #dt [value]="logsList" [rowHover]="true" [paginatorDropdownAppendTo]="mydiv" [paginator]="true"
+            [first]="first" [lazy]="true" [rows]="pageSize" [rowsPerPageOptions]="[10, 20, 30]" [totalRecords]="totalRecords"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true"
+            (onLazyLoad)="loadAuditLog($event)">
+            <ng-template #header>
+                <tr>
+                    <th>SL No</th>
+                    <th>Username</th>
+                    <th>Action</th>
+                    <th>Module</th>
+                    <th>Action Status</th>
+                    <th>IP Address</th>
+                    <th>User Agent</th>
+                    <th>Created At</th>
+                </tr>
+            </ng-template>
+            <ng-template #body let-log let-i="rowIndex">
+                <tr>
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ log.username }}</td>
+                    <td>{{ log.action }}</td>
+                    <td>{{ log.module }}</td>
+                    <td>{{ log.actionStatus }}</td>
+                    <td>{{ log.ipAddress }}</td>
+                    <td>{{ log.userAgent }}</td>
+                    <td>{{ log.createdAt | date: 'MMM d, y, h:mm' }}</td>
+                </tr>
+            </ng-template>
+            <ng-template #emptymessage>
+                <tr>
+                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground)">
+                        No Records Found
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>

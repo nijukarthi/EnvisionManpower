@@ -144,6 +144,8 @@
                     </th>
                     <th>Site Incharge</th>
                     <th>Qualification</th>
+                    <th>Updated By</th>
+                    <th>Updated On</th>
                     <th>Technical Skills</th>
                     <th>Productivity</th>
                     <th>On Time Delivery</th>
@@ -184,6 +186,10 @@
                     <td>{{ performance.candidate?.phoneNumber || '-' }}</td>
                     <td>{{ performance.employmentDetails.siteIncharge.userName || '-' }}</td>
                     <td>{{ performance.candidate.qualification || '-' }}</td>
+                    <td>{{ performance?.employeePerformance?.updatedBy?.userName || '-' }}</td>
+                    <td>{{ performance?.employeePerformance?.updatedOn 
+                        ? (performance?.employeePerformance?.updatedOn | date: 'MMM d, y, h:mm')
+                        : '-' }}</td>
                     @for (detail of performance.employeePerformance.performanceDetails; track $index) {
                     <td #pEditableColumn>
                         <p-cellEditor>

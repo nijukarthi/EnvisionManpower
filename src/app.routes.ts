@@ -42,6 +42,7 @@ import { AttendanceTable } from '@/pages/performanceAttendance/attendance-table/
 import { PoAssignTable } from '@/pages/po-assign-table/po-assign-table';
 import { PoAssignForm } from '@/pages/po-assign-form/po-assign-form';
 import { PoAssignEditForm } from '@/pages/po-assign-edit-form/po-assign-edit-form';
+import { AuditLog } from '@/pages/audit-log/audit-log';
 
 export const appRoutes: Routes = [
     {
@@ -118,6 +119,7 @@ export const appRoutes: Routes = [
             { path: 'candidates/cost-plus/:id', component: CostPlusCandidateForm, canActivate: [authGuard] },
             { path: 'candidates/fixed-cost', component: CandidateFixedCost, canActivate: [authGuard] },
             { path: 'candidates/cost-plus', component: CandidateCostPlus, canActivate: [authGuard] },
+            { path: 'logs', component: AuditLog, canActivate: [authGuard] },
             { path: 'pages', canActivate: [authGuard], loadChildren: () => import('./app/pages/pages.routes') }
         ]
     },

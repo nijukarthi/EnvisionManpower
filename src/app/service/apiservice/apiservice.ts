@@ -613,4 +613,8 @@ export class Apiservice {
     logoutUser(params: any){
         return this.postMethod('auth/logout', params);
     }
+
+    logsList(params: any): Observable<any>{
+        return this.postMethod('auth/logs', params);
+    }
 }
