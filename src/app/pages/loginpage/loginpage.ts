@@ -213,6 +213,7 @@ export class Loginpage {
                 sessionStorage.setItem("userName", val.data.userName);
                 sessionStorage.setItem('userGroupId', val.data.userGroupId);
                 sessionStorage.setItem('userEmail', val.data.email);
+                sessionStorage.setItem('userId', val.data.userId);
                 if (val.data.userGroupId === UserGroups.CLUSTERHEAD || val.data.userGroupId === UserGroups.DEPARTMENTHEAD) {
                     this.route.navigate(['/home/manpower-approval']);
                 } else if(val.data.userGroupId === UserGroups.CONSULTANCY){

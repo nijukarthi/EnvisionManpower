@@ -14,7 +14,7 @@
                     <th>Action Status</th>
                     <th>IP Address</th>
                     <th>User Agent</th>
-                    <th>Created At</th>
+                    <th>Created At (IST)</th>
                 </tr>
             </ng-template>
             <ng-template #body let-log let-i="rowIndex">
@@ -26,7 +26,7 @@
                     <td>{{ log.actionStatus }}</td>
                     <td>{{ log.ipAddress }}</td>
                     <td>{{ log.userAgent }}</td>
-                    <td>{{ log.createdAt | date: 'MMM d, y, h:mm' }}</td>
+                    <td>{{ log.createdAt | date: 'MMM d, y, h:mm a' }}</td>
                 </tr>
             </ng-template>
             <ng-template #emptymessage>
