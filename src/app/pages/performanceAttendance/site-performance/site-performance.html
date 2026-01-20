@@ -4,7 +4,7 @@
         <div class="flex justify-end gap-1">
             <label class="mt-1 text-lg">Month:</label>
             <p-datepicker view="month" [(ngModel)]="date" dateFormat="mm/yy" [readonlyInput]="true" [minDate]="minDate" 
-                placeholder="Pick a month" (onSelect)="fetchCandidateSitePerformance()" />
+                [maxDate]="maxDate" placeholder="Pick a month" (onSelect)="fetchCandidateSitePerformance()" />
             <p-menu #menu [model]="menuItems" [popup]="true" />
             <p-button (onClick)="menu.toggle($event)" label="Actions" icon="pi pi-angle-down" iconPos="right" />
             <input #excelInput type="file" accept=".xls,.xlsx" hidden (change)="excelSelected($event)" />

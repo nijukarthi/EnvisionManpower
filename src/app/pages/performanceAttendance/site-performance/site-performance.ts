@@ -41,6 +41,7 @@ export class SitePerformance implements OnInit {
 
     date: Date = new Date();
     minDate: Date | undefined;
+    maxDate: Date | undefined;
 
     menuItems: any[] = [];
 
@@ -129,6 +130,8 @@ export class SitePerformance implements OnInit {
         ];
 
         this.minDate = new Date(2025, 0, 1);
+        const today = new Date();
+        this.maxDate = new Date(today);
     }
 
     performanceApi(data: any) {

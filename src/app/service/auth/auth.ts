@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, OnInit } from '@angular/core';
 import { environment } from 'src/environments/environment.development';
 import { Apiservice } from '../apiservice/apiservice';
 import { Router } from '@angular/router';
@@ -15,8 +15,6 @@ export class Auth {
   private idleTimer!: any;
 
   private readonly IDLE_TIMEOUT = 15 * 60 * 1000;
-
-  currentUserId = Number(sessionStorage.getItem('userId'));
 
   constructor(private apiService: Apiservice, private router: Router){}
 
@@ -40,7 +38,9 @@ export class Auth {
     this.clearIdleTimer();
 
     this.idleTimer = setTimeout(() => {
-      if (this.currentUserId !== 1) {      
+      const userId = Number(sessionStorage.getItem('userId'));
+      console.log("userId:", userId);
+      if (userId !== 1) {      
         this.logout();
       }
     }, this.IDLE_TIMEOUT);
