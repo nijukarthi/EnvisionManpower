@@ -1,20 +1,49 @@
 <div class="card">
     <h5>Logs</h5>
     <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
-        <p-table #dt [value]="logsList" [rowHover]="true" [paginatorDropdownAppendTo]="mydiv" [paginator]="true"
-            [first]="first" [lazy]="true" [rows]="pageSize" [rowsPerPageOptions]="[10, 20, 30]" [totalRecords]="totalRecords"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true"
-            (onLazyLoad)="loadAuditLog($event)">
+        <p-table
+            #dt
+            [value]="logsList"
+            [rowHover]="true"
+            [paginatorDropdownAppendTo]="mydiv"
+            [paginator]="true"
+            [first]="first"
+            [lazy]="true"
+            [rows]="pageSize"
+            [rowsPerPageOptions]="[10, 20, 30]"
+            [totalRecords]="totalRecords"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [showCurrentPageReport]="true"
+            (onLazyLoad)="loadAuditLog($event)"
+        >
             <ng-template #header>
                 <tr>
                     <th>SL No</th>
-                    <th>Username</th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Username</span>
+                            <p-columnFilter type="text" field="userName" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
                     <th>Action</th>
                     <th>Module</th>
                     <th>Action Status</th>
                     <th>IP Address</th>
                     <th>User Agent</th>
-                    <th>Created At (IST)</th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Created At (IST)</span>
+                            <p-columnFilter type="date" field="date" display="menu" matchMode="between" [showOperator]="false" [showAddButton]="false">
+                                <ng-template #filter let-filter="filterCallback" let-value>
+                                    <div class="flex flex-col gap-2">
+                                        <p-datepicker [ngModel]="value?.[0] || null" (ngModelChange)="updateRange($event, value, 0, filter)" placeholder="From Date" />
+
+                                        <p-datepicker [ngModel]="value?.[1] || null" (ngModelChange)="updateRange($event, value, 1, filter)" placeholder="To Date" />
+                                    </div>
+                                </ng-template>
+                            </p-columnFilter>
+                        </div>
+                    </th>
                 </tr>
             </ng-template>
             <ng-template #body let-log let-i="rowIndex">
@@ -31,9 +60,7 @@
             </ng-template>
             <ng-template #emptymessage>
                 <tr>
-                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground)">
-                        No Records Found
-                    </td>
+                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground)">No Records Found</td>
                 </tr>
             </ng-template>
         </p-table>

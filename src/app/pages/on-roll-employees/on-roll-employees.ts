@@ -395,7 +395,7 @@ export class OnRollEmployees implements OnInit {
         }
     }
 
-    editOnrollRow(onroll: any){
+    editOnrollRow(onroll: any) {
         if (this.editingRow && this.editingRow !== onroll) {
             this.table.cancelRowEdit(this.editingRow);
         }
@@ -404,7 +404,7 @@ export class OnRollEmployees implements OnInit {
         onroll.editing = true;
     }
 
-    cancelEdit(onroll: any){
+    cancelEdit(onroll: any) {
         this.onrollEmployeeApi(this.filteredData);
         this.table.cancelRowEdit(onroll);
         this.editingRow = null;
