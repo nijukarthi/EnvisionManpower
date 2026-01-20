@@ -29,6 +29,7 @@ export class AttendanceTable implements OnInit {
     year: number | null = null;
 
     minDate: Date | undefined;
+    maxDate: Date | undefined;
 
     attendanceList: any;
     filteredData: any;
@@ -61,6 +62,8 @@ export class AttendanceTable implements OnInit {
         ];
 
         this.minDate = new Date(2025, 0, 1);
+        const today = new Date();
+        this.maxDate = new Date(today);
     }
 
     getMenuItems() {
