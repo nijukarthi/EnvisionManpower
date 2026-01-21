@@ -142,7 +142,6 @@
                             <p-columnFilter type="text" field="phoneNumber" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
-                    <th>Site Incharge</th>
                     <th>Qualification</th>
                     <th>Updated By</th>
                     <th>Updated On</th>
@@ -184,7 +183,6 @@
                     <td>{{ performance.employmentDetails.joiningDate || '-' }}</td>
                     <td>{{ performance.employmentDetails.lastWorkingDate || '-' }}</td>
                     <td>{{ performance.candidate?.phoneNumber || '-' }}</td>
-                    <td>{{ performance.employmentDetails.siteIncharge.userName || '-' }}</td>
                     <td>{{ performance.candidate.qualification || '-' }}</td>
                     <td>{{ performance?.employeePerformance?.updatedBy?.userName || '-' }}</td>
                     <td>{{ performance?.employeePerformance?.updatedOn 
