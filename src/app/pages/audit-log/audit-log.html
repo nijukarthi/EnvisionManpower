@@ -1,5 +1,8 @@
 <div class="card">
-    <h5>Logs</h5>
+    <div class="flex items-baseline-last justify-between">
+        <h5>Logs</h5>
+        <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
+    </div>
     <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
         <p-table
             #dt
@@ -25,7 +28,12 @@
                             <p-columnFilter type="text" field="userName" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
-                    <th>Action</th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Action</span>
+                            <p-columnFilter type="text" field="actions" display="menu" />
+                        </div>
+                    </th>
                     <th>Module</th>
                     <th>Action Status</th>
                     <th>IP Address</th>

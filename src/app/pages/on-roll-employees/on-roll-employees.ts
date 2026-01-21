@@ -141,7 +141,8 @@ export class OnRollEmployees implements OnInit {
         try {
             const data = {
                 offSet: this.offSet,
-                pageSize: this.pageSize
+                pageSize: this.pageSize,
+                employmentStatuses: ['ACTIVE']
             };
             console.log(data);
 
@@ -360,7 +361,7 @@ export class OnRollEmployees implements OnInit {
                 spnDescription: filters?.spnDescription?.[0]?.value ?? null,
                 experience: filters?.experience?.[0]?.value ?? null,
                 envisionRoleName: filters?.roleName?.[0]?.value ?? null,
-                employmentStatuses: filters?.status?.[0]?.value ?? null,
+                employmentStatuses: filters?.status?.[0]?.value ?? ['ACTIVE'],
                 phoneNumber: filters?.phoneNumber?.[0]?.value ?? null,
                 joiningDateFrom: Array.isArray(dateValue) ? formatDate(dateValue[0]) : null,
                 joiningDateTo: Array.isArray(dateValue) ? formatDate(dateValue[1]) : null

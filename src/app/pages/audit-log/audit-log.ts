@@ -54,6 +54,29 @@ export class AuditLog implements OnInit {
         }
     }
 
+    private formatDateForApi(date: Date, isEndDate = false){
+        if(!date) return null as any;
+
+        const yyyy = date.getFullYear();
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+        const dd = String(date.getDate()).padStart(2, '0');
+
+        const time = isEndDate ? '23:59:59' : '00:00:00';
+
+        return `${yyyy}-${mm}-${dd}T${time}Z`;
+    }
+
+    getFilterValues(filters: any, field: string): string[] | null{
+        const rules = filters?.[field];
+        if(!Array.isArray(rules)) return null;
+
+        const values = rules
+            .map(rule => rule?.value)
+            .filter(v => v !== null && v !== '');
+
+        return values.length ? values : null;
+    }
+
     loadAuditLog(event: any) {
         try {
             this.first = event.first;
@@ -63,19 +86,18 @@ export class AuditLog implements OnInit {
             const filters = event.filters;
             console.log(filters);
 
-            const formatDate = (d: any) => {
-                if (!d) return null;
-                return typeof d === 'string' ? d : d.toLocaleDateString('en-CA');
-            };
-
             const dateValue = filters?.date?.[0]?.value;
+
+            const from = Array.isArray(dateValue) ? dateValue[0] : null;
+            const to = Array.isArray(dateValue) ? dateValue[1] : null;
 
             this.filteredData = {
                 offSet: this.offSet,
                 pageSize: this.pageSize,
                 userName: filters?.userName?.[0]?.value ?? null,
-                fromDate: Array.isArray(dateValue) ? formatDate(dateValue[0]) : null,
-                toDate: Array.isArray(dateValue) ? formatDate(dateValue[1]) : null
+                fromDate: from ? this.formatDateForApi(from, false) : null,
+                toDate: to ? this.formatDateForApi(to, true) : null,
+                actions: this.getFilterValues(filters, 'actions')
             };
 
             console.log(this.filteredData);
@@ -84,6 +106,7 @@ export class AuditLog implements OnInit {
             console.log(error);
         }
     }
+
     updateRange(selectedValue: any, value: any[], index: number, filter: any) {
         if (!value) value = [];
 
