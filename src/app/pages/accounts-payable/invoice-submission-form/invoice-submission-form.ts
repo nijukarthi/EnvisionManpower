@@ -25,6 +25,7 @@ export class InvoiceSubmissionForm implements OnInit {
     poEmployeeList: any;
 
     selectedEmployees: number[] = [];
+    selectedPO: any[] = [];
 
     UserGroups = UserGroups;
 
@@ -242,23 +243,13 @@ export class InvoiceSubmissionForm implements OnInit {
         }
     }
 
-    selectedPOEmployee(emp: any) {
-        const id = emp.employmentDetails?.employmentId;
+    selectAll(selection: any){
+        console.log(selection);
+        this.selectedEmployees = selection
+        .filter((emp: any) => emp.eligible === true)
+        .map((emp: any) => emp.employmentDetails?.employmentId);
 
-        if (!this.selectedEmployees.includes(id)) {
-            this.selectedEmployees.push(id);
-        }
-        console.log('Selected:', this.selectedEmployees);
-        console.log(this.invoiceForm.value);
-    }
-
-    unSelectedEmployee(emp: any) {
-        const id = emp.employmentDetails?.employmentId;
-        this.selectedEmployees = this.selectedEmployees.filter((e) => e !== id);
-        console.log('Selected:', this.selectedEmployees);
-
-        console.log(this.items.value);
-        console.log(this.invoiceForm.value);
+        console.log('Selected Employees:', this.selectedEmployees);
     }
 
     formatDate(date: Date | null | string | undefined): string | null {
@@ -277,6 +268,8 @@ export class InvoiceSubmissionForm implements OnInit {
             const formValue = this.invoiceForm.value;
 
             const monthYear = this.convertMonthAndYear();
+
+            console.log(this.selectedEmployees);
 
             const filteredItems = formValue.items?.filter((item: any) => this.selectedEmployees.includes(item.employmentId));
 

@@ -2,7 +2,7 @@ import { Auth } from '@/service/auth/auth';
 import { Loader } from '@/service/loader/loader';
 import { Shared } from '@/service/shared';
 import { ChangeDetectorRef, Component, HostListener, OnInit } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
     selector: 'app-root',
@@ -13,10 +13,17 @@ import { RouterModule } from '@angular/router';
     <div class="global-loader" *ngIf="loading">
         <p-progressSpinner strokeWidth="3" fill="transparent"></p-progressSpinner>
     </div>
+    <p-dialog header="You have been logged out" [modal]="true" [(visible)]="showSessionPopup" 
+       [closable]="false" [style]="{ width: '30rem' }">
+        <p>{{ message }}</p>
+        <div class="flex justify-end">
+            <p-button label="Log in again" (onClick)="confirmLogout()" />
+        </div>
+    </p-dialog>
     `,
   styles: [`
     .global-loader {
-        position: fixed;
+        position: fixed; 
         inset: 0;
         display: flex;
         justify-content: center;
@@ -29,8 +36,11 @@ import { RouterModule } from '@angular/router';
 })
 export class AppComponent implements OnInit {
     loading: boolean = false;
+    showSessionPopup = false;
 
-    constructor(private spinner: Loader,private cdr: ChangeDetectorRef, private authService: Auth){
+    message = '';
+
+    constructor(private spinner: Loader,private cdr: ChangeDetectorRef, private authService: Auth, private router: Router){
         this.spinner.isLoading.subscribe((res)=>{
             setTimeout(()=>{
                 this.loading = res;
@@ -45,6 +55,14 @@ export class AppComponent implements OnInit {
         if (token) {
             this.authService.startIdleTimer();
         }
+
+        this.authService.sessionExpired$.subscribe(reason => {
+            this.message = reason === 'idle' 
+                ? 'You were logged out due to inactivity.' 
+                : 'Your session has expired. Please login again.';
+
+            this.showSessionPopup = true;
+        })
     }
 
     @HostListener('document:mousemove')
@@ -60,4 +78,8 @@ export class AppComponent implements OnInit {
         }
     }
 
+    confirmLogout(){
+        this.showSessionPopup = false;
+        this.router.navigate(['/']);
+    }
 }
