@@ -29,86 +29,85 @@
             [totalRecords]="totalRecords"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
             [paginatorDropdownAppendTo]="mydiv"
-            [tableStyle]="{'min-width': '230rem'}"
             (onLazyLoad)="loadDemands($event)"
         >
             <ng-template #header>
                 <tr>
-                    <th>SL NO</th>
-                    <th>
+                    <th pFrozenColumn alignFrozen="left" style="min-width:80px">SL NO</th>
+                    <th pFrozenColumn alignFrozen="left" style="min-width:200px">
                         <div class="flex items-center justify-between">
                             <span>Employee Code</span>
                             <p-columnFilter type="text" field="employeeCode" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
-                    <th>
+                    <th pFrozenColumn alignFrozen="left" style="min-width:200px">
                         <div class="flex items-center justify-between">
                             <span>Temp EMP Code</span>
                             <p-columnFilter type="text" field="candidateCode" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
-                    <th>
+                    <th pFrozenColumn alignFrozen="left" style="min-width:200px">
                         <div class="flex items-center justify-between">
                             <span>Employee Name</span>
                             <p-columnFilter type="text" field="candidateName" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
-                    <th>
+                    <th style="min-width:250px">
                         <div class="flex items-center justify-between">
                             <span>Consultancy Name</span>
                             <p-columnFilter type="text" field="consultancyName" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
-                    <th>
+                    <th style="min-width:150px">
                         <div class="flex items-center justify-between">
                             <span>Project Code</span>
                             <p-columnFilter type="text" field="projectCode" display="menu" />
                         </div>
                     </th>
-                    <th>
+                    <th style="min-width:150px">
                         <div class="flex items-center justify-between">
                             <span>Site Incharge</span>
                             <p-columnFilter type="text" field="siteInchargeName" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
-                    <th>Site Name</th>
-                    <th>
+                    <th style="min-width:200px">Site Name</th>
+                    <th style="min-width:150px">
                         <div class="flex items-center justify-between">
                             <span>Cluster Name</span>
                             <p-columnFilter type="text" field="clusterName" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
-                    <th>
+                    <th style="min-width:200px">
                         <div class="flex items-center justify-between">
                             <span>SPN Code</span>
                             <p-columnFilter type="text" field="spnCode" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
-                    <th>
+                    <th style="min-width:250px">
                         <div class="flex items-center justify-between">
                             <span>SPN Description</span>
                             <p-columnFilter type="text" field="spnDescription" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
-                    <th>
+                    <th style="min-width:150px">
                         <div class="flex items-center justify-between">
                             <span>Experience</span>
                             <p-columnFilter type="text" field="experience" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
-                    <th>
+                    <th style="min-width:200px">
                         <div class="flex items-center justify-between">
                             <span>Role</span>
                             <p-columnFilter type="text" field="roleName" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
-                    <th>
+                    <th style="min-width:200px">
                         <div class="flex items-center justify-between">
                             <span>Contact Number</span>
                             <p-columnFilter type="text" field="phoneNumber" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
-                    <th>
+                    <th style="min-width:200px">
                         <div class="flex items-center justify-between">
                             <span>Joining Date</span>
                             <p-columnFilter type="date" field="date" display="menu" matchMode="between" [showOperator]="false" 
@@ -125,8 +124,8 @@
                             </p-columnFilter>
                         </div>
                     </th>
-                    <th>Last Working Date</th>
-                    <th>
+                    <th style="min-width:200px">Last Working Date</th>
+                    <th style="min-width:150px">
                         <div class="flex items-center justify-between">
                             <span>Status</span>
                             <p-columnFilter field="status" matchMode="equals" display="menu" [showAddButton]="false">
@@ -141,23 +140,23 @@
                             </p-columnFilter>
                         </div>
                     </th>
-                    <th>Updated By</th>
-                    <th>Updated On</th>
-                    <th>Total No. of Days</th>
-                    <th>Effective Working Days</th>
-                    <th>Present Days</th>
-                    <th>Week Off</th>
-                    <th>Paid Leave</th>
-                    <th>Unpaid Leave</th>
-                    <th alignFrozen="right" pFrozenColumn>Actions</th>
+                    <th style="min-width:150px">Updated By</th>
+                    <th style="min-width:150px">Updated On</th>
+                    <th style="min-width:150px">Total No. of Days</th>
+                    <th style="min-width:200px">Effective Working Days</th>
+                    <th style="min-width:120px">Present Days</th>
+                    <th style="min-width:120px">Week Off</th>
+                    <th style="min-width:120px">Paid Leave</th>
+                    <th style="min-width:120px">Unpaid Leave</th>
+                    <th style="min-width:80px" alignFrozen="right" pFrozenColumn>Actions</th>
                 </tr>
             </ng-template>
             <ng-template #body let-attendance let-editing="editing" let-i="rowIndex">
                 <tr [pEditableRow]="attendance">
-                    <td>{{ i + 1 }}</td>
-                    <td>{{ attendance.candidate?.employeeCode || '-' }}</td>
-                    <td>{{ attendance.candidate?.candidateCode || '-' }}</td>
-                    <td>{{ attendance.candidate?.candidateName || '-' }}</td>
+                    <td pFrozenColumn alignFrozen="left">{{ i + 1 }}</td>
+                    <td pFrozenColumn alignFrozen="left">{{ attendance.candidate?.employeeCode || '-' }}</td>
+                    <td pFrozenColumn alignFrozen="left">{{ attendance.candidate?.candidateCode || '-' }}</td>
+                    <td pFrozenColumn alignFrozen="left">{{ attendance.candidate?.candidateName || '-' }}</td>
                     <td>{{ attendance.candidate.consultancy.consultancyName || '-' }}</td>
                     <td>{{ attendance.employmentDetails.project.projectCode || '-' }}</td>
                     <td>{{ attendance.employmentDetails.siteIncharge.userName || '-' }}</td>

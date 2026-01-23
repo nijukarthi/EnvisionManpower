@@ -3,6 +3,7 @@ import { inject, Injectable, OnInit } from '@angular/core';
 import { environment } from 'src/environments/environment.development';
 import { Apiservice } from '../apiservice/apiservice';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -11,10 +12,14 @@ export class Auth {
   private http = inject(HttpClient);
   private baseUrl = environment.baseUrl;
 
+  private sessionExpiredSubject = new Subject<'idle' | 'session'>();
+
+  sessionExpired$ = this.sessionExpiredSubject.asObservable();
+
   private sessionTimer!: any;
   private idleTimer!: any;
 
-  private readonly IDLE_TIMEOUT = 15 * 60 * 1000;
+  private readonly IDLE_TIMEOUT = 2 * 60 * 1000;
 
   constructor(private apiService: Apiservice, private router: Router){}
 
@@ -25,12 +30,14 @@ export class Auth {
     if (remainingTime <= 0) {
       console.log('checking remainingTime');
       this.logout();
+      this.notifySessionExpired('session');
       return;
     }
 
     this.sessionTimer = setTimeout(() => {
       console.log('checking logoutTimer');
       this.logout();
+      this.notifySessionExpired('session');
     }, remainingTime);
   }
 
@@ -40,8 +47,9 @@ export class Auth {
     this.idleTimer = setTimeout(() => {
       const userId = Number(sessionStorage.getItem('userId'));
       console.log("userId:", userId);
-      if (userId !== 1) {      
-        this.logout();
+      if (userId !== 1) {     
+        this.logout(); 
+        this.notifySessionExpired('idle');
       }
     }, this.IDLE_TIMEOUT);
   }
@@ -56,11 +64,14 @@ export class Auth {
     }
   }
 
+  private notifySessionExpired(reason: 'idle' | 'session'){
+    this.sessionExpiredSubject.next(reason);
+  }
+
   logout(){
     try {
       this.apiService.logoutUser('').subscribe();
       this.clearSession();
-      this.router.navigate(['/']);
     } catch (error) {
       console.log(error);
     }
