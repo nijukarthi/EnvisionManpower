@@ -5,10 +5,10 @@ import { Component, OnInit } from '@angular/core';
 @Component({
     selector: 'app-audit-log',
     imports: [Shared],
-    templateUrl: './audit-log.html',
-    styleUrl: './audit-log.scss'
+    templateUrl: './activity-log.html',
+    styleUrl: './activity-log.scss'
 })
-export class AuditLog implements OnInit {
+export class ActivityLog implements OnInit {
     offSet = 0;
     pageSize = 10;
     first = 0;
@@ -54,8 +54,8 @@ export class AuditLog implements OnInit {
         }
     }
 
-    private formatDateForApi(date: Date, isEndDate = false){
-        if(!date) return null as any;
+    private formatDateForApi(date: Date, isEndDate = false) {
+        if (!date) return null as any;
 
         const yyyy = date.getFullYear();
         const mm = String(date.getMonth() + 1).padStart(2, '0');
@@ -66,13 +66,11 @@ export class AuditLog implements OnInit {
         return `${yyyy}-${mm}-${dd}T${time}Z`;
     }
 
-    getFilterValues(filters: any, field: string): string[] | null{
+    getFilterValues(filters: any, field: string): string[] | null {
         const rules = filters?.[field];
-        if(!Array.isArray(rules)) return null;
+        if (!Array.isArray(rules)) return null;
 
-        const values = rules
-            .map(rule => rule?.value)
-            .filter(v => v !== null && v !== '');
+        const values = rules.map((rule) => rule?.value).filter((v) => v !== null && v !== '');
 
         return values.length ? values : null;
     }

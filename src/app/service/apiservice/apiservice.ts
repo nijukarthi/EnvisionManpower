@@ -27,7 +27,7 @@ export class Apiservice {
         return this.postMethod('auth/user/verify-otp', params);
     }
 
-    sendInterviewerOtp(params: any): Observable<any>{
+    sendInterviewerOtp(params: any): Observable<any> {
         return this.postMethod('auth/guestuser/send-otp', params);
     }
 
@@ -554,67 +554,71 @@ export class Apiservice {
         return this.postMethod('candidate/siteperfomance/resignation/force', params);
     }
 
-    cancelTransfer(params: any){
-      return this.postMethod('candidate/siteperfomance/transfer/cancel', params);
+    cancelTransfer(params: any) {
+        return this.postMethod('candidate/siteperfomance/transfer/cancel', params);
     }
 
-    cancelResignation(params: any){
-      return this.postMethod('candidate/siteperfomance/resignation/cancel', params);
+    cancelResignation(params: any) {
+        return this.postMethod('candidate/siteperfomance/resignation/cancel', params);
     }
 
-    updateTransfer(params: any){
+    updateTransfer(params: any) {
         return this.postMethod('candidate/siteperformance/transfer/extend-dates', params);
     }
 
-    updateResignation(params: any){
+    updateResignation(params: any) {
         return this.postMethod('candidate/siteperformance/resignation/extend-date', params);
     }
 
-    siteInchargeNDC(params: any){
+    siteInchargeNDC(params: any) {
         return this.postMethod('candidate/siteperformance/resignation/update/ndc-siteincharge', params);
     }
 
-    consultancyNDC(params: any){
+    consultancyNDC(params: any) {
         return this.postMethod('candidate/siteperformance/resignation/update/ndc-consultancy', params);
     }
 
-    fetchTrainingList(params: any): Observable<any>{
+    fetchTrainingList(params: any): Observable<any> {
         return this.postMethod('candidate/training', params);
     }
 
-    uploadSitePerformanceExcel(params: any){
+    uploadSitePerformanceExcel(params: any) {
         return this.postMethod('candidate/siteperformance/upload', params);
     }
 
-    uploadAttendanceExcel(params: any){
+    uploadAttendanceExcel(params: any) {
         return this.postMethod('candidate/siteattendance/upload', params);
     }
 
-    updatePurchaseOrder(params: any){
+    updatePurchaseOrder(params: any) {
         return this.postMethod('requesition/purchaseorder/edit', params);
     }
 
-    bookDisbursement(params: any){
+    bookDisbursement(params: any) {
         return this.postMethod('requesition/invoice/disbursement/book', params);
     }
 
-    approvePayment(params: any){
+    approvePayment(params: any) {
         return this.postMethod('requesition/invoice/disbursement/approve-payment', params);
     }
 
-    returnGRN(params: any){
+    returnGRN(params: any) {
         return this.postMethod('requesition/invoice/disbursement/return-grn', params);
     }
 
-    paymentMarked(params: any){
+    paymentMarked(params: any) {
         return this.postMethod('requesition/invoice/disbursement/mark-paid', params);
     }
 
-    logoutUser(params: any){
+    logoutUser(params: any) {
         return this.postMethod('auth/logout', params);
     }
 
-    logsList(params: any): Observable<any>{
+    logsList(params: any): Observable<any> {
         return this.postMethod('auth/logs', params);
+    }
+
+    sessionlogsList(params: any): Observable<any> {
+        return this.postMethod('auth/session-logs', params);
     }
 }
