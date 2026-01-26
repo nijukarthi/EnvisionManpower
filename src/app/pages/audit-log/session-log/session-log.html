@@ -1,0 +1,97 @@
+<div class="card">
+    <div class="flex items-baseline-last justify-between">
+        <h5>Logs</h5>
+        <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
+    </div>
+    <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
+        <p-table
+            #dt
+            [value]="SessionlogsList"
+            [rowHover]="true"
+            [paginatorDropdownAppendTo]="mydiv"
+            [paginator]="true"
+            [first]="first"
+            [lazy]="true"
+            [rows]="pageSize"
+            [rowsPerPageOptions]="[10, 20, 30]"
+            [totalRecords]="totalRecords"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [showCurrentPageReport]="true"
+            (onLazyLoad)="loadSessionLog($event)"
+        >
+            <ng-template #header>
+                <tr>
+                    <th>SL No</th>
+
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Session Id</span>
+                            <p-columnFilter type="text" field="sessionId" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Username</span>
+                            <p-columnFilter type="text" field="userName" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>UserGroupName</span>
+                            <p-columnFilter type="text" field="userGroupName" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Email</span>
+                            <p-columnFilter type="text" field="email" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
+                    <th>IpAddress</th>
+                    <th>User Agent</th>
+                    <th>Device Type</th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Created At (IST)</span>
+                            <p-columnFilter type="date" field="date" display="menu" matchMode="between" [showOperator]="false" [showAddButton]="false">
+                                <ng-template #filter let-filter="filterCallback" let-value>
+                                    <div class="flex flex-col gap-2">
+                                        <p-datepicker [ngModel]="value?.[0] || null" (ngModelChange)="updateRange($event, value, 0, filter)" placeholder="From Date" />
+
+                                        <p-datepicker [ngModel]="value?.[1] || null" (ngModelChange)="updateRange($event, value, 1, filter)" placeholder="To Date" />
+                                    </div>
+                                </ng-template>
+                            </p-columnFilter>
+                        </div>
+                    </th>
+                    <th>Session Expiry</th>
+                    <th>Login Time</th>
+                    <th>Logout Time</th>
+                    <th>Logout Type</th>
+                </tr>
+            </ng-template>
+            <ng-template #body let-log let-i="rowIndex">
+                <tr>
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ log.jti }}</td>
+                    <td>{{ log.username }}</td>
+                    <td>{{ log.userGroupName}}</td>
+                    <td>{{ log.emailOrPhone}}</td>
+                    <td>{{ log.ipAddress}}</td>
+                    <td>{{ log.userAgent}}</td>
+                    <td>{{ log.deviceType}}</td>
+                    <td>{{ log.createdAt | date: 'MMM d, y, h:mm a' }}</td>
+                    <td>{{ log.sessionExpiry}}</td>
+                    <td>{{ log.loginTime || '-'}}</td>
+                    <td>{{ log.logoutTime || '-'}}</td>
+                    <td>{{ log.logoutType || '-'}}</td>
+                </tr>
+            </ng-template>
+            <ng-template #emptymessage>
+                <tr>
+                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground)">No Records Found</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>

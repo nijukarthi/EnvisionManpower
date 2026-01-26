@@ -22,43 +22,45 @@ export class AppMenu {
 
     loggedUserGroupId = Number(sessionStorage.getItem('userGroupId'));
 
-    loggedInUserDetails:any = "";
-    adminUser:boolean = false;
-    departmentUser:boolean = false;
-    clusterUser:boolean = false;
-    siteInchargeUser:boolean = false;
-    projectManagerUser:boolean = false;
-    resourceManagerUser:boolean = false;
+    loggedInUserDetails: any = '';
+    adminUser: boolean = false;
+    departmentUser: boolean = false;
+    clusterUser: boolean = false;
+    siteInchargeUser: boolean = false;
+    projectManagerUser: boolean = false;
+    resourceManagerUser: boolean = false;
     consultancyUser = false;
     guestUser = false;
 
-    constructor(private apiService: Apiservice, private router: Router) { }
+    constructor(
+        private apiService: Apiservice,
+        private router: Router
+    ) {}
 
     ngOnInit() {
-       
         this.fetchUserProfile();
     }
 
-    fetchUserProfile(){
+    fetchUserProfile() {
         this.apiService.fetchUserProfile('').subscribe({
-            next: val => {
+            next: (val) => {
                 console.log(val);
                 this.loggedInUserDetails = val.data;
-                if(this.loggedInUserDetails){
-                    if(this.loggedInUserDetails.userGroupId === UserGroups.ADMIN && this.loggedInUserDetails.userGroupName == 'Admin'){
+                if (this.loggedInUserDetails) {
+                    if (this.loggedInUserDetails.userGroupId === UserGroups.ADMIN && this.loggedInUserDetails.userGroupName == 'Admin') {
                         this.adminUser = true;
-                    } else if(this.loggedInUserDetails.userGroupId === UserGroups.DEPARTMENTHEAD && this.loggedInUserDetails.userGroupName == 'Department Head'){
+                    } else if (this.loggedInUserDetails.userGroupId === UserGroups.DEPARTMENTHEAD && this.loggedInUserDetails.userGroupName == 'Department Head') {
                         this.departmentUser = true;
-                    }else if(this.loggedInUserDetails.userGroupId == UserGroups.CLUSTERHEAD && this.loggedInUserDetails.userGroupName == 'Cluster Head'){
+                    } else if (this.loggedInUserDetails.userGroupId == UserGroups.CLUSTERHEAD && this.loggedInUserDetails.userGroupName == 'Cluster Head') {
                         this.clusterUser = true;
-                    }else if(this.loggedInUserDetails.userGroupId == UserGroups.SITEINCHARGE && this.loggedInUserDetails.userGroupName == 'Site Incharge'){
+                    } else if (this.loggedInUserDetails.userGroupId == UserGroups.SITEINCHARGE && this.loggedInUserDetails.userGroupName == 'Site Incharge') {
                         this.siteInchargeUser = true;
-                    }else if(this.loggedInUserDetails.userGroupId == UserGroups.PROJECTMANAGER && this.loggedInUserDetails.userGroupName == 'Project Manager'){
+                    } else if (this.loggedInUserDetails.userGroupId == UserGroups.PROJECTMANAGER && this.loggedInUserDetails.userGroupName == 'Project Manager') {
                         this.projectManagerUser = true;
-                    }else if(this.loggedInUserDetails.userGroupId === UserGroups.RESOURCEMANAGER && this.loggedInUserDetails.userGroupName == 'Resource Manager'){
+                    } else if (this.loggedInUserDetails.userGroupId === UserGroups.RESOURCEMANAGER && this.loggedInUserDetails.userGroupName == 'Resource Manager') {
                         this.resourceManagerUser = true;
-                    }else if (this.loggedInUserDetails.userGroupId === UserGroups.CONSULTANCY && this.loggedInUserDetails.userGroupName === 'Consultancy Vendor') {
-                        this.consultancyUser = true
+                    } else if (this.loggedInUserDetails.userGroupId === UserGroups.CONSULTANCY && this.loggedInUserDetails.userGroupName === 'Consultancy Vendor') {
+                        this.consultancyUser = true;
                     } else if (this.loggedInUserDetails.userGroupId === UserGroups.GUESTUSER) {
                         this.guestUser = true;
                     }
@@ -66,14 +68,14 @@ export class AppMenu {
 
                 this.menuPage();
             },
-            error: err => {
+            error: (err) => {
                 console.log(err);
             }
-        })
+        });
     }
 
-    menuPage(){
-        try{
+    menuPage() {
+        try {
             this.model = [
                 {
                     label: 'Pages',
@@ -86,7 +88,7 @@ export class AppMenu {
                             visible: !!this.adminUser || !!this.siteInchargeUser,
                             command: () => {
                                 if (!this.siteInchargeUser) {
-                                    this.router.navigate(['/home/manpower-request'])
+                                    this.router.navigate(['/home/manpower-request']);
                                 }
                             }
                         },
@@ -96,7 +98,7 @@ export class AppMenu {
                             visible: this.adminUser || this.departmentUser || this.clusterUser || this.siteInchargeUser,
                             command: () => {
                                 if (!this.siteInchargeUser) {
-                                    this.router.navigate(['/home/manpower-approval'])
+                                    this.router.navigate(['/home/manpower-approval']);
                                 }
                             }
                         },
@@ -124,7 +126,7 @@ export class AppMenu {
                                 },
                                 {
                                     label: 'PO & Demand Map',
-                                    icon: 'pi pi-file-import', 
+                                    icon: 'pi pi-file-import',
                                     routerLink: ['/home/po-assign'],
                                     visible: this.adminUser || this.resourceManagerUser
                                 },
@@ -137,7 +139,7 @@ export class AppMenu {
                                 {
                                     label: 'On-roll Employees',
                                     icon: 'pi pi-user',
-                                    routerLink:['/home/onroll-employees'],
+                                    routerLink: ['/home/onroll-employees'],
                                     visible: this.adminUser || this.resourceManagerUser || this.siteInchargeUser || this.clusterUser || this.departmentUser
                                 },
                                 {
@@ -147,8 +149,7 @@ export class AppMenu {
                                     visible: this.adminUser || this.resourceManagerUser
                                 }
                             ],
-                            visible: this.adminUser || this.consultancyUser || this.resourceManagerUser || this.guestUser || this.siteInchargeUser || 
-                                this.clusterUser || this.departmentUser
+                            visible: this.adminUser || this.consultancyUser || this.resourceManagerUser || this.guestUser || this.siteInchargeUser || this.clusterUser || this.departmentUser
                         },
                         {
                             label: 'Performance & Attendance',
@@ -170,19 +171,17 @@ export class AppMenu {
                                     label: 'Transfer',
                                     icon: 'pi pi-file-export',
                                     routerLink: this.siteInchargeUser ? '' : ['/home/transfer'],
-                                    visible: this.adminUser || this.siteInchargeUser || this.departmentUser || this.clusterUser || this.consultancyUser || 
-                                        this.resourceManagerUser
+                                    visible: this.adminUser || this.siteInchargeUser || this.departmentUser || this.clusterUser || this.consultancyUser || this.resourceManagerUser
                                 },
                                 {
                                     label: 'Resignation',
                                     icon: 'pi pi-file-excel',
                                     routerLink: this.siteInchargeUser ? '' : ['/home/resignation'],
-                                    visible: this.adminUser || this.siteInchargeUser || this.departmentUser || this.clusterUser || this.consultancyUser || 
-                                        this.resourceManagerUser
+                                    visible: this.adminUser || this.siteInchargeUser || this.departmentUser || this.clusterUser || this.consultancyUser || this.resourceManagerUser
                                 }
                             ],
-                                visible: this.adminUser || this.siteInchargeUser || this.departmentUser || this.clusterUser || this.resourceManagerUser || this.consultancyUser
-                        },  
+                            visible: this.adminUser || this.siteInchargeUser || this.departmentUser || this.clusterUser || this.resourceManagerUser || this.consultancyUser
+                        },
                         {
                             label: 'Accounts Payable',
                             icon: 'pi pi-money-bill',
@@ -197,7 +196,7 @@ export class AppMenu {
                                     label: 'Invoice Receipt',
                                     icon: 'pi pi-receipt',
                                     routerLink: ['/home/invoice-receipt'],
-                                    visible: this.adminUser 
+                                    visible: this.adminUser
                                 },
                                 {
                                     label: 'Invoice Disbursement',
@@ -206,22 +205,22 @@ export class AppMenu {
                                     visible: this.adminUser
                                 }
                             ],
-                                visible: this.adminUser || this.consultancyUser
-                        },        
+                            visible: this.adminUser || this.consultancyUser
+                        },
                         {
                             label: 'Resource Pool',
-                            icon: 'pi pi-server', 
+                            icon: 'pi pi-server',
                             items: [
                                 {
                                     label: 'Consultancy',
                                     icon: 'pi pi-briefcase',
                                     routerLink: ['/home/consultancies'],
-                                    visible: this.resourceManagerUser || this.adminUser 
+                                    visible: this.resourceManagerUser || this.adminUser
                                 },
                                 {
                                     label: 'Candidate',
                                     icon: 'pi pi pi-user',
-                                    items:[
+                                    items: [
                                         {
                                             label: 'Fixed Cost',
                                             icon: 'pi pi-wallet',
@@ -238,7 +237,7 @@ export class AppMenu {
                                     visible: this.adminUser || this.consultancyUser
                                 }
                             ],
-                                visible: this.adminUser || this.consultancyUser || this.resourceManagerUser
+                            visible: this.adminUser || this.consultancyUser || this.resourceManagerUser
                         },
                         {
                             label: 'Masters',
@@ -286,23 +285,31 @@ export class AppMenu {
                                 },
                                 {
                                     label: 'Interviewer',
-                                    icon: "pi pi-address-book",
+                                    icon: 'pi pi-address-book',
                                     routerLink: ['/home/interviewers']
                                 }
                             ],
-                                visible: this.adminUser || this.resourceManagerUser
+                            visible: this.adminUser || this.resourceManagerUser
                         },
                         {
                             label: 'Audit Log',
                             icon: 'pi pi-file',
-                            routerLink: ['/home/logs']
+                            items: [
+                                {
+                                    label: 'Session Log',
+                                    icon: 'pi pi-warehouse',
+                                    routerLink: ['/home/session-logs']
+                                },
+                                {
+                                    label: 'Activity Log',
+                                    icon: 'pi pi-inbox',
+                                    routerLink: ['/home/activity-logs']
+                                }
+                            ]
                         }
                     ]
-                },
+                }
             ];
-        }
-        catch(e){
-
-        }
+        } catch (e) {}
     }
 }
