@@ -57,6 +57,11 @@ export class AppComponent implements OnInit {
         }
 
         this.authService.sessionExpired$.subscribe(reason => {
+
+            if (this.router.url === '/') {
+                return;
+            }
+
             this.message = reason === 'idle' 
                 ? 'You were logged out due to inactivity.' 
                 : 'Your session has expired. Please login again.';
@@ -65,17 +70,16 @@ export class AppComponent implements OnInit {
         })
     }
 
-    @HostListener('document:mousemove')
     @HostListener('document:keydown')
     @HostListener('document:click')
-    @HostListener('document:scroll')
-    @HostListener('document:touchStart')
+    @HostListener('document:touchstart')
     userActivity(){
         const token = sessionStorage.getItem('token');
 
-        if (token) {
-            this.authService.resetIdleTimer();
+        if (!token || this.router.url === '/') {
+            return;
         }
+        this.authService.resetIdleTimer();
     }
 
     confirmLogout(){

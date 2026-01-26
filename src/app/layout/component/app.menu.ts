@@ -296,13 +296,7 @@ export class AppMenu {
                             label: 'Audit Log',
                             icon: 'pi pi-file',
                             routerLink: ['/home/logs']
-                        },
-                        {
-                            label: 'Logout',
-                            icon: 'pi pi-sign-out',
-                            command: () => this.logoutUser()
-                        },
-
+                        }
                     ]
                 },
             ];
@@ -311,14 +305,4 @@ export class AppMenu {
 
         }
     }
-
-    logoutUser(){
-        try {
-            this.apiService.logoutUser('').subscribe();
-            this.router.navigate(['/']);
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
 }

@@ -19,7 +19,7 @@ export class Auth {
   private sessionTimer!: any;
   private idleTimer!: any;
 
-  private readonly IDLE_TIMEOUT = 2 * 60 * 1000;
+  private readonly IDLE_TIMEOUT = 30 * 60 * 1000;
 
   constructor(private apiService: Apiservice, private router: Router){}
 
@@ -29,15 +29,13 @@ export class Auth {
 
     if (remainingTime <= 0) {
       console.log('checking remainingTime');
-      this.logout();
-      this.notifySessionExpired('session');
+      this.notifyUnauthorized();
       return;
     }
 
     this.sessionTimer = setTimeout(() => {
       console.log('checking logoutTimer');
-      this.logout();
-      this.notifySessionExpired('session');
+      this.notifyUnauthorized();
     }, remainingTime);
   }
 
@@ -62,6 +60,11 @@ export class Auth {
     if (this.idleTimer) {
       clearTimeout(this.idleTimer);
     }
+  }
+
+  notifyUnauthorized(){
+    this.logout();
+    this.notifySessionExpired('session');
   }
 
   private notifySessionExpired(reason: 'idle' | 'session'){
@@ -97,6 +100,6 @@ export class Auth {
   }
 
   fetchUserProfile(){
-    return this.http.get(`${this.baseUrl}/api/user/profile`)
+    return this.http.get(`${this.baseUrl}/api/user/profile`);
   }
 }
