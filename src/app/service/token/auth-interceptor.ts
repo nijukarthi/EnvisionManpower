@@ -1,11 +1,13 @@
-import { HttpInterceptorFn } from '@angular/common/http';
+import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Auth } from '../auth/auth';
 import { Loader } from '../loader/loader';
-import { finalize } from 'rxjs';
+import { catchError, finalize, throwError } from 'rxjs';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const loader = inject(Loader);
+  const authService = inject(Auth);
+  
   loader.show();
 
   // skip only token adding, NOT the loader hide
@@ -28,6 +30,13 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   });
 
   return next(newReq).pipe(
+    catchError((error: HttpErrorResponse) => {
+      if (error.status === 401) {
+        loader.forceHide();
+        authService.notifyUnauthorized();
+      }
+      return throwError(() => error);
+    }),
     finalize(() => loader.hide())
   );
 
