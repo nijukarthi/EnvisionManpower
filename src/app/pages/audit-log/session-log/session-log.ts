@@ -40,6 +40,7 @@ export class SessionLog {
             console.log(error);
         }
     }
+
     fetchLogsList() {
         try {
             const data = {
@@ -64,6 +65,7 @@ export class SessionLog {
 
         return `${yyyy}-${mm}-${dd}T${time}Z`;
     }
+
     getFilterValues(filters: any, field: string): string[] | null {
         const rules = filters?.[field];
         if (!Array.isArray(rules)) return null;
@@ -72,6 +74,7 @@ export class SessionLog {
 
         return values.length ? values : null;
     }
+
     loadSessionLog(event: any) {
         try {
             this.first = event.first;
@@ -103,6 +106,7 @@ export class SessionLog {
             console.log(error);
         }
     }
+    
     updateRange(selectedValue: any, value: any[], index: number, filter: any) {
         if (!value) value = [];
 
