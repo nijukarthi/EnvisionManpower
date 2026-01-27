@@ -42,7 +42,7 @@ import { AttendanceTable } from '@/pages/performanceAttendance/attendance-table/
 import { PoAssignTable } from '@/pages/po-assign-table/po-assign-table';
 import { PoAssignForm } from '@/pages/po-assign-form/po-assign-form';
 import { PoAssignEditForm } from '@/pages/po-assign-edit-form/po-assign-edit-form';
-import { ActivityLog } from '@/pages/audit-log/activity-log';
+import { ActivityLog } from '@/pages/audit-log/activity-log/activity-log';
 import { SessionLog } from '@/pages/audit-log/session-log/session-log';
 
 export const appRoutes: Routes = [

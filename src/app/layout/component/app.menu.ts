@@ -292,20 +292,21 @@ export class AppMenu {
                             visible: this.adminUser || this.resourceManagerUser
                         },
                         {
-                            label: 'Audit Log',
+                            label: 'Audit Logs',
                             icon: 'pi pi-file',
                             items: [
                                 {
-                                    label: 'Session Log',
+                                    label: 'Session Logs',
                                     icon: 'pi pi-warehouse',
                                     routerLink: ['/home/session-logs']
                                 },
                                 {
-                                    label: 'Activity Log',
+                                    label: 'Activity Logs',
                                     icon: 'pi pi-inbox',
                                     routerLink: ['/home/activity-logs']
                                 }
-                            ]
+                            ],
+                            visible: this.adminUser || this.resourceManagerUser
                         }
                     ]
                 }

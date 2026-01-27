@@ -1,6 +1,6 @@
 <div class="card">
     <div class="flex items-baseline-last justify-between">
-        <h5>Logs</h5>
+        <h5>Session Logs</h5>
         <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
     </div>
     <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
@@ -17,6 +17,7 @@
             [totalRecords]="totalRecords"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
             [showCurrentPageReport]="true"
+            [tableStyle]="{'min-width': '200rem'}"
             (onLazyLoad)="loadSessionLog($event)"
         >
             <ng-template #header>
@@ -25,7 +26,7 @@
 
                     <th>
                         <div class="flex items-center justify-between">
-                            <span>Session Id</span>
+                            <span>Session ID</span>
                             <p-columnFilter type="text" field="sessionId" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
@@ -37,7 +38,7 @@
                     </th>
                     <th>
                         <div class="flex items-center justify-between">
-                            <span>UserGroupName</span>
+                            <span>Usergroup Name</span>
                             <p-columnFilter type="text" field="userGroupName" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
@@ -47,7 +48,7 @@
                             <p-columnFilter type="text" field="email" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
-                    <th>IpAddress</th>
+                    <th>IP Address</th>
                     <th>User Agent</th>
                     <th>Device Type</th>
                     <th>
@@ -73,17 +74,17 @@
             <ng-template #body let-log let-i="rowIndex">
                 <tr>
                     <td>{{ i + 1 }}</td>
-                    <td>{{ log.jti }}</td>
-                    <td>{{ log.username }}</td>
-                    <td>{{ log.userGroupName}}</td>
-                    <td>{{ log.emailOrPhone}}</td>
-                    <td>{{ log.ipAddress}}</td>
-                    <td>{{ log.userAgent}}</td>
-                    <td>{{ log.deviceType}}</td>
-                    <td>{{ log.createdAt | date: 'MMM d, y, h:mm a' }}</td>
-                    <td>{{ log.sessionExpiry}}</td>
-                    <td>{{ log.loginTime || '-'}}</td>
-                    <td>{{ log.logoutTime || '-'}}</td>
+                    <td>{{ log.jti || '-' }}</td>
+                    <td>{{ log.username || '-' }}</td>
+                    <td>{{ log.userGroupName || '-' }}</td>
+                    <td>{{ log.emailOrPhone || '-' }}</td>
+                    <td>{{ log.ipAddress || '-' }}</td>
+                    <td>{{ log.userAgent || '-' }}</td>
+                    <td>{{ log.deviceType || '-' }}</td>
+                    <td>{{ log.createdAt ? (log.createdAt | date: 'MMM d, y, h:mm a') : '-' }}</td>
+                    <td>{{ log.tokenExpiry ? (log.tokenExpiry | date: 'MMM d, y, h:mm a') : '-' }}</td>
+                    <td>{{ log.loginTime ? (log.loginTime | date: 'MMM d, y, h:mm a') : '-' }}</td>
+                    <td>{{ log.logoutTime ? (log.logoutTime | date: 'MMM d, y, h:mm a') : '-' }}</td>
                     <td>{{ log.logoutType || '-'}}</td>
                 </tr>
             </ng-template>

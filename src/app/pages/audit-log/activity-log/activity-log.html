@@ -1,6 +1,6 @@
 <div class="card">
     <div class="flex items-baseline-last justify-between">
-        <h5>Logs</h5>
+        <h5>Activity Logs</h5>
         <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
     </div>
     <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
@@ -68,7 +68,9 @@
             </ng-template>
             <ng-template #emptymessage>
                 <tr>
-                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground)">No Records Found</td>
+                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground)">
+                        No Records Found
+                    </td>
                 </tr>
             </ng-template>
         </p-table>
