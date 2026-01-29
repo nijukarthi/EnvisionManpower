@@ -1,7 +1,10 @@
 <div class="card">
     <div class="flex items-baseline-last justify-between">
         <h5>Activity Logs</h5>
-        <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
+        <div class="flex gap-2">
+            <p-button icon="pi pi-refresh" rounded (onClick)="fetchLogsList(true)" />
+            <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
+        </div>
     </div>
     <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
         <p-table
@@ -17,6 +20,7 @@
             [totalRecords]="totalRecords"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
             [showCurrentPageReport]="true"
+            [tableStyle]="{ 'min-width': '200rem' }"
             (onLazyLoad)="loadAuditLog($event)"
         >
             <ng-template #header>
@@ -24,8 +28,26 @@
                     <th>SL No</th>
                     <th>
                         <div class="flex items-center justify-between">
+                            <span>Session ID</span>
+                            <p-columnFilter type="text" field="sessionId" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
                             <span>Username</span>
                             <p-columnFilter type="text" field="userName" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Usergroup Name</span>
+                            <p-columnFilter type="text" field="userGroupName" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Email</span>
+                            <p-columnFilter type="text" field="emailOrPhone" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
                     <th>
@@ -35,18 +57,22 @@
                         </div>
                     </th>
                     <th>Module</th>
+                    <th>Action Summary</th>
                     <th>Action Status</th>
                     <th>IP Address</th>
                     <th>User Agent</th>
+                    <th>Device Type</th>
                     <th>
                         <div class="flex items-center justify-between">
                             <span>Created At (IST)</span>
                             <p-columnFilter type="date" field="date" display="menu" matchMode="between" [showOperator]="false" [showAddButton]="false">
                                 <ng-template #filter let-filter="filterCallback" let-value>
                                     <div class="flex flex-col gap-2">
-                                        <p-datepicker [ngModel]="value?.[0] || null" (ngModelChange)="updateRange($event, value, 0, filter)" placeholder="From Date" />
+                                        <p-datepicker [ngModel]="value?.[0] || null" 
+                                            (ngModelChange)="updateRange($event, value, 0, filter)" placeholder="From Date" />
 
-                                        <p-datepicker [ngModel]="value?.[1] || null" (ngModelChange)="updateRange($event, value, 1, filter)" placeholder="To Date" />
+                                        <p-datepicker [ngModel]="value?.[1] || null" 
+                                            (ngModelChange)="updateRange($event, value, 1, filter)" placeholder="To Date" />
                                     </div>
                                 </ng-template>
                             </p-columnFilter>
@@ -57,12 +83,19 @@
             <ng-template #body let-log let-i="rowIndex">
                 <tr>
                     <td>{{ i + 1 }}</td>
+                    <td>{{ log.jti || '-' }}</td>
                     <td>{{ log.username }}</td>
+                    <td>{{ log.userGroupName }}</td>
+                    <td>{{ log.emailOrPhone }}</td>
                     <td>{{ log.action }}</td>
                     <td>{{ log.module }}</td>
-                    <td>{{ log.actionStatus }}</td>
+                    <td>{{ log.actionSummary }}</td>
+                    <td>
+                        <p-tag [value]="log.actionStatus" [severity]="getSeverity(log.actionStatus)" />
+                    </td>
                     <td>{{ log.ipAddress }}</td>
                     <td>{{ log.userAgent }}</td>
+                    <td>{{ log.deviceType }}</td>
                     <td>{{ log.createdAt | date: 'MMM d, y, h:mm a' }}</td>
                 </tr>
             </ng-template>

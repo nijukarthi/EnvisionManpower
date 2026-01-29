@@ -41,8 +41,13 @@ export class SessionLog {
         }
     }
 
-    fetchLogsList() {
+    fetchLogsList(isRefresh = false) {
         try {
+            if (isRefresh) {
+                this.offSet = 0;
+                this.first = 0;
+            }
+
             const data = {
                 offSet: this.offSet,
                 pageSize: this.pageSize

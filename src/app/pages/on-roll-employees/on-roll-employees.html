@@ -25,7 +25,7 @@
             [totalRecords]="totalRecords"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
             [paginatorDropdownAppendTo]="mydiv"
-            [tableStyle]="{'min-width': '280rem'}"
+            [tableStyle]="{'min-width': '300rem'}"
             (onLazyLoad)="loadDemands($event)"
         >
             <ng-template #header let-columns>
@@ -147,6 +147,12 @@
                     <!-- <th>Aadhar Number</th> -->
                     <th>PPE Details</th>
                     <th>Actions</th>
+                    <th>
+                        <div class="flex items-center gap-2">
+                            <span>Edit Employment Details</span>
+                            <i class="pi pi-clock"></i>
+                        </div>
+                    </th>
                 </tr>
             </ng-template>
             <ng-template #body let-onroll let-editing="editing" let-i="rowIndex" let-columns="columns">
@@ -244,17 +250,28 @@
                     </td>
                     <td class="flex items-center justify-center gap-2">
                         @if (!editing) {
-                        <button pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil" rounded severity="secondary" (click)="editOnrollRow(onroll)"></button>
+                            <button pButton pRipple type="button" 
+                                pInitEditableRow icon="pi pi-pencil" rounded severity="secondary" 
+                                (click)="editOnrollRow(onroll)"></button>
                         }@else {
-                        <button pButton pRipple type="button" pSaveEditableRow icon="pi pi-check" rounded severity="primary" (click)="updateOnrollDetails(onroll)"></button>
-                        <button pButton pRipple type="button" pCancelEditableRow icon="pi pi-times" rounded severity="danger" (click)="cancelEdit(onroll)"></button>
+                            <button pButton pRipple type="button" 
+                                pSaveEditableRow icon="pi pi-check" rounded severity="primary" 
+                                (click)="updateOnrollDetails(onroll)"></button>
+                            <button pButton pRipple type="button" 
+                                pCancelEditableRow icon="pi pi-times" rounded severity="danger" 
+                                (click)="cancelEdit(onroll)"></button>
                         }
+                    </td>
+                    <td>
+                        <p-button label="Edit" icon="pi pi-pencil" (onClick)="editSpnDetails(onroll)" />
                     </td>
                 </tr>
             </ng-template>
             <ng-template #emptymessage>
                 <tr>
-                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground)">No Records Found</td>
+                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground)">
+                        No Records Found
+                    </td>
                 </tr>
             </ng-template>
         </p-table>
@@ -298,6 +315,86 @@
                     </tr>
                 </ng-template>
             </p-table>
+        </div>
+        <div class="flex justify-end mt-4">
+            <button pButton pRipple type="submit">
+                <span pButtonLabel>Submit</span>
+            </button>
+        </div>
+    </form>
+</p-dialog>
+
+<p-dialog header="Edit Employment Details" [(visible)]="spnDetailsModal" [modal]="true" [style]="{ width: '50rem' }"
+    [draggable]="false">
+    <form [formGroup]="updateEmploymentForm" (ngSubmit)="updateEmploymentDetails()">
+        <div class="grid grid-cols-2 gap-2">
+            <div class="grid col-span-1 gap-1">
+                <label for="employee-code">Employee Code</label>
+                <input type="text" pInputText [value]="onrollEmployeeDetails?.employeeCode" id="employee-code"
+                    [disabled]="true" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="employee-name">Employee Name</label>
+                <input type="text" pInputText [value]="onrollEmployeeDetails?.candidateName" id="employee-name"
+                    [disabled]="true" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="consultancy-name">Consultancy Name</label>
+                <input type="text" pInputText [value]="onrollEmployeeDetails?.consultancy?.consultancyName"
+                    id="consultancy-name" [disabled]="true" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="current-experience">Current Experience</label>
+                <input type="text" pInputText [value]="onrollEmployeeDetails?.employmentDetails?.currentExperience" 
+                    id="current-experience" [disabled]="true" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="total-experience">Total Experience</label>
+                <input type="text" pInputText [value]="onrollEmployeeDetails?.employmentDetails?.totalExperience" 
+                    id="total-experience" [disabled]="true" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="joining-date">Joining Date</label>
+                <input type="text" pInputText [value]="onrollEmployeeDetails?.employmentDetails?.joiningDate | date: 'dd-MM-yyyy'"
+                    [disabled]="true" id="joining-date" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="employment-status">Employment Status</label>
+                <input type="text" pInputText [value]="onrollEmployeeDetails?.employmentDetails?.employmentStatus" 
+                    [disabled]="true" id="employment-status" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="project-code">Project Code</label>
+                <p-select [options]="projectCodesList" formControlName="projectId" optionLabel="projectCode" optionValue="projectId" 
+                    [filter]="true" filterBy="projectCode" placeholder="Select Project Code" appendTo="body" 
+                    inputId="project-code" [showClear]="true" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="spn-code">SPN Code</label>
+                <p-select [options]="spnInfoList" formControlName="spnId" optionLabel="spnCode" optionValue="spnId" 
+                    [filter]="true" filterBy="spnCode" placeholder="Select SPN Code" appendTo="body" inputId="spn-code" 
+                    [showClear]="true" (onChange)="selectedSpn($event.value)" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="spn-description">SPN Description</label>
+                <p-select [options]="spnInfoList" formControlName="spnId" optionLabel="spnDescription" optionValue="spnId" 
+                    [filter]="true" filterBy="spnDescription" placeholder="Select SPN Description" appendTo="body" 
+                    inputId="spn-description" [showClear]="true" (onChange)="selectedSpn($event.value)">
+                    <ng-template #item let-item>{{ item.spnDescription }} - ({{ item.experience }})</ng-template>
+                    <ng-template #selectedItem let-item>{{ item.spnDescription }} - ({{ item.experience }})</ng-template>
+                </p-select>
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="experience">Experience</label>
+                <input type="text" pInputText [value]="onrollEmployeeDetails?.employmentDetails?.spn?.experience" 
+                    [disabled]="true" id="experience" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="role">Envision Role</label>
+                <p-select [options]="envisionRoleList" formControlName="envisionRoleId" optionLabel="roleName" optionValue="id" 
+                    [filter]="true" filterBy="roleName" placeholder="Select Envision Role" appendTo="body" inputId="role" 
+                    [showClear]="true" />
+            </div>
         </div>
         <div class="flex justify-end mt-4">
             <button pButton pRipple type="submit">
