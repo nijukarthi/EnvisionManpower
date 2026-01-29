@@ -25,11 +25,16 @@ export class OnRollEmployees implements OnInit {
     statuses!: any[];
 
     openPpeDetails = false;
+    spnDetailsModal = false;
 
     onrollEmployeeList: any;
     onrollPpeDetails: any;
     filteredData: any;
     editingRow: any | null = null;
+    spnInfoList: any;
+    envisionRoleList: any;
+    projectCodesList: any;
+    onrollEmployeeDetails: any;
 
     currentUserEmail = sessionStorage.getItem('userEmail');
 
@@ -50,6 +55,16 @@ export class OnRollEmployees implements OnInit {
             size: [ppe.size]
         });
     }
+
+    updateEmploymentForm = this.fb.group({
+        employmentId: [0],
+        projectId: [0],
+        spnId: [0],
+        envisionRoleId: [0],
+        joiningDate: [''],
+        lastWorkingDate: [null],
+        employmentStatus: ['']
+    })
 
     constructor(
         private apiService: Apiservice,
@@ -409,6 +424,124 @@ export class OnRollEmployees implements OnInit {
         this.onrollEmployeeApi(this.filteredData);
         this.table.cancelRowEdit(onroll);
         this.editingRow = null;
+    }
+
+    fetchSpnInfo(){
+        try {
+            this.apiService.fetchSpnInfo('').subscribe({
+                next: val => {
+                    console.log(val);
+                    this.spnInfoList = val?.data;
+                },
+                error: err => {
+                    console.log(err);
+                }
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    fetchRolesList(){
+        try {
+            this.apiService.fetchRoleInfoList('').subscribe({
+                next: val => {
+                    console.log(val);
+                    this.envisionRoleList = val?.data;
+                },
+                error: err => {
+                    console.log(err);
+                }
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    fetchProjectCodes(){
+        try {
+            this.apiService.fetchProjectCodes('').subscribe({
+                next: val => {
+                    console.log(val);
+                    this.projectCodesList = val?.data;
+                },
+                error: err => {
+                    console.log(err);
+                }
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    editSpnDetails(onroll: any){
+        try {
+            this.spnDetailsModal = true;
+            this.onrollEmployeeDetails = onroll;
+            console.log(this.onrollEmployeeDetails);
+            this.fetchSpnInfo();
+            this.fetchRolesList();
+            this.fetchProjectCodes();
+
+            const formatDate = (d: any) => {
+                if (!d) return null;
+                return typeof d === 'string' ? d : d.toLocaleDateString('en-CA');
+            };
+
+            this.updateEmploymentForm.patchValue({
+                employmentId: onroll?.employmentDetails?.employmentId,
+                projectId: onroll?.employmentDetails?.project?.projectId,
+                spnId: onroll?.employmentDetails?.spn?.spnId,
+                envisionRoleId: onroll?.employmentDetails?.envisionRole?.id,
+                joiningDate: formatDate(onroll?.employmentDetails?.joiningDate),
+                lastWorkingDate: onroll?.employmentDetails?.lastWorkingDate,
+                employmentStatus: onroll?.employmentDetails?.employmentStatus
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    selectedSpn(spnId: number){
+        console.log(spnId);
+        this.updateEmploymentForm.patchValue({
+            ...this.updateEmploymentForm.value,
+            spnId: spnId
+        });
+
+        const selectedSpn = this.spnInfoList.find(
+            (spn: any) => spn.spnId === spnId
+        );
+
+        if (selectedSpn && this.onrollEmployeeDetails?.employmentDetails) {
+            this.onrollEmployeeDetails.employmentDetails.spn = selectedSpn
+        }
+    }
+
+    updateEmploymentDetails(){
+        try {
+            console.log(this.updateEmploymentForm.value);
+
+            const data = this.updateEmploymentForm.value;
+
+            this.apiService.updateEmploymentDetails(data).subscribe({
+                next: val => {
+                    console.log(val);
+                    
+                    this.messageService.add({ 
+                        severity: 'success', 
+                        summary: 'Success', 
+                        detail: 'Employment Details Updated Successfully' });
+                    this.spnDetailsModal = false;
+                    this.fetchActiveOnrollEmployees();
+                },
+                error: err => {
+                    console.log(err);
+                }
+            })
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     onDialogClose() {

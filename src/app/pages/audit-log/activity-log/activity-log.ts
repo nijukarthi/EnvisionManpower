@@ -40,8 +40,14 @@ export class ActivityLog implements OnInit {
             console.log(error);
         }
     }
-    fetchLogsList() {
+
+    fetchLogsList(isRefresh = false) {
         try {
+            if (isRefresh) {
+                this.offSet = 0;
+                this.first = 0;
+            }
+
             const data = {
                 offSet: this.offSet,
                 pageSize: this.pageSize
@@ -92,7 +98,10 @@ export class ActivityLog implements OnInit {
             this.filteredData = {
                 offSet: this.offSet,
                 pageSize: this.pageSize,
-                userName: filters?.userName?.[0]?.value ?? null,
+                jti: filters?.sessionId?.[0]?.value ?? null,
+                username: filters?.userName?.[0]?.value ?? null,
+                userGroupName: filters?.userGroupName?.[0]?.value ?? null,
+                emailOrPhone: filters?.emailOrPhone?.[0]?.value ?? null,
                 fromDate: from ? this.formatDateForApi(from, false) : null,
                 toDate: to ? this.formatDateForApi(to, true) : null,
                 actions: this.getFilterValues(filters, 'actions')
@@ -111,5 +120,16 @@ export class ActivityLog implements OnInit {
         value[index] = selectedValue;
 
         filter(value);
+    }
+
+    getSeverity(status: string){
+        switch(status){
+            case 'SUCCESS':
+                return 'success';
+            case 'FAILURE':
+                return 'danger';
+            default:
+                return 'primary';
+        }
     }
 }

@@ -621,4 +621,8 @@ export class Apiservice {
     sessionlogsList(params: any): Observable<any> {
         return this.postMethod('auth/session-logs', params);
     }
+
+    updateEmploymentDetails(params: any){
+        return this.postMethod('candidate/employmentdetail/update', params);
+    }
 }
