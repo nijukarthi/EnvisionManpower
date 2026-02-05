@@ -6,7 +6,6 @@ import { Notfound } from './app/pages/notfound/notfound';
 import { Demand } from '@/pages/demand/demand';
 import { Approval } from '@/pages/approval/approval';
 import { Fullfillreq } from '@/pages/fullfillreq/fullfillreq';
-import { Register } from '@/pages/auth/register';
 import { ConsultancyTable } from '@/pages/consultancy/consultancy-table/consultancy-table';
 import { SpnTable } from '@/pages/spn/spn-table/spn-table';
 import { DepartmentTable } from '@/pages/department/department-table/department-table';
@@ -44,15 +43,13 @@ import { PoAssignForm } from '@/pages/po-assign-form/po-assign-form';
 import { PoAssignEditForm } from '@/pages/po-assign-edit-form/po-assign-edit-form';
 import { ActivityLog } from '@/pages/audit-log/activity-log/activity-log';
 import { SessionLog } from '@/pages/audit-log/session-log/session-log';
+import { UnderMaintenance } from '@/pages/under-maintenance/under-maintenance';
 
 export const appRoutes: Routes = [
     {
         path: '',
         component: Loginpage
-    },
-    {
-        path: 'register',
-        component: Register
+        // component: UnderMaintenance
     },
     {
         path: 'home',
@@ -67,7 +64,7 @@ export const appRoutes: Routes = [
                 path: 'manpower-approval',
                 component: Approval,
                 canActivate: [authGuard]
-            },
+            },  
             {
                 path: 'assign-role',
                 component: Fullfillreq,

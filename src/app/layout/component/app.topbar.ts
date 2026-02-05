@@ -10,6 +10,7 @@ import { ButtonModule } from 'primeng/button';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { AvatarModule } from 'primeng/avatar';
 import { AvatarGroupModule } from 'primeng/avatargroup';
+import { Auth } from '@/service/auth/auth';
 
 @Component({
     selector: 'app-topbar',
@@ -100,7 +101,7 @@ export class AppTopbar implements OnInit {
 
     userDetails: any;
 
-    constructor(public layoutService: LayoutService, private apiService: Apiservice, private router: Router) {}
+    constructor(public layoutService: LayoutService, private apiService: Apiservice, private router: Router, private authService: Auth) {}
 
     toggleDarkMode() {
         this.layoutService.layoutConfig.update((state) => ({ ...state, darkTheme: !state.darkTheme }));
@@ -170,7 +171,7 @@ export class AppTopbar implements OnInit {
 
     logoutUser(){
         try {
-            this.apiService.logoutUser('').subscribe();
+            this.authService.logout('manual');
             this.router.navigate(['/']);
         } catch (error) {
             console.log(error);
