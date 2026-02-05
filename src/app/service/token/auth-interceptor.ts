@@ -11,23 +11,25 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   loader.show();
 
   // skip only token adding, NOT the loader hide
-  const skipAuth =
-    req.url.includes('/api/auth/user/send-otp') ||
-    req.url.includes('/api/auth/user/verify-otp') ||
-    req.url.includes('/api/auth/guestuser/send-otp') ||
-    req.url.includes('/api/auth/guestuser/verify-otp');
+  // const skipAuth =
+  //   req.url.includes('/api/auth/user/send-otp') ||
+  //   req.url.includes('/api/auth/user/verify-otp') ||
+  //   req.url.includes('/api/auth/guestuser/send-otp') ||
+  //   req.url.includes('/api/auth/guestuser/verify-otp');
 
-  if (skipAuth) {
-    return next(req).pipe(
-      finalize(() => loader.hide())
-    );
-  }
+    const newReq = req.clone({
+      // headers: req.headers.set('Authorization', `Bearer ${authToken}`)
+      withCredentials: true
+    });
 
-  const authToken = inject(Auth).getAuthToken();
+    // if (skipAuth) {
+    //   return next(newReq).pipe(
+    //     finalize(() => loader.hide())
+    //   );
+    // }
 
-  const newReq = req.clone({
-    headers: req.headers.set('Authorization', `Bearer ${authToken}`)
-  });
+  // const authToken = inject(Auth).getAuthToken();
+
 
   return next(newReq).pipe(
     catchError((error: HttpErrorResponse) => {

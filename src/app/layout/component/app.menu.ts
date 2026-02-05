@@ -225,16 +225,16 @@ export class AppMenu {
                                             label: 'Fixed Cost',
                                             icon: 'pi pi-wallet',
                                             routerLink: ['/home/candidates/fixed-cost'],
-                                            visible: this.adminUser || this.consultancyUser
+                                            visible: this.consultancyUser
                                         },
                                         {
                                             label: 'Cost Plus',
                                             icon: 'pi pi-receipt',
                                             routerLink: ['/home/candidates/cost-plus'],
-                                            visible: this.adminUser || this.consultancyUser
+                                            visible: this.consultancyUser
                                         }
                                     ],
-                                    visible: this.adminUser || this.consultancyUser
+                                    visible: this.consultancyUser
                                 }
                             ],
                             visible: this.adminUser || this.consultancyUser || this.resourceManagerUser

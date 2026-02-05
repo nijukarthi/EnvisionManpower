@@ -114,6 +114,7 @@ export class Loginpage {
                         this.loginScreen = true;
                     },
                     error: err => {
+                        console.log(err);
                       this.registerScreen = false;
                         this.loginScreen = true;
                         this.messageService.add({ severity: 'error', summary: 'Error', detail: err?.error?.detail });
@@ -206,30 +207,6 @@ export class Loginpage {
         }
     }
 
-    fetchUserProfile(){
-        this.apiService.fetchUserProfile('').subscribe({
-            next: val => {
-                console.log(val);
-                sessionStorage.setItem("userName", val.data.userName);
-                sessionStorage.setItem('userGroupId', val.data.userGroupId);
-                sessionStorage.setItem('userEmail', val.data.email);
-                sessionStorage.setItem('userId', val.data.userId);
-                if (val.data.userGroupId === UserGroups.CLUSTERHEAD || val.data.userGroupId === UserGroups.DEPARTMENTHEAD) {
-                    this.route.navigate(['/home/manpower-approval']);
-                } else if(val.data.userGroupId === UserGroups.CONSULTANCY){
-                    this.route.navigate(['/home/consultancies']);
-                } else if (val.data.userGroupId === UserGroups.GUESTUSER) {
-                    this.route.navigate(['/home/manpower-fulfillment']);
-                }
-                else {
-                    this.route.navigate(['/home/manpower-request']);
-                }
-            },
-            error: err => {
-                console.log(err);
-            }
-        })
-    }
 
     verifyOtp(){
         try{
@@ -241,19 +218,9 @@ export class Loginpage {
 
                 this.apiService.verifyUserOtp(this.userOtpForm.value).subscribe({
                     next: (val: any) => {
-                    if(val.status == 200){
-                        console.log(val);
-                        sessionStorage.setItem('token', val.data.token);
+                        console.log(val);        
+                        this.authService.checkSessionAndNavigate().subscribe();
 
-                        const loginTime = new Date().getTime();
-                        const expiryTime = loginTime + (8 * 60 * 60 * 1000);
-                        console.log(expiryTime);
-
-                        sessionStorage.setItem('tokenExpiry', expiryTime.toString());
-
-                        this.authService.startSessionTimer(expiryTime);
-                        this.fetchUserProfile();
-                    }
                     },
                     error: err => {
                         console.log(err);
@@ -284,8 +251,7 @@ export class Loginpage {
                 this.apiService.verifyInterviewerOtp(data).subscribe({
                     next: val => {
                         console.log(val);
-                        sessionStorage.setItem('token', val.data.token);
-                        this.fetchUserProfile();
+                        this.authService.checkSessionAndNavigate().subscribe();
                     },
                     error: err => {
                         console.log(err);

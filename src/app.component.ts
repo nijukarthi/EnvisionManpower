@@ -50,11 +50,7 @@ export class AppComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        const token = sessionStorage.getItem('token');
-
-        if (token) {
-            this.authService.startIdleTimer();
-        }
+        this.authService.checkSessionAndNavigate().subscribe();
 
         this.authService.sessionExpired$.subscribe(reason => {
 
@@ -62,9 +58,19 @@ export class AppComponent implements OnInit {
                 return;
             }
 
-            this.message = reason === 'idle' 
-                ? 'You were logged out due to inactivity.' 
-                : 'Your session has expired. Please login again.';
+            switch(reason) {
+                case 'idle':
+                    this.message = 'You were logged out due to inactivity.' ;
+                    break;
+
+                case 'manual':
+                    this.message = 'You have been logged out. This session has ended across all open tabs.';
+                    break;
+
+                case 'session':
+                default:
+                    this.message = 'Your session has expired. Please login again.';
+            }
 
             this.showSessionPopup = true;
         })
@@ -74,9 +80,7 @@ export class AppComponent implements OnInit {
     @HostListener('document:click')
     @HostListener('document:touchstart')
     userActivity(){
-        const token = sessionStorage.getItem('token');
-
-        if (!token || this.router.url === '/') {
+        if (this.router.url === '/') {
             return;
         }
         this.authService.resetIdleTimer();
@@ -84,6 +88,7 @@ export class AppComponent implements OnInit {
 
     confirmLogout(){
         this.showSessionPopup = false;
+        this.authService.clearIdleTimer();
         this.router.navigate(['/']);
     }
 }
