@@ -2,10 +2,12 @@
     <div class="flex items-baseline-last justify-between">
         <h5>Invoice Disbursement</h5>
         <div class="flex justify-end gap-1">
-            <p-menu #menu [model]="menuItems" [popup]="true" />
-            <p-button (onClick)="menu.toggle($event)" label="Actions" icon="pi pi-angle-down" iconPos="right"
-                [disabled]="!selectedInvoiceId" [pTooltip]="!selectedInvoiceId ? 'Select One Invoice' : ''"
-                tooltipPosition="top" />
+            @if (currentUser !== USERGROUPS.READONLYADMIN) {
+                <p-menu #menu [model]="menuItems" [popup]="true" />
+                <p-button (onClick)="menu.toggle($event)" label="Actions" icon="pi pi-angle-down" iconPos="right"
+                    [disabled]="!selectedInvoiceId" [pTooltip]="!selectedInvoiceId ? 'Select One Invoice' : ''"
+                    tooltipPosition="top" />
+            }
             <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
         </div>
     </div>
