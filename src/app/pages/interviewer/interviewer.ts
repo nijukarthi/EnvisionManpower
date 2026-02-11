@@ -4,6 +4,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { FormFieldError } from '@/directives/form-field-error';
+import { UserGroups } from '@/models/usergroups/usergroups.enum';
 
 @Component({
     selector: 'app-interviewer',
@@ -28,6 +29,10 @@ export class Interviewer implements OnInit {
     openInterviewer = false;
 
     actionName = 'Submit';
+
+    currentUser = Number(sessionStorage.getItem('userGroupId'));
+            
+    USERGROUPS = UserGroups;
 
     private fb = inject(FormBuilder);
 

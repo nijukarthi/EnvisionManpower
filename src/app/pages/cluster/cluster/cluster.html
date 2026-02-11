@@ -1,7 +1,9 @@
 <div class="card">
     <div class="flex items-baseline-last justify-between">
         <h5>Clusters</h5>
-        <p-button label="Add Cluster" icon="pi pi-plus" (click)="addCluster()" />
+        @if (currentUser !== USERGROUPS.READONLYADMIN){
+            <p-button label="Add Cluster" icon="pi pi-plus" (click)="addCluster()" />
+        }
     </div>
     <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
         <p-table [value]="clusterList" [rowHover]="true">
@@ -11,7 +13,9 @@
                     <th>Cluster Name</th>
                     <th>Cluster Code</th>
                     <th>Cluster Head</th>
-                    <th>Actions</th>
+                    @if (currentUser !== USERGROUPS.READONLYADMIN){
+                        <th>Actions</th>
+                    }
                 </tr>
             </ng-template>
             <ng-template #body let-cluster let-i="rowIndex">
@@ -20,10 +24,12 @@
                     <td>{{ cluster.clusterName }}</td>
                     <td>{{ cluster.clusterCode }}</td>
                     <td>{{ cluster.clusterHead.userName }}</td>
-                    <td>
-                        <p-menu #menu [model]="menuItems" [popup]="true" appendTo="body" />
-                        <p-button (click)="clusterMenu($event,menu,cluster)" icon="pi pi-ellipsis-v" [rounded]="true" variant="text" />
-                    </td>
+                    @if (currentUser !== USERGROUPS.READONLYADMIN){
+                        <td>
+                            <p-menu #menu [model]="menuItems" [popup]="true" appendTo="body" />
+                            <p-button (click)="clusterMenu($event,menu,cluster)" icon="pi pi-ellipsis-v" [rounded]="true" variant="text" />
+                        </td>
+                    }
                 </tr>
             </ng-template>
             <ng-template #emptymessage>

@@ -4,7 +4,7 @@ import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Va
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { FormFieldError } from '@/directives/form-field-error';
-import { min } from 'rxjs';
+import { UserGroups } from '@/models/usergroups/usergroups.enum';
 
 @Component({
     selector: 'app-company-users',
@@ -28,6 +28,10 @@ export class CompanyUsers implements OnInit {
     filteredData: any;
 
     userId: number | null = null;
+
+    currentUser = Number(sessionStorage.getItem('userGroupId'));
+        
+    USERGROUPS = UserGroups;
 
     private fb = inject(FormBuilder);
 

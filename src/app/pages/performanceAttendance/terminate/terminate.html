@@ -20,11 +20,11 @@
             [showCurrentPageReport]="true"
             [rowsPerPageOptions]="[10, 20, 30]"
             [totalRecords]="totalRecords"
-            selectionMode="single"
+            [selectionMode]="currentUser === USERGROUPS.READONLYADMIN ? null : 'single'"
             dataKey="resignationId"
-            (onRowSelect)="selectedEmployee($event.data)"
+            (onRowSelect)="currentUser !== USERGROUPS.READONLYADMIN && selectedEmployee($event.data)"
             [lazy]="true"
-            (onRowUnselect)="unSelectedEmployee()"
+            (onRowUnselect)="currentUser !== USERGROUPS.READONLYADMIN && unSelectedEmployee()"
             [first]="first"
             [(selection)]="selectedResignation"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
@@ -151,8 +151,14 @@
                             } @else if (resignation.stateHeadApproval.approvalStatus === APPROVALSTATUS.REJECTED) {
                             <p-button icon="pi pi-times" severity="danger" rounded [disabled]="true" />
                             } @if (resignation.stateHeadApproval.approvalStatus === APPROVALSTATUS.PENDING) {
-                            <p-button icon="pi pi-check" severity="primary" rounded (onClick)="clusterHeadApproval(resignation.resignationId, 'Accepted')" />
-                            <p-button icon="pi pi-times" severity="danger" rounded (onClick)="clusterHeadApproval(resignation.resignationId, 'Rejected')" />
+                            <p-button icon="pi pi-check" severity="primary" rounded 
+                                [disabled]="currentUser !== USERGROUPS.CLUSTERHEAD && 
+                                    currentUser !== USERGROUPS.ADMIN && currentUser !== USERGROUPS.RESOURCEMANAGER"
+                                (onClick)="clusterHeadApproval(resignation.resignationId, 'Accepted')" />
+                            <p-button icon="pi pi-times" severity="danger" rounded 
+                                [disabled]="currentUser !== USERGROUPS.CLUSTERHEAD &&
+                                    currentUser !== USERGROUPS.ADMIN && currentUser !== USERGROUPS.RESOURCEMANAGER"
+                                (onClick)="clusterHeadApproval(resignation.resignationId, 'Rejected')" />
                             }
                         </div>
                     </td>
@@ -163,8 +169,14 @@
                             } @else if (resignation.departmentHeadApproval.approvalStatus === APPROVALSTATUS.REJECTED) {
                             <p-button icon="pi pi-times" severity="danger" rounded [disabled]="true" />
                             } @if (resignation.departmentHeadApproval.approvalStatus === APPROVALSTATUS.PENDING) {
-                            <p-button icon="pi pi-check" severity="primary" rounded (onClick)="departmentHeadApproval(resignation.resignationId, 'Accepted')" />
-                            <p-button icon="pi pi-times" severity="danger" rounded (onClick)="departmentHeadApproval(resignation.resignationId, 'Rejected')" />
+                            <p-button icon="pi pi-check" severity="primary" rounded 
+                                [disabled]="currentUser !== USERGROUPS.DEPARTMENTHEAD &&
+                                    currentUser !== USERGROUPS.ADMIN && currentUser !== USERGROUPS.RESOURCEMANAGER"
+                                (onClick)="departmentHeadApproval(resignation.resignationId, 'Accepted')" />
+                            <p-button icon="pi pi-times" severity="danger" rounded
+                                [disabled]="currentUser !== USERGROUPS.DEPARTMENTHEAD &&
+                                    currentUser !== USERGROUPS.ADMIN && currentUser !== USERGROUPS.RESOURCEMANAGER"
+                                (onClick)="departmentHeadApproval(resignation.resignationId, 'Rejected')" />
                             }
                         </div>
                     </td>

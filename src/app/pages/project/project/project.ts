@@ -21,6 +21,8 @@ export class Project implements OnInit {
     menuItems: any[] = [];
     selectedProject: any;
 
+    currentUser = Number(sessionStorage.getItem('userGroupId'));
+
     UserGroups = UserGroups;
 
     first = 0;

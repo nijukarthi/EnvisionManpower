@@ -1,4 +1,5 @@
 import { Column } from '@/models/table-column/table-column';
+import { UserGroups } from '@/models/usergroups/usergroups.enum';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
@@ -34,6 +35,10 @@ export class OnboardingTable implements OnInit {
   ppeDetailsList: any;
   filteredData: any;
   editingRow: any | null = null;
+
+  currentUser = Number(sessionStorage.getItem('userGroupId'));
+  
+  USERGROUPS = UserGroups;
 
   private fb = inject(FormBuilder);
 

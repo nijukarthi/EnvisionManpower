@@ -1,5 +1,6 @@
 export enum UserGroups {
     ADMIN = 301,
+    READONLYADMIN = 302,
     SITEINCHARGE = 306,
     CLUSTERHEAD = 311,
     DEPARTMENTHEAD = 316,

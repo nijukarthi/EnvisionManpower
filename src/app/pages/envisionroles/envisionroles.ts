@@ -5,6 +5,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { FormFieldError } from '@/directives/form-field-error';
+import { UserGroups } from '@/models/usergroups/usergroups.enum';
 
 @Component({
     selector: 'app-envisionroles',
@@ -28,6 +29,10 @@ export class Envisionroles {
     roleList: any;
     roleForm: any;
     actionName: any = 'Save';
+
+    currentUser = Number(sessionStorage.getItem('userGroupId'));
+    
+    USERGROUPS = UserGroups;
 
     constructor(
         private messageService: MessageService,
