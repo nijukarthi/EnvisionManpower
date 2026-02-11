@@ -28,6 +28,10 @@ export class DepartmentTable implements OnInit {
     menuItems: any[] = [];
     selectedDepartment: any;
 
+    currentUser = Number(sessionStorage.getItem('userGroupId'));
+
+    UserGroups = UserGroups;
+
     constructor(
         private messageService: MessageService,
         private apiService: Apiservice,

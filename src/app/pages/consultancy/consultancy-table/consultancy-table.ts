@@ -1,3 +1,4 @@
+import { UserGroups } from '@/models/usergroups/usergroups.enum';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
 import { Component, OnInit } from '@angular/core';
@@ -19,7 +20,9 @@ export class ConsultancyTable implements OnInit {
     consultancyForm: any;
     actionName: any = 'Add';
 
-    loggedUserGroupId = Number(sessionStorage.getItem('userGroupId'));
+    currentUser = Number(sessionStorage.getItem('userGroupId'));
+
+    USERGROUPS = UserGroups;
 
     offSet = 0;
     pageSize = 10;

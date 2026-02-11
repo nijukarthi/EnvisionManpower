@@ -1,12 +1,14 @@
 <div class="card">
     <div class="flex items-baseline-last justify-between">
         <h5>PO & Demand Map</h5>
-        <div class="flex justify-end gap-1">
-            <p-button label="Actions" (onClick)="menu.toggle($event)" pTooltip="Select One Purchase Order" tooltipPosition="top"
-                [disabled]="!selectedPOId" />
-            <p-tieredmenu #menu [model]="items" [popup]="true" appendTo="body" />
-            <p-button label="Map New Demand" icon="pi pi-plus" routerLink="/home/po-assign/new" />
-        </div>
+        @if (currentUser !== USERGROUPS.READONLYADMIN) {
+            <div class="flex justify-end gap-1">
+                <p-button label="Actions" (onClick)="menu.toggle($event)" pTooltip="Select One Purchase Order" tooltipPosition="top"
+                    [disabled]="!selectedPOId" />
+                <p-tieredmenu #menu [model]="items" [popup]="true" appendTo="body" />
+                <p-button label="Map New Demand" icon="pi pi-plus" routerLink="/home/po-assign/new" />
+            </div>
+        }
     </div>
     <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
         <p-table [value]="poList" stripedRows [rowHover]="true" [paginator]="true" [rows]="pageSize" [first]="first"

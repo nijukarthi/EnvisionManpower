@@ -1,3 +1,4 @@
+import { UserGroups } from '@/models/usergroups/usergroups.enum';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
 import { Component, OnInit, ViewChild } from '@angular/core';
@@ -21,6 +22,10 @@ export class TrainingTable implements OnInit {
     trainingList: any;
     editingRow: any | null = null;
     filteredData: any;
+
+    currentUser = Number(sessionStorage.getItem('userGroupId'));
+          
+    USERGROUPS = UserGroups;
 
     trainingStatusList = [
         {

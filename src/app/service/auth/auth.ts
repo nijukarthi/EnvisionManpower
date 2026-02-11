@@ -108,6 +108,10 @@ export class Auth {
             this.router.navigate(['/home/consultancies']);
             break;
 
+          case UserGroups.READONLYADMIN:
+            this.router.navigate(['/home/onroll-employees']);
+            break;
+
           case UserGroups.GUESTUSER:
             this.router.navigate(['/home/manpower-fulfillment']);
             break;

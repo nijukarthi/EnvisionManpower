@@ -30,6 +30,11 @@ export class Cluster implements OnInit {
 
     menuItems: any[] = [];
     selectedCluster: any;
+
+    currentUser = Number(sessionStorage.getItem('userGroupId'));
+    
+    USERGROUPS = UserGroups;
+    
     constructor(
         private messageService: MessageService,
         private apiService: Apiservice,

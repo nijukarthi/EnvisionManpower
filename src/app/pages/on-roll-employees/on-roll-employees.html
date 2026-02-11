@@ -145,14 +145,16 @@
                     <th>Emergency Contact Number</th>
                     <!-- <th>UAN</th> -->
                     <!-- <th>Aadhar Number</th> -->
-                    <th>PPE Details</th>
-                    <th>Actions</th>
-                    <th>
-                        <div class="flex items-center gap-2">
-                            <span>Edit Employment Details</span>
-                            <i class="pi pi-clock"></i>
-                        </div>
-                    </th>
+                    @if (currentUser !== USERGROUPS.READONLYADMIN){
+                        <th>PPE Details</th>
+                        <th>Actions</th>
+                        <th>
+                            <div class="flex items-center gap-2">
+                                <span>Edit Employment Details</span>
+                                <i class="pi pi-clock"></i>
+                            </div>
+                        </th>
+                    }
                 </tr>
             </ng-template>
             <ng-template #body let-onroll let-editing="editing" let-i="rowIndex" let-columns="columns">
@@ -239,32 +241,34 @@
                             </ng-template>
                         </p-cellEditor>
                     </td> -->
-                    <td>
-                        <p-button
-                            [label]="onroll?.ppeDetails.length > 0 ? 'Edit PPE' : 'Add PPE'"
-                            [icon]="onroll?.ppeDetails.length > 0 ? 'pi pi-pencil' : 'pi pi-plus'"
-                            [severity]="onroll.ppeDetails.length > 0 ? 'contrast' : 'primary'"
-                            text
-                            (onClick)="ppeDetailsModal(onroll)"
-                        />
-                    </td>
-                    <td class="flex items-center justify-center gap-2">
-                        @if (!editing) {
-                            <button pButton pRipple type="button" 
-                                pInitEditableRow icon="pi pi-pencil" rounded severity="secondary" 
-                                (click)="editOnrollRow(onroll)"></button>
-                        }@else {
-                            <button pButton pRipple type="button" 
-                                pSaveEditableRow icon="pi pi-check" rounded severity="primary" 
-                                (click)="updateOnrollDetails(onroll)"></button>
-                            <button pButton pRipple type="button" 
-                                pCancelEditableRow icon="pi pi-times" rounded severity="danger" 
-                                (click)="cancelEdit(onroll)"></button>
-                        }
-                    </td>
-                    <td>
-                        <p-button label="Edit" icon="pi pi-pencil" (onClick)="editSpnDetails(onroll)" />
-                    </td>
+                    @if (currentUser !== USERGROUPS.READONLYADMIN){
+                        <td>
+                            <p-button
+                                [label]="onroll?.ppeDetails.length > 0 ? 'Edit PPE' : 'Add PPE'"
+                                [icon]="onroll?.ppeDetails.length > 0 ? 'pi pi-pencil' : 'pi pi-plus'"
+                                [severity]="onroll.ppeDetails.length > 0 ? 'contrast' : 'primary'"
+                                text
+                                (onClick)="ppeDetailsModal(onroll)"
+                            />
+                        </td>
+                        <td class="flex items-center justify-center gap-2">
+                            @if (!editing) {
+                                <button pButton pRipple type="button" 
+                                    pInitEditableRow icon="pi pi-pencil" rounded severity="secondary" 
+                                    (click)="editOnrollRow(onroll)"></button>
+                            }@else {
+                                <button pButton pRipple type="button" 
+                                    pSaveEditableRow icon="pi pi-check" rounded severity="primary" 
+                                    (click)="updateOnrollDetails(onroll)"></button>
+                                <button pButton pRipple type="button" 
+                                    pCancelEditableRow icon="pi pi-times" rounded severity="danger" 
+                                    (click)="cancelEdit(onroll)"></button>
+                            }
+                        </td>
+                        <td>
+                            <p-button label="Edit" icon="pi pi-pencil" (onClick)="editSpnDetails(onroll)" />
+                        </td>
+                    }
                 </tr>
             </ng-template>
             <ng-template #emptymessage>

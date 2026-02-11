@@ -23,14 +23,14 @@
             [rowsPerPageOptions]="[10, 20, 30]"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
             [first]="first"
-            selectionMode="single"
+            [selectionMode]="currentUserRole === USERGROUPS.READONLYADMIN ? null : 'single'"
             dataKey="transferId"
-            (onRowSelect)="selectedEmployee($event.data)"
-            (onRowUnselect)="unSelectedEmployee()"
+            (onRowSelect)="currentUserRole !== USERGROUPS.READONLYADMIN && selectedEmployee($event.data)"
+            (onRowUnselect)="currentUserRole !== USERGROUPS.READONLYADMIN && unSelectedEmployee()"
             [(selection)]="selectedTransfer"
             [paginatorDropdownAppendTo]="mydiv"
             [totalRecords]="totalRecords"
-            [tableStyle]="{'min-width': '170rem'}"
+            [tableStyle]="{'min-width': '180rem'}"
             (onLazyLoad)="loadTransfer($event)"
         >
             <ng-template #header>
@@ -155,8 +155,14 @@
                         } @else if (transfer.stateHeadApproval.approvalStatus === APPROVALSTATUS.REJECTED) {
                         <p-button icon="pi pi-times" severity="danger" rounded [disabled]="true" />
                         } @if (transfer.stateHeadApproval.approvalStatus === APPROVALSTATUS.PENDING) {
-                        <p-button icon="pi pi-check" severity="primary" rounded [disabled]="currentUserRole === USERGROUPS.DEPARTMENTHEAD" (onClick)="clusterHeadApproval(transfer.transferId, 'Accepted')" />
-                        <p-button icon="pi pi-times" severity="danger" rounded [disabled]="currentUserRole === USERGROUPS.DEPARTMENTHEAD" (onClick)="clusterHeadApproval(transfer.transferId, 'Rejected')" />
+                        <p-button icon="pi pi-check" severity="primary" rounded 
+                            [disabled]="currentUserRole !== USERGROUPS.CLUSTERHEAD &&
+                                currentUserRole !== USERGROUPS.ADMIN && currentUserRole !== USERGROUPS.RESOURCEMANAGER" 
+                            (onClick)="clusterHeadApproval(transfer.transferId, 'Accepted')" />
+                        <p-button icon="pi pi-times" severity="danger" rounded 
+                            [disabled]="currentUserRole !== USERGROUPS.CLUSTERHEAD && 
+                                currentUserRole !== USERGROUPS.ADMIN && currentUserRole !== USERGROUPS.RESOURCEMANAGER" 
+                            (onClick)="clusterHeadApproval(transfer.transferId, 'Rejected')" />
                         }
                     </td>
                     <td>
@@ -166,8 +172,14 @@
                             } @else if (transfer.departmentHeadApproval.approvalStatus === APPROVALSTATUS.REJECTED) {
                             <p-button icon="pi pi-times" severity="danger" rounded [disabled]="true" />
                             } @if (transfer.departmentHeadApproval.approvalStatus === APPROVALSTATUS.PENDING) {
-                            <p-button icon="pi pi-check" severity="primary" rounded [disabled]="currentUserRole === USERGROUPS.CLUSTERHEAD" (onClick)="departmentHeadApproval(transfer.transferId, 'Accepted')" />
-                            <p-button icon="pi pi-times" severity="danger" rounded [disabled]="currentUserRole === USERGROUPS.CLUSTERHEAD" (onClick)="departmentHeadApproval(transfer.transferId, 'Rejected')" />
+                            <p-button icon="pi pi-check" severity="primary" rounded 
+                                [disabled]="currentUserRole !== USERGROUPS.DEPARTMENTHEAD &&
+                                    currentUserRole !== USERGROUPS.ADMIN && currentUserRole !== USERGROUPS.RESOURCEMANAGER" 
+                                (onClick)="departmentHeadApproval(transfer.transferId, 'Accepted')" />
+                            <p-button icon="pi pi-times" severity="danger" rounded 
+                                [disabled]="currentUserRole !== USERGROUPS.DEPARTMENTHEAD &&
+                                    currentUserRole !== USERGROUPS.ADMIN && currentUserRole !== USERGROUPS.RESOURCEMANAGER" 
+                                (onClick)="departmentHeadApproval(transfer.transferId, 'Rejected')" />
                             }
                         </div>
                     </td>

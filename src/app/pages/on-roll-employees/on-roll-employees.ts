@@ -1,4 +1,5 @@
 import { Column } from '@/models/table-column/table-column';
+import { UserGroups } from '@/models/usergroups/usergroups.enum';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
@@ -19,6 +20,10 @@ export class OnRollEmployees implements OnInit {
     first = 0;
     totalRecords = 0;
     candidateId: number | null = null;
+
+    currentUser = Number(sessionStorage.getItem('userGroupId'));
+      
+    USERGROUPS = UserGroups;
 
     cols!: Column[];
 

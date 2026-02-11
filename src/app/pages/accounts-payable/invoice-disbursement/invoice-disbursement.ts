@@ -1,3 +1,4 @@
+import { UserGroups } from '@/models/usergroups/usergroups.enum';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
 import { Component, inject, OnInit } from '@angular/core';
@@ -22,6 +23,10 @@ export class InvoiceDisbursement implements OnInit {
     openGRNReturning = false;
 
     invoiceStatus = '';
+
+    currentUser = Number(sessionStorage.getItem('userGroupId'));
+    
+    USERGROUPS = UserGroups;
 
     invoiceDisbursementList: any;
     totalRecords: any;

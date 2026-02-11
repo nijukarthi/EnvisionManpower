@@ -7,6 +7,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { FormFieldError } from '@/directives/form-field-error';
+import { UserGroups } from '@/models/usergroups/usergroups.enum';
 
 @Component({
     selector: 'app-spn-table',
@@ -24,6 +25,10 @@ export class SpnTable implements OnInit {
     filteredData: any;
 
     actionName = '';
+
+    currentUser = Number(sessionStorage.getItem('userGroupId'));
+        
+    USERGROUPS = UserGroups;
 
     spnId: number | null = null;
 

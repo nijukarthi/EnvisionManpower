@@ -1,4 +1,5 @@
 import { PurchaseOrderStatus } from '@/models/purchase-order-status/purchase-order-status.enum';
+import { UserGroups } from '@/models/usergroups/usergroups.enum';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
 import { Component, OnInit } from '@angular/core';
@@ -22,6 +23,10 @@ export class PoAssignTable implements OnInit {
   selectedPOId = 0;
 
   poStatus = '';
+
+  currentUser = Number(sessionStorage.getItem('userGroupId'));
+
+  USERGROUPS = UserGroups;
 
   items = [
     {

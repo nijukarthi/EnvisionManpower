@@ -1,8 +1,8 @@
 <div class="card">
     <div class="flex items-baseline-last justify-between">
         <h5>Consultancies</h5>
-        @if (loggedUserGroupId !== 360) {
-        <p-button label="Add Consultancy" icon="pi pi-plus" routerLink="/home/consultancies/new" />
+        @if (currentUser !== USERGROUPS.CONSULTANCY && currentUser !== USERGROUPS.READONLYADMIN) {
+            <p-button label="Add Consultancy" icon="pi pi-plus" routerLink="/home/consultancies/new" />
         }
     </div>
     <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
@@ -28,7 +28,9 @@
                     <th>Phone</th>
                     <th>Email</th>
                     <th>Gst Number</th>
-                    <th>Actions</th>
+                    @if (currentUser !== USERGROUPS.READONLYADMIN) {
+                        <th>Actions</th>
+                    }
                 </tr>
             </ng-template>
             <ng-template #body let-consul let-i="rowIndex">
@@ -40,10 +42,12 @@
                     <td>{{ consul.phoneNumber || '-' }}</td>
                     <td>{{ consul.email || '-' }}</td>
                     <td>{{ consul.gstNumber || '-' }}</td>
-                    <td>
-                        <p-menu #menu [model]="getMenuItems(consul)" [popup]="true" appendTo="body" />
-                        <p-button (click)="menu.toggle($event)" icon="pi pi-ellipsis-v" [rounded]="true" variant="text" />
-                    </td>
+                    @if (currentUser !== USERGROUPS.READONLYADMIN) {
+                        <td>
+                            <p-menu #menu [model]="getMenuItems(consul)" [popup]="true" appendTo="body" />
+                            <p-button (click)="menu.toggle($event)" icon="pi pi-ellipsis-v" [rounded]="true" variant="text" />
+                        </td>
+                    }
                 </tr>
             </ng-template>
             <ng-template #emptymessage>
