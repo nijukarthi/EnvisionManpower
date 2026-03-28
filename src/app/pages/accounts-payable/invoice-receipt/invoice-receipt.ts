@@ -248,7 +248,7 @@ export class InvoiceReceipt implements OnInit {
             {
                 label: 'Edit',
                 icon: 'pi pi-pencil',
-                command: () => this.router.navigate(['/home/invoice-submission', receipt.invoiceHeader.invoiceId])
+                command: () => this.router.navigate(['/home/invoice-submission', receipt.invoiceHeader.invoiceId, 'edit'])
             }
         ];
     }

@@ -97,28 +97,6 @@ export class Auth {
         sessionStorage.setItem("userId", val.data.userId);
 
         this.startIdleTimer();
-
-        switch(val.data.userGroupId){
-          case UserGroups.CLUSTERHEAD:
-          case UserGroups.DEPARTMENTHEAD:
-            this.router.navigate(['/home/manpower-approval']);
-            break;
-
-          case UserGroups.CONSULTANCY:
-            this.router.navigate(['/home/consultancies']);
-            break;
-
-          case UserGroups.READONLYADMIN:
-            this.router.navigate(['/home/onroll-employees']);
-            break;
-
-          case UserGroups.GUESTUSER:
-            this.router.navigate(['/home/manpower-fulfillment']);
-            break;
-
-          default:
-            this.router.navigate(['/home/manpower-request']);
-        }
       }),
       catchError(err => {
         this.loggedIn = false;

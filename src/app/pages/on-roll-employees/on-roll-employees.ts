@@ -2,7 +2,7 @@ import { Column } from '@/models/table-column/table-column';
 import { UserGroups } from '@/models/usergroups/usergroups.enum';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
@@ -15,6 +15,8 @@ import { Table } from 'primeng/table';
 })
 export class OnRollEmployees implements OnInit {
     @ViewChild('dt') table!: Table;
+    @ViewChild('excelInput') excelInput!: ElementRef<HTMLInputElement>;
+    
     offSet = 0;
     pageSize = 10;
     first = 0;
@@ -28,7 +30,8 @@ export class OnRollEmployees implements OnInit {
     cols!: Column[];
 
     statuses!: any[];
-
+    menuItems: any[] = [];
+ 
     openPpeDetails = false;
     spnDetailsModal = false;
 
@@ -40,6 +43,8 @@ export class OnRollEmployees implements OnInit {
     envisionRoleList: any;
     projectCodesList: any;
     onrollEmployeeDetails: any;
+
+    selectedImportType!: 'FC' | 'CP';
 
     currentUserEmail = sessionStorage.getItem('userEmail');
 
@@ -112,6 +117,8 @@ export class OnRollEmployees implements OnInit {
             { label: 'TRANSFERRED', value: 'TRANSFERRED' },
             { label: 'RESIGNED', value: 'RESIGNED' }
         ];
+
+        this.menuItems = this.getMenuItems();
     }
 
     onrollEmployeeApi(data: any) {
@@ -547,6 +554,186 @@ export class OnRollEmployees implements OnInit {
         } catch (error) {
             console.log(error);
         }
+    }
+
+    importCostPlusCandidates(file: File){
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            console.log(formData);
+
+            this.apiService.importCostPlusCandidates(formData).subscribe({
+                next: val => {
+                    console.log(val);
+                    this.fetchActiveOnrollEmployees();
+                    this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Excel uploaded successfully' });
+                },
+                error: err => {
+                    console.log(err);
+
+                    if (err.status === 400) {
+                        this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
+                    }
+                }
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    importFixedCostCandidates(file: File){
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            console.log(formData);
+
+            this.apiService.importFixedCostCandidates(formData).subscribe({
+                next: val => {
+                    console.log(val);
+                    this.fetchActiveOnrollEmployees();
+                    this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Excel uploaded successfully' });
+                },
+                error: err => {
+                    console.log(err);
+
+                    if (err.status === 400) {
+                        this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
+                    }
+                }
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    exportFCCandidatesExcel(){
+        try {
+            this.apiService.exportFixedCostCandidates().subscribe({
+                next: (val: Blob) => {
+                    console.log(val);
+                    const url = window.URL.createObjectURL(val);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `FixedCostEmployee.xlsx`;
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Fixed Cost Employees excel template downloaded successfully.' });
+                },
+                error: async(err) => {
+                    console.log(err);
+
+                    if(err.error instanceof Blob){
+                        const text = await err.error.text();
+                        const json = JSON.parse(text);
+                        this.messageService.add({severity: 'error', summary: 'Error', detail: json.detail || 'Something went wrong' });
+                    } else {
+                        this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail || 'Something went wrong' });
+                    }
+                }
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    exportCPCandidatesExcel(){
+        try {
+            this.apiService.exportCostPlusCandidates().subscribe({
+                next: (val: Blob) => {
+                    console.log(val);
+                    const url = window.URL.createObjectURL(val);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `CostPlusEmployee.xlsx`;
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Cost Plus Employees excel template downloaded successfully.' });
+                },
+                error: async(err) => {
+                    console.log(err);
+
+                    if (err.error instanceof Blob) {
+                        const text = await err.error.text();
+                        const json = JSON.parse(text);
+                        this.messageService.add({severity: 'error', summary: 'Error', detail: json.detail || 'Something went wrong' });
+                    } else {
+                        this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail || 'Something went wrong' });
+                    }
+                }
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    openExcelPicker(type: 'FC' | 'CP'){
+        this.selectedImportType = type;
+        this.excelInput.nativeElement.click();
+    }
+
+    excelSelected(event: Event){
+        const input = event.target as HTMLInputElement;
+        const file = input.files?.[0];
+
+        if(!file) return;
+
+        if (this.selectedImportType === 'FC') {
+            this.importFixedCostCandidates(file);
+        } else {
+            this.importCostPlusCandidates(file);
+        }
+
+        input.value = '';
+    }
+
+    getMenuItems(){
+        return [
+            {
+                label: 'Template',
+                icon: 'pi pi-file',
+                items: [
+                    {
+                        label: 'Fixed Cost Employees',
+                        icon: 'pi pi-wallet',
+                        items: [
+                            {
+                                label: 'Import',
+                                icon: 'pi pi-upload',
+                                command: () => this.openExcelPicker('FC')
+                            },
+                            {
+                                label: 'Export',
+                                icon: 'pi pi-download',
+                                command: () => this.exportFCCandidatesExcel()
+                            }
+                        ]
+                    },
+                    {
+                        label: 'Cost Plus Employees',
+                        icon: 'pi pi-receipt',
+                        items: [
+                            {
+                                label: 'Import',
+                                icon: 'pi pi-upload',
+                                command: () => this.openExcelPicker('CP')
+                            },
+                            {
+                                label: 'Export',
+                                icon: 'pi pi-download',
+                                command: () => this.exportCPCandidatesExcel()
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                label: 'Export to Excel',
+                icon: 'pi pi-external-link',
+                command: () => this.exportToExcel()
+            }
+        ]
     }
 
     onDialogClose() {

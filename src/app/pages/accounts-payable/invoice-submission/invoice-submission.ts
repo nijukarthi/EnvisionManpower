@@ -88,7 +88,7 @@ export class InvoiceSubmission implements OnInit {
             {
                 label: 'View',
                 icon: 'pi pi-eye',
-                command: () => this.router.navigate(['/home/invoice-submission', submission.invoiceId])
+                command: () => this.router.navigate(['/home/invoice-submission', submission.invoiceId, 'edit'])
             },
             {
                 label: 'Delete',

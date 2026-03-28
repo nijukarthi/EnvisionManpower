@@ -173,7 +173,7 @@ export class DepartmentTable implements OnInit {
                 this.messageService.add({
                     severity: 'error',
                     summary: 'Error',
-                    detail: 'Please Enter Department'
+                    detail: 'Please Enter the Department Details'
                 });
             }
         } else {
@@ -210,7 +210,7 @@ export class DepartmentTable implements OnInit {
                 this.messageService.add({
                     severity: 'error',
                     summary: 'Error',
-                    detail: 'Please Enter Department'
+                    detail: 'Please Enter the Department Details'
                 });
             }
         }

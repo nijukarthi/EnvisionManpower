@@ -625,4 +625,121 @@ export class Apiservice {
     updateEmploymentDetails(params: any){
         return this.postMethod('candidate/employmentdetail/update', params);
     }
+
+
+    // DPR Service
+
+    addDPRProjectDetails(params: any){
+        return this.postMethod('wtg-dpr/project/create', params);
+    }
+
+    exportProdQualExcel(pCode: string){
+        return this.http.get(`${this.baseUrl}wtg-dpr/production-quality/template/export?projectCode=${pCode}`,
+            { responseType: 'blob' }
+        );
+    }
+
+    exportDispRecvExcel(pCode: string){
+        return this.http.get(`${this.baseUrl}wtg-dpr/disptach-receiving/template/export?projectCode=${pCode}`, 
+            { responseType: 'blob' }
+        );
+    }
+
+    exportFndICExcel(pCode: string){
+        return this.http.get(`${this.baseUrl}wtg-dpr/foundation-installation-comm/template/export?projectCode=${pCode}`, 
+            { responseType: 'blob' }
+        );
+    }
+
+    fetchDprProjectList(params: any): Observable<any>{
+        return this.postMethod(`wtg-dpr/projects`, params);
+    }
+
+    fetchDprProjWTGList(params: any): Observable<any>{
+        return this.postMethod(`wtg-dpr/project/wtgs`, params);
+    }
+
+    importProdQualExcel(params: any){
+        return this.postMethod('wtg-dpr/project/import/production-quality', params);
+    }
+
+    importDispRecvExcel(params: any){
+        return this.postMethod('wtg-dpr/project/import/dispatch_receiving', params);
+    }
+
+    importFndICExcel(params: any){
+        return this.postMethod('wtg-dpr/project/import/foundation-installation-comm', params);
+    }
+
+    updateWtgDetails(params: any){
+        return this.postMethod('wtg-dpr/project/wtgs/update', params);
+    }
+
+    updateProdActivity(params: any){
+        return this.postMethod('wtg-dpr/project/wtgs/update/production-activity', params);
+    }
+
+    updateQualActivity(params: any){
+        return this.postMethod('wtg-dpr/project/wtgs/update/quality-activity', params);
+    }
+
+    updateDispatchActivity(params: any){
+        return this.postMethod('wtg-dpr/project/wtgs/update/dispatch-activity', params);
+    }
+
+    updateReceivingActivity(params: any){
+        return this.postMethod('wtg-dpr/project/wtgs/update/receiving-activity', params);
+    }
+
+    updateFoundationActivity(params: any){
+        return this.postMethod('wtg-dpr/project/wtgs/update/foundation', params);
+    }
+
+    updateInstallationActivity(params: any){
+        return this.postMethod('wtg-dpr/project/wtgs/update/installation', params);
+    }
+
+    updateCommissioningActivity(params: any){
+        return this.postMethod('wtg-dpr/project/wtgs/update/commissioning', params);
+    }
+
+    customerWiseDprList(params: any): Observable<any>{
+        return this.postMethod('wtg-dpr/project/summary/customer', params);
+    }
+
+    fetchCustomerList(): Observable<any>{
+        return this.http.get(`${this.baseUrl}wtg-dpr/customers`);
+    }
+
+    createCustomer(params: any){
+        return this.postMethod('wtg-dpr/customer/create', params);
+    }
+
+    updateCustomer(params: any){
+        return this.postMethod('wtg-dpr/customer/update', params);
+    }
+
+    updateDprProject(params: any){
+        return this.postMethod('wtg-dpr/project/update', params);
+    }
+
+    deleteDprProject(params: any){
+        return this.postMethod('wtg-dpr/project/delete', params);
+    }
+
+    importFixedCostCandidates(params: any){
+        return this.postMethod('candidate/fixedcost/template/import', params);
+    } 
+
+    importCostPlusCandidates(params: any){
+        return this.postMethod('candidate/costplus/template/import', params);
+    }
+
+    exportFixedCostCandidates(){
+        return this.http.get(`${this.baseUrl}candidate/fixedcost/template/export`, { responseType: 'blob' });
+    }
+
+    exportCostPlusCandidates(){
+        return this.http.get(`${this.baseUrl}candidate/costplus/template/export`, { responseType: 'blob' });
+    }
 }

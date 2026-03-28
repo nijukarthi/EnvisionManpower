@@ -1,0 +1,101 @@
+<div class="card">
+    <div class="flex items-baseline-last justify-between">
+        <h5>DPR Project Details</h5>
+        <div class="flex justify-end gap-1">
+            <p-button label="Add DPR Project" icon="pi pi-plus" routerLink="/home/dpr-project-details/create" />
+            <p-tieredmenu #menu [model]="menuItems" [popup]="true" appendTo="body" />
+            <p-button (onClick)="menu.toggle($event)" label="Actions" icon="pi pi-angle-down" iconPos="right" />
+            <input #excelInput type="file" accept=".xls,.xlsx" hidden (change)="excelSelected($event)" />
+            <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
+        </div>
+    </div>
+    <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
+        <p-table #dt [value]="dprProjectList" dataKey="projectCode" [rowHover]="true" [paginator]="true" [lazy]="true"
+            [paginatorDropdownAppendTo]="mydiv" [showCurrentPageReport]="true" [totalRecords]="totalRecords"
+            [rowsPerPageOptions]="[10, 20, 30]" [rows]="pageSize" [first]="first" [(selection)]="selectedDprProject"
+            (onRowSelect)="selectedProj($event.data)" (onRowUnselect)="unSelectedProj()"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [tableStyle]="{ 'min-width': 'max-content' }" (onLazyLoad)="loadDprProject($event)">
+            <ng-template #header>
+                <tr>
+                    <th>
+                        <p-tableHeaderCheckbox />
+                    </th>
+                    <th>SL NO</th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Project Code</span>
+                            <p-columnFilter type="text" field="projectCode" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Project Description</span>
+                            <p-columnFilter type="text" field="projectDescription" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Customer Name</span>
+                            <p-columnFilter type="text" field="customerName" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
+                    <th>Quantity</th>
+                    <th>Total Foundation</th>
+                    <th>Total Installation</th>
+                    <th>Total Commissioning</th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Cluster Name</span>
+                            <p-columnFilter type="text" field="clusterName" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Zone</span>
+                            <p-columnFilter type="text" field="zone" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
+                    <th>Crane Count</th>
+                    <th>Actions</th>
+                </tr>
+            </ng-template>
+            <ng-template #body let-project let-i="rowIndex">
+                <tr>
+                    <td>
+                        <p-tableCheckbox [value]="project" />
+                    </td>
+                    <td>{{ i + 1 }}</td>
+                    <td>
+                        <p-menu #menu [model]="projectMenuItems" [popup]="true" appendTo="body" />
+                        <span class="text-blue-500 cursor-pointer hover:underline"
+                            (click)="dprProjectMenu($event, menu, project)">
+                                {{ project.projectCode || '-' }}
+                        </span>
+                    </td>
+                    <td>{{ project.projectDescription || '-' }}</td>
+                    <td>{{ project.customerName || '-' }}</td> 
+                    <td>{{ project.projectQty || '-' }}</td>
+                    <td>{{ project.totalFoundation || '-' }}</td>
+                    <td>{{ project.totalInstallation || '-' }}</td>
+                    <td>{{ project.totalCommissioning || '-' }}</td>
+                    <td>{{ project.clusterName || '-' }}</td>
+                    <td>{{ project.zone || '-' }}</td>
+                    <td>{{ project.craneCount || '-' }}</td>
+                    <td>
+                        <p-menu #menu [model]="projectMenuItems" [popup]="true" appendTo="body" />
+                        <p-button (click)="dprProjectMenu($event, menu, project)" icon="pi pi-ellipsis-v" [rounded]="true" text="variant" />
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template #emptymessage>
+                <tr>
+                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground)">No Records Found</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+<p-toast />
+<p-confirmdialog />

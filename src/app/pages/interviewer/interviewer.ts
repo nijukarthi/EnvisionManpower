@@ -133,6 +133,10 @@ export class Interviewer implements OnInit {
                     },
                     error: (err) => {
                         console.log(err);
+
+                        if (err.status === 400) {
+                            this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
+                        }
                     }
                 });
             } else {
@@ -148,6 +152,10 @@ export class Interviewer implements OnInit {
                     },
                     error: (err) => {
                         console.log(err);
+
+                        if (err.status === 400) {
+                            this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
+                        }
                     }
                 });
             }

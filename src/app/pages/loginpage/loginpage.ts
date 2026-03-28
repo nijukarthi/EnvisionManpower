@@ -219,7 +219,41 @@ export class Loginpage {
                 this.apiService.verifyUserOtp(this.userOtpForm.value).subscribe({
                     next: (val: any) => {
                         console.log(val);        
-                        this.authService.checkSessionAndNavigate().subscribe();
+                        this.authService.checkSessionAndNavigate().subscribe(val => {
+                            if(!val) return;
+
+                            if (this.route.url === '/' || this.route.url === ''){
+                                switch(val.data.userGroupId){
+                                    case UserGroups.CLUSTERHEAD:
+                                    case UserGroups.DEPARTMENTHEAD:
+                                        this.route.navigate(['/home/manpower-approval']);
+                                        break;
+                        
+                                    case UserGroups.CONSULTANCY:
+                                        this.route.navigate(['/home/consultancies']);
+                                        break;
+                        
+                                    case UserGroups.READONLYADMIN:
+                                        this.route.navigate(['/home/onroll-employees']);
+                                        break;
+                        
+                                    case UserGroups.GUESTUSER:
+                                        this.route.navigate(['/home/manpower-fulfillment']);
+                                        break;
+
+                                    case UserGroups.DPRMANAGEMENTTEAM:
+                                        this.route.navigate(['/home/dpr-project-details']);
+                                        break;
+                        
+                                    case UserGroups.ADMIN:
+                                    case UserGroups.SITEINCHARGE:
+                                    case UserGroups.PROJECTMANAGER:
+                                    case UserGroups.RESOURCEMANAGER:
+                                    case UserGroups.ACCOUNTSRECEIVABLETEAM:
+                                        this.route.navigate(['/home/manpower-request']);
+                                }
+                            }
+                        });
 
                     },
                     error: err => {
@@ -251,7 +285,37 @@ export class Loginpage {
                 this.apiService.verifyInterviewerOtp(data).subscribe({
                     next: val => {
                         console.log(val);
-                        this.authService.checkSessionAndNavigate().subscribe();
+                        this.authService.checkSessionAndNavigate().subscribe(val => {
+                            if(!val) return;
+
+                                if (this.route.url === '/' || this.route.url === '') {         
+                                    switch(val.data.userGroupId){
+                                        case UserGroups.CLUSTERHEAD:
+                                        case UserGroups.DEPARTMENTHEAD:
+                                            this.route.navigate(['/home/manpower-approval']);
+                                            break;
+                            
+                                        case UserGroups.CONSULTANCY:
+                                            this.route.navigate(['/home/consultancies']);
+                                            break;
+                            
+                                        case UserGroups.READONLYADMIN:
+                                            this.route.navigate(['/home/onroll-employees']);
+                                            break;
+                            
+                                        case UserGroups.GUESTUSER:
+                                            this.route.navigate(['/home/manpower-fulfillment']);
+                                            break;
+                            
+                                        case UserGroups.ADMIN:
+                                        case UserGroups.SITEINCHARGE:
+                                        case UserGroups.PROJECTMANAGER:
+                                        case UserGroups.RESOURCEMANAGER:
+                                        case UserGroups.ACCOUNTSRECEIVABLETEAM:
+                                            this.route.navigate(['/home/manpower-request']);
+                                    }
+                                }
+                        });
                     },
                     error: err => {
                         console.log(err);

@@ -44,6 +44,11 @@ import { PoAssignEditForm } from '@/pages/po-assign-edit-form/po-assign-edit-for
 import { ActivityLog } from '@/pages/audit-log/activity-log/activity-log';
 import { SessionLog } from '@/pages/audit-log/session-log/session-log';
 import { UnderMaintenance } from '@/pages/under-maintenance/under-maintenance';
+import { SiteWiseDprInput } from '@/pages/dprInput/site-wise-dpr-input/site-wise-dpr-input';
+import { ViewWtgDetails } from '@/pages/dprInput/view-wtg-details/view-wtg-details';
+import { CustomerWiseDpr } from '@/pages/dprInput/summary/customer-wise-dpr/customer-wise-dpr';
+import { Customer } from '@/pages/dprInput/customer/customer';
+import { CreateDprProject } from '@/pages/dprInput/create-dpr-project/create-dpr-project';
 
 export const appRoutes: Routes = [
     {
@@ -80,7 +85,7 @@ export const appRoutes: Routes = [
                 component: ConsultancyForm,
                 canActivate: [authGuard]
             },
-            { path: 'consultancies/:id', component: ConsultancyForm, canActivate: [authGuard] },
+            { path: 'consultancies/:id/edit', component: ConsultancyForm, canActivate: [authGuard] },
             { path: 'departments', component: DepartmentTable, canActivate: [authGuard] },
             { path: 'spn', component: SpnTable, canActivate: [authGuard] },
             { path: 'categories', component: CategoryTable, canActivate: [authGuard] },
@@ -97,7 +102,7 @@ export const appRoutes: Routes = [
             { path: 'manpower-fulfillment/steps', component: Steps, canActivate: [authGuard] },
             { path: 'po-assign', component: PoAssignTable, canActivate: [authGuard] },
             { path: 'po-assign/new', component: PoAssignForm, canActivate: [authGuard] },
-            { path: 'po-assign/:id', component: PoAssignEditForm, canActivate: [authGuard] },
+            { path: 'po-assign/:id/edit', component: PoAssignEditForm, canActivate: [authGuard] },
             { path: 'onboarding', component: OnboardingTable, canActivate: [authGuard] },
             { path: 'onroll-employees', component: OnRollEmployees, canActivate: [authGuard] },
             { path: 'training', component: TrainingTable, canActivate: [authGuard] },
@@ -108,15 +113,21 @@ export const appRoutes: Routes = [
             { path: 'resignation', component: Terminate, canActivate: [authGuard] },
             { path: 'invoice-submission', component: InvoiceSubmission, canActivate: [authGuard] },
             { path: 'invoice-submission/new', component: InvoiceSubmissionForm, canActivate: [authGuard] },
-            { path: 'invoice-submission/:id', component: InvoiceSubmissionForm, canActivate: [authGuard] },
+            { path: 'invoice-submission/:id/edit', component: InvoiceSubmissionForm, canActivate: [authGuard] },
             { path: 'invoice-receipt', component: InvoiceReceipt, canActivate: [authGuard] },
             { path: 'invoice-disbursement', component: InvoiceDisbursement, canActivate: [authGuard] },
             { path: 'candidates/fixed-cost/new', component: FixedCostCandidateForm, canActivate: [authGuard] },
-            { path: 'candidates/fixed-cost/:id', component: FixedCostCandidateForm, canActivate: [authGuard] },
+            { path: 'candidates/fixed-cost/:id/edit', component: FixedCostCandidateForm, canActivate: [authGuard] },
             { path: 'candidates/cost-plus/new', component: CostPlusCandidateForm, canActivate: [authGuard] },
-            { path: 'candidates/cost-plus/:id', component: CostPlusCandidateForm, canActivate: [authGuard] },
+            { path: 'candidates/cost-plus/:id/edit', component: CostPlusCandidateForm, canActivate: [authGuard] },
             { path: 'candidates/fixed-cost', component: CandidateFixedCost, canActivate: [authGuard] },
             { path: 'candidates/cost-plus', component: CandidateCostPlus, canActivate: [authGuard] },
+            { path: 'dpr-project-details', component: SiteWiseDprInput, canActivate: [authGuard] },
+            { path: 'dpr-project-details/create', component: CreateDprProject, canActivate: [authGuard] },
+            { path: 'dpr-project-details/:id/update', component: CreateDprProject, canActivate: [authGuard] },
+            { path: 'dpr-project-details/:id/wtg-details', component: ViewWtgDetails, canActivate: [authGuard] },
+            { path: 'customer', component: Customer, canActivate: [authGuard] },
+            { path: 'customer-wise-dpr', component: CustomerWiseDpr, canActivate: [authGuard] },
             { path: 'activity-logs', component: ActivityLog, canActivate: [authGuard] },
             { path: 'session-logs', component: SessionLog, canActivate: [authGuard] },
             { path: 'pages', canActivate: [authGuard], loadChildren: () => import('./app/pages/pages.routes') }

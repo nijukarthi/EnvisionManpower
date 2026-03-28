@@ -33,83 +33,84 @@
             (onRowUnselect)="unSelectedEmployee()"
             (onLazyLoad)="loadPerformances($event)"
             [paginatorDropdownAppendTo]="mydiv"
+            [tableStyle]="{ 'min-width': 'max-content' }"
         >
             <ng-template #header>
                 <tr>
                     @if (currentUser !== USERGROUPS.READONLYADMIN) {
-                        <th pFrozenColumn alignFrozen="left" style="min-width:50px">
+                        <th pFrozenColumn alignFrozen="left">
                             <p-tableHeaderCheckbox />
                         </th>
                     }
-                    <th pFrozenColumn alignFrozen="left" style="min-width:80px">SL No</th>
-                    <th pFrozenColumn alignFrozen="left" style="min-width:200px">
+                    <th pFrozenColumn alignFrozen="left">SL No</th>
+                    <th pFrozenColumn alignFrozen="left">
                         <div class="flex items-center justify-between">
                             <span>Employee Code</span>
                             <p-columnFilter type="text" field="employeeCode" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
-                    <th pFrozenColumn alignFrozen="left" style="min-width:200px">
+                    <th pFrozenColumn alignFrozen="left">
                         <div class="flex items-center justify-between">
                             <span>Temp EMP Code</span>
                             <p-columnFilter type="text" field="candidateCode" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
-                    <th pFrozenColumn alignFrozen="left" style="min-width:200px">
+                    <th pFrozenColumn alignFrozen="left">
                         <div class="flex items-center justify-between">
                             <span>Employee Name</span>
                             <p-columnFilter type="text" field="candidateName" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
-                    <th style="min-width:250px">
+                    <th>
                         <div class="flex items-center justify-between">
                             <span>Consultancy Name</span>
                             <p-columnFilter type="text" field="consultancyName" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
-                    <th style="min-width:150px">
+                    <th>
                         <div class="flex items-center justify-between">
                             <span>Project Code</span>
                             <p-columnFilter type="text" field="projectCode" display="menu" />
                         </div>
                     </th>
-                    <th style="min-width:150px">
+                    <th>
                         <div class="flex items-center justify-between">
                             <span>Site Incharge</span>
                             <p-columnFilter type="text" field="siteInchargeName" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
                     <th>Site Name</th>
-                    <th style="min-width:150px">
+                    <th>
                         <div class="flex items-center justify-between">
                             <span>Cluster Name</span>
                             <p-columnFilter type="text" field="clusterName" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
-                    <th style="min-width:200px">
+                    <th>
                         <div class="flex items-center justify-between">
                             <span>SPN Code</span>
                             <p-columnFilter type="text" field="spnCode" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
-                    <th style="min-width:200px">
+                    <th>
                         <div class="flex items-center justify-between">
                             <span>SPN Description</span>
                             <p-columnFilter type="text" field="spnDescription" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
-                    <th style="min-width:150px">
+                    <th>
                         <div class="flex items-center justify-between">
                             <span>Experience</span>
                             <p-columnFilter type="text" field="experience" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
-                    <th style="min-width:200px">
+                    <th>
                         <div class="flex items-center justify-between">
                             <span>Role</span>
                             <p-columnFilter type="text" field="roleName" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
-                    <th style="min-width:100px">
+                    <th>
                         <div class="flex items-center justify-between">
                             <span>Status</span>
                             <p-columnFilter field="status" matchMode="equals" display="menu" [showAddButton]="false">
@@ -123,7 +124,7 @@
                             </p-columnFilter>
                         </div>
                     </th>
-                    <th style="min-width:150px">
+                    <th>
                         <div class="flex items-center justify-between">
                             <span>Joining Date</span>
                             <p-columnFilter type="date" field="date" display="menu" matchMode="between" [showOperator]="false" [showAddButton]="false">
@@ -136,29 +137,32 @@
                             </p-columnFilter>
                         </div>
                     </th>
-                    <th style="min-width:150px">Last Working Date</th>
-                    <th style="min-width:200px">
+                    <th>Last Working Date</th>
+                    <th>
                         <div class="flex items-center justify-between">
                             <span>Contact Number</span>
                             <p-columnFilter type="text" field="phoneNumber" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
-                    <th style="min-width:100px">Qualification</th>
-                    <th style="min-width:150px">Updated By</th>
-                    <th style="min-width:150px">Updated On</th>
-                    <th style="min-width:150px">Technical Skills</th>
-                    <th style="min-width:150px">Productivity</th>
-                    <th style="min-width:150px">On Time Delivery</th>
-                    <th style="min-width:150px">Quality of Work</th>
-                    <th style="min-width:150px">Problem Solving</th>
-                    <th style="min-width:200px">Communication Skill</th>
-                    <th style="min-width:150px">Safety at Work</th>
-                    <th style="min-width:150px">Soft Skill</th>
-                    <th style="min-width:150px">Compliance</th>
-                    <th style="min-width:150px">Total Sum</th>
-                    <th style="min-width:150px">Rating</th>
+                    <th>Qualification</th>
+                    <th>Updated By</th>
+                    <th>Updated On</th>
+                    <th>Technical Skills</th>
+                    <th>Productivity</th>
+                    <th>On Time Delivery</th>
+                    <th>Quality of Work</th>
+                    <th>Problem Solving</th>
+                    <th>Communication Skill</th>
+                    <th>Safety at Work</th>
+                    <th>Soft Skill</th>
+                    <th>Compliance</th>
+                    @if (showTeamWorkColumn) {
+                        <th>Team Work</th>
+                    }
+                    <th>Total Sum</th>
+                    <th>Rating</th>
                     @if (currentUser !== USERGROUPS.READONLYADMIN) {
-                        <th style="min-width:80px" alignFrozen="right" pFrozenColumn>Actions</th>
+                        <th alignFrozen="right" pFrozenColumn>Actions</th>
                     }
                 </tr>
             </ng-template>
@@ -194,14 +198,18 @@
                         ? (performance?.employeePerformance?.updatedOn | date: 'MMM d, y, h:mm a')
                         : '-' }}</td>
                     @for (detail of performance.employeePerformance.performanceDetails; track $index) {
-                    <td #pEditableColumn>
-                        <p-cellEditor>
-                            <ng-template #input>
-                                <p-inputnumber #scoreInput [(ngModel)]="detail.score" (ngModelChange)="calculateTotalScore(performance)" [useGrouping]="false" [min]="0" [max]="10" placeholder="Enter score (1-10)" />
-                            </ng-template>
-                            <ng-template #output> {{ detail.score || '-' }} </ng-template>
-                        </p-cellEditor>
-                    </td>
+                        @if ($index !== 9 || showTeamWorkColumn) {
+                            <td #pEditableColumn>
+                                <p-cellEditor>
+                                    <ng-template #input>
+                                        <p-inputnumber #scoreInput [(ngModel)]="detail.score" 
+                                            (ngModelChange)="calculateTotalScore(performance)" [useGrouping]="false" [min]="0" [max]="10" 
+                                            placeholder="Enter score (1-10)" />
+                                    </ng-template>
+                                    <ng-template #output>{{ detail.score || '-' }}</ng-template>
+                                </p-cellEditor>
+                            </td>
+                        }
                     } @empty { @for (i of performanceColumns; track $index) {
                     <td class="text-center">-</td>
                     } }
@@ -249,7 +257,7 @@
             <ng-container [formGroupName]="i">
                 <div class="col-span-1 col-start-1 gap-1 grid">
                     <label for="last-working-date">Last Working Date</label>
-                    <p-datepicker formControlName="lastWorkingDate" [minDate]="minDate" [showIcon]="true" [iconDisplay]="'input'" inputId="last-working-date" placeholder="Select Date" appendTo="body" />
+                    <p-datepicker formControlName="lastWorkingDate" [minDate]="lastMinDate" [showIcon]="true" [iconDisplay]="'input'" inputId="last-working-date" placeholder="Select Date" appendTo="body" />
                 </div>
                 <div class="col-span-1 gap-1 grid">
                     <label for="replacement">Replacement Required?</label>

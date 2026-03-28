@@ -1,8 +1,10 @@
+import { UserGroups } from '@/models/usergroups/usergroups.enum';
 import { Auth } from '@/service/auth/auth';
 import { Loader } from '@/service/loader/loader';
 import { Shared } from '@/service/shared';
 import { ChangeDetectorRef, Component, HostListener, OnInit } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { NavigationEnd, Router, RouterModule } from '@angular/router';
+import { filter, take } from 'rxjs';
 
 @Component({
     selector: 'app-root',
@@ -40,6 +42,8 @@ export class AppComponent implements OnInit {
 
     message = '';
 
+    UserGroups = UserGroups;
+
     constructor(private spinner: Loader,private cdr: ChangeDetectorRef, private authService: Auth, private router: Router){
         this.spinner.isLoading.subscribe((res)=>{
             setTimeout(()=>{
@@ -50,7 +54,50 @@ export class AppComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.authService.checkSessionAndNavigate().subscribe();
+        this.router.events
+            .pipe(
+                filter(event => event instanceof NavigationEnd),
+                take(1)
+            )
+            .subscribe(() => {
+                this.authService.checkSessionAndNavigate().subscribe(val => {
+                    if(!val) return;
+        
+                    if (this.router.url === '/' || this.router.url === ''){
+                        console.log('checking app component if condition');
+                        switch(val.data.userGroupId){
+                            case UserGroups.CLUSTERHEAD:
+                            case UserGroups.DEPARTMENTHEAD:
+                                this.router.navigate(['/home/manpower-approval']);
+                                break;
+                
+                            case UserGroups.CONSULTANCY:
+                                this.router.navigate(['/home/consultancies']);
+                                break;
+                
+                            case UserGroups.READONLYADMIN:
+                                this.router.navigate(['/home/onroll-employees']);
+                                break;
+                
+                            case UserGroups.GUESTUSER:
+                                this.router.navigate(['/home/manpower-fulfillment']);
+                                break;
+
+                            case UserGroups.DPRMANAGEMENTTEAM:
+                                this.router.navigate(['/home/dpr-project-details']);
+                                break;
+                
+                            case UserGroups.ADMIN:
+                            case UserGroups.SITEINCHARGE:
+                            case UserGroups.PROJECTMANAGER:
+                            case UserGroups.RESOURCEMANAGER:
+                            case UserGroups.ACCOUNTSRECEIVABLETEAM:
+                                console.log('consoling default switch case');
+                                this.router.navigate(['/home/manpower-request']);
+                        }
+                    }
+                });
+            })
 
         this.authService.sessionExpired$.subscribe(reason => {
 

@@ -9,3 +9,87 @@
     --breakpoint-xl: 1200px;
     --breakpoint-2xl: 1920px;
 }
+
+.p-toast .p-toast-message {
+    border-radius: 8px !important;
+    border: none !important;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1) !important;
+    padding: 0 !important;
+    min-height: auto !important;
+}
+
+/* Make content flex and align perfectly */
+.p-toast .p-toast-message .p-toast-message-content {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 10px !important;
+}
+
+/* Remove internal wrapper spacing */
+.p-toast .p-toast-message .p-toast-text {
+    display: flex !important;
+    align-items: center !important;
+    margin: 0 !important;
+}
+
+/* Remove default margins */
+.p-toast .p-toast-detail {
+    margin: 0 !important;
+    line-height: 1 !important;
+}
+
+/* Align icons vertically */
+.p-toast .p-toast-message-icon,
+.p-toast .p-toast-icon-close {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    line-height: 1 !important;
+}
+
+/* Remove extra spacing from close button */
+.p-toast .p-toast-icon-close {
+    margin-left: 0 !important;
+}
+
+.p-toast .p-toast-message.p-toast-message-success {
+    background: #ecfdf5 !important;
+}
+
+.p-toast .p-toast-message.p-toast-message-error {
+    background: #fef2f2 !important;
+}
+
+.p-toast .p-toast-message.p-toast-message-warn {
+    background: #fffbeb !important;
+}
+
+.p-toast .p-toast-message.p-toast-message-info {
+    background: #eff6ff !important;
+}
+
+
+.app-dark .p-toast .p-toast-message {
+    border-radius: 8px !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6) !important;
+    padding: 0 !important;
+    min-height: auto !important;
+}
+
+.app-dark .p-toast .p-toast-message.p-toast-message-success {
+    background: #052e2b !important;
+}
+
+.app-dark .p-toast .p-toast-message.p-toast-message-error {
+    background: #3f0f0f !important;
+}
+
+.app-dark .p-toast .p-toast-message.p-toast-message-warn {
+    background: #3f2a05 !important;
+}
+
+.app-dark .p-toast .p-toast-message.p-toast-message-info {
+    background: #0c1f3f !important;
+}

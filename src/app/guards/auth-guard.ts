@@ -3,10 +3,11 @@ import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 
 export const authGuard: CanActivateFn = (route, state) => {
-  const authService = inject(Auth);
   const router = inject(Router);
 
-  if (authService.isLoggedIn()) {
+  const userId = sessionStorage.getItem('userId');
+
+  if (userId) {
     return true;
   }
 
