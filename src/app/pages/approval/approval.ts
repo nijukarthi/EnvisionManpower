@@ -6,7 +6,6 @@ import { DemandStatus } from '@/models/demand-status/demand-status.enum';
 import { ApprovalStatus } from '@/models/approval-status/approval-status.enum';
 import { UserGroups } from '@/models/usergroups/usergroups.enum';
 import { MessageService } from 'primeng/api';
-import { Column } from '@/models/table-column/table-column';
 
 @Component({
   selector: 'app-approval',

@@ -53,9 +53,10 @@
                     <label for="spn-description">SPN Description</label>
                     <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.spn?.spnDescription" [disabled]="true" id="spn-description" />
                 </div>
-                <div class="grid col-span-1 gap-1">
+                <div class="col-span-1 gap-1">
                     <label for="experience">Experience</label>
-                    <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.spn?.experience" [disabled]="true" id="experience" />
+                    <input type="text" pInputText [value]="employeeDetails?.employeeDetails?.spn?.experience" [disabled]="true" 
+                        id="experience" class="block w-full" />
                 </div>
                 <div class="col-span-1 gap-1" formGroupName="transferFrom">
                     <label for="last-working-date">Last Working Date</label>
@@ -73,7 +74,7 @@
                         class="block w-full"
                     />
                     @if(getLastWorkingDate(i)?.invalid && (getLastWorkingDate(i)?.dirty || getLastWorkingDate(i)?.touched)){ @if(getLastWorkingDate(i)?.hasError('required')){
-                    <p-message severity="error" variant="simple" size="small" styleClass="mt-1">Last Working Date is required </p-message>
+                        <p-message severity="error" variant="simple" size="small" styleClass="mt-1">Last Working Date is required </p-message>
                     }}
                 </div>
                 <div class="col-span-1 gap-1">

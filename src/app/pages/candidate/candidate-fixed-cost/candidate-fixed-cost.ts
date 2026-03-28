@@ -34,7 +34,7 @@ export class CandidateFixedCost implements OnInit {
             {
                 label: 'Edit',
                 icon: 'pi pi-pencil',
-                command: () => this.router.navigate(['/home/candidates/fixed-cost', candidate.candidateId])
+                command: () => this.router.navigate(['/home/candidates/fixed-cost', candidate.candidateId, 'edit'])
             },
             {
                 label: 'Delete',

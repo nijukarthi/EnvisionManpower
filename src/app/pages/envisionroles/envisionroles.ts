@@ -160,7 +160,7 @@ export class Envisionroles {
                     this.messageService.add({
                         severity: 'error',
                         summary: 'Error',
-                        detail: 'Please Enter Role'
+                        detail: 'Please Enter the Role Name'
                     });
                 }
             } else {
@@ -198,7 +198,7 @@ export class Envisionroles {
                     this.messageService.add({
                         severity: 'error',
                         summary: 'Error',
-                        detail: 'Please Enter Role'
+                        detail: 'Please Enter the Role Name'
                     });
                 }
             }

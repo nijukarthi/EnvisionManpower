@@ -32,6 +32,7 @@ export class AppMenu {
     consultancyUser = false;
     guestUser = false;
     readonlyAdmin = false;
+    dprTeam = false;
 
     constructor(
         private apiService: Apiservice,
@@ -68,6 +69,8 @@ export class AppMenu {
                     }
                     else if (this.loggedInUserDetails.userGroupId === UserGroups.GUESTUSER) {
                         this.guestUser = true;
+                    } else if(this.loggedInUserDetails.userGroupId === UserGroups.DPRMANAGEMENTTEAM){
+                        this.dprTeam = true;
                     }
                 }
 
@@ -303,6 +306,40 @@ export class AppMenu {
                                 }
                             ],
                             visible: this.adminUser || this.resourceManagerUser || this.readonlyAdmin
+                        },
+                        {
+                            label: 'Daily Progress Report',
+                            icon: 'pi pi-chart-bar',
+                            items: [
+                                {
+                                    label: 'Inputs',
+                                    icon: 'pi pi-sign-in',
+                                    items: [
+                                        {
+                                            label: 'Site Wise DPR',
+                                            icon: 'pi pi-map-marker',
+                                            routerLink: ['/home/dpr-project-details']
+                                        },
+                                        {
+                                            label: 'Customer',
+                                            icon: 'pi pi-user',
+                                            routerLink: ['/home/customer']
+                                        }
+                                    ]
+                                },
+                                {
+                                    label: 'Summary',
+                                    icon: 'pi pi-file',
+                                    items: [
+                                        {
+                                            label: 'Customer Wise DPR',
+                                            icon: 'pi pi-file-check',
+                                            routerLink: ['/home/customer-wise-dpr']
+                                        }
+                                    ]
+                                }
+                            ],
+                            visible: this.adminUser || this.dprTeam
                         },
                         {
                             label: 'Audit Logs',

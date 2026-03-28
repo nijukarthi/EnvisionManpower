@@ -48,7 +48,7 @@ export class Cluster implements OnInit {
         this.clusterForm = this.fb.group({
             clusterId: [0],
             clusterName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
-            clusterCode: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(2)]],
+            clusterCode: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(15)]],
             clusterHead: this.fb.group({
                 userId: [null, Validators.required]
             })

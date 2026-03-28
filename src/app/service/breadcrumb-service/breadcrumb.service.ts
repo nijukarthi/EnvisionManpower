@@ -29,18 +29,23 @@ export class BreadcrumbService{
         this.breadcrumbs = segments.map(segment => {
             currentUrl += `/${segment}`;
             console.log(currentUrl);
+
+            const isNumber = !isNaN(+segment);
+
             return {
                 label: this.format(segment),
-                routerLink: segment === 'home' ? null : segment === 'candidates' ? null : currentUrl,
-                disabled: segment === 'home' || segment === 'candidates'
+                routerLink: (segment === 'home' || segment === 'candidates' || isNumber) ? null : currentUrl,
+                disabled: segment === 'home' || segment === 'candidates' || isNumber
             };
         });
         console.log(this.breadcrumbs);
     }
 
     private format(value: string): string{
+        console.log("value", value);
         if(value === 'new') return 'New';
-        if(!isNaN(+value)) return 'Edit';
+        if(value === 'edit') return 'Edit';
+        if(!isNaN(+value)) return value;
 
         const withSpaces = value.replace(/-/g, ' ');
 
