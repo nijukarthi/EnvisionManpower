@@ -1,0 +1,388 @@
+<div class="card">
+    <div class="flex items-center justify-between">
+        <h5>WTG Details <span class="text-blue-500">#{{ dprProjWtgDetails.dprProjectDetails.projectCode }}</span></h5>
+        <div class="mb-2 flex gap-1">
+            <div>
+                <label for="task">Task:</label>
+                <p-select [options]="taskList" optionLabel="label" optionValue="value" [showClear]="true" 
+                    [filter]="true" filterBy="label" inputId="task" placeholder="Select Task" styleClass="ml-2 w-56"
+                    (onChange)="selectedTask($event.value)" />
+            </div>
+            <p-button label="Save Task" (onClick)="saveTask()" [disabled]="!selectedWTGActivity" />
+            <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
+        </div>
+    </div>
+    <!-- <div class="mb-4">
+        <p-multiselect [options]="dprType" display="chip" optionLabel="label" selectedItemsLabel="{0} columns selected" 
+            [style]="{ 'min-width': '200px' }" placeholder="Choose Columns" />
+    </div> -->
+
+    <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
+        <p-table #dt dataKey="siNo" [value]="dprProjectWtgList" showGridlines [rowHover]="true" [paginator]="true" [lazy]="true"
+            [paginatorDropdownAppendTo]="mydiv" [showCurrentPageReport]="true" [totalRecords]="totalRecords"
+            [rowsPerPageOptions]="[10, 20, 30]" [rows]="pageSize" [first]="first" editMode="row"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [tableStyle]="{ 'min-width': 'max-content' }" (onLazyLoad)="loadWtgDetails($event)">
+            <ng-template #header>
+                <tr>
+                    <th rowspan="2">SL NO</th>
+                    <th rowspan="2">
+                        <div class="flex items-center justify-between">
+                            <span>WTG Number</span>
+                            <p-columnFilter type="text" field="wtgNumber" display="menu" [showAddButton]="false" />
+                        </div>   
+                    </th>
+                    <th rowspan="2">
+                        <div class="flex items-center justify-between">
+                            <span>Location Number</span>
+                            <p-columnFilter type="text" field="wtgLocation" display="menu" [showAddButton]="false" />
+                        </div>     
+                    </th>
+                    <th rowspan="2">
+                        <div class="flex items-center justify-between">
+                            <span>Maximo ID</span>
+                            <p-columnFilter type="text" field="maximoId" display="menu" [showAddButton]="false" />
+                        </div>   
+                    </th>
+                    <th rowspan="2">
+                        <div class="flex items-center justify-between">
+                            <span>WTG Model</span>
+                            <p-columnFilter field="wtgModel" display="menu" matchMode="equals" [showAddButton]="false">
+                                <ng-template #filter let-value let-filter="filterCallback">
+                                    <p-select [options]="wtgModelFilterList" optionLabel="label" optionValue="value"
+                                       (onChange)="filter($event.value)" placeholder="Select WTG Model" class="w-full"></p-select>
+                                </ng-template>
+                            </p-columnFilter>
+                        </div>  
+                    </th>
+                    @if(showProductionComponent){
+                        <th>Nacelle Production Actual</th>
+                        <th>Hub Production Actual</th>
+                        <th>Blade Production Actual</th>
+                        <th>Tower Production Actual</th>
+                        <th>Updated By</th>
+                        <th>Updated On</th>
+                    }
+                    @if(showQualityComponent){
+                        <th colspan="4" style="text-align: center;">Nacelle</th>
+                        <th colspan="4" style="text-align: center;">Hub</th>
+                        <th colspan="4" style="text-align: center;">Blade</th>
+                        <th colspan="4" style="text-align: center;">Tower</th>
+                        <th rowspan="2">Updated By</th>
+                        <th rowspan="2">Updated On</th>
+                    }
+                    @if(showDispatchComponent){
+                        <th>Nacelle Dispatch Actual</th>
+                        <th>Hub Dispatch Actual</th>
+                        <th>Blade Dispatch Actual</th>
+                        <th>Tower Dispatch Actual</th>
+                        <th>Updated By</th>
+                        <th>Updated On</th>
+                    }
+                    @if(showReceivingComponent){
+                        <th colspan="2" style="text-align: center;">Nacelle</th>
+                        <th colspan="2" style="text-align: center;">Hub</th>
+                        <th colspan="2" style="text-align: center;">Blade</th>
+                        <th colspan="2" style="text-align: center;">Tower</th>
+                        <th rowspan="2">Updated By</th>
+                        <th rowspan="2">Updated On</th>
+                    }
+                    @if(showFoundation){
+                        <th>Foundation Completed Date</th>
+                    }
+                    @if(showInstallation){
+                        <th>Installation Completed Date</th>
+                        <th>MCC Actual Date</th>
+                        <th>MCC Sign Off Date</th>
+                    }
+                    @if(showCommissioning){
+                        <th>Pre-commissioning</th>
+                        <th>Commissioning</th>
+                        <th>STPT</th>
+                        <th>STPT Sign Off</th>
+                        <th>HOTO</th>
+                    }
+                    <th rowspan="2">Actions</th>
+                </tr>
+                <tr>
+                    @if(showQualityComponent){
+                        <th>Final QC Date</th>
+                        <th>Inspection Call Date</th>
+                        <th>Customer Inspection Date</th>
+                        <th>MDCC Date</th>
+                        <th>Final QC Date</th>
+                        <th>Inspection Call Date</th>
+                        <th>Customer Inspection Date</th>
+                        <th>MDCC Date</th>
+                        <th>Final QC Date</th>
+                        <th>Inspection Call Date</th>
+                        <th>Customer Inspection Date</th>
+                        <th>MDCC Date</th>
+                        <th>Final QC Date</th>
+                        <th>Inspection Call Date</th>
+                        <th>Customer Inspection Date</th>
+                        <th>MDCC Date</th>
+                    }
+                    @if(showReceivingComponent){
+                        <th>Receiving Date</th>
+                        <th>MVC Date</th>
+                        <th>Receiving Date</th>
+                        <th>MVC Date</th>
+                        <th>Receiving Date</th>
+                        <th>MVC Date</th>
+                        <th>Receiving Date</th>
+                        <th>MVC Date</th>
+                    }
+                </tr>
+            </ng-template>
+            <ng-template #body let-wtg let-editing="editing" let-i="rowIndex">
+                <tr [pEditableRow]="wtg">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ wtg?.wtgNumber || '-' }}</td>
+                    <td>{{ wtg?.wtgLocation || '-' }}</td>
+                    <td>{{ wtg?.maximoId || '-' }}</td>
+                    <td>{{ wtg?.towerModel || '-' }}</td>
+                    @if(showProductionComponent){
+                        <td>
+                            <p-datepicker [(ngModel)]="wtg.wtgProduction.nacelleProductionActual" [showIcon]="true" 
+                               dateFormat="yy-mm-dd" [iconDisplay]="'input'" appendTo="body" placeholder="Select Date" />
+                        </td>
+                        <td>
+                            <p-datepicker [(ngModel)]="wtg.wtgProduction.hubProductionActual" [showIcon]="true" 
+                               dateFormat="yy-mm-dd" [iconDisplay]="'input'" appendTo="body" placeholder="Select Date" />
+                        </td>
+                        <td>
+                            <p-datepicker [(ngModel)]="wtg.wtgProduction.bladeProductionActual" [showIcon]="true" 
+                               dateFormat="yy-mm-dd" [iconDisplay]="'input'" appendTo="body" placeholder="Select Date" />
+                        </td>
+                        <td>
+                            <p-datepicker [(ngModel)]="wtg.wtgProduction.towerProductionActual" [showIcon]="true" 
+                               dateFormat="yy-mm-dd" [iconDisplay]="'input'" appendTo="body" placeholder="Select Date" />
+                        </td>
+                        <td>{{ wtg?.wtgProduction?.updatedBy?.userName || '-' }}</td>
+                        <td>{{ wtg?.wtgProduction?.updatedOn ? ( wtg?.wtgProduction?.updatedOn | date: 'MMM d, y, h:mm a' ) : '-' }}</td>
+                    }
+                    @if(showQualityComponent){
+                        <td>
+                            <p-datepicker [(ngModel)]="wtg.wtgQuality.nacelleFinalQcActual" [showIcon]="true" [iconDisplay]="'input'" 
+                               dateFormat="yy-mm-dd" appendTo="body" placeholder="Select Date" />
+                        </td>
+                        <td>
+                            <p-datepicker [(ngModel)]="wtg.wtgQuality.nacelleInspectionCallActual" [showIcon]="true" [iconDisplay]="'input'" 
+                               dateFormat="yy-mm-dd" appendTo="body" placeholder="Select Date" />
+                        </td>
+                        <td>
+                            <p-datepicker [(ngModel)]="wtg.wtgQuality.nacelleCustomerInspectionActual" [showIcon]="true" [iconDisplay]="'input'" 
+                               dateFormat="yy-mm-dd" appendTo="body" placeholder="Select Date" />
+                        </td>
+                        <td>
+                            <p-datepicker [(ngModel)]="wtg.wtgQuality.nacelleMdccActual" [showIcon]="true" [iconDisplay]="'input'" 
+                               dateFormat="yy-mm-dd" appendTo="body" placeholder="Select Date" />
+                        </td>
+                        <td>
+                            <p-datepicker [(ngModel)]="wtg.wtgQuality.hubFinalQcActual" [showIcon]="true" [iconDisplay]="'input'" appendTo="body" 
+                               dateFormat="yy-mm-dd" placeholder="Select Date" />
+                        </td>
+                        <td>
+                            <p-datepicker [(ngModel)]="wtg.wtgQuality.hubInspectionCallActual" [showIcon]="true" [iconDisplay]="'input'" appendTo="body" 
+                               dateFormat="yy-mm-dd" placeholder="Select Date" />
+                        </td>
+                        <td>
+                            <p-datepicker [(ngModel)]="wtg.wtgQuality.hubCustomerInspectionActual" [showIcon]="true" [iconDisplay]="'input'" appendTo="body" 
+                               dateFormat="yy-mm-dd" placeholder="Select Date" />
+                        </td>
+                        <td>
+                            <p-datepicker [(ngModel)]="wtg.wtgQuality.hubMdccActual" [showIcon]="true" [iconDisplay]="'input'" appendTo="body" 
+                               dateFormat="yy-mm-dd" placeholder="Select Date" />
+                        </td>
+                        <td>
+                            <p-datepicker [(ngModel)]="wtg.wtgQuality.bladeFinalQcActual" [showIcon]="true" [iconDisplay]="'input'" appendTo="body" 
+                               dateFormat="yy-mm-dd" placeholder="Select Date" />
+                        </td>
+                        <td>
+                            <p-datepicker [(ngModel)]="wtg.wtgQuality.bladeInspectionCallActual" [showIcon]="true" [iconDisplay]="'input'" appendTo="body" 
+                               dateFormat="yy-mm-dd" placeholder="Select Date" />
+                        </td>
+                        <td>
+                            <p-datepicker [(ngModel)]="wtg.wtgQuality.bladeCustomerInspectionActual" [showIcon]="true" [iconDisplay]="'input'" appendTo="body" 
+                               dateFormat="yy-mm-dd" placeholder="Select Date" />
+                        </td>
+                        <td>
+                            <p-datepicker [(ngModel)]="wtg.wtgQuality.bladeMdccActual" [showIcon]="true" [iconDisplay]="'input'" appendTo="body" 
+                               dateFormat="yy-mm-dd" placeholder="Select Date" />
+                        </td>
+                        <td>
+                            <p-datepicker [(ngModel)]="wtg.wtgQuality.towerFinalQcActual" [showIcon]="true" [iconDisplay]="'input'" appendTo="body" 
+                               dateFormat="yy-mm-dd" placeholder="Select Date" />
+                        </td>
+                        <td>
+                            <p-datepicker [(ngModel)]="wtg.wtgQuality.towerInspectionCallActual" [showIcon]="true" [iconDisplay]="'input'" appendTo="body" 
+                               dateFormat="yy-mm-dd" placeholder="Select Date" />
+                        </td>
+                        <td>
+                            <p-datepicker [(ngModel)]="wtg.wtgQuality.towerCustomerInspectionActual" [showIcon]="true" [iconDisplay]="'input'" appendTo="body" 
+                               dateFormat="yy-mm-dd" placeholder="Select Date" />
+                        </td>
+                        <td>
+                            <p-datepicker [(ngModel)]="wtg.wtgQuality.towerMdccActual" [showIcon]="true" [iconDisplay]="'input'" appendTo="body" 
+                               dateFormat="yy-mm-dd" placeholder="Select Date" />
+                        </td>
+                        <td>{{ wtg?.wtgQuality?.updatedBy?.userName || '-' }}</td>
+                        <td>{{ wtg.wtgQuality.updatedOn ? (wtg.wtgQuality.updatedOn | date: 'MMM d, y, h:mm a') : '-' }}</td>
+                    }
+                    @if(showDispatchComponent){
+                        <td>
+                            <p-datepicker [(ngModel)]="wtg.wtgDispatch.nacelleDispatchActual" [showIcon]="true" [iconDisplay]="'input'" 
+                               dateFormat="yy-mm-dd" appendTo="body" placeholder="Select Date" />
+                        </td>
+                        <td>
+                            <p-datepicker [(ngModel)]="wtg.wtgDispatch.hubDispatchActual" [showIcon]="true" [iconDisplay]="'input'" 
+                               dateFormat="yy-mm-dd" appendTo="body" placeholder="Select Date" />
+                        </td>
+                        <td>
+                            <p-datepicker [(ngModel)]="wtg.wtgDispatch.bladeDispatchActual" [showIcon]="true" [iconDisplay]="'input'" 
+                               dateFormat="yy-mm-dd" appendTo="body" placeholder="Select Date" />
+                        </td>
+                        <td>
+                            <p-datepicker [(ngModel)]="wtg.wtgDispatch.towerDispatchActual" [showIcon]="true" [iconDisplay]="'input'" 
+                               dateFormat="yy-mm-dd" appendTo="body" placeholder="Select Date" />
+                        </td>
+                        <td>{{ wtg.wtgDispatch?.updatedBy?.userName || '-' }}</td>
+                        <td>{{ wtg.wtgDispatch.updatedOn ? (wtg?.wtgDispatch?.updatedOn | date: 'MMM d, y, h:mm a') : '-' }}</td>
+                    }
+                    @if(showReceivingComponent){
+                        <td>
+                            <p-datepicker [(ngModel)]="wtg.wtgReceiving.nacelleReceivingActual" [showIcon]="true" [iconDisplay]="'input'" 
+                               dateFormat="yy-mm-dd" appendTo="body" placeholder="Select Date" />
+                        </td>
+                        <td>
+                            <p-datepicker [(ngModel)]="wtg.wtgReceiving.nacelleMvcDate" [showIcon]="true" [iconDisplay]="'input'" appendTo="body" 
+                               dateFormat="yy-mm-dd" placeholder="Select Date" />
+                        </td>
+                        <td>
+                            <p-datepicker [(ngModel)]="wtg.wtgReceiving.hubReceivingActual" [showIcon]="true" [iconDisplay]="'input'" 
+                               dateFormat="yy-mm-dd" appendTo="body" placeholder="Select Date" />
+                        </td>
+                        <td>
+                            <p-datepicker [(ngModel)]="wtg.wtgReceiving.hubMvcDate" [showIcon]="true" [iconDisplay]="'input'" 
+                               dateFormat="yy-mm-dd" appendTo="body" placeholder="Select Date" />
+                        </td>
+                        <td>
+                            <p-datepicker [(ngModel)]="wtg.wtgReceiving.bladeReceivingActual" [showIcon]="true" [iconDisplay]="'input'" 
+                               dateFormat="yy-mm-dd" appendTo="body" placeholder="Select Date" />
+                        </td>
+                        <td>
+                            <p-datepicker [(ngModel)]="wtg.wtgReceiving.bladeMvcDate" [showIcon]="true" [iconDisplay]="'input'" 
+                               dateFormat="yy-mm-dd" appendTo="body" placeholder="Select Date" />
+                        </td>
+                        <td>
+                            <p-datepicker [(ngModel)]="wtg.wtgReceiving.towerReceivingActual" [showIcon]="true" [iconDisplay]="'input'" 
+                               dateFormat="yy-mm-dd" appendTo="body" placeholder="Select Date" />
+                        </td>
+                        <td>
+                            <p-datepicker [(ngModel)]="wtg.wtgReceiving.towerMvcDate" [showIcon]="true" [iconDisplay]="'input'" 
+                               dateFormat="yy-mm-dd" appendTo="body" placeholder="Select Date" />
+                        </td>
+                        <td>{{ wtg.wtgReceiving?.updatedBy?.userName || '-' }}</td>
+                        <td>{{ wtg.wtgReceiving.updatedOn ? (wtg?.wtgReceiving?.updatedOn | date: 'MMM d, y, h:mm a') : '-' }}</td>
+                    }
+                    @if(showFoundation){
+                        <td>
+                            <p-datepicker [(ngModel)]="wtg.wtgFoundation.foundationDate" [showIcon]="true" [iconDisplay]="'input'" 
+                               dateFormat="yy-mm-dd" appendTo="body" placeholder="Select Date" />
+                        </td>
+                    }
+                    @if(showInstallation){
+                        <td>
+                            <p-datepicker [(ngModel)]="wtg.wtgInstallation.installationDate" [showIcon]="true" [iconDisplay]="'input'" 
+                               dateFormat="yy-mm-dd" appendTo="body" placeholder="Select Date" />
+                        </td>
+                        <td>
+                            <p-datepicker [(ngModel)]="wtg.wtgInstallation.mccDate" [showIcon]="true" [iconDisplay]="'input'" 
+                               dateFormat="yy-mm-dd" appendTo="body" placeholder="Select Date" />
+                        </td>
+                        <td>
+                            <p-datepicker [(ngModel)]="wtg.wtgInstallation.mccSignOffDate" [showIcon]="true" [iconDisplay]="'input'" 
+                               dateFormat="yy-mm-dd" appendTo="body" placeholder="Select Date" />
+                        </td>
+                    }
+                    @if(showCommissioning){
+                        <td>
+                            <p-datepicker [(ngModel)]="wtg.wtgCommissioning.preCommissioningDate" [showIcon]="true" [iconDisplay]="'input'" 
+                               dateFormat="yy-mm-dd" appendTo="body" placeholder="Select Date" />
+                        </td>
+                        <td>
+                            <p-datepicker [(ngModel)]="wtg.wtgCommissioning.commissioningDate" [showIcon]="true" [iconDisplay]="'input'" appendTo="body" 
+                               dateFormat="yy-mm-dd" placeholder="Select Date" />
+                        </td>
+                        <td>
+                            <p-datepicker [(ngModel)]="wtg.wtgCommissioning.stptDate" [showIcon]="true" [iconDisplay]="'input'" appendTo="body" 
+                               dateFormat="yy-mm-dd" placeholder="Select Date" />
+                        </td>
+                        <td>
+                            <p-datepicker [(ngModel)]="wtg.wtgCommissioning.stptSignOffDate" [showIcon]="true" [iconDisplay]="'input'" appendTo="body" 
+                               dateFormat="yy-mm-dd" placeholder="Select Date" />
+                        </td>
+                        <td>
+                            <p-datepicker [(ngModel)]="wtg.wtgCommissioning.hotoDate" [showIcon]="true" [iconDisplay]="'input'" appendTo="body" 
+                               dateFormat="yy-mm-dd" placeholder="Select Date" />
+                        </td>
+                    }
+                    <td>
+                        <p-menu #menu [model]="menuItems" [popup]="true" appendTo="body" />
+                        <p-button (click)="wtgDetailsMenu($event, menu, wtg)" icon="pi pi-ellipsis-v" [rounded]="true" text="variant" />
+                    </td>         
+                </tr>
+            </ng-template>
+            <ng-template #emptymessage>
+                <tr>
+                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground)">
+                        No Record Found
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>          
+    </div>
+</div>
+
+<p-dialog header="WTG Details" [modal]="true" [(visible)]="wtgDetailsModal" [style]="{ width: '50rem' }"
+    [draggable]="false" (onHide)="onDialogClose()">
+    <div class="flex justify-between mb-4">
+        <div class="flex gap-2">
+            <span class="font-bold">Project Code:</span>
+            <span>{{ dprProjWtgDetails.dprProjectDetails.projectCode }}</span>
+        </div>
+        <div class="flex gap-2">
+            <span class="font-bold">WTG Number:</span>
+            <span>{{ selectedWtgDetails?.wtgNumber }}</span>
+        </div>
+    </div>
+    <form [formGroup]="updateWtgDetailsForm" (ngSubmit)="updateWtgDetails()">
+        <div class="grid grid-cols-2 gap-2" formArrayName="wtgDetails">
+            @for (item of wtgDetails.controls; track $index; let i = $index) {
+                <ng-container [formGroupName]="i">
+                    <div class="grid col-span-1 gap-1">
+                        <label for="location-number">Location Number</label>
+                        <input type="text" pInputText formControlName="wtgLocation" id="location-number" />
+                    </div>
+                    <div class="grid col-span-1 gap-1">
+                        <label for="maximo-id">Maximo ID</label>
+                        <input type="text" pInputText formControlName="maximoId" id="maximo-id" />
+                    </div>
+                    <div class="grid col-span-1 gap-1">
+                        <label for="maximo-id">WTG Model</label>
+                        <p-select [options]="wtgModelList" formControlName="towerModel" optionLabel="label" optionValue="value"
+                            [filter]="true" filterBy="label" inputId="maximo-id" appendTo="body" placeholder="Select WTG Model" />
+                    </div>
+                </ng-container>
+            }
+        </div>
+        <div class="flex justify-end">
+            <button pButton pRipple type="submit">
+                <span pButtonLabel>Submit</span>
+            </button>
+        </div>
+    </form>
+</p-dialog>
+
+<p-toast />

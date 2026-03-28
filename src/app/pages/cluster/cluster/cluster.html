@@ -1,18 +1,31 @@
 <div class="card">
     <div class="flex items-baseline-last justify-between">
         <h5>Clusters</h5>
-        @if (currentUser !== USERGROUPS.READONLYADMIN){
-            <p-button label="Add Cluster" icon="pi pi-plus" (click)="addCluster()" />
-        }
+        <div class="flex justify-end gap-2">
+            @if (currentUser !== USERGROUPS.READONLYADMIN){
+                <p-button label="Add Cluster" icon="pi pi-plus" (click)="addCluster()" />
+            }
+            <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
+        </div>
     </div>
     <div class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
-        <p-table [value]="clusterList" [rowHover]="true">
+        <p-table #dt [value]="clusterList" [rowHover]="true">
             <ng-template #header>
                 <tr>
                     <th>SI No</th>
-                    <th>Cluster Name</th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Cluster Name</span>
+                            <p-columnFilter type="text" field="clusterName" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
                     <th>Cluster Code</th>
-                    <th>Cluster Head</th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Cluster Head</span>
+                            <p-columnFilter type="text" field="clusterHead.userName" display="menu" [showAddButton]="false" />
+                        </div>   
+                    </th>
                     @if (currentUser !== USERGROUPS.READONLYADMIN){
                         <th>Actions</th>
                     }

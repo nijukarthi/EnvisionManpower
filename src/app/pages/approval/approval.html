@@ -8,7 +8,7 @@
     </div>
     <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
         <p-table [value]="demandProcessingList" #dt [(selection)]="selectedApprovalList" dataKey="id" [lazy]="true"
-            [tableStyle]="{ 'min-width': '130rem' }" [paginator]="true" [rowsPerPageOptions]="[10, 20, 30]" stripedRows
+            [tableStyle]="{ 'min-width': 'max-content' }" [paginator]="true" [rowsPerPageOptions]="[10, 20, 30]" stripedRows
             [rows]="pageSize" [rowHover]="true" [showCurrentPageReport]="true" [first]="first" [filters]="filters"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [totalRecords]="totalRecords"
             responsiveLayout="scroll" (onLazyLoad)="loadDemands($event)" [paginatorDropdownAppendTo]="mydiv"
@@ -67,7 +67,11 @@
                         </div>
                     </th>
                     <th style="text-align: center;">Cluster Head Approval</th>
+                    <th>CH Approved By</th>
+                    <th>CH Approved On</th>
                     <th style="text-align: center;">Department Head Approval</th> 
+                    <th>DH Approved By</th>
+                    <th>DH Approved On</th>
                 </tr>
             </ng-template>
             <ng-template #body let-demand let-rowIndex="rowIndex">
@@ -115,6 +119,9 @@
                                 (onClick)="clusterHeadApproval(demand.demandId, 'Rejected')" />
                         }
                     </td>
+                    <td>{{ demand.stateHeadApproval.approvedBy.userName || '-' }}</td>
+                    <td>{{ demand.stateHeadApproval.approvedOn ? 
+                        (demand.stateHeadApproval.approvedOn | date: 'MMM d, y, h:mm a') : '-' }}</td> 
                     <td style="text-align: center;">
                         @if (demand.departmentHeadApproval.approvalStatus === APPROVALSTATUS.ACCEPTED) {
                             <p-button icon="pi pi-check" [rounded]="true" [disabled]="true" />
@@ -126,15 +133,18 @@
                             <p-button icon="pi pi-check" [rounded]="true" class="w-full mr-2" 
                                 [disabled]="loggedUserGroupId !== USERGROUPS.DEPARTMENTHEAD 
                                     && loggedUserGroupId !== USERGROUPS.ADMIN 
-                                    || demand.stateHeadApproval.approvalStatus === APPROVALSTATUS.REJECTED" 
+                                    || demand.stateHeadApproval.approvalStatus !== APPROVALSTATUS.ACCEPTED" 
                                 (onClick)="departmentHeadApproval(demand.demandId, 'Accepted')" />
                             <p-button icon="pi pi-times" [rounded]="true" class="w-full" severity="danger" 
                                 [disabled]="loggedUserGroupId !== USERGROUPS.DEPARTMENTHEAD 
                                     && loggedUserGroupId !== USERGROUPS.ADMIN 
-                                    || demand.stateHeadApproval.approvalStatus === APPROVALSTATUS.REJECTED" 
+                                    || demand.stateHeadApproval.approvalStatus !== APPROVALSTATUS.ACCEPTED" 
                                 (onClick)="departmentHeadApproval(demand.demandId, 'Rejected')" />
                         }
                     </td>
+                    <td>{{ demand.departmentHeadApproval.approvedBy.userName || '-' }}</td>
+                    <td>{{ demand.departmentHeadApproval.approvedOn ? 
+                        (demand.departmentHeadApproval.approvedOn | date: 'MMM d, y, h:mm a') : '-' }}</td>
                 </tr>
             </ng-template>
             <ng-template #emptymessage>

@@ -99,7 +99,8 @@
                             <span>Training Status</span>
                             <p-columnFilter field="status" matchMode="equals" display="menu" [showAddButton]="false">
                                 <ng-template #filter let-value let-filter="filterCallback">
-                                    <p-select [options]="trainingStatusList" optionLabel="label" optionValue="value" (onChange)="filter($event.value)" placeholder="Select Statuses" class="w-full"> </p-select>
+                                    <p-select [options]="trainingStatusList" optionLabel="label" optionValue="value" 
+                                    (onChange)="filter($event.value)" placeholder="Select Status" class="w-full"></p-select>
                                 </ng-template>
                             </p-columnFilter>
                         </div>

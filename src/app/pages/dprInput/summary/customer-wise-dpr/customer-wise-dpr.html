@@ -1,0 +1,87 @@
+<div class="card">
+    <div class="flex items-baseline-last justify-between">
+        <h5>Customer Wise DPR</h5>
+        <div class="flex justify-end gap-1">
+            <div>
+                <label for="tower-model">WTG Model:</label>
+                <p-select [options]="wtgModelList" optionLabel="label" optionValue="value" 
+                    [filter]="true" filterBy="label" placeholder="Select WTG Model" styleClass="ml-2 w-56"
+                    (onChange)="selectedWtgModel($event.value)" />
+            </div>
+            <p-button label="Export" icon="pi pi-external-link" (onClick)="exportToExcel()" />
+            <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
+        </div>
+    </div>
+    <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
+        <p-table #dt [value]="customerWiseDprList" [lazy]="true" [rowHover]="true" 
+            [scrollable]="true" scrollHeight="500px" (onLazyLoad)="loadCustomerWiseDpr($event)">
+            <ng-template #header>
+                <tr>
+                    <th pFrozenColumn alignFrozen="left">SL NO</th>
+                    <th pFrozenColumn alignFrozen="left">
+                        <div class="flex items-center justify-between">
+                            <span>Customer Name</span>
+                            <p-columnFilter type="text" field="customerName" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
+                    <th>Total WTG</th>
+                    <th>Total NH Manuf.</th>
+                    <th>Total NH Dispatched</th>
+                    <th>NH Plant Inventory</th>
+                    <th>Total Blades Manuf.</th>
+                    <th>Total Blade Dispatched</th>
+                    <th>Blade Inventory</th>
+                    <th>Total Revenue</th>
+                    <th>Total Foundation</th>
+                    <th>Total Installation</th>
+                    <th>Total Commissioning</th>
+                </tr>
+            </ng-template>
+            <ng-template #body let-customer let-i="rowIndex">
+                <tr>
+                    <td pFrozenColumn alignFrozen="left">{{ i + 1 }}</td>
+                    <td pFrozenColumn alignFrozen="left">{{ customer.customer }}</td>
+                    <td>{{ customer.totalWtg }}</td>
+                    <td>{{ customer.totalNhManuf }}</td>
+                    <td>{{ customer.totalNhDispatched }}</td>
+                    <td>{{ customer.nhPlantInventory }}</td>
+                    <td>{{ customer.totalBladeManuf }}</td>
+                    <td>{{ customer.totalBladeDispatched }}</td>
+                    <td>{{ customer.bladeInventory }}</td>
+                    <td>{{ customer.revenue }}</td>
+                    <td>{{ customer.totalFoundation }}</td>
+                    <td>{{ customer.totalInstallation }}</td>
+                    <td>{{ customer.totalCommissioning }}</td>
+                </tr>
+            </ng-template>
+            @if (customerWiseDprList?.length > 0) {
+                <ng-template #footer>
+                    <tr style="font-weight: 600; background-color: var(--surface-ground);">
+                        <td colspan="2" pFrozenColumn alignFrozen="left">Grand Total</td>
+                        <td>{{ grandTotal.totalWtg }}</td>
+                        <td>{{ grandTotal.totalNhManuf }}</td>
+                        <td>{{ grandTotal.totalNhDispatched }}</td>
+                        <td>{{ grandTotal.nhPlantInventory }}</td>
+                        <td>{{ grandTotal.totalBladeManuf }}</td>
+                        <td>{{ grandTotal.totalBladeDispatched }}</td>
+                        <td>{{ grandTotal.bladeInventory }}</td>
+                        <td>{{ grandTotal.revenue }}</td>
+                        <td>{{ grandTotal.totalFoundation }}</td>
+                        <td>{{ grandTotal.totalInstallation }}</td>
+                        <td>{{ grandTotal.totalCommissioning }}</td>
+                    </tr>
+                </ng-template>
+            }
+            <ng-template #emptymessage>
+                <tr>
+                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground)">
+                        No Records Found
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+<p-toast />
+<p-confirmdialog />

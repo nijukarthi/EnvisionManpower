@@ -30,7 +30,7 @@ export class CandidateCostPlus implements OnInit {
       {
         label: 'Edit',
         icon: 'pi pi-pencil',
-        command: () => this.router.navigate(['/home/candidates/cost-plus', candidate.candidateId])
+        command: () => this.router.navigate(['/home/candidates/cost-plus', candidate.candidateId, 'edit'])
        },
       {
         label: 'Delete',

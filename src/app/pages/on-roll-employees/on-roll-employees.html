@@ -2,7 +2,9 @@
     <div class="flex items-baseline-last justify-between">
         <h5>On-roll Employees</h5>
         <div class="flex gap-2">
-            <p-button icon="pi pi-external-link" label="Export to Excel" (click)="exportToExcel()" />
+            <p-tieredmenu #menu [model]="menuItems" [popup]="true" appendTo="body" />
+            <p-button (onClick)="menu.toggle($event)" label="Actions" icon="pi pi-angle-down" iconPos="right" />
+            <input #excelInput type="file" accept=".xls,.xlsx" hidden (change)="excelSelected($event)" />
             <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
         </div>
     </div>

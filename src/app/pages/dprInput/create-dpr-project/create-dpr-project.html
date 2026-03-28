@@ -1,0 +1,141 @@
+<div class="card">
+    <h5>{{ dprProjectId ? 'Update DPR Project' : 'Create DPR Project' }}</h5>
+    <form [formGroup]="dprProjectForm" (ngSubmit)="submitDprProject()">
+        <div class="grid grid-cols-2 gap-2">
+            <div class="col-span-1">
+                <label for="customer-name">Customer Name</label>
+                <p-select [options]="customerList" formControlName="customerId" optionLabel="customerName" optionValue="customerId"
+                    [filter]="true" filterBy="customerName" placeholder="Select Customer" appendTo="body" [showClear]="true"
+                    class="block w-full" appFormFieldError />
+    
+                @if(customerId?.invalid && (customerId?.dirty || customerId?.touched)) {
+                    @if (customerId?.hasError('required')) {
+                        <p-message severity="error" variant="simple" size="small" styleClass="mt-1">
+                            Customer Name is required
+                        </p-message>
+                    }
+                }
+            </div>
+            <div class="col-span-1">
+                <label for="probability">Probability</label>
+                <p-select [options]="probabilityList" formControlName="probability" optionLabel="label" optionValue="value" 
+                    [filter]="true" filterBy="optionLabel" placeholder="Select Probability" inputId="probability" 
+                    appendTo="body" [showClear]="true" class="block w-full"  />
+            </div>
+            <div class="col-span-1">
+                <label for="state">Cluster</label>
+                <p-select [options]="clusterList" formControlName="clusterName" optionLabel="clusterName" 
+                    optionValue="clusterName" appendTo="body" [filter]="true" filterBy="clusterName" placeholder="Select Cluster" 
+                    [showClear]="true" appFormFieldError class="block w-full" />
+    
+                @if (clusterName?.invalid && (clusterName?.dirty || clusterName?.touched)) {
+                    @if (clusterName?.hasError('required')) {
+                        <p-message severity="error" variant="simple" size="small" styleClass="mt-1">
+                            Cluster Name is required
+                        </p-message>
+                    }
+                }
+            </div>
+            <div class="col-span-1">
+                <label for="project-code">Project Code</label>
+                <p-select [options]="projCodeList" formControlName="projectCode" optionLabel="projectCode" optionValue="projectCode"
+                    appendTo="body" [filter]="true" filterBy="projectCode" placeholder="Select Project Code" 
+                    inputId="project-code" [showClear]="true" appFormFieldError class="block w-full" />
+    
+                    @if(projectCode?.invalid && (projectCode?.dirty || projectCode?.touched)){
+                        @if (projectCode?.hasError('required')) {
+                            <p-message severity="error" variant="simple" size="small" styleClass="mt-1">
+                                Project Code is required
+                            </p-message>
+                        }
+                    }
+            </div>
+            <div class="col-span-1">
+                <label for="project-description">Project Description</label>
+                <input type="text" pInputText formControlName="projectDescription" id="project-description" class="block w-full" />
+            </div>
+            <div class="col-span-1">
+                <label for="pm-name">Project Manager</label>
+                <p-select [options]="projManagerList" formControlName="projectManager" optionLabel="userName" optionValue="userId" 
+                    [filter]="true" filterBy="userName" placeholder="Select Project Manager" appendTo="body" 
+                    inputId="pm-name" [showClear]="true" appFormFieldError class="block w-full" />
+    
+                @if (projectManager?.invalid && (projectManager?.dirty || projectManager?.touched)) {
+                    @if (projectManager?.hasError('required')) {
+                        <p-message severity="error" variant="simple" size="small" styleClass="mt-1">
+                            Project Manager is required
+                        </p-message>
+                    }
+                }
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="term">Term</label>
+                <p-select [options]="termList" formControlName="projectTerm" optionLabel="label" optionValue="value" [filter]="true"
+                    filterBy="label" placeholder="Select Term" inputId="term" appendTo="body" [showClear]="true" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="ppa-type">PPA Type</label>
+                <p-select [options]="ppaTypeList" formControlName="ppaType" optionLabel="label" optionValue="value" [filter]="true" 
+                    filterBy="label" placeholder="Select PPA Type" inputId="ppa-type" appendTo="body" [showClear]="true" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="contract-status">Contract Status</label>
+                <p-select [options]="contractStatusList" formControlName="contractStatus" optionLabel="label" optionValue="value" 
+                    [filter]="true" filterBy="label" placeholder="Select Contract Status" inputId="contract-status" appendTo="body" 
+                    [showClear]="true" />
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="site-status">Site Status</label>
+                <p-select [options]="siteStatusList" formControlName="siteStatus" optionLabel="label" optionValue="value" [filter]="true" 
+                    filterBy="label" placeholder="Select Site Status" inputId="site-status" appendTo="body" [showClear]="true" />
+            </div>
+            <div class="col-span-1">
+                <label for="qty">Quantity</label>
+                <input type="text" pInputText formControlName="projectQty" id="qty" appFormFieldError class="block w-full" />
+    
+                @if (projectQty?.invalid && (projectQty?.dirty || projectQty?.touched)) {
+                    @if (projectQty?.hasError('required')) {
+                        <p-message severity="error" variant="simple" size="small" styleClass="mt-1">
+                            Project Quantity is required
+                        </p-message>
+                    }
+                    @if (projectQty?.hasError('minlength')) {
+                        <p-message severity="error" variant="simple" size="small" styleClass="mt-1">
+                            Project Quantity must contain at least 1 character
+                        </p-message>
+                    }
+                    @if (projectQty?.hasError('maxlength')) {
+                        <p-message severity="error" variant="simple" size="small" styleClass="mt-1">
+                            Project Quantity cannot exceed 3 characters
+                        </p-message>
+                    }
+                }
+            </div>
+            <div class="col-span-1">
+                <label for="zone">Zone</label>
+                <p-select [options]="zoneList" formControlName="zone" optionLabel="label" optionValue="value" placeholder="Select Zone" 
+                    [filter]="true" filterBy="label" appendTo="body" [showClear]="true" 
+                        appFormFieldError class="block w-full" />
+    
+                @if (zone?.invalid && (zone?.dirty || zone?.touched)) {
+                    @if (zone?.hasError('required')) {
+                        <p-message severity="error" variant="simple" size="small" styleClass="mt-1">
+                            Zone is required
+                        </p-message>
+                    }
+                }
+            </div>
+            <div class="grid col-span-1 gap-1">
+                <label for="crane-count">Crane Count</label>
+                <input type="text" pInputText formControlName="craneCount" id="crane-count" />
+            </div>
+        </div>
+        <div class="flex justify-end mt-3">
+            <button pButton pRipple type="submit">
+                <span pButtonLabel>{{ dprProjectId ? 'Update' : 'Submit' }}</span>
+            </button>
+        </div>
+    </form>
+</div>
+
+<p-toast />

@@ -1,0 +1,651 @@
+import { WtgActivities } from '@/models/wtg-activities/wtg-activities.enum';
+import { Apiservice } from '@/service/apiservice/apiservice';
+import { Shared } from '@/service/shared';
+import { Component, inject, OnInit } from '@angular/core';
+import { FormArray, FormBuilder } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
+
+@Component({
+  selector: 'app-view-wtg-details',
+  imports: [Shared],
+  templateUrl: './view-wtg-details.html',
+  styleUrl: './view-wtg-details.scss'
+})
+export class ViewWtgDetails implements OnInit {
+  offSet = 0;
+  pageSize =  10;
+  first = 0;
+  totalRecords = 0;
+  selectedDprProjId = 0;
+
+  showProductionComponent = false;
+  showQualityComponent = false;
+  showDispatchComponent = false;
+  showReceivingComponent = false;
+  showFoundation = false;
+  showInstallation = false;
+  showCommissioning = false;
+
+  wtgDetailsModal = false;
+
+  selectedWTGActivity: string | null = null;
+
+  menuItems: any[] = [];
+  updatedRows: any[] = [];
+  originalDprProjectWtgList: any[] = [];
+
+  dprProjectWtgList: any;
+  dprProjWtgDetails: any;
+  selectedWtgDetails: any;
+  filteredData: any;
+
+  WTGACTIVITIES = WtgActivities;
+
+  private fb = inject(FormBuilder);
+
+  constructor(private router: Router, 
+    private apiService: Apiservice, 
+    private route: ActivatedRoute, private messageService: MessageService){}
+
+  updateWtgDetailsForm = this.fb.group({
+    wtgDetails: this.fb.array([this.wtgArray()])   
+  })
+
+  wtgArray(){
+    return this.fb.group({
+      wtgDetailId: [0],
+      wtgLocation: [''],
+      maximoId: [''],
+      towerModel: ['']
+    });
+  }
+
+  get wtgDetails(){
+    return this.updateWtgDetailsForm.get('wtgDetails') as FormArray;
+  }
+
+  taskList = [
+    {
+      label: 'Production',
+      value: this.WTGACTIVITIES.PRODUCTION
+    },
+    {
+      label: 'Quality', 
+      value: this.WTGACTIVITIES.QUALITY
+    },
+    {
+      label: 'Dispatch',
+      value: this.WTGACTIVITIES.DISPATCH
+    },
+    {
+      label: 'Receiving',
+      value: this.WTGACTIVITIES.RECEIVING
+    },
+    {
+      label: 'Foundation',
+      value: this.WTGACTIVITIES.FOUNDATION
+    },
+    {
+      label: 'Installation',
+      value: this.WTGACTIVITIES.INSTALLATION
+    },
+    {
+      label: 'Commissioning',
+      value: this.WTGACTIVITIES.COMMISSIONING
+    }
+  ];
+
+  ngOnInit(): void {
+    this.dprProjWtgDetails = history.state;
+    console.log(this.dprProjWtgDetails);
+    this.menuItems = this.getMenuItems();
+
+    this.route.paramMap.subscribe((param) => {
+      const id = param.get('id');
+      console.log(id);
+
+      if (id) {
+        this.selectedDprProjId = Number(id);
+      }
+    });
+
+    this.fetchDprProjWTGList();
+  }
+
+  dprProjWtgApi(data: any){
+    try {
+      this.apiService.fetchDprProjWTGList(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.dprProjectWtgList = val?.data?.data.map((wtg: any) => {
+
+            wtg.wtgFoundation ??= {};
+            wtg.wtgProduction ??= {};
+            wtg.wtgQuality ??= {};
+            wtg.wtgDispatch ??= {};
+            wtg.wtgReceiving ??= {};
+            wtg.wtgInstallation ??= {};
+            wtg.wtgCommissioning ??= {};
+
+            this.convertDates(wtg.wtgFoundation, [
+              'foundationDate'
+            ]);
+
+          this.convertDates(wtg.wtgProduction, [
+            'nacelleProductionActual',
+            'hubProductionActual',
+            'bladeProductionActual',
+            'towerProductionActual'
+          ]);
+
+          this.convertDates(wtg.wtgQuality, [
+            'bladeCustomerInspectionActual',
+            'bladeFinalQcActual',
+            'bladeInspectionCallActual',
+            'bladeMdccActual',
+            'hubCustomerInspectionActual',
+            'hubFinalQcActual',
+            'hubInspectionCallActual',
+            'hubMdccActual',
+            'nacelleCustomerInspectionActual',
+            'nacelleFinalQcActual',
+            'nacelleInspectionCallActual',
+            'nacelleMdccActual',
+            'towerCustomerInspectionActual',
+            'towerFinalQcActual',
+            'towerInspectionCallActual',
+            'towerMdccActual'
+          ]);
+
+          this.convertDates(wtg.wtgDispatch, [
+            'nacelleDispatchActual',
+            'hubDispatchActual',
+            'bladeDispatchActual',
+            'towerDispatchActual'
+          ]);
+
+          this.convertDates(wtg.wtgReceiving, [
+            'bladeMvcDate',
+            'bladeReceivingActual',
+            'hubMvcDate',
+            'hubReceivingActual',
+            'nacelleMvcDate',
+            'nacelleReceivingActual',
+            'towerMvcDate',
+            'towerReceivingActual'
+          ]);
+
+            return wtg;
+          });
+
+          this.originalDprProjectWtgList = structuredClone(this.dprProjectWtgList);
+          console.log(this.originalDprProjectWtgList);
+          this.totalRecords = val?.data?.length ?? 0;
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  fetchDprProjWTGList(){
+    try {
+      const data = {
+        dprProjectDetailsId: this.selectedDprProjId,
+        activity: this.selectedWTGActivity,
+        offSet: this.offSet,
+        pageSize: this.pageSize
+      }
+
+      console.log(data);
+
+      this.dprProjWtgApi(data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  openWtgDetailsModal(){
+    try {
+      this.wtgDetailsModal = true;
+      this.wtgDetails.at(0).patchValue({
+        wtgLocation: this.selectedWtgDetails.wtgLocation,
+        maximoId: this.selectedWtgDetails.maximoId,
+        towerModel: this.selectedWtgDetails.towerModel
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  updateWtgDetails(){
+    try {
+      this.wtgDetails.at(0).patchValue({
+        ...this.wtgDetails.value,
+        wtgDetailId: this.selectedWtgDetails.wtgDetailId
+      })
+      const data = this.wtgDetails.value;
+      console.log(data);
+
+      this.apiService.updateWtgDetails(data).subscribe({
+        next: val => {
+          console.log(val);
+          this.wtgDetailsModal = false;
+          this.fetchDprProjWTGList();
+          this.messageService.add({severity: 'success', summary: 'Success', detail: 'WTG Details Updated Successfully'});
+        },
+        error: err => {
+          console.log(err);
+        }
+      })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  checkEqual(obj1: any, obj2: any): boolean{
+    return JSON.stringify(obj1) === JSON.stringify(obj2);
+  }
+
+  saveTask(){
+    if (this.showProductionComponent) {    
+      try {
+        const updatedRows = this.dprProjectWtgList.filter((row: any) => {
+          const originalRow = this.originalDprProjectWtgList.find(
+            o => o.wtgDetailId === row.wtgDetailId
+          );
+
+          return !this.checkEqual(row.wtgProduction, originalRow.wtgProduction);
+        })
+
+        const data = updatedRows.map((wtg: any) => ({
+          wtgDetailId: wtg?.wtgDetailId,
+          nacelleProductionActual: this.formatDate(wtg.wtgProduction.nacelleProductionActual),
+          hubProductionActual: this.formatDate(wtg.wtgProduction.hubProductionActual),
+          bladeProductionActual: this.formatDate(wtg.wtgProduction.bladeProductionActual),
+          towerProductionActual: this.formatDate(wtg.wtgProduction.towerProductionActual)
+        }))
+  
+        console.log(data);
+  
+        this.apiService.updateProdActivity(data).subscribe({
+          next: val => {
+            console.log(val);
+            this.fetchDprProjWTGList();
+            this.messageService.add({severity: 'success', summary: 'Success', detail: 'Production Task Updated Successfully'});
+          },
+          error: err => {
+            console.log(err);
+
+            if (err.status === 400) {
+              this.messageService.add({severity: 'error', summary: 'Error', detail: err.error.detail });
+            }
+          }
+        })
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    if (this.showQualityComponent) {
+      try {
+        const updatedRows = this.dprProjectWtgList.filter((row: any) => {
+          const originalRow = this.originalDprProjectWtgList.find(
+            o => o.wtgDetailId === row.wtgDetailId
+          );
+
+          return !this.checkEqual(row.wtgQuality, originalRow.wtgQuality);
+        })
+
+        const data = updatedRows.map((wtg: any) => ({
+          wtgDetailId: wtg.wtgDetailId,
+          nacelleFinalQcActual: this.formatDate(wtg.wtgQuality.nacelleFinalQcActual),
+          nacelleInspectionCallActual: this.formatDate(wtg.wtgQuality.nacelleInspectionCallActual),
+          nacelleCustomerInspectionActual: this.formatDate(wtg.wtgQuality.nacelleCustomerInspectionActual),
+          nacelleMdccActual: this.formatDate(wtg.wtgQuality.nacelleMdccActual),
+          hubFinalQcActual: this.formatDate(wtg.wtgQuality.hubFinalQcActual),
+          hubInspectionCallActual: this.formatDate(wtg.wtgQuality.hubInspectionCallActual),
+          hubCustomerInspectionActual: this.formatDate(wtg.wtgQuality.hubCustomerInspectionActual),
+          hubMdccActual: this.formatDate(wtg.wtgQuality.hubMdccActual),
+          bladeFinalQcActual: this.formatDate(wtg.wtgQuality.bladeFinalQcActual),
+          bladeInspectionCallActual: this.formatDate(wtg.wtgQuality.bladeInspectionCallActual),
+          bladeCustomerInspectionActual: this.formatDate(wtg.wtgQuality.bladeCustomerInspectionActual),
+          bladeMdccActual: this.formatDate(wtg.wtgQuality.bladeMdccActual),
+          towerFinalQcActual: this.formatDate(wtg.wtgQuality.towerFinalQcActual),
+          towerInspectionCallActual: this.formatDate(wtg.wtgQuality.towerInspectionCallActual),
+          towerCustomerInspectionActual: this.formatDate(wtg.wtgQuality.towerCustomerInspectionActual),
+          towerMdccActual: this.formatDate(wtg.wtgQuality.towerMdccActual)
+        }));
+
+        console.log(data);
+
+        this.apiService.updateQualActivity(data).subscribe({
+          next: val => {
+            console.log(val);
+            this.fetchDprProjWTGList();
+            this.messageService.add({severity: 'success', summary: 'Success', detail: 'Quality Task Updated Successfully'});
+          },
+          error: err => {
+            console.log(err);
+
+            if (err.status === 400) {
+              this.messageService.add({severity: 'error', summary: 'Error', detail: err.error.detail });
+            }
+          }
+        })
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    if (this.showDispatchComponent) {
+      try {
+        const updatedRows = this.dprProjectWtgList.filter((row: any) => {
+          const originalRow = this.originalDprProjectWtgList.find(
+            o => o.wtgDetailId === row.wtgDetailId
+          )
+
+          return !this.checkEqual(row.wtgDispatch, originalRow.wtgDispatch);
+        });
+
+        const data = updatedRows.map((wtg: any) => ({
+          wtgDetailId: wtg.wtgDetailId,
+          nacelleDispatchActual: this.formatDate(wtg.wtgDispatch.nacelleDispatchActual),
+          hubDispatchActual: this.formatDate(wtg.wtgDispatch.hubDispatchActual),
+          bladeDispatchActual: this.formatDate(wtg.wtgDispatch.bladeDispatchActual),
+          towerDispatchActual: this.formatDate(wtg.wtgDispatch.towerDispatchActual)
+        }));
+
+        console.log(data);
+
+        this.apiService.updateDispatchActivity(data).subscribe({
+          next: val => {
+            console.log(val);
+            this.fetchDprProjWTGList();
+            this.messageService.add({severity: 'success', summary: 'Success', detail: 'Dispatch Task Updated Successfully'});
+          },
+          error: err => {
+            console.log(err);
+
+            if (err.status === 400) {
+              this.messageService.add({severity: 'error', summary: 'Error', detail: err.error.detail });
+            }
+          }
+        })
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    if (this.showReceivingComponent) {
+      try {
+        const updatedRows = this.dprProjectWtgList.filter((row: any) => {
+          const originalRow = this.originalDprProjectWtgList.find(
+            o => o.wtgDetailId === row.wtgDetailId
+          )
+
+          return !this.checkEqual(row.wtgReceiving, originalRow.wtgReceiving);
+        })
+
+        const data = updatedRows.map((wtg: any) => ({
+          wtgDetailId: wtg.wtgDetailId,
+          nacelleReceivingActual: this.formatDate(wtg.wtgReceiving.nacelleReceivingActual),
+          nacelleMvcDate: this.formatDate(wtg.wtgReceiving.nacelleMvcDate),
+          hubReceivingActual: this.formatDate(wtg.wtgReceiving.hubReceivingActual),
+          hubMvcDate: this.formatDate(wtg.wtgReceiving.hubMvcDate),
+          bladeReceivingActual: this.formatDate(wtg.wtgReceiving.bladeReceivingActual),
+          bladeMvcDate: this.formatDate(wtg.wtgReceiving.bladeMvcDate),
+          towerReceivingActual: this.formatDate(wtg.wtgReceiving.towerReceivingActual),
+          towerMvcDate: this.formatDate(wtg.wtgReceiving.towerMvcDate)
+        }));
+
+        console.log(data);
+
+        this.apiService.updateReceivingActivity(data).subscribe({
+          next: val => {
+            console.log(val);
+            this.fetchDprProjWTGList();
+            this.messageService.add({severity: 'success', summary: 'Success', detail: 'Receiving Task Updated Successfully'});
+          },
+          error: err => {
+            console.log(err);
+
+            if (err.status === 400) {
+              this.messageService.add({severity: 'error', summary: 'Error', detail: err.error.detail });
+            }
+          }
+        })
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    if (this.showFoundation) {
+      try {
+        const updatedRows = this.dprProjectWtgList.filter((row: any) => {
+          const originalRow = this.originalDprProjectWtgList.find(
+            o => o.wtgDetailId === row.wtgDetailId
+          )
+
+          return !this.checkEqual(row.wtgFoundation, originalRow.wtgFoundation);
+        });
+
+        const data = updatedRows.map((wtg: any) => ({
+          wtgDetailId: wtg.wtgDetailId,
+          foundationDate: this.formatDate(wtg.wtgFoundation.foundationDate)
+        }));
+
+        console.log(data);
+
+        this.apiService.updateFoundationActivity(data).subscribe({
+          next: val => {
+            console.log(val);
+            this.fetchDprProjWTGList();
+            this.messageService.add({severity: 'success', summary: 'Success', detail: 'Foundation Task Updated Successfully'});
+          },
+          error: err => {
+            console.log(err);
+
+            if (err.status === 400) {
+              this.messageService.add({severity: 'error', summary: 'Error', detail: err.error.detail });
+            }
+          }
+        })
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    if (this.showInstallation) {
+      try {
+        const updatedRows = this.dprProjectWtgList.filter((row: any) => {
+          const originalRow = this.originalDprProjectWtgList.find(
+            o => o.wtgDetailId === row.wtgDetailId
+          )
+
+          return !this.checkEqual(row.wtgInstallation, originalRow.wtgInstallation)
+        })
+
+        const data = updatedRows.map((wtg: any) => ({
+          wtgDetailId: wtg.wtgDetailId,
+          installationDate: this.formatDate(wtg?.wtgInstallation?.installationDate),
+          mccDate: this.formatDate(wtg?.wtgInstallation?.mccDate),
+          mccSignOffDate: this.formatDate(wtg?.wtgInstallation?.mccSignOffDate)
+        }));
+
+        console.log(data);
+
+        this.apiService.updateInstallationActivity(data).subscribe({
+          next: val => {
+            console.log(val);
+            this.fetchDprProjWTGList();
+            this.messageService.add({severity: 'success', summary: 'Success', detail: 'Installation Task Updated Successfully'});
+          },
+          error: err => {
+            console.log(err);
+
+            if (err.status === 400) {
+              this.messageService.add({severity: 'error', summary: 'Error', detail: err.error.detail });
+            }
+          }
+        })
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    if (this.showCommissioning) {
+      try {
+        const updatedRows = this.dprProjectWtgList.filter((row: any) => {
+          const originalRow = this.originalDprProjectWtgList.find(
+            o => o.wtgDetailId === row.wtgDetailId
+          );
+
+          return !this.checkEqual(row.wtgCommissioning, originalRow.wtgCommissioning);
+        })
+
+        const data = updatedRows.map((wtg: any) => ({
+          wtgDetailId: wtg.wtgDetailId,
+          preCommissioningDate: this.formatDate(wtg.wtgCommissioning.preCommissioningDate),
+          commissioningDate: this.formatDate(wtg.wtgCommissioning.commissioningDate),
+          stptDate: this.formatDate(wtg.wtgCommissioning.stptDate),
+          stptSignOffDate: this.formatDate(wtg.wtgCommissioning.stptSignOffDate),
+          hotoDate: this.formatDate(wtg.wtgCommissioning.hotoDate)
+        }));
+
+        console.log(data);
+
+        this.apiService.updateCommissioningActivity(data).subscribe({
+          next: val => {
+            console.log(val);
+            this.fetchDprProjWTGList();
+            this.messageService.add({severity: 'success', summary: 'Success', detail: 'Commissioning Task Updated Successfully'});
+          },
+          error: err => {
+            console.log(err);
+
+            if (err.status === 400) {
+              this.messageService.add({severity: 'error', summary: 'Error', detail: err.error.detail });
+            }
+          }
+        })
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }
+
+  wtgModelList = [
+    {
+      label: 'EN 156_3.3MW',
+      value: 'EN 156_3.3MW'
+    },
+    {
+      label: 'EN 182_5.0MW',
+      value: 'EN 182_5.0MW'
+    }
+  ];
+
+  wtgModelFilterList = [
+    {
+      label: 'EN 156_3.3MW',
+      value: 10
+    },
+    {
+      label: 'EN 182_5.0MW',
+      value: 11
+    }
+  ]
+
+  getMenuItems(){
+    return [
+      {
+        label: 'Edit WTG Details',
+        icon: 'pi pi-pencil',
+        command: () => this.openWtgDetailsModal()
+      }
+    ]
+  }
+
+  dprType = [
+    { 
+      label: 'Site Wise Manufacturing Input'
+    },
+    {
+      label: 'Site Wise I&C Input'
+    }
+  ]
+
+  wtgDetailsMenu(event: Event, menu: any, wtg: any){
+    this.selectedWtgDetails = wtg;
+    console.log(this.selectedWtgDetails);
+    menu.toggle(event);
+  }
+
+  selectedTask(task: string){
+    this.selectedWTGActivity = task;
+
+    this.showProductionComponent = task === this.WTGACTIVITIES.PRODUCTION;
+    this.showQualityComponent = task === this.WTGACTIVITIES.QUALITY;
+    this.showDispatchComponent = task === this.WTGACTIVITIES.DISPATCH;
+    this.showReceivingComponent = task === this.WTGACTIVITIES.RECEIVING;
+    this.showFoundation = task === this.WTGACTIVITIES.FOUNDATION;
+    this.showInstallation = task === this.WTGACTIVITIES.INSTALLATION;
+    this.showCommissioning = task === this.WTGACTIVITIES.COMMISSIONING;
+
+    this.fetchDprProjWTGList();
+  }
+
+  private convertDates(obj: any, dateField: string[]){
+    if(!obj) return;
+
+    dateField.forEach(field => {
+      obj[field] = obj[field] ? new Date(obj[field]) : null;
+    });
+  }
+
+  private formatDate(date: Date | null): string | null{
+    if(!date) return null;
+
+    if (typeof date === 'string') {
+      return date;
+    }
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  }
+
+  loadWtgDetails(event: any){
+    this.first = event.first;
+    this.offSet = event.first / event.rows;
+    this.pageSize = event.rows;
+
+    const filters = event.filters;
+    console.log(filters);
+
+    this.filteredData = {
+      dprProjectDetailsId: this.selectedDprProjId,
+      activity: this.selectedWTGActivity,
+      offSet: this.offSet,
+      pageSize: this.pageSize,
+      wtgNumber: filters?.wtgNumber?.[0]?.value ?? null,
+      wtgLocation: filters?.wtgLocation?.[0]?.value ?? null,
+      maximoId: filters?.maximoId?.[0]?.value ?? null,
+      towerModel: filters?.wtgModel?.[0]?.value ?? null
+    }
+
+    console.log(this.filteredData);
+
+    this.dprProjWtgApi(this.filteredData);
+  }
+
+  onDialogClose(){
+    this.updateWtgDetailsForm.reset();
+  }
+}

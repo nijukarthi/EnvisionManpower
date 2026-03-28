@@ -1,10 +1,11 @@
 import { UserGroups } from '@/models/usergroups/usergroups.enum';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
+import { DatePipe } from '@angular/common';
 import { Component, ElementRef, inject, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { FormArray, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 
 @Component({
@@ -20,6 +21,7 @@ export class SitePerformance implements OnInit {
     @ViewChild('excelInput') excelInput!: ElementRef<HTMLInputElement>;
 
     openTerminateModal = false;
+    showTeamWorkColumn = false;
 
     offSet = 0;
     pageSize = 10;
@@ -42,6 +44,7 @@ export class SitePerformance implements OnInit {
     date: Date = new Date();
     minDate: Date | undefined;
     maxDate: Date | undefined;
+    lastMinDate: Date | undefined;
 
     menuItems: any[] = [];
 
@@ -72,7 +75,8 @@ export class SitePerformance implements OnInit {
     constructor(
         private apiService: Apiservice,
         private messageService: MessageService,
-        private confirmationService: ConfirmationService
+        private confirmationService: ConfirmationService,
+        private datePipe: DatePipe
     ) {}
 
     getMenuItems() {
@@ -134,6 +138,7 @@ export class SitePerformance implements OnInit {
         this.minDate = new Date(2025, 0, 1);
         const today = new Date();
         this.maxDate = new Date(today);
+        this.lastMinDate = new Date(today);
     }
 
     performanceApi(data: any) {
@@ -174,6 +179,15 @@ export class SitePerformance implements OnInit {
         return new Date(year, month, 0).getDate();
     }
 
+    isCurrentMonth(date: Date): boolean{
+        const now = new Date();
+
+        return (
+            date.getMonth() === now.getMonth() &&
+            date.getFullYear() === now.getFullYear()
+        )
+    }
+
     fetchCandidateSitePerformance() {
         try {
             this.month = this.date ? this.date.getMonth() + 1 : null;
@@ -181,7 +195,10 @@ export class SitePerformance implements OnInit {
 
             this.totalDays = this.month && this.year ? this.getDaysInMonth(this.month, this.year) : null;
 
+            this.showTeamWorkColumn = this.isCurrentMonth(this.date);
+
             const data = {
+                ...this.filteredData,
                 offSet: this.offSet,
                 pageSize: this.pageSize,
                 month: this.month,
@@ -342,7 +359,7 @@ export class SitePerformance implements OnInit {
 
         performance.employeePerformance.totalScore = total;
 
-        performance.employeePerformance.remarks = total >= 80 ? 'A' : total >= 60 ? 'B+' : total >= 40 ? 'B' : total >= 20 ? 'C' : 'D';
+        performance.employeePerformance.remarks = total >= 91 ? 'A' : total >= 81 ? 'B+' : total >= 71 ? 'B' : total >= 61 ? 'C' : 'D';
     }
 
     submitPerformanceForm(performance: any) {
@@ -370,6 +387,7 @@ export class SitePerformance implements OnInit {
                     console.log(err);
 
                     if (err.status === 400) {
+                        this.performanceApi(this.filteredData);
                         this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
                     }
                 }
@@ -404,8 +422,14 @@ export class SitePerformance implements OnInit {
     onSubmit() {
         try {
             console.log(this.resignationRequestForm.value);
+
+            const lastDate = this.resignationDetails.at(0).get('lastWorkingDate')?.value;
+
+            const formatDate = this.datePipe.transform(lastDate, 'yyyy-MM-dd');
+
             this.resignationDetails.at(0).patchValue({
                 ...this.resignationDetails.value,
+                lastWorkingDate: formatDate,  
                 employmentId: this.employmentId
             });
 

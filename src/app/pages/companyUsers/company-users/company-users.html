@@ -73,7 +73,8 @@
     </div>
 </div>
 
-<p-dialog [header]="userId ? 'Edit Company User' : 'Add New Company User'" [modal]="true" [(visible)]="openCompanyUser" [style]="{width: '50rem'}" (onHide)="onDialogClose()">
+<p-dialog [header]="userId ? 'Edit Company User' : 'Add New Company User'" [modal]="true" [(visible)]="openCompanyUser" 
+    [style]="{width: '50rem'}" (onHide)="onDialogClose()">
     <form [formGroup]="companyUserForm" (ngSubmit)="onSubmit()">
         <div class="grid grid-cols-2 gap-2">
             <div class="col-span-1">

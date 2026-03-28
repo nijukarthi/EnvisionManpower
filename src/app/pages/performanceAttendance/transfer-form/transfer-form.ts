@@ -5,6 +5,7 @@ import { FormArray, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { FormFieldError } from '@/directives/form-field-error';
+import { DatePipe } from '@angular/common';
 
 @Component({
     selector: 'app-transfer-form',
@@ -25,7 +26,8 @@ export class TransferForm implements OnInit {
     constructor(
         private apiService: Apiservice,
         private messageService: MessageService,
-        private router: Router
+        private router: Router,
+        private datePipe: DatePipe
     ) {}
 
     transferForm = this.fb.group({
@@ -131,14 +133,24 @@ export class TransferForm implements OnInit {
         }
     }
 
+    private formatDate(date: any): string | null{
+        return this.datePipe.transform(date, 'yyyy-MM-dd');
+    }
+
     onSubmit() {
         try {
             console.log(this.transferForm.value);
+
+            const lastDate = this.transferDetails.at(0).get('transferFrom.lastWorkingDate')?.value;
+            const joiningDate = this.transferDetails.at(0).get('joiningDate')?.value;
+
             this.transferDetails.at(0).patchValue({
                 ...this.transferDetails.value,
                 transferFrom: {
-                    employmentId: this.employeeDetails.employeeDetails.employmentId
-                }
+                    employmentId: this.employeeDetails.employeeDetails.employmentId,
+                    lastWorkingDate: this.formatDate(lastDate)
+                },
+                joiningDate: this.formatDate(joiningDate)
             });
 
             const data = this.transferDetails.value;
