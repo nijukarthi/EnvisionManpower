@@ -15,6 +15,9 @@ import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 export class PoAssignTable implements OnInit {
   poList: any; 
   selectedPO: any;
+  filteredData: any;
+
+  statuses: any[] = [];
 
   offSet = 0;
   pageSize = 10;
@@ -62,6 +65,15 @@ export class PoAssignTable implements OnInit {
 
   ngOnInit(): void {
     this.fetchPOList();
+
+    this.statuses = [
+      { label: 'DRAFT', value: PurchaseOrderStatus.DRAFT },
+      { label: 'ACTIVE', value: PurchaseOrderStatus.ACTIVE },
+      { label: 'SUSPENDED', value: PurchaseOrderStatus.SUSPENDED },
+      { label: 'UTILIZED', value: PurchaseOrderStatus.UTILIZED },
+      { label: 'EXPIRED', value: PurchaseOrderStatus.EXPIRED },
+      { label: 'CANCELLED', value: PurchaseOrderStatus.CANCELLED }
+    ];
   }
 
   getMenuItems(po: any){
@@ -101,15 +113,8 @@ export class PoAssignTable implements OnInit {
     }
   }
 
-  fetchPOList(){
+  assignPOApi(data: any){
     try {
-      const data = {
-        offSet: this.offSet,
-        pageSize: this.pageSize
-      }
-
-      console.log(data);
-
       this.apiService.fetchPOList(data).subscribe({
         next: val => {
           console.log(val);
@@ -130,6 +135,21 @@ export class PoAssignTable implements OnInit {
           console.log(err);
         }
       })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  fetchPOList(){
+    try {
+      const data = {
+        offSet: this.offSet,
+        pageSize: this.pageSize
+      }
+
+      console.log(data);
+
+      this.assignPOApi(data);
     } catch (error) {
       console.log(error);
     }
@@ -180,10 +200,45 @@ export class PoAssignTable implements OnInit {
     }
   }
 
-  pageChange(event: any){
-    this.first = event.first;
-    this.offSet = event.first / event.rows;
-    this.pageSize = event.rows;
-    this.fetchPOList();
+  loadPOAssign(event: any){
+    try {
+      this.first = event.first;
+      this.offSet = event.first / event.rows;
+      this.pageSize = event.rows;
+  
+      const filters = event.filters;
+      console.log(filters);
+
+      const formatDate = (d: any) => {
+        if (!d) return null;
+        return typeof d === 'string' ? d : d.toLocaleDateString('en-CA');
+      };
+
+      const dateValue = filters?.date?.[0]?.value;
+
+      this.filteredData = {
+        offSet: this.offSet,
+        pageSize: this.pageSize,
+        poNumber: filters?.poNumber?.[0]?.value ?? '',
+        poStatus: filters?.status?.[0]?.value ?? null,
+        consultancyName: filters?.consultancyName?.[0]?.value ?? '',
+        dateFrom: Array.isArray(dateValue) ? formatDate(dateValue[0]) : null,
+        dateTo: Array.isArray(dateValue) ? formatDate(dateValue[1]) : null
+      }
+
+      console.log(this.filteredData);
+
+      this.assignPOApi(this.filteredData);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  updateRange(selectedValue: any, value: any[], index: number, filter: any) {
+    if (!value) value = [];
+
+    value[index] = selectedValue;
+
+    filter(value);
   }
 }

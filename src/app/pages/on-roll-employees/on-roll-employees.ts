@@ -6,6 +6,7 @@ import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core'
 import { FormArray, FormBuilder } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
+import { forkJoin } from 'rxjs';
 
 @Component({
     selector: 'app-on-roll-employees',
@@ -31,9 +32,13 @@ export class OnRollEmployees implements OnInit {
 
     statuses!: any[];
     menuItems: any[] = [];
+    consultancyRequestList: any[] = [];
+    selectedOnroll: any[] = [];
+    consultancyList: any[] = [];
  
     openPpeDetails = false;
     spnDetailsModal = false;
+    showConsulRequestModal = false;
 
     onrollEmployeeList: any;
     onrollPpeDetails: any;
@@ -74,6 +79,15 @@ export class OnRollEmployees implements OnInit {
         joiningDate: [''],
         lastWorkingDate: [null],
         employmentStatus: ['']
+    })
+
+    consultancyChangeForm = this.fb.group({
+        candidate: this.fb.group({
+            candidateId: [0]
+        }),
+        consultancy: this.fb.group({
+            userId: [0]
+        })
     })
 
     constructor(
@@ -125,7 +139,6 @@ export class OnRollEmployees implements OnInit {
         try {
             this.apiService.fetchOnRollCandidates(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.onrollEmployeeList = val?.data.data.map((onroll: any) => ({
                         ...onroll,
                         employmentDetails: {
@@ -135,7 +148,6 @@ export class OnRollEmployees implements OnInit {
                         }
                     }));
                     this.totalRecords = val?.data.length ?? 0;
-                    console.log(this.totalRecords);
 
                     this.cols = [
                         { field: 'employeeCode', header: 'Employee Code', customExportHeader: 'Employee Code' },
@@ -171,7 +183,6 @@ export class OnRollEmployees implements OnInit {
                 pageSize: this.pageSize,
                 employmentStatuses: ['ACTIVE']
             };
-            console.log(data);
 
             this.onrollEmployeeApi(data);
         } catch (error) {
@@ -207,12 +218,8 @@ export class OnRollEmployees implements OnInit {
                         export: true
                     };
 
-                    console.log(data);
-
                     this.apiService.fetchOnRollCandidates(data).subscribe({
                         next: (val) => {
-                            console.log(val);
-
                             this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Excel file successfully send to email' });
                         }
                     });
@@ -240,11 +247,8 @@ export class OnRollEmployees implements OnInit {
                 alternativeNumber: onroll.alternativeNumber
             };
 
-            console.log(data);
-
             this.apiService.updateOnboardCandidates(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Candidate Details Updated Successfully' });
                     setTimeout(() => {
                         this.onrollEmployeeApi(this.filteredData);
@@ -272,11 +276,9 @@ export class OnRollEmployees implements OnInit {
             const data = {
                 candidateId: this.candidateId
             };
-            console.log(data);
 
             this.apiService.fetchPpeDetails(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.onrollPpeDetails = val?.data;
                     this.populatePpeDetails();
                 },
@@ -310,7 +312,6 @@ export class OnRollEmployees implements OnInit {
     }
 
     addPpe() {
-        console.log('checking');
         const newPpeGroup = this.fb.group({
             ppeType: [''],
             size: ['']
@@ -326,11 +327,8 @@ export class OnRollEmployees implements OnInit {
                 ppeDetails: this.ppeDetails.value
             };
 
-            console.log(data);
-
             this.apiService.updatePpeDetails(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Successfully Updated PPE Details' });
                     this.openPpeDetails = false;
                     this.fetchActiveOnrollEmployees();
@@ -364,7 +362,6 @@ export class OnRollEmployees implements OnInit {
             this.pageSize = event.rows;
 
             const filters = event.filters;
-            console.log(filters);
 
             const formatDate = (d: any) => {
                 if (!d) return null;
@@ -380,6 +377,7 @@ export class OnRollEmployees implements OnInit {
                 candidateCode: filters?.candidateCode?.[0]?.value ?? null,
                 candidateName: filters?.candidateName?.[0]?.value ?? null,
                 consultancyName: filters?.consultancyName?.[0]?.value ?? null,
+                categoryName: filters?.categoryName?.[0]?.value ?? null,
                 demandCode: filters?.demandCode?.[0]?.value ?? null,
                 projectCode: this.getFilterValues(filters, 'projectCode'),
                 siteInchargeName: filters?.siteInchargeName?.[0]?.value ?? null,
@@ -393,8 +391,6 @@ export class OnRollEmployees implements OnInit {
                 joiningDateFrom: Array.isArray(dateValue) ? formatDate(dateValue[0]) : null,
                 joiningDateTo: Array.isArray(dateValue) ? formatDate(dateValue[1]) : null
             };
-
-            console.log(this.filteredData);
 
             this.onrollEmployeeApi(this.filteredData);
         } catch (error) {
@@ -442,7 +438,6 @@ export class OnRollEmployees implements OnInit {
         try {
             this.apiService.fetchSpnInfo('').subscribe({
                 next: val => {
-                    console.log(val);
                     this.spnInfoList = val?.data;
                 },
                 error: err => {
@@ -458,7 +453,6 @@ export class OnRollEmployees implements OnInit {
         try {
             this.apiService.fetchRoleInfoList('').subscribe({
                 next: val => {
-                    console.log(val);
                     this.envisionRoleList = val?.data;
                 },
                 error: err => {
@@ -474,7 +468,6 @@ export class OnRollEmployees implements OnInit {
         try {
             this.apiService.fetchProjectCodes('').subscribe({
                 next: val => {
-                    console.log(val);
                     this.projectCodesList = val?.data;
                 },
                 error: err => {
@@ -490,7 +483,6 @@ export class OnRollEmployees implements OnInit {
         try {
             this.spnDetailsModal = true;
             this.onrollEmployeeDetails = onroll;
-            console.log(this.onrollEmployeeDetails);
             this.fetchSpnInfo();
             this.fetchRolesList();
             this.fetchProjectCodes();
@@ -515,7 +507,6 @@ export class OnRollEmployees implements OnInit {
     }
 
     selectedSpn(spnId: number){
-        console.log(spnId);
         this.updateEmploymentForm.patchValue({
             ...this.updateEmploymentForm.value,
             spnId: spnId
@@ -532,14 +523,10 @@ export class OnRollEmployees implements OnInit {
 
     updateEmploymentDetails(){
         try {
-            console.log(this.updateEmploymentForm.value);
-
             const data = this.updateEmploymentForm.value;
 
             this.apiService.updateEmploymentDetails(data).subscribe({
                 next: val => {
-                    console.log(val);
-                    
                     this.messageService.add({ 
                         severity: 'success', 
                         summary: 'Success', 
@@ -561,11 +548,8 @@ export class OnRollEmployees implements OnInit {
             const formData = new FormData();
             formData.append('file', file);
 
-            console.log(formData);
-
             this.apiService.importCostPlusCandidates(formData).subscribe({
                 next: val => {
-                    console.log(val);
                     this.fetchActiveOnrollEmployees();
                     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Excel uploaded successfully' });
                 },
@@ -587,11 +571,8 @@ export class OnRollEmployees implements OnInit {
             const formData = new FormData();
             formData.append('file', file);
 
-            console.log(formData);
-
             this.apiService.importFixedCostCandidates(formData).subscribe({
                 next: val => {
-                    console.log(val);
                     this.fetchActiveOnrollEmployees();
                     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Excel uploaded successfully' });
                 },
@@ -612,7 +593,6 @@ export class OnRollEmployees implements OnInit {
         try {
             this.apiService.exportFixedCostCandidates().subscribe({
                 next: (val: Blob) => {
-                    console.log(val);
                     const url = window.URL.createObjectURL(val);
                     const a = document.createElement('a');
                     a.href = url;
@@ -642,7 +622,6 @@ export class OnRollEmployees implements OnInit {
         try {
             this.apiService.exportCostPlusCandidates().subscribe({
                 next: (val: Blob) => {
-                    console.log(val);
                     const url = window.URL.createObjectURL(val);
                     const a = document.createElement('a');
                     a.href = url;
@@ -668,6 +647,34 @@ export class OnRollEmployees implements OnInit {
         }
     }
 
+    fetchConsultancyList(){
+        try {
+            this.apiService.fetchConsultancyInfoList('').subscribe({
+                next: val => {
+                    console.log(val);
+                    this.consultancyList = val.data;
+                },
+                error: err => {
+                    console.log(err);
+                }
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    selectedEmployee(onroll: any){
+        console.log(onroll);
+        this.consultancyRequestList.push(onroll);
+        console.log(this.consultancyRequestList);
+        this.menuItems = this.getMenuItems();
+    }
+
+    unSelectedEmployee(){
+        this.consultancyRequestList = [];
+        this.menuItems = this.getMenuItems();
+    }
+
     openExcelPicker(type: 'FC' | 'CP'){
         this.selectedImportType = type;
         this.excelInput.nativeElement.click();
@@ -686,6 +693,15 @@ export class OnRollEmployees implements OnInit {
         }
 
         input.value = '';
+    }
+
+    openConsultancyRequest(){
+        try {
+            this.showConsulRequestModal = true;
+            this.fetchConsultancyList();
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     getMenuItems(){
@@ -726,12 +742,19 @@ export class OnRollEmployees implements OnInit {
                             }
                         ]
                     }
-                ]
+                ],
+                visible: this.currentUser !== UserGroups.SERVICEMANAGER
             },
             {
                 label: 'Export to Excel',
                 icon: 'pi pi-external-link',
                 command: () => this.exportToExcel()
+            },
+            {
+                label: 'Change Consultancy Request',
+                icon: 'pi pi-file-edit',
+                disabled: this.consultancyRequestList.length === 0,
+                command: () => this.openConsultancyRequest()
             }
         ]
     }
@@ -741,5 +764,55 @@ export class OnRollEmployees implements OnInit {
         this.ppeDetailsForm.reset();
         this.ppeDetails.clear();
         this.onrollPpeDetails = [];
+    }
+
+    onConsulDialogClose(){
+        this.consultancyRequestList = [];
+        this.selectedOnroll = [];
+    }
+
+    confirmConsultancyChange(){
+        try {
+            console.log(this.consultancyChangeForm.value);
+
+            const selectedConsultancyId = this.consultancyChangeForm.get('consultancy.userId')?.value;
+
+            if (!selectedConsultancyId) {
+                console.log('Please select consultancy');
+                return;
+            }
+
+            const requests = this.consultancyRequestList.map(candidate => {
+                const payload = {
+                    candidate: {
+                        candidateId: candidate.candidateId
+                    },
+                    consultancy: {
+                        userId: selectedConsultancyId
+                    }
+                };
+
+                return this.apiService.createChangeConsulRequest(payload);
+            });
+
+            forkJoin(requests).subscribe({
+                next: res => {
+                    console.log('All requests success:', res);
+                    this.consultancyChangeForm.reset();
+                    this.showConsulRequestModal = false;
+                    this.messageService.add({ severity: 'success', summary: 'Success', 
+                        detail: 'Consultancy Change Request Created Successfully' });
+                },
+                error: err => {
+                    console.log('One of the requests failed:', err);
+
+                    if (err.status === 400) {
+                        this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
+                    }
+                }
+            });
+        } catch (error) {
+            console.log(error);
+        }
     }
 }

@@ -54,9 +54,7 @@ export class Loginpage {
   }
 
     otpTimer(expireByString: string){
-        console.log(expireByString);
         const expireBy = new Date(expireByString).getTime();
-        console.log("expireBy:", expireBy);
 
         const interval = setInterval(() => {
             const currentTime = Date.now();
@@ -74,7 +72,6 @@ export class Loginpage {
             const seconds = totalSeconds % 60;
 
             this.otpTimeLeft = `${this.pad(minutes)}:${this.pad(seconds)}`;
-            // console.log(this.otpTimeLeft);
         }, 1000)
     }
 
@@ -102,13 +99,11 @@ export class Loginpage {
                     this.apiService.sendOTP(data).subscribe({
                     next: val => {
                         if(val.status == 200){
-                            console.log(val);
                             this.registerScreen = true;
                             this.loginScreen = false;
                             this.loginUserResponse = val.data;
                             this.otpTimer(this.loginUserResponse.expireBy);
                             return;
-                           /*  this.route.navigate(['/register']) */
                         }
                         this.registerScreen = false;
                         this.loginScreen = true;
@@ -146,7 +141,6 @@ export class Loginpage {
                         if(val.status == 200){
                            this.registerScreen = true;
                             this.loginScreen = false;
-                            console.log(val);
                             this.loginUserResponse = val;
                             this.otpTimer(this.loginUserResponse.expireBy);
                             return;
@@ -176,13 +170,10 @@ export class Loginpage {
 
     submitInterviewer(){
         try {
-            console.log(this.interviewerForm.value);
             if (this.interviewerForm.valid) {
                 const data = this.interviewerForm.value;
-                console.log(data);
                 this.apiService.sendInterviewerOtp(data).subscribe({
                     next: val => {
-                        console.log(val);
                         this.loginScreen = false;
                         this.registerInterviewerScreen = true;
                         this.loginUserResponse = val.data;
@@ -214,11 +205,9 @@ export class Loginpage {
                 this.userOtpForm.patchValue({
                     email: this.loginUserResponse.email
                 })
-                console.log(this.userOtpForm.value);
 
                 this.apiService.verifyUserOtp(this.userOtpForm.value).subscribe({
-                    next: (val: any) => {
-                        console.log(val);        
+                    next: (val: any) => { 
                         this.authService.checkSessionAndNavigate().subscribe(val => {
                             if(!val) return;
 
@@ -250,6 +239,7 @@ export class Loginpage {
                                     case UserGroups.PROJECTMANAGER:
                                     case UserGroups.RESOURCEMANAGER:
                                     case UserGroups.ACCOUNTSRECEIVABLETEAM:
+                                    case UserGroups.SERVICEMANAGER:
                                         this.route.navigate(['/home/manpower-request']);
                                 }
                             }
@@ -273,18 +263,15 @@ export class Loginpage {
 
     verifyInterviewerOtp(){
         try {
-            console.log(this.interviewerOtpForm.value);
             if (this.interviewerOtpForm.valid) {
                 this.interviewerOtpForm.patchValue({
                     phoneNumber: this.loginUserResponse.email
                 })
 
                 const data = this.interviewerOtpForm.value;
-                console.log(data);
 
                 this.apiService.verifyInterviewerOtp(data).subscribe({
                     next: val => {
-                        console.log(val);
                         this.authService.checkSessionAndNavigate().subscribe(val => {
                             if(!val) return;
 

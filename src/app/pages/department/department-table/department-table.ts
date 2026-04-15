@@ -67,11 +67,11 @@ export class DepartmentTable implements OnInit {
                 icon: 'pi pi-pencil',
                 command: () => this.editDepartment(this.selectedDepartment)
             },
-            {
-                label: 'Delete',
-                icon: 'pi pi-trash',
-                command: () => this.deleteDepartment(this.selectedDepartment)
-            }
+            // {
+            //     label: 'Delete',
+            //     icon: 'pi pi-trash',
+            //     command: () => this.deleteDepartment(this.selectedDepartment)
+            // }
         ];
     }
 
@@ -90,12 +90,10 @@ export class DepartmentTable implements OnInit {
             const data = {
                 userGroupId: userGroupId
             };
-            console.log(data);
+
             this.apiService.findUserGroup(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.departmentHeadList = val?.data;
-                    console.log('departmentHeadList', this.departmentHeadList);
                 },
                 error: (err) => {
                     console.log(err);
@@ -110,7 +108,6 @@ export class DepartmentTable implements OnInit {
         try {
             this.apiService.fetchActiveDepartments('').subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.departmentList = val.data;
                 },
                 error: (err) => {
@@ -144,7 +141,6 @@ export class DepartmentTable implements OnInit {
     }
 
     onSubmit() {
-        console.log(this.departmentForm.value);
         if (!this.departmentId) {
             if (this.departmentForm.valid) {
                 const data = {
@@ -155,7 +151,6 @@ export class DepartmentTable implements OnInit {
                 };
                 this.apiService.createNewDepartment(data).subscribe({
                     next: (val) => {
-                        console.log(val);
                         this.messageService.add({
                             severity: 'success',
                             summary: 'Success',
@@ -181,13 +176,11 @@ export class DepartmentTable implements OnInit {
                 this.departmentForm.patchValue({
                     departmentId: this.departmentId.departmentId
                 });
-                console.log(this.departmentForm.value);
 
                 const data = this.departmentForm.value;
-                console.log(data);
+
                 this.apiService.updateDepartment(data).subscribe({
                     next: (res) => {
-                        console.log(res);
                         this.messageService.add({
                             severity: 'success',
                             summary: 'Success',
@@ -242,7 +235,6 @@ export class DepartmentTable implements OnInit {
                 };
                 this.apiService.deleteDepartment(data).subscribe({
                     next: (val) => {
-                        console.log(val);
                         this.fetchActiveDepartments();
                     },
                     error: (err) => {

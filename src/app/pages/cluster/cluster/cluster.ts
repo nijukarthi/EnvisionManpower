@@ -87,7 +87,6 @@ export class Cluster implements OnInit {
         try {
             this.apiService.getActiveClusters('').subscribe({
                 next: (val: any) => {
-                    console.log(val);
                     this.clusterList = val?.data;
                 },
                 error: (err) => {
@@ -105,7 +104,6 @@ export class Cluster implements OnInit {
         };
         this.apiService.findUserGroup(data).subscribe({
             next: (val: any) => {
-                console.log(val);
                 this.userList = val.data;
             },
             error: (err) => {
@@ -125,7 +123,6 @@ export class Cluster implements OnInit {
     }
 
     editCluster(cluster: any) {
-        console.log(cluster);
         try {
             this.clusterId = cluster.clusterId;
             this.openCluster = true;
@@ -146,7 +143,6 @@ export class Cluster implements OnInit {
 
     onSubmit() {
         try {
-            console.log(this.clusterForm.value);
             if (!this.clusterId) {
                 if (this.clusterForm.valid) {
                     let data = {
@@ -156,10 +152,9 @@ export class Cluster implements OnInit {
                             userId: this.clusterForm.get('clusterHead.userId').value
                         }
                     };
-                    console.log(data);
+
                     this.apiService.createNewCluster(data).subscribe({
                         next: (val) => {
-                            console.log(val);
                             this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Cluster Created Successfully' });
                             this.openCluster = false;
                             this.clusterForm.reset();
@@ -192,7 +187,6 @@ export class Cluster implements OnInit {
 
                     this.apiService.updateCluster(data).subscribe({
                         next: (val) => {
-                            console.log(val);
                             this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Cluster Updated Successfully' });
                             this.openCluster = false;
                             this.clusterForm.reset();
@@ -234,7 +228,6 @@ export class Cluster implements OnInit {
                     };
                     this.apiService.deleteCluster(data).subscribe({
                         next: (val) => {
-                            console.log(val);
                             this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Cluster Deleted Successfully' });
                             this.fetchActiveCluster();
                         },

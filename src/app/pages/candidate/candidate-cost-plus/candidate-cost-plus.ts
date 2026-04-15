@@ -49,7 +49,6 @@ export class CandidateCostPlus implements OnInit {
 
       this.apiService.fetchActiveCostPlusCandidates(data).subscribe({
         next: val => {
-          console.log(val);
           this.costPlusCandidateList = val?.data?.data;
           this.totalRecords = val?.data.length ?? 0;
         }, 
@@ -86,7 +85,6 @@ export class CandidateCostPlus implements OnInit {
 
           this.apiService.deleteCandidate(data).subscribe({
             next: val => {
-              console.log(val);
               this.messageService.add({severity: 'success', summary: 'Success', detail: `${candidate.candidateCode} Deleted Successfully`});
               this.fetchActiveCostPlusCandidates();
             },

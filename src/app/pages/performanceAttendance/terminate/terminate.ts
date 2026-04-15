@@ -85,7 +85,6 @@ export class Terminate implements OnInit {
         try {
             this.apiService.fetchResignationList(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.resignationList = val?.data?.data;
                     this.totalRecords = val?.data?.length ?? 0;
                 },
@@ -105,7 +104,6 @@ export class Terminate implements OnInit {
                 pageSize: this.pageSize,
                 resignationStatuses: [102]
             };
-            console.log(data);
 
             this.resignationApi(data);
         } catch (error) {
@@ -114,18 +112,13 @@ export class Terminate implements OnInit {
     }
 
     siteInchargeNDC(selectedValue: boolean, resignationId: number) {
-        console.log(selectedValue);
-
         const data = {
             resignationId: resignationId,
             updateNdc: selectedValue
         };
 
-        console.log(data);
-
         this.apiService.siteInchargeNDC(data).subscribe({
             next: (val) => {
-                console.log(val);
                 this.messageService.add({ severity: 'success', summary: 'Success', detail: 'NDC Updated Successfully' });
                 this.fetchResignationList();
             },
@@ -145,11 +138,8 @@ export class Terminate implements OnInit {
             updateNdc: selectedValue
         };
 
-        console.log(data);
-
         this.apiService.consultancyNDC(data).subscribe({
             next: (val) => {
-                console.log(val);
                 this.messageService.add({ severity: 'success', summary: 'Success', detail: 'NDC Updated Successfully' });
                 this.fetchResignationList();
             },
@@ -170,11 +160,8 @@ export class Terminate implements OnInit {
                 approvalStatus: type === 'Accepted' ? ApprovalStatus.ACCEPTED : ApprovalStatus.REJECTED
             };
 
-            console.log(data);
-
             this.apiService.approveResignClusterHead(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     if (type === 'Accepted') {
                         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Resignation Request Accepted' });
                     } else {
@@ -197,11 +184,9 @@ export class Terminate implements OnInit {
                 resignationId: resignationId,
                 approvalStatus: type === 'Accepted' ? ApprovalStatus.ACCEPTED : ApprovalStatus.REJECTED
             };
-            console.log(data);
 
             this.apiService.approveResignDeptHead(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     if (type === 'Accepted') {
                         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Resignation Request Accepted' });
                     } else {
@@ -219,7 +204,6 @@ export class Terminate implements OnInit {
     }
 
     selectedEmployee(resignation: any) {
-        console.log(resignation);
         this.selectedResignDetails = resignation;
         if (resignation.resignationStatus === TransferStatus.SCHEDULED) {
             this.selectedResignationId = resignation.resignationId;
@@ -267,11 +251,9 @@ export class Terminate implements OnInit {
                 ...this.updateResignationForm.value,
                 newLastWorkingDate: formatDate
             };
-            console.log(data);
 
             this.apiService.updateResignation(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Resignation Details Updated Successfully' });
                     this.resignationModal = false;
                     this.updateResignationForm.reset();
@@ -299,10 +281,8 @@ export class Terminate implements OnInit {
                     const data = {
                         id: this.selectedResignationId
                     };
-                    console.log(data);
                     this.apiService.forceResignation(data).subscribe({
                         next: (val) => {
-                            console.log(val);
                             this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Employee resigned Successfully' });
                             this.fetchResignationList();
                             this.selectedResignation = [];
@@ -327,7 +307,6 @@ export class Terminate implements OnInit {
     }
 
     cancelResignationPopup() {
-        console.log('cancel request');
         this.confirmationService.confirm({
             header: 'Are you sure?',
             accept: () => {
@@ -336,11 +315,8 @@ export class Terminate implements OnInit {
                         id: this.selectedResignationId
                     };
 
-                    console.log(data);
-
                     this.apiService.cancelResignation(data).subscribe({
                         next: (val) => {
-                            console.log(val);
                             this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Resignation Cancelled Successfully' });
                             this.fetchResignationList();
                             this.selectedResignation = [];
@@ -416,7 +392,6 @@ export class Terminate implements OnInit {
             this.pageSize = event.rows;
 
             const filters = event.filters;
-            console.log(filters);
 
             const formatDate = (d: any) => {
                 if (!d) return null;
@@ -437,8 +412,6 @@ export class Terminate implements OnInit {
                 lastWorkingFrom: Array.isArray(dateValue) ? formatDate(dateValue[0]) : null,
                 lastWorkingTo: Array.isArray(dateValue) ? formatDate(dateValue[1]) : null
             };
-
-            console.log(payload);
 
             this.resignationApi(payload);
         } catch (error) {

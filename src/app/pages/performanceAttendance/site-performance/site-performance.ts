@@ -145,7 +145,6 @@ export class SitePerformance implements OnInit {
         try {
             this.apiService.fetchCandidateSitePerformance(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.sitePerformancesList = val?.data?.data;
                     this.totalRecords = val?.data?.length ?? 0;
 
@@ -204,7 +203,6 @@ export class SitePerformance implements OnInit {
                 month: this.month,
                 year: this.year
             };
-            console.log(data);
 
             this.performanceApi(data);
         } catch (error) {
@@ -234,15 +232,12 @@ export class SitePerformance implements OnInit {
                 year: this.year
             };
 
-            console.log(payload);
-
             const formData = new FormData();
             formData.append('file', file);
             formData.append('payload', new Blob([JSON.stringify(payload)], { type: 'application/json' }));
 
             this.apiService.uploadSitePerformanceExcel(formData).subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.fetchCandidateSitePerformance();
 
                     this.messageService.add({
@@ -290,11 +285,8 @@ export class SitePerformance implements OnInit {
                         export: true
                     };
 
-                    console.log(data);
-
                     this.apiService.fetchCandidateSitePerformance(data).subscribe({
                         next: (val) => {
-                            console.log(val);
                             this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Excel file successfully send to email' });
                         }
                     });
@@ -364,8 +356,6 @@ export class SitePerformance implements OnInit {
 
     submitPerformanceForm(performance: any) {
         try {
-            console.log(performance);
-
             const data = {
                 employmentId: performance.employmentDetails.employmentId,
                 year: this.year,
@@ -375,11 +365,8 @@ export class SitePerformance implements OnInit {
                 performanceDetails: performance.employeePerformance.performanceDetails
             };
 
-            console.log(data);
-
             this.apiService.updateSitePerformanceDetails(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Successfully Updated Site Performance Details' });
                     this.performanceApi(this.filteredData);
                 },
@@ -407,22 +394,17 @@ export class SitePerformance implements OnInit {
     }
 
     selectedEmployee(performance: any) {
-        console.log(performance);
         this.employeeDetails = performance.employmentDetails;
         this.menuItems = this.getMenuItems();
-        console.log(this.employeeDetails);
     }
 
     unSelectedEmployee() {
         this.employeeDetails = null;
         this.menuItems = this.getMenuItems();
-        console.log(this.employeeDetails);
     }
 
     onSubmit() {
         try {
-            console.log(this.resignationRequestForm.value);
-
             const lastDate = this.resignationDetails.at(0).get('lastWorkingDate')?.value;
 
             const formatDate = this.datePipe.transform(lastDate, 'yyyy-MM-dd');
@@ -434,11 +416,9 @@ export class SitePerformance implements OnInit {
             });
 
             const data = this.resignationDetails.value;
-            console.log(data);
 
             this.apiService.employeeResignation(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Resignation Request Created Successfully' });
                     this.openTerminateModal = false;
                     this.resignationRequestForm.reset();
@@ -527,7 +507,6 @@ export class SitePerformance implements OnInit {
             this.pageSize = event.rows;
 
             const filters = event.filters;
-            console.log(filters);
 
             const formatDate = (d: any) => {
                 if (!d) return null;
@@ -545,6 +524,7 @@ export class SitePerformance implements OnInit {
                 candidateCode: filters?.candidateCode?.[0]?.value ?? null,
                 candidateName: filters?.candidateName?.[0]?.value ?? null,
                 consultancyName: filters?.consultancyName?.[0]?.value ?? null,
+                categoryName: filters?.categoryName?.[0]?.value ?? null,
                 projectCode: this.getFilterValues(filters, 'projectCode'),
                 siteInchargeName: filters?.siteInchargeName?.[0]?.value ?? null,
                 clusterName: filters?.clusterName?.[0]?.value ?? null,
@@ -557,8 +537,6 @@ export class SitePerformance implements OnInit {
                 joiningDateFrom: Array.isArray(dateValue) ? formatDate(dateValue[0]) : null,
                 joiningDateTo: Array.isArray(dateValue) ? formatDate(dateValue[1]) : null
             };
-
-            console.log(this.filteredData);
 
             this.performanceApi(this.filteredData);
         } catch (error) {

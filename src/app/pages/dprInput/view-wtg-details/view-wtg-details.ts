@@ -4,7 +4,7 @@ import { Shared } from '@/service/shared';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MessageService } from 'primeng/api';
+import { FilterService, MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-view-wtg-details',
@@ -29,6 +29,8 @@ export class ViewWtgDetails implements OnInit {
 
   wtgDetailsModal = false;
 
+  maxDate: Date | undefined;
+
   selectedWTGActivity: string | null = null;
 
   menuItems: any[] = [];
@@ -46,7 +48,10 @@ export class ViewWtgDetails implements OnInit {
 
   constructor(private router: Router, 
     private apiService: Apiservice, 
-    private route: ActivatedRoute, private messageService: MessageService){}
+    private route: ActivatedRoute, 
+    private messageService: MessageService,
+    private filterService: FilterService
+  ){}
 
   updateWtgDetailsForm = this.fb.group({
     wtgDetails: this.fb.array([this.wtgArray()])   
@@ -96,14 +101,16 @@ export class ViewWtgDetails implements OnInit {
     }
   ];
 
+  dateFilterOptions = [
+    { label: 'Blank', value: 'isEmpty' }
+  ];
+
   ngOnInit(): void {
     this.dprProjWtgDetails = history.state;
-    console.log(this.dprProjWtgDetails);
     this.menuItems = this.getMenuItems();
 
     this.route.paramMap.subscribe((param) => {
       const id = param.get('id');
-      console.log(id);
 
       if (id) {
         this.selectedDprProjId = Number(id);
@@ -111,13 +118,20 @@ export class ViewWtgDetails implements OnInit {
     });
 
     this.fetchDprProjWTGList();
+
+    const today = new Date();
+    this.maxDate = new Date(today);
+
+    this.filterService.register('isEmpty', (value: any) => {
+      console.log(value);
+      return value === null || value === undefined || value === '';
+    });
   }
 
   dprProjWtgApi(data: any){
     try {
       this.apiService.fetchDprProjWTGList(data).subscribe({
         next: val => {
-          console.log(val);
           this.dprProjectWtgList = val?.data?.data.map((wtg: any) => {
 
             wtg.wtgFoundation ??= {};
@@ -180,7 +194,6 @@ export class ViewWtgDetails implements OnInit {
           });
 
           this.originalDprProjectWtgList = structuredClone(this.dprProjectWtgList);
-          console.log(this.originalDprProjectWtgList);
           this.totalRecords = val?.data?.length ?? 0;
         },
         error: err => {
@@ -200,8 +213,6 @@ export class ViewWtgDetails implements OnInit {
         offSet: this.offSet,
         pageSize: this.pageSize
       }
-
-      console.log(data);
 
       this.dprProjWtgApi(data);
     } catch (error) {
@@ -229,11 +240,9 @@ export class ViewWtgDetails implements OnInit {
         wtgDetailId: this.selectedWtgDetails.wtgDetailId
       })
       const data = this.wtgDetails.value;
-      console.log(data);
 
       this.apiService.updateWtgDetails(data).subscribe({
         next: val => {
-          console.log(val);
           this.wtgDetailsModal = false;
           this.fetchDprProjWTGList();
           this.messageService.add({severity: 'success', summary: 'Success', detail: 'WTG Details Updated Successfully'});
@@ -262,6 +271,11 @@ export class ViewWtgDetails implements OnInit {
           return !this.checkEqual(row.wtgProduction, originalRow.wtgProduction);
         })
 
+        if (updatedRows.length === 0) {
+          this.messageService.add({severity: 'error', summary: 'Error', detail: 'Please update at least one date'});
+          return;
+        }
+
         const data = updatedRows.map((wtg: any) => ({
           wtgDetailId: wtg?.wtgDetailId,
           nacelleProductionActual: this.formatDate(wtg.wtgProduction.nacelleProductionActual),
@@ -270,11 +284,8 @@ export class ViewWtgDetails implements OnInit {
           towerProductionActual: this.formatDate(wtg.wtgProduction.towerProductionActual)
         }))
   
-        console.log(data);
-  
         this.apiService.updateProdActivity(data).subscribe({
           next: val => {
-            console.log(val);
             this.fetchDprProjWTGList();
             this.messageService.add({severity: 'success', summary: 'Success', detail: 'Production Task Updated Successfully'});
           },
@@ -300,6 +311,11 @@ export class ViewWtgDetails implements OnInit {
           return !this.checkEqual(row.wtgQuality, originalRow.wtgQuality);
         })
 
+        if (updatedRows.length === 0) {
+          this.messageService.add({severity: 'error', summary: 'Error', detail: 'Please update at least one date'});
+          return;
+        }
+
         const data = updatedRows.map((wtg: any) => ({
           wtgDetailId: wtg.wtgDetailId,
           nacelleFinalQcActual: this.formatDate(wtg.wtgQuality.nacelleFinalQcActual),
@@ -320,11 +336,8 @@ export class ViewWtgDetails implements OnInit {
           towerMdccActual: this.formatDate(wtg.wtgQuality.towerMdccActual)
         }));
 
-        console.log(data);
-
         this.apiService.updateQualActivity(data).subscribe({
           next: val => {
-            console.log(val);
             this.fetchDprProjWTGList();
             this.messageService.add({severity: 'success', summary: 'Success', detail: 'Quality Task Updated Successfully'});
           },
@@ -351,6 +364,11 @@ export class ViewWtgDetails implements OnInit {
           return !this.checkEqual(row.wtgDispatch, originalRow.wtgDispatch);
         });
 
+        if (updatedRows.length === 0) {
+          this.messageService.add({severity: 'error', summary: 'Error', detail: 'Please update at least one date'});
+          return;
+        }
+
         const data = updatedRows.map((wtg: any) => ({
           wtgDetailId: wtg.wtgDetailId,
           nacelleDispatchActual: this.formatDate(wtg.wtgDispatch.nacelleDispatchActual),
@@ -359,11 +377,8 @@ export class ViewWtgDetails implements OnInit {
           towerDispatchActual: this.formatDate(wtg.wtgDispatch.towerDispatchActual)
         }));
 
-        console.log(data);
-
         this.apiService.updateDispatchActivity(data).subscribe({
           next: val => {
-            console.log(val);
             this.fetchDprProjWTGList();
             this.messageService.add({severity: 'success', summary: 'Success', detail: 'Dispatch Task Updated Successfully'});
           },
@@ -388,7 +403,12 @@ export class ViewWtgDetails implements OnInit {
           )
 
           return !this.checkEqual(row.wtgReceiving, originalRow.wtgReceiving);
-        })
+        });
+
+        if (updatedRows.length === 0) {
+          this.messageService.add({severity: 'error', summary: 'Error', detail: 'Please update at least one date'});
+          return;
+        }
 
         const data = updatedRows.map((wtg: any) => ({
           wtgDetailId: wtg.wtgDetailId,
@@ -402,11 +422,8 @@ export class ViewWtgDetails implements OnInit {
           towerMvcDate: this.formatDate(wtg.wtgReceiving.towerMvcDate)
         }));
 
-        console.log(data);
-
         this.apiService.updateReceivingActivity(data).subscribe({
           next: val => {
-            console.log(val);
             this.fetchDprProjWTGList();
             this.messageService.add({severity: 'success', summary: 'Success', detail: 'Receiving Task Updated Successfully'});
           },
@@ -433,16 +450,18 @@ export class ViewWtgDetails implements OnInit {
           return !this.checkEqual(row.wtgFoundation, originalRow.wtgFoundation);
         });
 
+        if (updatedRows.length === 0) {
+          this.messageService.add({severity: 'error', summary: 'Error', detail: 'Please update at least one date'});
+          return;
+        }
+
         const data = updatedRows.map((wtg: any) => ({
           wtgDetailId: wtg.wtgDetailId,
           foundationDate: this.formatDate(wtg.wtgFoundation.foundationDate)
         }));
 
-        console.log(data);
-
         this.apiService.updateFoundationActivity(data).subscribe({
           next: val => {
-            console.log(val);
             this.fetchDprProjWTGList();
             this.messageService.add({severity: 'success', summary: 'Success', detail: 'Foundation Task Updated Successfully'});
           },
@@ -467,7 +486,12 @@ export class ViewWtgDetails implements OnInit {
           )
 
           return !this.checkEqual(row.wtgInstallation, originalRow.wtgInstallation)
-        })
+        });
+
+        if (updatedRows.length === 0) {
+          this.messageService.add({severity: 'error', summary: 'Error', detail: 'Please update at least one date'});
+          return;
+        }
 
         const data = updatedRows.map((wtg: any) => ({
           wtgDetailId: wtg.wtgDetailId,
@@ -476,11 +500,8 @@ export class ViewWtgDetails implements OnInit {
           mccSignOffDate: this.formatDate(wtg?.wtgInstallation?.mccSignOffDate)
         }));
 
-        console.log(data);
-
         this.apiService.updateInstallationActivity(data).subscribe({
           next: val => {
-            console.log(val);
             this.fetchDprProjWTGList();
             this.messageService.add({severity: 'success', summary: 'Success', detail: 'Installation Task Updated Successfully'});
           },
@@ -505,7 +526,12 @@ export class ViewWtgDetails implements OnInit {
           );
 
           return !this.checkEqual(row.wtgCommissioning, originalRow.wtgCommissioning);
-        })
+        });
+
+        if (updatedRows.length === 0) {
+          this.messageService.add({severity: 'error', summary: 'Error', detail: 'Please update at least one date'});
+          return;
+        }
 
         const data = updatedRows.map((wtg: any) => ({
           wtgDetailId: wtg.wtgDetailId,
@@ -516,11 +542,8 @@ export class ViewWtgDetails implements OnInit {
           hotoDate: this.formatDate(wtg.wtgCommissioning.hotoDate)
         }));
 
-        console.log(data);
-
         this.apiService.updateCommissioningActivity(data).subscribe({
           next: val => {
-            console.log(val);
             this.fetchDprProjWTGList();
             this.messageService.add({severity: 'success', summary: 'Success', detail: 'Commissioning Task Updated Successfully'});
           },
@@ -581,7 +604,6 @@ export class ViewWtgDetails implements OnInit {
 
   wtgDetailsMenu(event: Event, menu: any, wtg: any){
     this.selectedWtgDetails = wtg;
-    console.log(this.selectedWtgDetails);
     menu.toggle(event);
   }
 
@@ -629,15 +651,59 @@ export class ViewWtgDetails implements OnInit {
     const filters = event.filters;
     console.log(filters);
 
+    const wtgLocationFilter = filters?.wtgLocation?.[0];
+    console.log(wtgLocationFilter);
+
+    const wtgModelFilter = filters?.wtgModel?.[0];
+    console.log(wtgModelFilter);
+
+    const foundationFilter = filters?.foundationDate?.[0];
+    console.log(foundationFilter);
+
+    const installationFilter = filters?.installationDate?.[0];
+    console.log(installationFilter);
+
+    const mccFilter = filters?.mccDate?.[0];
+    console.log(mccFilter);
+
+    const mccSignOffFilter = filters?.mccSignOff?.[0];
+    console.log(mccSignOffFilter);
+
+    const preCommissioningFilter = filters?.preCommissioningDate?.[0];
+    console.log(preCommissioningFilter);
+
+    const commissioningFilter = filters?.commissioningDate?.[0];
+    console.log(commissioningFilter);
+
+    const stptFilter = filters?.stptDate?.[0];
+    console.log(stptFilter);
+
+    const stptSignOffFilter = filters?.stptSignOffDate?.[0];
+    console.log(stptSignOffFilter);
+
+    const hotoFilter = filters?.hotoDate?.[0];
+    console.log(hotoFilter);
+
     this.filteredData = {
       dprProjectDetailsId: this.selectedDprProjId,
       activity: this.selectedWTGActivity,
       offSet: this.offSet,
       pageSize: this.pageSize,
-      wtgNumber: filters?.wtgNumber?.[0]?.value ?? null,
-      wtgLocation: filters?.wtgLocation?.[0]?.value ?? null,
-      maximoId: filters?.maximoId?.[0]?.value ?? null,
-      towerModel: filters?.wtgModel?.[0]?.value ?? null
+      filters: {
+        wtgNumber: filters?.wtgNumber?.[0]?.value ?? null,
+        wtgLocation: wtgLocationFilter?.matchMode === 'isEmpty' ? 'NULL' : wtgLocationFilter?.value ?? null,
+        maximoId: filters?.maximoId?.[0]?.value ?? null,
+        towerModel: wtgModelFilter?.matchModel === 'isEmpty' ? 'NULL' : wtgModelFilter?.value ?? null,
+        foundationDate: foundationFilter?.matchMode === 'isEmpty' ? 'NULL' : foundationFilter?.value ?? null,
+        installationDate: installationFilter?.matchMode === 'isEmpty' ? 'NULL' : installationFilter?.value ?? null,
+        mccDate: mccFilter?.matchMode === 'isEmpty' ? 'NULL' : mccFilter?.value ?? null,
+        mccSignOffDate: mccSignOffFilter?.matchMode === 'isEmpty' ? 'NULL' : mccSignOffFilter?.value ?? null,
+        preCommissioningDate: preCommissioningFilter?.matchMode === 'isEmpty' ? 'NULL' : preCommissioningFilter?.value ?? null,
+        commissioningDate: commissioningFilter?.matchMode === 'isEmpty' ? 'NULL' : commissioningFilter?.value ?? null,
+        stptDate: stptFilter?.matchMode === 'isEmpty' ? 'NULL' : stptFilter?.value ?? null,
+        stptSignOffDate: stptSignOffFilter?.matchMode === 'isEmpty' ? 'NULL' : stptSignOffFilter?.value ?? null,
+        hotoDate: hotoFilter?.matchMode === 'isEmpty' ? 'NULL' : hotoFilter?.value ?? null
+      }
     }
 
     console.log(this.filteredData);

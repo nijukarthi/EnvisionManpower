@@ -5,6 +5,7 @@
         <div class="flex gap-2">
             @if (currentUser !== USERGROUPS.READONLYADMIN){
                 <p-button label="Add Role" icon="pi pi-plus" (click)="addRoles()" />
+                <p-button icon="pi pi-external-link" label="Export to Excel" (click)="exportToExcel()" />
             }
             <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
         </div>

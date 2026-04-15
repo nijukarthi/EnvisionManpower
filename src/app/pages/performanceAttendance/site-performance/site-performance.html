@@ -69,6 +69,12 @@
                     </th>
                     <th>
                         <div class="flex items-center justify-between">
+                            <span>Category Name</span>
+                            <p-columnFilter type="text" field="categoryName" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
                             <span>Project Code</span>
                             <p-columnFilter type="text" field="projectCode" display="menu" />
                         </div>
@@ -161,7 +167,7 @@
                     }
                     <th>Total Sum</th>
                     <th>Rating</th>
-                    @if (currentUser !== USERGROUPS.READONLYADMIN) {
+                    @if (currentUser !== USERGROUPS.READONLYADMIN && currentUser !== USERGROUPS.SERVICEMANAGER) {
                         <th alignFrozen="right" pFrozenColumn>Actions</th>
                     }
                 </tr>
@@ -178,6 +184,7 @@
                     <td pFrozenColumn alignFrozen="left">{{ performance.candidate?.candidateCode || '-' }}</td>
                     <td pFrozenColumn alignFrozen="left">{{ performance.candidate?.candidateName || '-' }}</td>
                     <td>{{ performance.candidate?.consultancy?.consultancyName || '-' }}</td>
+                    <td>{{ performance.candidate?.category?.categoryName || '-' }}</td>
                     <td>{{ performance.employmentDetails.project.projectCode || '-' }}</td>
                     <td>{{ performance.employmentDetails.siteIncharge.userName || '-' }}</td>
                     <td>{{ performance.employmentDetails.project.siteName || '-' }}</td>
@@ -229,7 +236,7 @@
                             <ng-template #output> {{ performance.employeePerformance.remarks ?? '-' }} </ng-template>
                         </p-cellEditor>
                     </td>
-                    @if (currentUser !== USERGROUPS.READONLYADMIN) {
+                    @if (currentUser !== USERGROUPS.READONLYADMIN && currentUser !== USERGROUPS.SERVICEMANAGER) {
                         <td class="flex items-center justify-center gap-2" pFrozenColumn alignFrozen="right">
                             @if (!editing) {
                             <button pButton pRipple type="button" icon="pi pi-pencil" pInitEditableRow rounded severity="secondary" (click)="editPerformance(performance)"></button>

@@ -26,6 +26,9 @@ export class Fullfillreq implements OnInit {
  demandFullfillList: any;
  envisionRoleList: any;
  requisitionDetails: any;
+ filteredData: any;
+
+ currentUser = Number(sessionStorage.getItem('userGroupId'));
 
  loggedUserGroupId = Number(sessionStorage.getItem('userGroupId'));
   selectedState:any = "";
@@ -40,17 +43,10 @@ export class Fullfillreq implements OnInit {
     this.fetchEnvisionRolesInfoList();
   }
 
-  fetchDemandFullFillment(){
-    try {    
-      const data = {
-        offSet: this.offSet,
-        pageSize: this.pageSize
-      }
-      console.log(data);
-  
+  assignStandardRoleApi(data: any){
+    try {
       this.apiService.assignRoleForDemand(data).subscribe({
         next: val => {
-          console.log(val);
           this.demandFullfillList = val?.data?.data;
           this.totalRecords = val?.data?.length ?? 0;
         },
@@ -63,11 +59,23 @@ export class Fullfillreq implements OnInit {
     }
   }
 
+  fetchDemandFullFillment(){
+    try {    
+      const data = {
+        offSet: this.offSet,
+        pageSize: this.pageSize
+      }
+  
+      this.assignStandardRoleApi(data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   fetchEnvisionRolesInfoList(){
     try {  
       this.apiService.fetchRoleInfoList('').subscribe({
         next: val => {
-          console.log(val);
           this.envisionRoleList = val.data;
         },
         error: err => {
@@ -81,16 +89,13 @@ export class Fullfillreq implements OnInit {
 
   assignEnvisionRoles(demandId: number, event: any){
     try {  
-      console.log(demandId, event);
-  
-      const data = {
+        const data = {
         demandId: demandId,
         envisionRoleId: event
       }
   
       this.apiService.assignEnvisionRoles(data).subscribe({
         next: val => {
-          console.log(val);
           this.messageService.add({severity: 'success', summary: 'Success', detail: 'Role Assigned Successfully'});
           this.fetchDemandFullFillment();
         },
@@ -117,7 +122,6 @@ export class Fullfillreq implements OnInit {
 
       this.apiService.viewRequisition(data).subscribe({
         next: val => {
-          console.log(val);
           this.requisitionDetails = val.data;
         },
         error: err => {
@@ -129,11 +133,28 @@ export class Fullfillreq implements OnInit {
     }
   }
 
-  pageChange(event: any){
-    this.first = event.first;
-    this.offSet = event.first / event.rows;
-    this.pageSize = event.rows;
-    this.fetchDemandFullFillment();
+  loadStandardRole(event: any){
+    try {
+      this.first = event.first;
+      this.offSet = event.first / event.rows;
+      this.pageSize = event.rows;
+  
+      const filters = event.filters;
+  
+      this.filteredData = {
+        offSet: this.offSet,
+        pageSize: this.pageSize,
+        demandCode: filters?.demandCode?.[0]?.value ?? '',
+        spnCode: filters?.spnCode?.[0]?.value ?? '',
+        spnDescription: filters?.spnDescription?.[0].value ?? '',
+        experience: filters?.experience?.[0].value ?? ''
+      }
+
+  
+      this.assignStandardRoleApi(this.filteredData);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
 }

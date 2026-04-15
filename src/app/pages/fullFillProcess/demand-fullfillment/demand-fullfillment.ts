@@ -23,12 +23,21 @@ export class DemandFullfillment implements OnInit {
 
   demandFullfillmentList: any;
   requisitionDetails: any;
+  filteredData: any;
+
+  statuses: any[] = [];
 
   openViewRequisition = false;
 
   UserGroups = UserGroups;
 
   currentUserRole = Number(sessionStorage.getItem('userGroupId'));
+
+  filters = {
+    status: [{ value: [102], matchMode: 'equals' }]
+  };
+
+  selectedStatuses: number[] = [102];
 
   statusMap: any = {
     102: { label: 'Processing', severity: 'warn' },
@@ -42,6 +51,12 @@ export class DemandFullfillment implements OnInit {
 
   ngOnInit(): void {
     this.fetchDemandFullfillment();
+
+    this.statuses = [
+      { label: 'Processing', value: 102 },
+      { label: 'Completed', value: 200 },
+      { label: 'Rejected', value: 406 }
+    ];
   }
 
 
@@ -96,7 +111,6 @@ export class DemandFullfillment implements OnInit {
 
   goToStep(demand: any){
     const stepName = Number(this.getStepLabel(demand.fullfillmentStatus));
-    console.log(stepName);
 
     const allowedRoles = STEP_ACCESS[stepName];
 
@@ -122,17 +136,10 @@ export class DemandFullfillment implements OnInit {
     return allowedRoles.includes(this.currentUserRole) || false;
   }
 
-  fetchDemandFullfillment(){
+  manpowerFulfillmentApi(data: any){
     try {
-      const data = {
-        demandStatus: DemandStatus.PROCESSING,
-        offSet: this.offSet,
-        pageSize: this.pageSize
-      }
-
       this.apiService.fetchDemandFullFill(data).subscribe({
         next: val => {
-          console.log(val);
           this.demandFullfillmentList = val?.data?.data;
           this.totalRecords = val.data.length ?? 0;
         },
@@ -140,6 +147,20 @@ export class DemandFullfillment implements OnInit {
           console.log(err);
         }
       })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  fetchDemandFullfillment(){
+    try {
+      const data = {
+        demandStatus: DemandStatus.PROCESSING,
+        offSet: this.offSet,
+        pageSize: this.pageSize
+      }
+      
+      this.manpowerFulfillmentApi(data);
     } catch (error) {
       console.log(error);
     }
@@ -164,9 +185,31 @@ export class DemandFullfillment implements OnInit {
   
 
   pageChange(event: any){
-    this.first = event.first;
-    this.offSet = event.first / event.rows;
-    this.pageSize = event.rows;
     this.fetchDemandFullfillment();
+  }
+
+  loadFulfillment(event: any){
+    try {
+      this.first = event.first;
+      this.offSet = event.first / event.rows;
+      this.pageSize = event.rows;
+  
+      const filters = event.filters;
+  
+      this.filteredData = {
+        offSet: this.offSet,
+        pageSize: this.pageSize,
+        demandCode: filters?.demandCode?.[0]?.value ?? '',
+        demandStatus: filters?.status?.[0]?.value ?? [102],
+        spnCode: filters?.spnCode?.[0]?.value ?? '',
+        spnDescription: filters?.spnDescription?.[0].value ?? '',
+        experience: filters?.experience?.[0].value ?? '',
+        envisionRoleName: filters?.roleName?.[0].value ?? '',
+      }
+  
+      this.manpowerFulfillmentApi(this.filteredData);
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

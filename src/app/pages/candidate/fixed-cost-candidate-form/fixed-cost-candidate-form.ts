@@ -104,7 +104,6 @@ export class FixedCostCandidateForm implements OnInit {
 
         this.route.paramMap.subscribe((param) => {
             const id = param.get('id');
-            console.log(id);
 
             if (id) {
                 this.candidateId = Number(id);
@@ -119,7 +118,6 @@ export class FixedCostCandidateForm implements OnInit {
             if (!this.candidateId) {
                 this.apiService.createFixedCostCandidate(data).subscribe({
                     next: (val) => {
-                        console.log(val);
                         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Candidate Created Successfully' });
                         setTimeout(() => {
                             this.router.navigate(['/home/candidates/fixed-cost']);
@@ -136,7 +134,6 @@ export class FixedCostCandidateForm implements OnInit {
             } else {
                 this.apiService.updateFixedCostCandidate(data).subscribe({
                     next: (val) => {
-                        console.log(val);
                         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Candidate Updated Successfully' });
                         setTimeout(() => {
                             this.router.navigate(['/home/candidates/fixed-cost']);
@@ -157,10 +154,7 @@ export class FixedCostCandidateForm implements OnInit {
     }
 
     onSubmit() {
-        console.log(this.fixedCostCandidateForm.value);
-
         let data = this.fixedCostCandidateForm.value;
-        console.log('Final data to send:', data);
 
         if (this.candidateId) {
             data = {
@@ -178,7 +172,6 @@ export class FixedCostCandidateForm implements OnInit {
             };
             this.apiService.fetchViewCandidate(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     const candidateData = val.data;
 
                     const formattedData = {
@@ -234,7 +227,6 @@ export class FixedCostCandidateForm implements OnInit {
         try {
             this.apiService.fetchEmploymentStatus('').subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.employmentStatusList = val.data;
                 },
                 error: (err) => {
@@ -250,7 +242,6 @@ export class FixedCostCandidateForm implements OnInit {
         try {
             this.apiService.fetchRoleInfoList('').subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.envisionRoleList = val.data;
                 },
                 error: (err) => {
@@ -266,7 +257,6 @@ export class FixedCostCandidateForm implements OnInit {
         try {
             this.apiService.fetchSpnInfo('').subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.spnInfoList = val.data;
                 },
                 error: (err) => {
@@ -280,15 +270,12 @@ export class FixedCostCandidateForm implements OnInit {
 
     selectedPCode(projectId: number) {
         try {
-            console.log(projectId);
-
             const data = {
                 projectId: projectId
             };
 
             this.apiService.viewProject(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.projectDetails = val.data;
                 },
                 error: (err) => {
@@ -300,16 +287,6 @@ export class FixedCostCandidateForm implements OnInit {
         }
     }
 
-    // selectedSPN(spnId: number){
-    //   this.selectedSpn = this.spnInfoList.find((spn: any) => spn.spnId === spnId);
-    //   console.log(this.selectedSpn);
-
-    //   const spnGroup = this.fixedCostCandidateForm.get('employmentDetails.spn');
-    //   spnGroup?.patchValue({
-    //     spnId: spnId
-    //   })
-    // }
-
     updateEmploymentStatus() {
         try {
             const data = {
@@ -319,7 +296,6 @@ export class FixedCostCandidateForm implements OnInit {
 
             this.apiService.updateEmploymentStatus(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Employment Status Updated Successfully' });
                     setTimeout(() => {
                         this.router.navigate(['/home/candidates/fixed-cost']);
@@ -335,7 +311,6 @@ export class FixedCostCandidateForm implements OnInit {
     }
 
     addExistingCandidate() {
-        console.log(this.fixedCostCandidateForm.value);
         const formValue = this.fixedCostCandidateForm.value;
 
         let data;

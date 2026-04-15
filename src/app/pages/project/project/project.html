@@ -2,8 +2,9 @@
     <div class="flex items-baseline-last justify-between">
         <h5>Projects</h5>
         <div class="flex gap-2">
-            @if (currentUser !== UserGroups.READONLYADMIN){
+            @if (currentUser !== UserGroups.READONLYADMIN && currentUser !== UserGroups.SERVICEMANAGER){
                 <p-button label="Add Project" icon="pi pi-plus" (click)="addProject()" />
+                <p-button icon="pi pi-external-link" label="Export to Excel" (click)="exportToExcel()" />
             }
             <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
         </div>
@@ -69,7 +70,7 @@
                             <p-columnFilter type="text" field="siteIncharge" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
-                    @if (currentUser !== UserGroups.READONLYADMIN){
+                    @if (currentUser !== UserGroups.READONLYADMIN && currentUser !== UserGroups.SERVICEMANAGER){
                         <th>Actions</th>
                     }
                 </tr>
@@ -84,7 +85,7 @@
                     <td>{{ project.department.departmentName }}</td>
                     <td>{{ project.departmentHead.userName }}</td>
                     <td>{{ project.siteIncharge.userName }}</td>
-                    @if (currentUser !== UserGroups.READONLYADMIN){
+                    @if (currentUser !== UserGroups.READONLYADMIN && currentUser !== UserGroups.SERVICEMANAGER){
                         <td>
                             <p-menu #menu [model]="menuItems" [popup]="true" appendTo="body" />
                             <p-button (click)="projectMenu($event,menu,project)" icon="pi pi-ellipsis-v" [rounded]="true" variant="text" />

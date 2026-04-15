@@ -26,7 +26,6 @@ export class CustomerWiseDpr implements OnInit {
     try {   
       this.apiService.customerWiseDprList(data).subscribe({
         next: val => {
-          console.log(val);
           this.customerWiseDprList = val?.data;
         },
         error: err => {
@@ -46,8 +45,6 @@ export class CustomerWiseDpr implements OnInit {
         isExport: false
       }
 
-      console.log(data);
-
       this.customerWiseDprApi(data);
     } catch (error) {
       console.log(error);
@@ -60,8 +57,6 @@ export class CustomerWiseDpr implements OnInit {
         ...this.filteredData,
         towerModel: towerName
       }
-
-      console.log(data);
 
       this.customerWiseDprApi(data);
     } catch (error) {
@@ -92,11 +87,8 @@ export class CustomerWiseDpr implements OnInit {
             isExport: true
           }
     
-          console.log(data);
-    
           this.apiService.customerWiseDprList(data).subscribe({
             next: val => {
-              console.log(val);
               this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Excel file successfully send to email' });
             },
             error: err => {
@@ -112,13 +104,10 @@ export class CustomerWiseDpr implements OnInit {
 
   loadCustomerWiseDpr(event: any){
     const filters = event.filters;
-    console.log(filters);
 
     this.filteredData = {
       customerName: filters?.customerName?.[0]?.value ?? null
     };
-
-    console.log(this.filteredData);
 
     this.customerWiseDprApi(this.filteredData);
   }

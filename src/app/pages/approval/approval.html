@@ -2,9 +2,11 @@
     <div class="flex items-baseline-last justify-between">
         <div class="flex items-start gap-2">
             <h5>Manpower Approval</h5>
-            <!-- <p-tag value="Processing" [rounded]="true" class="mt-1" /> -->
         </div>
-        <p-button icon="pi pi-filter-slash" label="Clear" (click)="dt.clear()" />
+        <div class="flex justify-end gap-2">
+            <p-button label="Export to Excel" icon="pi pi-external-link" (onClick)="exportToExcel()" />
+            <p-button icon="pi pi-filter-slash" label="Clear" (click)="dt.clear()" />
+        </div>
     </div>
     <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
         <p-table [value]="demandProcessingList" #dt [(selection)]="selectedApprovalList" dataKey="id" [lazy]="true"
@@ -119,7 +121,7 @@
                                 (onClick)="clusterHeadApproval(demand.demandId, 'Rejected')" />
                         }
                     </td>
-                    <td>{{ demand.stateHeadApproval.approvedBy.userName || '-' }}</td>
+                    <td>{{ demand?.stateHeadApproval?.approvedBy?.userName || '-' }}</td>
                     <td>{{ demand.stateHeadApproval.approvedOn ? 
                         (demand.stateHeadApproval.approvedOn | date: 'MMM d, y, h:mm a') : '-' }}</td> 
                     <td style="text-align: center;">
@@ -142,7 +144,7 @@
                                 (onClick)="departmentHeadApproval(demand.demandId, 'Rejected')" />
                         }
                     </td>
-                    <td>{{ demand.departmentHeadApproval.approvedBy.userName || '-' }}</td>
+                    <td>{{ demand?.departmentHeadApproval?.approvedBy?.userName || '-' }}</td>
                     <td>{{ demand.departmentHeadApproval.approvedOn ? 
                         (demand.departmentHeadApproval.approvedOn | date: 'MMM d, y, h:mm a') : '-' }}</td>
                 </tr>
@@ -216,3 +218,4 @@
 </p-dialog>
 
 <p-toast />
+<p-confirmdialog />

@@ -107,7 +107,6 @@ export class PoAssignForm implements OnInit {
         try {
             this.apiService.fetchConsultancyInfoList('').subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.consultancyList = val.data;
                 },
                 error: (err) => {
@@ -120,12 +119,10 @@ export class PoAssignForm implements OnInit {
     }
 
     selectedPODate(poDate: Date){
-        console.log(poDate);
         this.minPODate = poDate;
     }
 
     selectedPOStartDate(poStartDate: Date){
-        console.log(poStartDate);
         this.minPOStartDate = poStartDate;
     }
 
@@ -177,7 +174,6 @@ export class PoAssignForm implements OnInit {
             const months = val.monthsAllowed;
             const unitPrice = val.unitRate;
             const taxRate = val.taxRate;
-            console.log(months, unitPrice, taxRate);
 
             const taxAmount = unitPrice * (taxRate / 100) + unitPrice;
             const itemTotal = months * taxAmount;
@@ -191,7 +187,6 @@ export class PoAssignForm implements OnInit {
             );
 
             this.calculateGrandTotal();
-            console.log(item);
         });
     }
 
@@ -216,7 +211,6 @@ export class PoAssignForm implements OnInit {
         });
 
         const grandTotal = newTotal + existingTotal;
-        console.log('Grand Total = ', grandTotal);
 
         this.mapPOForm.patchValue(
             {
@@ -230,7 +224,6 @@ export class PoAssignForm implements OnInit {
         try {
             this.apiService.fetchSpnInfo('').subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.spnInfoList = val.data;
                 },
                 error: (err) => {
@@ -243,11 +236,9 @@ export class PoAssignForm implements OnInit {
     }
 
     selectedSpnCode(spnId: number, item: any) {
-        console.log(spnId);
         this.selectedSpnId = spnId;
         item.selectedSpnId = spnId;
         item.selectedSpn = this.spnInfoList.find((spn: any) => spn.spnId === spnId);
-        console.log(this.selectedSpn);
 
         this.fetchDemandDetails();
     }
@@ -256,7 +247,6 @@ export class PoAssignForm implements OnInit {
         this.selectedExistingSpnId = spnId;
         item.selectedExistingSpnId = spnId;
         item.selectedExistingSpn = this.spnInfoList.find((spn: any) => spn.spnId === spnId);
-        console.log(this.selectedSpn);
 
         this.fetchSpnCandidates(lineIndex);
     }
@@ -266,11 +256,9 @@ export class PoAssignForm implements OnInit {
             const data = {
                 spnId: this.selectedSpnId
             };
-            console.log(data);
 
             this.apiService.fetchDemandDetails(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.demandList = val?.data;
                 },
                 error: (err) => {
@@ -332,7 +320,6 @@ export class PoAssignForm implements OnInit {
 
             this.apiService.fetchDemandCandidates({ demandId }).subscribe({
                 next: (val) => {
-                    console.log(val);
                     const employees = val.data;
                     const consultancyId = this.mapPOForm.get('consultancy.userId')?.value;
 
@@ -355,8 +342,6 @@ export class PoAssignForm implements OnInit {
                     lineItem.newEmployeeItems.controls.forEach((item: any, index: number) => {
                         this.subscribeToItemChanges(item as FormGroup);
                     });
-
-                    console.log('LINE ITEM employees:', lineItem.newEmployeeList);
                 },
 
                 error: (err) => {
@@ -392,13 +377,10 @@ export class PoAssignForm implements OnInit {
                 spnId: this.selectedExistingSpnId
             };
 
-            console.log(data);
-
             const lineItem = this.existingEmployeeLineItems[lineIndex];
 
             this.apiService.fetchSpnCandidates(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     const existingEmployeeItems = val?.data;
 
                     const selectedConsultancy = this.mapPOForm.get('consultancy.userId')?.value;
@@ -419,7 +401,6 @@ export class PoAssignForm implements OnInit {
                     lineItem.existingEmployeeItems.controls.forEach((item: any, index: number) => {
                         this.subscribeToItemChanges(item as FormGroup);
                     });
-                    console.log(lineItem.existingEmployeeList);
                 },
                 error: (err) => {
                     console.log(err);
@@ -437,21 +418,14 @@ export class PoAssignForm implements OnInit {
     }
 
     removeNewEmployee(outerIndex: number, index: number, candidateId: number) {
-        console.log(this.newEmployeeLineItems);
         const lineItem = this.newEmployeeLineItems[outerIndex];
-        console.log(lineItem);
         lineItem.newEmployeeList = lineItem?.newEmployeeList.filter((e: any) => e.candidateId !== candidateId);
-        console.log(lineItem.newEmployeeList);
-        console.log(lineItem.newEmployeeItems);
         lineItem.newEmployeeItems.removeAt(index);
     }
 
     removeExistingEmployee(outerIndex: number, index: number, candidateId: number) {
         const lineItem = this.existingEmployeeLineItems[outerIndex];
-        console.log(lineItem);
         lineItem.existingEmployeeList = lineItem.existingEmployeeList.filter((e: any) => e.candidateId !== candidateId);
-        console.log(lineItem.existingEmployeeList);
-        console.log(lineItem.existingEmployeeItems);
         lineItem.existingEmployeeItems.removeAt(index);
     }
 
@@ -468,8 +442,6 @@ export class PoAssignForm implements OnInit {
 
     onSubmit() {
         try {
-            console.log(this.mapPOForm.value);
-
             const data = {
                 poNumber: this.mapPOForm.get('poNumber')?.value,
                 consultancy: {
@@ -518,13 +490,8 @@ export class PoAssignForm implements OnInit {
                 items: []
             };
 
-            console.log(console.log('Line Items:', this.newEmployeeLineItems));
-            console.log(console.log('Line Items:', this.newEmployeeLineItems));
-
             // LOOP LINE ITEMS
             this.newEmployeeLineItems.forEach((item) => {
-                console.log('newEmployeeList =', item.newEmployeeList);
-                console.log('newEmployeeList =', item.newEmployeeItems.value);
                 payload.items.push({
                     candidate: {
                         candidateId: item.newEmployeeItems.value.candidateId
@@ -551,8 +518,6 @@ export class PoAssignForm implements OnInit {
 
     });
   }); */
-
-            console.log('FINAL PAYLOAD: ', payload);
         } catch (e) {}
     }
 
@@ -596,11 +561,9 @@ export class PoAssignForm implements OnInit {
                 });
             });
 
-            console.log('FINAL PAYLOAD =', payload);
 
             this.apiService.mapNewPurchaseOrder(payload).subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Purchase Order Created Successfully' });
                     this.router.navigate(['/home/po-assign']);
                 },

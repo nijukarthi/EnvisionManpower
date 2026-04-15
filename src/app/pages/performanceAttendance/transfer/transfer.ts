@@ -85,7 +85,6 @@ export class Transfer implements OnInit {
         try {
             this.apiService.fetchTransferredEmployeeList(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.transferredEmployeeList = val?.data?.data;
                     this.totalRecords = val?.data?.length ?? 0;
                 },
@@ -118,10 +117,9 @@ export class Transfer implements OnInit {
                 transferId: transferId,
                 approvalStatus: type === 'Accepted' ? ApprovalStatus.ACCEPTED : ApprovalStatus.REJECTED
             };
-            console.log(data);
+
             this.apiService.approveTransferClusterHead(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     if (type === 'Accepted') {
                         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Transfer Request Accepted Successfully' });
                     } else {
@@ -144,11 +142,9 @@ export class Transfer implements OnInit {
                 transferId: transferId,
                 approvalStatus: type === 'Accepted' ? ApprovalStatus.ACCEPTED : ApprovalStatus.REJECTED
             };
-            console.log(data);
 
             this.apiService.approveTransferDeptHead(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     if (type === 'Accepted') {
                         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Transfer Request Accepted Successfully' });
                     } else {
@@ -166,7 +162,6 @@ export class Transfer implements OnInit {
     }
 
     selectedEmployee(transfer: any) {
-        console.log(transfer);
         this.selectedTransferDetails = transfer;
         if (transfer.transferStatus === TransferStatus.SCHEDULED) {
             this.selectedTransferId = transfer.transferId;
@@ -198,7 +193,6 @@ export class Transfer implements OnInit {
         nextDay.setDate(nextDay.getDate() + 1);
 
         this.minJoiningDate = nextDay;
-        console.log(this.minJoiningDate);
 
         this.updateTransferForm.get('newJoiningDate')?.reset();
     }
@@ -210,11 +204,8 @@ export class Transfer implements OnInit {
             });
             const data = this.updateTransferForm.value;
 
-            console.log(data);
-
             this.apiService.updateTransfer(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Transfer Details Updated Successfully' });
                     this.updateTransferModal = false;
                     this.updateTransferForm.reset();
@@ -242,10 +233,9 @@ export class Transfer implements OnInit {
                     const data = {
                         id: this.selectedTransferId
                     };
-                    console.log(data);
+
                     this.apiService.forceTransfer(data).subscribe({
                         next: (val) => {
-                            console.log(val);
                             this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Transfered Successfully' });
                             this.fetchTransferedList();
                             this.selectedTransfer = [];
@@ -270,7 +260,6 @@ export class Transfer implements OnInit {
     }
 
     cancelTransferPopup() {
-        console.log('cancel request');
         this.confirmationService.confirm({
             header: 'Are you sure?',
             accept: () => {
@@ -278,11 +267,9 @@ export class Transfer implements OnInit {
                     const data = {
                         id: this.selectedTransferId
                     };
-                    console.log(data);
 
                     this.apiService.cancelTransfer(data).subscribe({
                         next: (val) => {
-                            console.log(val);
                             this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Transfer Cancelled Successfully' });
                             this.fetchTransferedList();
                             this.selectedTransfer = [];
@@ -305,8 +292,6 @@ export class Transfer implements OnInit {
     }
 
     typedValue(event: any) {
-        // console.log(event);
-
         if (event.target.value === 'Confirm') {
             this.isEnableBtn = true;
         } else {
@@ -357,7 +342,6 @@ export class Transfer implements OnInit {
             this.pageSize = event.rows;
 
             const filters = event.filters;
-            console.log(filters);
 
             const formatDate = (d: any) => {
                 if (!d) return null;
@@ -378,8 +362,6 @@ export class Transfer implements OnInit {
                 joiningFrom: Array.isArray(dateValue) ? formatDate(dateValue[0]) : null,
                 joiningTo: Array.isArray(dateValue) ? formatDate(dateValue[1]) : null
             };
-
-            console.log(payload);
 
             this.transferApi(payload);
         } catch (error) {

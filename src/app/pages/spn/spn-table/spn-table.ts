@@ -27,6 +27,8 @@ export class SpnTable implements OnInit {
     actionName = '';
 
     currentUser = Number(sessionStorage.getItem('userGroupId'));
+
+    currentUserEmail = sessionStorage.getItem('userEmail');
         
     USERGROUPS = UserGroups;
 
@@ -206,6 +208,46 @@ export class SpnTable implements OnInit {
             console.log(error);
             this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Please Try Again' });
         }
+    }
+
+    exportToExcel(){
+        const emailText = this.currentUserEmail ?? 'your email address';
+
+        this.confirmationService.confirm({
+            message: `The Excel file will be sent to ${emailText}. Do you want to proceed?`,
+            header: 'Confirmation',
+            closable: true,
+            closeOnEscape: true,
+            icon: 'pi pi-exclamation-triangle',
+            rejectButtonProps: {
+                label: 'Cancel',
+                severity: 'secondary',
+                outlined: true
+            },
+            acceptButtonProps: {
+                label: 'OK'
+            },
+            accept: () => {
+                try {
+                    const data = {
+                        ...this.filteredData,
+                        export: true
+                    };
+
+                    console.log(data);
+
+                    this.apiService.fetchActiveSpns(data).subscribe({
+                        next: (val) => {
+                            console.log(val);
+
+                            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Excel file successfully send to email' });
+                        }
+                    });
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+        });
     }
 
     deleteSpn(spn: any) {

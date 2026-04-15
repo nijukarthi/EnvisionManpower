@@ -742,4 +742,24 @@ export class Apiservice {
     exportCostPlusCandidates(){
         return this.http.get(`${this.baseUrl}candidate/costplus/template/export`, { responseType: 'blob' });
     }
+
+    importTraining(params: any){
+        return this.postMethod('candidate/training/template/import', params);
+    }
+
+    exportTraining(){
+        return this.http.get(`${this.baseUrl}candidate/training/template/export`, { responseType: 'blob' });
+    }
+
+    createChangeConsulRequest(params: any){
+        return this.postMethod('candidate/change-consultancy/request/create', params);
+    }
+
+    fetchConsulRequestList(params: any): Observable<any>{
+        return this.postMethod('candidate/change-consultancy/request', params);
+    }
+
+    approveConsulRequest(params: any): Observable<any>{
+        return this.postMethod('candidate/change-consultancy/request/approve', params);
+    }
 }

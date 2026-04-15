@@ -16,6 +16,7 @@ export class ResourceManagerAssign implements OnInit {
   resourceManagerDemandList: any;
   resourceManagerList: any;
   requisitionDetails: any;
+  filteredData: any;
 
   offSet = 0;
   pageSize = 10;
@@ -35,13 +36,8 @@ export class ResourceManagerAssign implements OnInit {
     this.fetchResourceManagerList();
   }
 
-  fetchDemandResourceManager(){
+  resourceManagerAssignApi(data: any){
     try {
-      const data = {
-        offSet: this.offSet,
-        pageSize: this.pageSize
-      }
-
       this.apiService.fetchDemandResourceManager(data).subscribe({
         next: val => {
           console.log(val);
@@ -52,6 +48,21 @@ export class ResourceManagerAssign implements OnInit {
           console.log(err);
         }
       })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  fetchDemandResourceManager(){
+    try {
+      const data = {
+        offSet: this.offSet,
+        pageSize: this.pageSize
+      }
+
+      console.log(data);
+
+      this.resourceManagerAssignApi(data);
     } catch (error) {
       console.log(error);
     }
@@ -123,12 +134,29 @@ export class ResourceManagerAssign implements OnInit {
     }
   }
 
-  pageChange(event: any){
-    console.log(event);
+  loadRMAssign(event: any){
+    try {
+      this.first = event.first;
+      this.offSet = event.first / event.rows;
+      this.pageSize = event.rows;
 
-    this.first = event.first;
-    this.offSet = event.first / event.rows;
-    this.pageSize = event.rows;
-    this.fetchDemandResourceManager();
+      const filters = event.filters;
+      console.log(filters);
+
+      this.filteredData = {
+        offSet: this.offSet,
+        pageSize: this.pageSize,
+        demandCode: filters?.demandCode?.[0]?.value ?? '',
+        spnCode: filters?.spnCode?.[0]?.value ?? '',
+        spnDescription: filters?.spnDescription?.[0].value ?? '',
+        experience: filters?.experience?.[0].value ?? ''
+      }
+
+      console.log(this.filteredData);
+
+      this.resourceManagerAssignApi(this.filteredData);
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

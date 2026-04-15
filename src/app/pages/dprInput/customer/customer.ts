@@ -38,7 +38,6 @@ export class Customer implements OnInit {
     try {
       this.apiService.fetchCustomerList().subscribe({
         next: val => {
-          console.log(val);
           this.customerList = val.data;
         },
         error: err => {
@@ -53,13 +52,10 @@ export class Customer implements OnInit {
   submitCustomerForm(){
     try {
       if (!this.selectedCustomer) {     
-        console.log(this.customerForm.value);
-  
         const data = this.customerForm.value;
   
         this.apiService.createCustomer(data).subscribe({
           next: val => {
-            console.log(val);
             this.customerModal = false;
             this.customerForm.reset();
             this.fetchCustomerList();
@@ -70,15 +66,10 @@ export class Customer implements OnInit {
           }
         })
       } else {
-        console.log(this.customerForm.value);
-
         const data = this.customerForm.value;
-
-        console.log(data);
 
         this.apiService.updateCustomer(data).subscribe({
           next: val => {
-            console.log(val);
             this.customerModal = false;
             this.customerForm.reset();
             this.fetchCustomerList();
@@ -99,7 +90,6 @@ export class Customer implements OnInit {
       this.customerModal = true;
       if (this.selectedCustomer) {       
         this.customerForm.patchValue(this.selectedCustomer);
-        console.log(this.customerForm.value);
       }
     } catch (error) {
       console.log(error);
@@ -119,7 +109,6 @@ export class Customer implements OnInit {
   customerMenu(event: Event, menu: any, customer: any){
     this.selectedCustomer = customer;
     menu.toggle(event);
-    console.log(this.selectedCustomer);
   }
 
   onDialogClose(){

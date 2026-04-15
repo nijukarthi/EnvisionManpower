@@ -33,6 +33,7 @@ export class AppMenu {
     guestUser = false;
     readonlyAdmin = false;
     dprTeam = false;
+    serviceManagerTeam = false;
 
     constructor(
         private apiService: Apiservice,
@@ -46,7 +47,6 @@ export class AppMenu {
     fetchUserProfile() {
         this.apiService.fetchUserProfile('').subscribe({
             next: (val) => {
-                console.log(val);
                 this.loggedInUserDetails = val.data;
                 if (this.loggedInUserDetails) {
                     if (this.loggedInUserDetails.userGroupId === UserGroups.ADMIN && this.loggedInUserDetails.userGroupName == 'Admin') {
@@ -71,6 +71,8 @@ export class AppMenu {
                         this.guestUser = true;
                     } else if(this.loggedInUserDetails.userGroupId === UserGroups.DPRMANAGEMENTTEAM){
                         this.dprTeam = true;
+                    } else if (this.loggedInUserDetails.userGroupId === UserGroups.SERVICEMANAGER) {
+                        this.serviceManagerTeam = true;
                     }
                 }
 
@@ -90,10 +92,15 @@ export class AppMenu {
                     icon: 'pi pi-fw pi-briefcase',
                     routerLink: ['/pages'],
                     items: [
+                        // {
+                        //     label: 'Dashboard',
+                        //     icon: 'pi pi-objects-column',
+                        //     routerLink: ['/home/dashboard']
+                        // },
                         {
                             label: 'Manpower Request',
                             icon: 'pi pi-calendar',
-                            visible: !!this.adminUser || !!this.siteInchargeUser,
+                            visible: !!this.adminUser || !!this.siteInchargeUser || this.serviceManagerTeam,
                             command: () => {
                                 if (!this.siteInchargeUser) {
                                     this.router.navigate(['/home/manpower-request']);
@@ -103,7 +110,8 @@ export class AppMenu {
                         {
                             label: 'Manpower Approval',
                             icon: 'pi pi-ticket',
-                            visible: this.adminUser || this.departmentUser || this.clusterUser || this.siteInchargeUser,
+                            visible: this.adminUser || this.departmentUser || this.clusterUser || this.siteInchargeUser
+                                    || this.serviceManagerTeam,
                             command: () => {
                                 if (!this.siteInchargeUser) {
                                     this.router.navigate(['/home/manpower-approval']);
@@ -118,49 +126,57 @@ export class AppMenu {
                                     label: 'Assign Resource Manager',
                                     icon: 'pi pi-address-book',
                                     routerLink: ['/home/assign-resource-manager'],
-                                    visible: this.adminUser
+                                    visible: this.adminUser || this.serviceManagerTeam
                                 },
                                 {
                                     label: 'Assign Standard Role',
                                     icon: 'pi pi-address-book',
                                     routerLink: ['/home/assign-role'],
-                                    visible: this.adminUser || this.resourceManagerUser
-                                },
+                                    visible: this.adminUser || this.resourceManagerUser || this.serviceManagerTeam
+                                }, 
                                 {
                                     label: 'Manpower Fulfillment',
                                     icon: 'pi pi-history',
                                     routerLink: ['/home/manpower-fulfillment'],
                                     visible: this.consultancyUser || this.adminUser || this.resourceManagerUser || this.guestUser
+                                    || this.serviceManagerTeam
                                 },
                                 {
                                     label: 'PO & Demand Map',
                                     icon: 'pi pi-file-import',
                                     routerLink: ['/home/po-assign'],
-                                    visible: this.adminUser || this.resourceManagerUser || this.readonlyAdmin
+                                    visible: this.adminUser || this.resourceManagerUser || this.readonlyAdmin || this.serviceManagerTeam
                                 },
                                 {
                                     label: 'Onboarding',
                                     icon: 'pi pi-graduation-cap',
                                     routerLink: ['/home/onboarding'],
-                                    visible: this.adminUser || this.resourceManagerUser || this.readonlyAdmin
+                                    visible: this.adminUser || this.resourceManagerUser || this.readonlyAdmin || this.serviceManagerTeam
                                 },
                                 {
                                     label: 'On-roll Employees',
                                     icon: 'pi pi-user',
                                     routerLink: ['/home/onroll-employees'],
                                     visible: this.adminUser || this.resourceManagerUser || this.siteInchargeUser || 
-                                        this.clusterUser || this.departmentUser || this.readonlyAdmin
+                                        this.clusterUser || this.departmentUser || this.readonlyAdmin || this.serviceManagerTeam
+                                },
+                                {
+                                    label: 'Change Consultancy Request',
+                                    icon: 'pi pi-user',
+                                    routerLink: ['/home/consultancy-request'],
+                                    visible: this.adminUser || this.resourceManagerUser || this.siteInchargeUser || 
+                                        this.clusterUser || this.departmentUser || this.readonlyAdmin || this.serviceManagerTeam
                                 },
                                 {
                                     label: 'Training',
                                     icon: 'pi pi-warehouse',
                                     routerLink: ['/home/training'],
-                                    visible: this.adminUser || this.resourceManagerUser || this.readonlyAdmin
+                                    visible: this.adminUser || this.resourceManagerUser || this.readonlyAdmin || this.serviceManagerTeam
                                 }
                             ],
                             visible: this.adminUser || this.consultancyUser || this.resourceManagerUser || 
                                 this.guestUser || this.siteInchargeUser || this.clusterUser || this.departmentUser ||
-                                this.readonlyAdmin
+                                this.readonlyAdmin || this.serviceManagerTeam
                         },
                         {
                             label: 'Performance & Attendance',
@@ -171,32 +187,33 @@ export class AppMenu {
                                     icon: 'pi pi-book',
                                     routerLink: ['/home/attendance'],
                                     visible: this.adminUser || this.siteInchargeUser || this.resourceManagerUser || this.clusterUser || 
-                                        this.departmentUser || this.consultancyUser || this.readonlyAdmin
+                                        this.departmentUser || this.consultancyUser || this.readonlyAdmin || this.serviceManagerTeam
                                 },
                                 {
                                     label: 'Site Performance',
                                     icon: 'pi pi-map',
                                     routerLink: ['/home/site-performance'],
                                     visible: this.adminUser || this.siteInchargeUser || this.resourceManagerUser || this.clusterUser || 
-                                        this.departmentUser || this.consultancyUser || this.readonlyAdmin
+                                        this.departmentUser || this.consultancyUser || this.readonlyAdmin || this.serviceManagerTeam
                                 },
                                 {
                                     label: 'Transfer',
                                     icon: 'pi pi-file-export',
-                                    routerLink: this.siteInchargeUser ? '' : ['/home/transfer'],
+                                    routerLink: ['/home/transfer'],
                                     visible: this.adminUser || this.siteInchargeUser || this.departmentUser || this.clusterUser || 
-                                        this.consultancyUser || this.resourceManagerUser || this.readonlyAdmin
+                                        this.consultancyUser || this.resourceManagerUser || this.readonlyAdmin || this.serviceManagerTeam
                                 },
                                 {
                                     label: 'Resignation',
                                     icon: 'pi pi-file-excel',
-                                    routerLink: this.siteInchargeUser ? '' : ['/home/resignation'],
+                                    routerLink: ['/home/resignation'],
                                     visible: this.adminUser || this.siteInchargeUser || this.departmentUser || this.clusterUser || 
-                                        this.consultancyUser || this.resourceManagerUser || this.readonlyAdmin
+                                        this.consultancyUser || this.resourceManagerUser || this.readonlyAdmin || this.serviceManagerTeam
                                 }
                             ],
                             visible: this.adminUser || this.siteInchargeUser || this.departmentUser || 
                                 this.clusterUser || this.resourceManagerUser || this.consultancyUser || this.readonlyAdmin
+                                || this.serviceManagerTeam
                         },
                         {
                             label: 'Accounts Payable',
@@ -262,50 +279,59 @@ export class AppMenu {
                                 {
                                     label: 'SPN',
                                     icon: 'pi pi-warehouse',
-                                    routerLink: ['/home/spn']
+                                    routerLink: ['/home/spn'],
+                                    visible: this.adminUser || this.resourceManagerUser || this.readonlyAdmin
                                 },
                                 {
                                     label: 'Project',
                                     icon: 'pi pi-inbox',
-                                    routerLink: ['/home/projects']
+                                    routerLink: ['/home/projects'],
+                                    visible: this.adminUser || this.resourceManagerUser || this.readonlyAdmin || this.serviceManagerTeam
                                 },
                                 {
                                     label: 'User Group',
                                     icon: 'pi pi-users',
-                                    routerLink: ['/home/usergroups']
+                                    routerLink: ['/home/usergroups'],
+                                    visible: this.adminUser || this.resourceManagerUser || this.readonlyAdmin
                                 },
                                 {
                                     label: 'Category',
                                     icon: 'pi pi-table',
-                                    routerLink: ['/home/categories']
+                                    routerLink: ['/home/categories'],
+                                    visible: this.adminUser || this.resourceManagerUser || this.readonlyAdmin
                                 },
                                 {
                                     label: 'Department',
                                     icon: 'pi pi-sitemap',
-                                    routerLink: ['/home/departments']
+                                    routerLink: ['/home/departments'],
+                                    visible: this.adminUser || this.resourceManagerUser || this.readonlyAdmin
                                 },
                                 {
                                     label: 'Envision Roles',
                                     icon: 'pi pi-book',
-                                    routerLink: ['/home/envision-roles']
+                                    routerLink: ['/home/envision-roles'],
+                                    visible: this.adminUser || this.resourceManagerUser || this.readonlyAdmin
                                 },
                                 {
                                     label: 'Cluster',
                                     icon: 'pi pi-shop',
-                                    routerLink: ['/home/clusters']
+                                    routerLink: ['/home/clusters'],
+                                    visible: this.adminUser || this.resourceManagerUser || this.readonlyAdmin
                                 },
                                 {
                                     label: 'Users',
                                     icon: 'pi pi-user',
-                                    routerLink: ['/home/users']
+                                    routerLink: ['/home/users'],
+                                    visible: this.adminUser || this.resourceManagerUser || this.readonlyAdmin
                                 },
                                 {
                                     label: 'Interviewer',
                                     icon: 'pi pi-address-book',
-                                    routerLink: ['/home/interviewers']
+                                    routerLink: ['/home/interviewers'],
+                                    visible: this.adminUser || this.resourceManagerUser || this.readonlyAdmin
                                 }
                             ],
-                            visible: this.adminUser || this.resourceManagerUser || this.readonlyAdmin
+                            visible: this.adminUser || this.resourceManagerUser || this.readonlyAdmin || this.serviceManagerTeam
                         },
                         {
                             label: 'Daily Progress Report',

@@ -2,8 +2,9 @@
     <div class="flex items-baseline-last justify-between">
         <h5>Company Users</h5>
         <div class="flex gap-2">
-            @if (currentUser !== USERGROUPS.READONLYADMIN) {
+            @if (currentUser !== USERGROUPS.READONLYADMIN  && currentUser !== USERGROUPS.SERVICEMANAGER) {
                 <p-button label="Add Users" icon="pi pi-plus" (click)="addUser()" />
+                <p-button icon="pi pi-external-link" label="Export to Excel" (click)="exportToExcel()" />
             }
             <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
         </div>
@@ -140,7 +141,6 @@
                     appendTo="body"
                 />
             </div>
-
             }
         </div>
         <div class="flex justify-end mt-4">

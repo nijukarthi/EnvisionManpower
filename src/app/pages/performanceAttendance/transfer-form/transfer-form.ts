@@ -65,7 +65,6 @@ export class TransferForm implements OnInit {
 
     ngOnInit(): void {
         this.employeeDetails = history.state;
-        console.log(this.employeeDetails);
         this.fetchDemandDetails();
 
         const today = new Date();
@@ -89,13 +88,10 @@ export class TransferForm implements OnInit {
             const data = {
                 spnId: this.employeeDetails.employeeDetails.spn.spnId
             };
-            console.log(data);
 
             this.apiService.fetchDemandDetails(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.demandList = val?.data?.filter((d: any) => d.demandStatus === 102 && d.departmentHeadApproval.approvalStatus === 200 && d.stateHeadApproval.approvalStatus === 200 && d.envisionRole);
-                    console.log(this.demandList);
                 },
                 error: (err) => {
                     console.log(err);
@@ -107,9 +103,7 @@ export class TransferForm implements OnInit {
     }
 
     selectedDCode(demandId: number) {
-        console.log(demandId);
         this.demandDetails = this.demandList.find((d) => d.demandId === demandId);
-        console.log(this.demandDetails);
     }
 
     selectedLastDate(lastDate: any) {
@@ -117,14 +111,11 @@ export class TransferForm implements OnInit {
         nextDay.setDate(nextDay.getDate() + 1);
 
         this.minJoiningDate = nextDay;
-        console.log(this.minJoiningDate);
 
         this.transferDetails.at(0).get('joiningDate')?.reset();
     }
 
     replacementChange(isReplace: boolean) {
-        console.log(isReplace);
-
         if (isReplace && !this.employeeDetails.employeeDetails.demand) {
             this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Transfer-from employment is not mapped to any demand. Create a new demand if replacement is required.' });
 
@@ -139,8 +130,6 @@ export class TransferForm implements OnInit {
 
     onSubmit() {
         try {
-            console.log(this.transferForm.value);
-
             const lastDate = this.transferDetails.at(0).get('transferFrom.lastWorkingDate')?.value;
             const joiningDate = this.transferDetails.at(0).get('joiningDate')?.value;
 
@@ -154,11 +143,9 @@ export class TransferForm implements OnInit {
             });
 
             const data = this.transferDetails.value;
-            console.log(data);
 
             this.apiService.transferCandidateProject(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Transfer Request Created Successfully' });
                     setTimeout(() => {
                         this.router.navigate(['/home/site-performance']);

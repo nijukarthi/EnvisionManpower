@@ -122,7 +122,6 @@ export class ConsultancyForm implements OnInit {
     ngOnInit(): void {
         this.route.paramMap.subscribe((param) => {
             const id = param.get('id');
-            console.log(id);
 
             if (id) {
                 this.userId = Number(id);
@@ -139,10 +138,8 @@ export class ConsultancyForm implements OnInit {
             const data = {
                 userId: userId
             };
-            console.log(data);
             this.apiService.fetchViewConsultancy(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     const categoryIds = val.data.consultancyCategory.map((c: any) => c.categoryId);
                     this.consultancyCategoryControl.patchValue(categoryIds);
 
@@ -166,7 +163,6 @@ export class ConsultancyForm implements OnInit {
     fetchActiveCategory() {
         this.apiService.fetchActiveCategory('').subscribe({
             next: (val) => {
-                console.log(val);
                 this.categoryList = val.data;
             },
             error: (err) => {
@@ -186,13 +182,11 @@ export class ConsultancyForm implements OnInit {
 
     onSubmit() {
         try {
-            console.log(this.consultancyForm.value);
             if (!this.userId) {
                 const data = this.consultancyForm.value;
 
                 this.apiService.createConsultancy(data).subscribe({
                     next: (val) => {
-                        console.log(val);
                         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Consultancy Created Successfully' });
                         setTimeout(() => {
                             this.router.navigate(['/home/consultancies']);
@@ -213,11 +207,9 @@ export class ConsultancyForm implements OnInit {
                     const existingCategory = this.consultancyCategoryControl.value?.map((id: number) => ({ categoryId: id }));
                     data.consultancyCategory = existingCategory;
                 }
-                console.log(data);
 
                 this.apiService.updateConsultancy(data).subscribe({
                     next: (val) => {
-                        console.log(val);
                         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Consultancy Updated Successfully' });
                         setTimeout(() => {
                             this.router.navigate(['/home/consultancies']);

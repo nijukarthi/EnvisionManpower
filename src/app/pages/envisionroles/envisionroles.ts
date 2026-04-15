@@ -31,6 +31,8 @@ export class Envisionroles {
     actionName: any = 'Save';
 
     currentUser = Number(sessionStorage.getItem('userGroupId'));
+
+    currentUserEmail = sessionStorage.getItem('userEmail');
     
     USERGROUPS = UserGroups;
 
@@ -74,7 +76,6 @@ export class Envisionroles {
         try {
             this.apiService.fetchActiveEnvRole(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.roleList = val.data.data;
                     this.totalRecords = val?.data.length ?? 0;
                 },
@@ -103,8 +104,6 @@ export class Envisionroles {
                 pageSize: this.pageSize
             };
 
-            console.log(data);
-
             this.envisionrolesApi(data);
         } catch (error) {
             console.log(error);
@@ -129,7 +128,6 @@ export class Envisionroles {
 
     onSubmit() {
         try {
-            console.log(this.roleForm.value);
             if (!this.roleId) {
                 if (this.roleForm.valid) {
                     var name = this.roleForm.get('roleName').value;
@@ -138,7 +136,6 @@ export class Envisionroles {
                     };
                     this.apiService.createNewEnvRole(data).subscribe({
                         next: (val) => {
-                            console.log(val);
                             this.messageService.add({
                                 severity: 'success',
                                 summary: 'Success',
@@ -176,7 +173,6 @@ export class Envisionroles {
 
                     this.apiService.updateEnvRole(data).subscribe({
                         next: (val) => {
-                            console.log(val);
                             this.messageService.add({
                                 severity: 'success',
                                 summary: 'Success',
@@ -229,7 +225,6 @@ export class Envisionroles {
                     };
                     this.apiService.deleteEnvRole(data).subscribe({
                         next: (val) => {
-                            console.log(val);
                             this.fetchActiveEnvRole();
                         },
                         error: (err) => {
@@ -240,6 +235,42 @@ export class Envisionroles {
                     console.log(error);
                 }
                 this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Role Deleted Successfully' });
+            }
+        });
+    }
+
+    exportToExcel(){
+        const emailText = this.currentUserEmail ?? 'your email address';
+
+        this.confirmationService.confirm({
+            message: `The Excel file will be sent to ${emailText}. Do you want to proceed?`,
+            header: 'Confirmation',
+            closable: true,
+            closeOnEscape: true,
+            icon: 'pi pi-exclamation-triangle',
+            rejectButtonProps: {
+                label: 'Cancel',
+                severity: 'secondary',
+                outlined: true
+            },
+            acceptButtonProps: {
+                label: 'OK'
+            },
+            accept: () => {
+                try {
+                    const data = {
+                        ...this.filteredData,
+                        isExport: true
+                    };
+
+                    this.apiService.fetchActiveEnvRole(data).subscribe({
+                        next: (val) => {
+                            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Excel file successfully send to email' });
+                        }
+                    });
+                } catch (error) {
+                    console.log(error);
+                }
             }
         });
     }
@@ -261,7 +292,6 @@ export class Envisionroles {
             this.pageSize = event.rows;
 
             const filters = event.filters;
-            console.log(filters);
 
             this.filteredData = {
                 offSet: this.offSet,
@@ -269,7 +299,6 @@ export class Envisionroles {
                 search: filters?.roleName?.[0]?.value ?? null
             };
 
-            console.log(this.filteredData);
             this.envisionrolesApi(this.filteredData);
         } catch (error) {
             console.log(error);

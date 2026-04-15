@@ -30,6 +30,8 @@ export class CompanyUsers implements OnInit {
     userId: number | null = null;
 
     currentUser = Number(sessionStorage.getItem('userGroupId'));
+
+    currentUserEmail = sessionStorage.getItem('userEmail');
         
     USERGROUPS = UserGroups;
 
@@ -89,7 +91,6 @@ export class CompanyUsers implements OnInit {
         try {
             this.apiService.fetchActiveCompanyUsers(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.companyUserList = val?.data?.data;
                     this.totalRecords = val?.data?.length ?? 0;
                 },
@@ -113,8 +114,6 @@ export class CompanyUsers implements OnInit {
                 pageSize: this.pageSize
             };
 
-            console.log(data);
-
             this.companyUsersApi(data);
         } catch (error) {
             console.log(error);
@@ -126,7 +125,6 @@ export class CompanyUsers implements OnInit {
         try {
             this.apiService.fetchActiveUsergroup('').subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.userGroupList = val.data;
                 },
                 error: (err) => {
@@ -143,7 +141,6 @@ export class CompanyUsers implements OnInit {
         try {
             this.apiService.fetchActiveDepartments('').subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.departmentList = val.data;
                 },
                 error: (err) => {
@@ -158,6 +155,10 @@ export class CompanyUsers implements OnInit {
 
     selectedUserGroup(selectedGroupId: number) {
         this.showDepartments = selectedGroupId !== 301 && selectedGroupId !== 316;
+
+        if (selectedGroupId === 318) {
+            this.departmentList = this.departmentList.filter((d: any) => d.departmentId === 3 || d.departmentId === 6)
+        }
     }
 
     selectDepartments(selectedIds: number[]) {
@@ -172,7 +173,6 @@ export class CompanyUsers implements OnInit {
                 })
             );
         });
-        console.log('Form value:', this.companyUserForm.value);
     }
 
     addUser() {
@@ -191,17 +191,14 @@ export class CompanyUsers implements OnInit {
             const data = {
                 userId: this.userId
             };
-            console.log(data);
+
             this.apiService.viewCompanyUser(data).subscribe({
                 next: (val) => {
-                    console.log(val);
-
                     if (val.data.userDepartments.length === 0) {
                         this.showDepartments = false;
                     }
                     const departmentIds = val.data.userDepartments.map((d: any) => d.departmentId);
                     this.departmentsControl.patchValue(departmentIds);
-                    console.log(departmentIds);
 
                     const emailPrefix = val.data.email.split('@')[0];
 
@@ -220,7 +217,6 @@ export class CompanyUsers implements OnInit {
     }
 
     editUser(user: any) {
-        // console.log(user);
         this.userId = user.userId;
         this.openCompanyUser = true;
         this.actionName = 'Update';
@@ -233,7 +229,7 @@ export class CompanyUsers implements OnInit {
         } else {
             this.companyUserForm.get('email')?.enable();
         }
-        if (!this.showDepartments) {
+        if (!this.showDepartments && user.isDefault) {
             this.companyUserForm.get('userGroupId')?.disable();
         } else {
             this.companyUserForm.get('userGroupId')?.enable();
@@ -242,17 +238,14 @@ export class CompanyUsers implements OnInit {
 
     onSubmit() {
         try {
-            console.log(this.companyUserForm.value);
             if (this.actionName == 'Add') {
                 const emailPrefix = this.companyUserForm.get('email')?.value?.trim();
                 let data = {
                     ...this.companyUserForm.value,
                     email: emailPrefix ? `${emailPrefix}@envision-energy.com` : null
                 };
-                console.log(data);
                 this.apiService.createCompanyUsers(data).subscribe({
                     next: (res) => {
-                        console.log(res);
                         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'User Created Successfully' });
                         this.openCompanyUser = false;
                         this.companyUserForm.reset();
@@ -284,10 +277,8 @@ export class CompanyUsers implements OnInit {
                     data.userDepartments = existingDepartments;
                 }
 
-                console.log(data);
                 this.apiService.updateCompanyUser(data).subscribe({
                     next: (val) => {
-                        console.log(val);
                         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'User Updated Successfully' });
                         this.openCompanyUser = false;
                         this.companyUserForm.reset();
@@ -331,12 +322,47 @@ export class CompanyUsers implements OnInit {
 
                     this.apiService.deleteCompanyUser(data).subscribe({
                         next: (val) => {
-                            console.log(val);
                             this.messageService.add({ severity: 'success', summary: 'Success', detail: 'User Deleted Successfully' });
                             this.fetchActiveCompanyUsers();
                         },
                         error: (err) => {
                             console.log(err);
+                        }
+                    });
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+        });
+    }
+
+    exportToExcel(){
+        const emailText = this.currentUserEmail ?? 'your email address';
+
+        this.confirmationService.confirm({
+            message: `The Excel file will be sent to ${emailText}. Do you want to proceed?`,
+            header: 'Confirmation',
+            closable: true,
+            closeOnEscape: true,
+            icon: 'pi pi-exclamation-triangle',
+            rejectButtonProps: {
+                label: 'Cancel',
+                severity: 'secondary',
+                outlined: true
+            },
+            acceptButtonProps: {
+                label: 'OK'
+            },
+            accept: () => {
+                try {
+                    const data = {
+                        ...this.filteredData,
+                        export: true
+                    };
+
+                    this.apiService.fetchActiveCompanyUsers(data).subscribe({
+                        next: (val) => {
+                            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Excel file successfully send to email' });
                         }
                     });
                 } catch (error) {
@@ -375,7 +401,6 @@ export class CompanyUsers implements OnInit {
             this.pageSize = event.rows;
 
             const filters = event.filters;
-            console.log(filters);
 
             this.filteredData = {
                 offSet: this.offSet,
@@ -384,8 +409,6 @@ export class CompanyUsers implements OnInit {
                 email: filters?.email?.[0]?.value ?? null,
                 userGroupName: filters?.userGroupName?.[0]?.value ?? null
             };
-
-            console.log(this.filteredData);
 
             this.companyUsersApi(this.filteredData);
         } catch (error) {

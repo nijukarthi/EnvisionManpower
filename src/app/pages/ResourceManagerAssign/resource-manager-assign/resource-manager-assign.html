@@ -1,21 +1,44 @@
 <p-fluid>
     <div class="card">
-        <h5>Resource Manager Assign</h5>
+        <div class="flex items-baseline-last justify-between">
+            <h5>Resource Manager Assign</h5>
+            <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
+        </div>
         <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
             <p-table [value]="resourceManagerDemandList" #dt [(selection)]="selectedApprovalList" dataKey="id" [lazy]="true"
-                [tableStyle]="{ 'min-width': '120rem' }" [paginator]="true" [rowsPerPageOptions]="[10, 20, 30]"
+                [tableStyle]="{ 'min-width': 'max-content' }" [paginator]="true" [rowsPerPageOptions]="[10, 20, 30]"
                 stripedRows [rows]="pageSize" [rowHover]="true" [showCurrentPageReport]="true"
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [first]="first"
                 responsiveLayout="scroll" [paginatorDropdownAppendTo]="mydiv"
-                [totalRecords]="totalRecords" (onPage)="pageChange($event)">
+                [totalRecords]="totalRecords" (onLazyLoad)="loadRMAssign($event)">
                 <ng-template #header>
                     <tr>
                         <th>S.No</th>
                         <th>View</th>
-                        <th>Demand Code</th>
-                        <th>SPN</th>
-                        <th>SPN Description</th>
-                        <th>Experience</th>
+                        <th>
+                            <div class="flex items-center justify-between">
+                                <span>Demand Code</span>
+                                <p-columnFilter type="text" field="demandCode" display="menu" [showAddButton]="false" />
+                            </div>
+                        </th>
+                        <th>
+                            <div class="flex items-center justify-between">
+                                <span>SPN Code</span>
+                                <p-columnFilter type="text" field="spnCode" display="menu" [showAddButton]="false" />
+                            </div>
+                        </th>
+                        <th>
+                            <div class="flex items-center justify-between">
+                                <span>SPN Description</span>
+                                <p-columnFilter type="text" field="spnDescription" display="menu" [showAddButton]="false" />
+                            </div>
+                        </th>
+                        <th>
+                            <div class="flex items-center justify-between">
+                                <span>Experience</span>
+                                <p-columnFilter type="text" field="experience" display="menu" [showAddButton]="false" />
+                            </div>
+                        </th>
                         <th>Quantity</th>
                         <th>Planned Deployment Date</th>
                         <th>Planned Release Date</th>

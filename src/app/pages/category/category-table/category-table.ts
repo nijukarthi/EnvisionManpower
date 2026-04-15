@@ -63,7 +63,6 @@ export class CategoryTable implements OnInit {
     fetchViewCategory() {
         this.apiService.fetchActiveCategory('').subscribe({
             next: (val) => {
-                console.log(val);
                 this.categoryList = val?.data;
                 this.categoryForm.patchValue(val);
             },
@@ -91,7 +90,6 @@ export class CategoryTable implements OnInit {
 
     onSubmit() {
         try {
-            console.log(this.categoryForm.value);
             if (!this.categoryId) {
                 if (this.categoryForm.valid) {
                     let name = this.categoryForm.get('categoryName').value;
@@ -100,7 +98,6 @@ export class CategoryTable implements OnInit {
                     };
                     this.apiService.createNewCategory(data).subscribe({
                         next: (val) => {
-                            console.log(val);
                             this.messageService.add({
                                 severity: 'success',
                                 summary: 'Success',
@@ -134,7 +131,6 @@ export class CategoryTable implements OnInit {
 
                     this.apiService.updateCategory(data).subscribe({
                         next: (val) => {
-                            console.log(val);
                             this.messageService.add({
                                 severity: 'success',
                                 summary: 'Success',
@@ -183,7 +179,6 @@ export class CategoryTable implements OnInit {
                     };
                     this.apiService.deleteCategory(data).subscribe({
                         next: (val) => {
-                            console.log(val);
                             this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Category Deleted Successfully' });
                             this.fetchViewCategory();
                         },

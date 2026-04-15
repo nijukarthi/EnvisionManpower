@@ -99,15 +99,12 @@ export class Demand implements OnInit {
     }
     selectedPCode(projectId: number) {
         try {
-            console.log(projectId);
-
             const data = {
                 projectId: projectId
             };
 
             this.apiService.viewProject(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.projectDetails = val.data;
                 },
                 error: (err) => {
@@ -123,7 +120,6 @@ export class Demand implements OnInit {
         try {
             this.apiService.fetchProjectCodes('').subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.PCodeList = val.data;
                 },
                 error: (err) => {
@@ -139,7 +135,6 @@ export class Demand implements OnInit {
         try {
             this.apiService.fetchActiveCategory('').subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.categoryList = val.data;
                 },
                 error: (err) => {
@@ -155,7 +150,6 @@ export class Demand implements OnInit {
         try {
             this.apiService.fetchSpnInfo('').subscribe({
                 next: (val) => {
-                    console.log('Spn Info', val);
                     this.spnInfoList = val.data;
                 },
                 error: (err) => {
@@ -186,8 +180,6 @@ export class Demand implements OnInit {
     }
 
     selectedSpnCode(event: any, rowIndex: number) {
-        console.log(event);
-
         this.demandDetails.at(rowIndex).patchValue({
             spnDescription: event,
             experience: event
@@ -195,8 +187,6 @@ export class Demand implements OnInit {
     }
 
     selectedSpnDescription(event: any, rowIndex: number) {
-        console.log(event);
-
         this.demandDetails.at(rowIndex).patchValue({
             spn: {
                 spnId: event
@@ -206,16 +196,12 @@ export class Demand implements OnInit {
     }
 
     selectedDeploymentDate(deploymentDate: any) {
-        console.log(deploymentDate);
-
         const releaseStart = new Date(deploymentDate);
         releaseStart.setDate(releaseStart.getDate() + 7);
         this.releaseMinDate = releaseStart;
     }
 
     onSubmit(): void {
-        console.log(this.demandForm.value);
-
         const data = {
             project: {
                 projectId: this.demandForm.get('project.projectId')?.value
@@ -226,11 +212,8 @@ export class Demand implements OnInit {
             demandDetails: this.demandForm.get('demandDetails')?.value
         };
 
-        console.log(data);
-
         this.apiService.createRequesition(data).subscribe({
             next: (val) => {
-                console.log(val);
                 this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Manpower Request Created Successfully' });
                 this.demandForm.reset();
                 this.demandDetails.clear();

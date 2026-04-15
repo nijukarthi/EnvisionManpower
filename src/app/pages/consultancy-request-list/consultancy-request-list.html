@@ -1,0 +1,108 @@
+<div class="card">
+    <div class="flex items-baseline-last justify-between">
+        <h5>Change Consultancy Requests</h5>
+        <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
+    </div>
+    <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
+        <p-table #dt [value]="consulRequestList" [rowHover]="true" [paginator]="true"
+            [rows]="pageSize" [lazy]="true" [rowsPerPageOptions]="[10, 20, 30, 40, 50]"
+            [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [totalRecords]="totalRecords" (onLazyLoad)="loadConsulRequest($event)"
+            [tableStyle]="{ 'min-width': 'max-content' }">
+            <ng-template #header>
+                <tr>
+                    <th>SL No</th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Employee Code</span>
+                            <p-columnFilter type="text" field="employeeCode" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Candidate Code</span>
+                            <p-columnFilter type="text" field="candidateCode" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Candidate Name</span>
+                            <p-columnFilter type="text" field="candidateName" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Consultancy Name</span>
+                            <p-columnFilter type="text" field="consultancyName" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
+                    <th>Status</th>
+                    <th>Created By</th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Created On</span>
+                            <p-columnFilter type="date" field="date" display="menu" matchMode="between" [showOperator]="false" [showAddButton]="false">
+                                <ng-template #filter let-filter="filterCallback" let-value>
+                                    <div class="flex flex-col gap-2">
+                                        <p-datepicker [ngModel]="value?.[0] || null" 
+                                            (ngModelChange)="updateRange($event, value, 0, filter)" placeholder="From Date" />
+
+                                        <p-datepicker [ngModel]="value?.[1] || null" 
+                                            (ngModelChange)="updateRange($event, value, 1, filter)" placeholder="To Date" />
+                                    </div>
+                                </ng-template>
+                            </p-columnFilter>
+                        </div>
+                    </th>
+                    @if (currentUser === UserGroups.RESOURCEMANAGER) {
+                        <th>Resource Manager Approval</th>
+                        <th>RM Approved By</th>
+                        <th>RM Approved On</th>
+                    }
+                </tr>
+            </ng-template>
+            <ng-template #body let-consul let-i="rowIndex">
+                <tr>
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ consul.candidate.employeeCode }}</td>
+                    <td>{{ consul.candidate.candidateCode }}</td>
+                    <td>{{ consul.candidate.candidateName }}</td>
+                    <td>{{ consul.consultancy.consultancyName }}</td>
+                    <td>
+                        <p-tag [value]="getStatusLabel(consul.approvedBy.approvalStatus)" 
+                            [severity]="getSeverity(consul.approvedBy.approvalStatus)" />
+                    </td>
+                    <td>{{ consul.createdBy.userName }}</td>
+                    <td>{{ consul.createdOn | date:'dd-MM-yyyy' }}</td>
+                    @if (currentUser === UserGroups.RESOURCEMANAGER) {
+                        <td style="text-align: center;">
+                            @if (consul.approvedBy.approvalStatus === APPROVALSTATUS.ACCEPTED) {
+                                <p-button icon="pi pi-check" [rounded]="true" [disabled]="true" />
+                            }
+                            @else if (consul.approvedBy.approvalStatus === APPROVALSTATUS.REJECTED){
+                                <p-button icon="pi pi-times" [rounded]="true" [disabled]="true" severity="danger" />
+                            } @else if (consul.approvedBy.approvalStatus === APPROVALSTATUS.PENDING) { 
+                                <div class="flex items-center justify-center gap-2">
+                                    <p-button icon="pi pi-check" rounded 
+                                        (onClick)="resourceManagerApproval(consul)" />
+                                    <p-button icon="pi pi-times" rounded severity="danger" 
+                                        (onClick)="resourceManagerApproval(consul)" />
+                                </div>
+                            }
+                        </td>
+                    }
+                    <td>{{ consul?.approvedBy?.approvedBy?.userName || '-' }}</td>
+                    <td>{{ consul?.approvedBy?.approvedOn ? 
+                        (consul?.approvedBy?.approvedOn  | date:'dd-MM-yyyy') : '-' }}</td>
+                </tr>
+            </ng-template>
+            <ng-template #emptymessage>
+                <tr>
+                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground)">No Records Found</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+<p-toast />

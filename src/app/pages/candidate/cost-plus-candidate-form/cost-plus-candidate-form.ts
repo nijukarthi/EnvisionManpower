@@ -133,7 +133,6 @@ export class CostPlusCandidateForm implements OnInit {
 
         this.route.paramMap.subscribe((param) => {
             const id = param.get('id');
-            console.log(id);
 
             if (id) {
                 this.candidateId = Number(id);
@@ -151,7 +150,6 @@ export class CostPlusCandidateForm implements OnInit {
 
             this.apiService.fetchViewCandidate(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.costPlusCandidateForm.patchValue(val.data);
                 },
                 error: (err) => {
@@ -223,10 +221,8 @@ export class CostPlusCandidateForm implements OnInit {
     updatePersonalDetails() {
         try {
             const { monthlyReimbursements, oneTimeReimbursements, ...data } = this.costPlusCandidateForm.value;
-            console.log(data);
             this.apiService.updateCostPlusPersonalCandidate(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Candidate Personal Detials Updated Successfully' });
                     this.fetchViewCandidate(this.candidateId);
                 },
@@ -247,11 +243,9 @@ export class CostPlusCandidateForm implements OnInit {
                 candidateId: this.candidateId,
                 ...data
             };
-            console.log(data);
 
             this.apiService.updateMonthlyReimbursementCandidate(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Candidate Monthly Reimbursements Updated Successfully' });
                     this.fetchViewCandidate(this.candidateId);
                 },
@@ -266,15 +260,12 @@ export class CostPlusCandidateForm implements OnInit {
 
     selectedPCode(projectId: any) {
         try {
-            console.log(projectId);
-
             const data = {
                 projectId: projectId
             };
 
             this.apiService.viewProject(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.projectDetails = val.data;
                 },
                 error: (err) => {
@@ -286,20 +277,10 @@ export class CostPlusCandidateForm implements OnInit {
         }
     }
 
-    // selectedSpnId(spnId: number){
-    //   this.selectedSpn = this.spnInfoList.find((spn: any) => spn.spnId === spnId);
-
-    //   const spnGroup = this.costPlusCandidateForm.get('employmentDetails.spn');
-    //   spnGroup?.patchValue({
-    //     spnId: spnId
-    //   })
-    // }
-
     fetchEnvisionRolesInfoList() {
         try {
             this.apiService.fetchRoleInfoList('').subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.envisionRoleList = val.data;
                 },
                 error: (err) => {
@@ -314,10 +295,8 @@ export class CostPlusCandidateForm implements OnInit {
     costPlusCandidateApi(data: any) {
         try {
             if (!this.candidateId) {
-                console.log(data);
                 this.apiService.createCostPlusCandidates(data).subscribe({
                     next: (val) => {
-                        console.log(val);
                         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Candidate Created Successfully' });
                         setTimeout(() => {
                             this.router.navigate(['/home/candidates/cost-plus']);
@@ -334,7 +313,6 @@ export class CostPlusCandidateForm implements OnInit {
             } else {
                 this.apiService.updateOneTimeReimbursementCandidate(data).subscribe({
                     next: (val) => {
-                        console.log(val);
                         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Candidate Updated Successfully' });
                         setTimeout(() => {
                             this.router.navigate(['/home/candidates/cost-plus']);
@@ -355,8 +333,6 @@ export class CostPlusCandidateForm implements OnInit {
     }
 
     onSubmit() {
-        console.log(this.costPlusCandidateForm.getRawValue());
-
         let data;
 
         if (this.candidateId) {
@@ -366,11 +342,9 @@ export class CostPlusCandidateForm implements OnInit {
                 candidateId: this.candidateId,
                 ...data
             };
-            console.log(data);
             this.costPlusCandidateApi(data);
         } else {
             const data = this.costPlusCandidateForm.getRawValue();
-            console.log('Final data to send:', data);
             this.costPlusCandidateApi(data);
         }
     }
@@ -382,11 +356,9 @@ export class CostPlusCandidateForm implements OnInit {
                 candidateId: this.candidateId,
                 ...formValue
             };
-            console.log(data);
 
             this.apiService.updateCostPlusSalaryDetails(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Candidate Salary Details Updated Successfully' });
                     setTimeout(() => {
                         this.router.navigate(['/home/candidates/cost-plus']);
@@ -406,7 +378,6 @@ export class CostPlusCandidateForm implements OnInit {
     }
 
     submitEmploymentDetails() {
-        console.log(this.costPlusCandidateForm.getRawValue());
         const data = this.costPlusCandidateForm.getRawValue();
 
         if (this.costPlusCandidateForm.get('costPlusSalaryDetails')?.dirty) {

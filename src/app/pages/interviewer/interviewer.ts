@@ -31,6 +31,8 @@ export class Interviewer implements OnInit {
     actionName = 'Submit';
 
     currentUser = Number(sessionStorage.getItem('userGroupId'));
+
+    currentUserEmail = sessionStorage.getItem('userEmail');
             
     USERGROUPS = UserGroups;
 
@@ -80,7 +82,6 @@ export class Interviewer implements OnInit {
         try {
             this.apiService.fetchActiveInterviewers(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.interviewerList = val.data.data;
                     this.totalRecords = val?.data?.length ?? 0;
                 },
@@ -100,8 +101,6 @@ export class Interviewer implements OnInit {
                 pageSize: this.pageSize
             };
 
-            console.log(data);
-
             this.interviewerApi(data);
         } catch (error) {
             console.log(error);
@@ -118,14 +117,11 @@ export class Interviewer implements OnInit {
 
     onSubmit() {
         try {
-            console.log(this.interviewerForm.value);
             if (!this.userId) {
                 const { userId, ...data } = this.interviewerForm.value;
-                console.log(data);
 
                 this.apiService.createNewInterviewer(data).subscribe({
                     next: (val) => {
-                        console.log(val);
                         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Interviewer Created Successfully' });
                         this.interviewerForm.reset();
                         this.openInterviewer = false;
@@ -144,7 +140,6 @@ export class Interviewer implements OnInit {
 
                 this.apiService.updateInterviewer(data).subscribe({
                     next: (val) => {
-                        console.log(val);
                         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Interviewer Updated Successfully' });
                         this.interviewerForm.reset();
                         this.openInterviewer = false;
@@ -171,7 +166,6 @@ export class Interviewer implements OnInit {
             };
             this.apiService.fetchViewInterviewer(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.interviewerForm.patchValue(val.data);
                 },
                 error: (err) => {
@@ -217,12 +211,47 @@ export class Interviewer implements OnInit {
 
                     this.apiService.deleteInterviewer(data).subscribe({
                         next: (val) => {
-                            console.log(val);
                             this.messageService.add({ severity: 'success', summary: 'Success', detail: `${candidate.userName} Deleted Successfully` });
                             this.fetchActiveInterviewers();
                         },
                         error: (err) => {
                             console.log(err);
+                        }
+                    });
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+        });
+    }
+
+    exportToExcel(){
+        const emailText = this.currentUserEmail ?? 'your email address';
+
+        this.confirmationService.confirm({
+            message: `The Excel file will be sent to ${emailText}. Do you want to proceed?`,
+            header: 'Confirmation',
+            closable: true,
+            closeOnEscape: true,
+            icon: 'pi pi-exclamation-triangle',
+            rejectButtonProps: {
+                label: 'Cancel',
+                severity: 'secondary',
+                outlined: true
+            },
+            acceptButtonProps: {
+                label: 'OK'
+            },
+            accept: () => {
+                try {
+                    const data = {
+                        ...this.filteredData,
+                        isExport: true
+                    };
+
+                    this.apiService.fetchActiveInterviewers(data).subscribe({
+                        next: (val) => {
+                            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Excel file successfully send to email' });
                         }
                     });
                 } catch (error) {
@@ -244,7 +273,6 @@ export class Interviewer implements OnInit {
             this.pageSize = event.rows;
 
             const filters = event.filters;
-            console.log(filters);
 
             this.filteredData = {
                 offSet: this.offSet,
@@ -252,7 +280,6 @@ export class Interviewer implements OnInit {
                 search: filters?.interviewer?.[0]?.value ?? null
             };
 
-            console.log(this.filteredData);
             this.interviewerApi(this.filteredData);
         } catch (error) {
             console.log(error);

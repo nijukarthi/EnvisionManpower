@@ -5,7 +5,7 @@ import { Apiservice } from '@/service/apiservice/apiservice';
 import { DemandStatus } from '@/models/demand-status/demand-status.enum';
 import { ApprovalStatus } from '@/models/approval-status/approval-status.enum';
 import { UserGroups } from '@/models/usergroups/usergroups.enum';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-approval',
@@ -17,7 +17,9 @@ export class Approval implements OnInit {
   @ViewChild('dt') dt: any;
 
   demandProcessingList: any[] = [];
+
   requisitionDetails: any;
+  filteredData: any;
 
   statuses: any[] = [];
 
@@ -26,6 +28,8 @@ export class Approval implements OnInit {
   APPROVALSTATUS = ApprovalStatus;
   
   loggedUserGroupId = Number(sessionStorage.getItem('userGroupId'));
+
+  currentUserEmail = sessionStorage.getItem('userEmail');
 
   offSet = 0;
   pageSize = 10;
@@ -55,7 +59,9 @@ export class Approval implements OnInit {
 
   selectedStatuses: number[] = [102];
 
-  constructor(private fb: FormBuilder, private apiService: Apiservice, private messageService: MessageService) {}
+  constructor(private fb: FormBuilder, private apiService: Apiservice, private messageService: MessageService,
+    private confirmationService: ConfirmationService
+  ) {}
 
   ngOnInit(): void {
     this.fetchDemandRequest();
@@ -71,7 +77,6 @@ export class Approval implements OnInit {
   fetchUserProfile(){
     this.apiService.fetchUserProfile('').subscribe({
       next: val => {
-          console.log(val);
           this.loggedInUserDetails = val.data;
           if(this.loggedInUserDetails){
                 if(this.loggedInUserDetails.userGroupId == 316 && this.loggedInUserDetails.userGroupName == 'Department Head'){
@@ -91,7 +96,6 @@ export class Approval implements OnInit {
     try {
       this.apiService.fetchDemandRequest(data).subscribe({
         next: val => {
-          console.log(val);
           this.demandProcessingList = val?.data?.data;
           this.totalRecords = val?.data?.length ?? 0;
         },
@@ -115,8 +119,6 @@ export class Approval implements OnInit {
         pageSize: this.pageSize,
         demandStatus: [102]
       }
-
-      console.log(data);
   
       this.manpowerApprovalApi(data);
     } catch (error) {
@@ -125,9 +127,7 @@ export class Approval implements OnInit {
   }
 
   demandQtyChange(demandId: number, quantity: number){
-    try {  
-      console.log(quantity);
-  
+    try {    
       const data = {
         demandId: demandId,
         quantity: quantity
@@ -135,7 +135,6 @@ export class Approval implements OnInit {
   
       this.apiService.editDemandQuantity(data).subscribe({
         next: val => {
-          console.log(val);
           this.messageService.add({severity: 'success', summary: 'Success', detail: 'Manpower Quantity Updated Successfully'});
           this.fetchDemandRequest();
         },
@@ -150,8 +149,6 @@ export class Approval implements OnInit {
 
   clusterHeadApproval(demandId: number, type: 'Accepted' | 'Rejected'){
     try {
-      console.log(demandId);
-
       const data = {
         demandId: demandId,
         approvalStatus: type === 'Accepted' ? 200 : 406
@@ -159,7 +156,6 @@ export class Approval implements OnInit {
 
       this.apiService.approveDemandByClusterHead(data).subscribe({
         next: val => {
-          console.log(val);
           this.messageService.add({severity: 'success', summary: 'Success', 
             detail: type === 'Accepted' ? 'Manpower Successfully Accepted' : 'Manpower Rejected' });
           this.fetchDemandRequest();
@@ -175,8 +171,6 @@ export class Approval implements OnInit {
 
   departmentHeadApproval(demandId: number, type: 'Accepted' | 'Rejected'){
     try {
-      console.log(demandId);
-
       const data = {
         demandId: demandId,
         approvalStatus: type === 'Accepted' ? 200 : 406
@@ -184,7 +178,6 @@ export class Approval implements OnInit {
 
       this.apiService.approveDemandByDepartmentHead(data).subscribe({
         next: val => {
-          console.log(val);
           this.messageService.add({severity: 'success', summary: 'Success', detail: type === 'Accepted' ? 
             'Manpower Successfully Accepted' : 'Manpower Rejected'});
           this.fetchDemandRequest();
@@ -209,7 +202,6 @@ export class Approval implements OnInit {
 
       this.apiService.viewRequisition(data).subscribe({
         next: val => {
-          console.log(val);
           this.requisitionDetails = val.data;
         },
         error: err => {
@@ -221,6 +213,45 @@ export class Approval implements OnInit {
     }
   }
 
+  exportToExcel(){
+    const emailText = this.currentUserEmail ?? 'your email address';
+
+    this.confirmationService.confirm({
+      message: `The Excel file will be sent to ${emailText}. Do you want to proceed?`,
+      header: 'Confirmation',
+      closable: true,
+      closeOnEscape: true,
+      icon: 'pi pi-exclamation-triangle',
+      rejectButtonProps: {
+          label: 'Cancel',
+          severity: 'secondary',
+          outlined: true
+      },
+      acceptButtonProps: {
+          label: 'OK'
+      },
+      accept: () => {
+        try {
+          const data = {
+            ...this.filteredData,
+            export: true
+          }
+
+          this.apiService.fetchDemandRequest(data).subscribe({
+            next: val => {
+              this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Excel file successfully send to email' });
+            },
+            error: err => {
+              console.log(err);
+            }
+          })
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    });
+  }
+
   loadDemands(event: any) {
     try {   
       this.first = event.first;
@@ -228,11 +259,8 @@ export class Approval implements OnInit {
       this.pageSize = event.rows;
   
       const filters = event.filters;
-      // console.log(filters.demandCode[0]?.value);
-      // console.log(filters.spnCode[0]?.value);
-      console.log(filters);
   
-      const payload: any = {
+      this.filteredData = {
         offSet: this.offSet,
         pageSize: this.pageSize,
         demandStatus: filters?.status?.[0]?.value ?? [102],
@@ -243,9 +271,7 @@ export class Approval implements OnInit {
         envisionRoleName: filters?.role?.[0].value ?? ''
       };
 
-      console.log(payload);
-
-      this.manpowerApprovalApi(payload);
+      this.manpowerApprovalApi(this.filteredData);
     } catch (error) {
       console.log(error);
     }

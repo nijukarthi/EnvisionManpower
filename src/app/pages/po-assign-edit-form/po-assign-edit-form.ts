@@ -69,7 +69,6 @@ export class PoAssignEditForm implements OnInit {
 
       this.apiService.fetchViewPurchaseOrder(data).subscribe({
         next: val => {
-          console.log(val);
           this.poDetails = val?.data;
           this.populateItems();
           const converted = {
@@ -99,12 +98,10 @@ export class PoAssignEditForm implements OnInit {
   }
 
   selectedPODate(poDate: Date){
-    console.log(poDate);
     this.minPODate = poDate;
   }
 
   selectedPOStartDate(poStartDate: Date){
-    console.log(poStartDate);
     this.minPOStartDate = poStartDate;
   }
 
@@ -136,7 +133,6 @@ export class PoAssignEditForm implements OnInit {
 
     this.poLineItems.controls.forEach((ctrl: any) => {
       total += ctrl.get('lineTotal').value || 0;
-      // console.log(total);
       this.poDetails.totalValue = total;
     });
 
@@ -153,8 +149,6 @@ export class PoAssignEditForm implements OnInit {
 
   onSubmit(){
     try {
-      console.log(this.updatePOForm.getRawValue());
-
       const changedItems = this.getChangedLineItems().map(item => ({
         candidateId: item.value.candidateId,
         monthsAllowed: item.value.monthsAllowed,
@@ -162,14 +156,11 @@ export class PoAssignEditForm implements OnInit {
         taxRate: item.value.taxRate,
         remove: item.value.remove
       }));
-      console.log(changedItems);
 
       const data = {
         ...this.updatePOForm.getRawValue(),
         items: changedItems
       };
-
-      console.log(data);
 
       // this.apiService.updatePurchaseOrder(data).subscribe({
       //   next: val => {
@@ -201,8 +192,6 @@ export class PoAssignEditForm implements OnInit {
 
       rowGroup.markAsDirty();
       rowGroup.get('remove')?.markAsDirty();
-
-      console.log(rowGroup.value);
 
       if (!isRemoved) {
         rowGroup.disable({ emitEvent: false });
