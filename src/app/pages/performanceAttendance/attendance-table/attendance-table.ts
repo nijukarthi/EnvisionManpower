@@ -67,7 +67,6 @@ export class AttendanceTable implements OnInit {
     }
 
     getMenuItems() {
-        console.log('getMenuItems called');
         return [
             {
                 label: 'Import',
@@ -101,7 +100,6 @@ export class AttendanceTable implements OnInit {
                 month: this.month,
                 year: this.year
             };
-            console.log(data);
 
             this.attendanceApi(data);
         } catch (error) {
@@ -113,7 +111,6 @@ export class AttendanceTable implements OnInit {
         try {
             this.apiService.fetchAttendanceList(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.attendanceList = val?.data?.data;
                     this.totalRecords = val?.data?.length ?? 0;
 
@@ -190,11 +187,8 @@ export class AttendanceTable implements OnInit {
             this.dt.cancelRowEdit(this.editingRow);
         }
 
-        console.log(attendance);
-
         this.editingRow = attendance;
         attendance.editing = true;
-        console.log(attendance);
 
         setTimeout(() => {
             const fields = [
@@ -231,8 +225,6 @@ export class AttendanceTable implements OnInit {
     // https://angular.dev/tools/cli/build#configuring-commonjs-dependencies
     submitAttendanceForm(attendance: any) {
         try {
-            console.log(attendance);
-
             const data = {
                 employmentDetails: {
                     employmentId: attendance.employmentDetails.employmentId
@@ -246,11 +238,8 @@ export class AttendanceTable implements OnInit {
                 weekOff: attendance.weekOff
             };
 
-            console.log(data);
-
             this.apiService.updateAttendanceDetails(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Successfully Updated Attendance Details' });
                     this.attendanceApi(this.filteredData);
                 },
@@ -291,13 +280,9 @@ export class AttendanceTable implements OnInit {
             this.pageSize = event.rows;
 
             const filters = event.filters;
-            console.log(filters);
 
             const formatDate = (d: any) => {
-                console.log(d);
                 if (!d) return null;
-                console.log(typeof d);
-                console.log(d.toLocaleDateString('en-CA'));
                 return typeof d === 'string' ? d : d.toLocaleDateString('en-CA');
             };
 
@@ -312,6 +297,7 @@ export class AttendanceTable implements OnInit {
                 candidateCode: filters?.candidateCode?.[0]?.value ?? null,
                 candidateName: filters?.candidateName?.[0]?.value ?? null,
                 consultancyName: filters?.consultancyName?.[0]?.value ?? null,
+                categoryName: filters?.categoryName?.[0]?.value ?? null,
                 projectCode: this.getFilterValues(filters, 'projectCode'),
                 siteInchargeName: filters?.siteInchargeName?.[0]?.value ?? null,
                 clusterName: filters?.clusterName?.[0]?.value ?? null,
@@ -324,8 +310,6 @@ export class AttendanceTable implements OnInit {
                 joiningDateFrom: Array.isArray(dateValue) ? formatDate(dateValue[0]) : null,
                 joiningDateTo: Array.isArray(dateValue) ? formatDate(dateValue[1]) : null
             };
-
-            console.log(this.filteredData);
 
             this.attendanceApi(this.filteredData);
         } catch (error) {
@@ -355,15 +339,12 @@ export class AttendanceTable implements OnInit {
                 year: this.year
             };
 
-            console.log(payload);
-
             const formData = new FormData();
             formData.append('file', file);
             formData.append('payload', new Blob([JSON.stringify(payload)], { type: 'application/json' }));
 
             this.apiService.uploadAttendanceExcel(formData).subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.fetchAttendanceList();
 
                     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Excel uploaded successfully' });
@@ -407,12 +388,9 @@ export class AttendanceTable implements OnInit {
                         export: true
                     };
 
-                    console.log(data);
 
                     this.apiService.fetchAttendanceList(data).subscribe({
                         next: (val) => {
-                            console.log(val);
-
                             this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Excel file successfully send to email' });
                         }
                     });

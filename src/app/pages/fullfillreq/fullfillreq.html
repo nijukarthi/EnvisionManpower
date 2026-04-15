@@ -1,21 +1,44 @@
 <p-fluid>
     <div class="card">
-        <h5>Assign Standard Role</h5>
+        <div class="flex items-baseline-last justify-between">
+            <h5>Assign Standard Role</h5>
+            <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
+        </div>
         <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
             <p-table [value]="demandFullfillList"  #dt
                 [tableStyle]="{ 'min-width': '110rem' }" [paginator]="true" [rowsPerPageOptions]="[10, 20, 30]" stripedRows
                 [rows]="pageSize" [rowHover]="true" [showCurrentPageReport]="true" [first]="first"
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [lazy]="true"
-                responsiveLayout="scroll" (onPage)="pageChange($event)" [totalRecords]="totalRecords"
-                [paginatorDropdownAppendTo]="mydiv">
+                responsiveLayout="scroll" [totalRecords]="totalRecords"
+                [paginatorDropdownAppendTo]="mydiv" (onLazyLoad)="loadStandardRole($event)">
                 <ng-template #header>
                     <tr>
                         <th>S.No</th>
                         <th>View</th>
-                        <th>Demand Code</th>
-                        <th>SPN</th>
-                        <th>SPN Description</th>
-                        <th>Experience</th>
+                        <th>
+                            <div class="flex items-center justify-between">
+                                <span>Demand Code</span>
+                                <p-columnFilter type="text" field="demandCode" display="menu" [showAddButton]="false" />
+                            </div>
+                        </th>
+                        <th>
+                            <div class="flex items-center justify-between">
+                                <span>SPN Code</span>
+                                <p-columnFilter type="text" field="spnCode" display="menu" [showAddButton]="false" />
+                            </div>
+                        </th>
+                        <th>
+                            <div class="flex items-center justify-between">
+                                <span>SPN Description</span>
+                                <p-columnFilter type="text" field="spnDescription" display="menu" [showAddButton]="false" />
+                            </div>
+                        </th>
+                        <th>
+                            <div class="flex items-center justify-between">
+                                <span>Experience</span>
+                                <p-columnFilter type="text" field="experience" display="menu" [showAddButton]="false" />
+                            </div>
+                        </th>
                         <th>Quantity</th>
                         <th>Planned deployment date</th>
                         <th>Planned release date</th>
@@ -36,10 +59,14 @@
                         <td>{{ demand.plannedDeploymentDate }}</td>
                         <td>{{ demand.plannedReleaseDate }}</td>
                         <td>
-                            <p-select [options]="envisionRoleList" [ngModel]="demand.envisionRole ? demand.envisionRole.id : null" appendTo="body" optionLabel="roleName" optionValue="id"
-                                placeholder="Select Role" [filter]="true" filterBy="roleName" 
-                                class="w-full md:w-56" [disabled]="loggedUserGroupId !== UserGroups.RESOURCEMANAGER && loggedUserGroupId !== UserGroups.ADMIN"
-                                (onChange)="assignEnvisionRoles(demand.demandId, $event.value)" />
+                            @if (currentUser !== UserGroups.SERVICEMANAGER) {
+                                <p-select [options]="envisionRoleList" [ngModel]="demand.envisionRole ? demand.envisionRole.id : null" appendTo="body" optionLabel="roleName" optionValue="id"
+                                    placeholder="Select Role" [filter]="true" filterBy="roleName" 
+                                    class="w-full md:w-56" [disabled]="loggedUserGroupId !== UserGroups.RESOURCEMANAGER && loggedUserGroupId !== UserGroups.ADMIN"
+                                    (onChange)="assignEnvisionRoles(demand.demandId, $event.value)" />
+                            }@else {
+                                <span>{{ demand.envisionRole ? demand.envisionRole.roleName : '-' }}</span>
+                            }
                         </td>
                     </tr>
                 </ng-template>

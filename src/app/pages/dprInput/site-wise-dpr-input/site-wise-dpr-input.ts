@@ -50,7 +50,6 @@ export class SiteWiseDprInput implements OnInit {
     try {
       this.apiService.fetchDprProjectList(data).subscribe({
         next: val => {
-          console.log(val);
           this.dprProjectList = val?.data?.data;
           this.totalRecords = val?.data?.length ?? 0;
         },
@@ -70,8 +69,6 @@ export class SiteWiseDprInput implements OnInit {
         pageSize: this.pageSize
       };
 
-      console.log(data);
-
       this.dprProjectDetailsApi(data);
     } catch (error) {
       console.log(error);
@@ -81,8 +78,6 @@ export class SiteWiseDprInput implements OnInit {
   selectedProj(proj: any){
     this.selectedProject = proj;
     this.selectedProjCode = proj.projectCode;
-    console.log(this.selectedProjCode);
-    console.log(this.selectedProject);
   }
 
   unSelectedProj(){
@@ -182,11 +177,8 @@ export class SiteWiseDprInput implements OnInit {
       formData.append('file', file);
       formData.append('projectId', this.selectedProject?.dprProjectDetailsId.toString());
 
-      console.log(formData);
-
       this.apiService.importProdQualExcel(formData).subscribe({
         next: val => {
-          console.log(val);
           this.fetchDprProjectDetails();
           this.selectedDprProject = [];
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Excel uploaded successfully' });
@@ -215,11 +207,8 @@ export class SiteWiseDprInput implements OnInit {
       formData.append('file', file);
       formData.append('projectId', this.selectedProject.dprProjectDetailsId.toString());
 
-      console.log(formData);
-
       this.apiService.importDispRecvExcel(formData).subscribe({
         next: val => {
-          console.log(val);
           this.fetchDprProjectDetails();
           this.selectedDprProject = [];
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Excel uploaded successfully' });
@@ -248,11 +237,8 @@ export class SiteWiseDprInput implements OnInit {
       formData.append('file', file);
       formData.append('projectId', this.selectedProject.dprProjectDetailsId.toString());
 
-      console.log(formData);
-
       this.apiService.importFndICExcel(formData).subscribe({
         next: val => {
-          console.log(val);
           this.fetchDprProjectDetails();
           this.selectedDprProject = [];
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Excel uploaded successfully' });
@@ -279,7 +265,6 @@ export class SiteWiseDprInput implements OnInit {
 
       this.apiService.exportProdQualExcel(this.selectedProjCode).subscribe({
         next: (val: Blob) => {
-          console.log(val);
           const url = window.URL.createObjectURL(val);
           const a = document.createElement('a');
           a.href = url;
@@ -315,7 +300,6 @@ export class SiteWiseDprInput implements OnInit {
 
       this.apiService.exportDispRecvExcel(this.selectedProjCode).subscribe({
         next: val => {
-          console.log(val);
           const url = window.URL.createObjectURL(val);
           const a = document.createElement('a');
           a.href = url;
@@ -351,7 +335,6 @@ export class SiteWiseDprInput implements OnInit {
 
       this.apiService.exportFndICExcel(this.selectedProjCode).subscribe({
         next: val => {
-          console.log(val);
           const url = window.URL.createObjectURL(val);
           const a = document.createElement('a');
           a.href = url;
@@ -427,11 +410,8 @@ export class SiteWiseDprInput implements OnInit {
             isExport: true
           }
 
-          console.log(data);
-
           this.apiService.fetchDprProjectList(data).subscribe({
             next: val => {
-              console.log(val);
               this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Excel file successfully send to email' });
             },
             error: err => {
@@ -470,11 +450,8 @@ export class SiteWiseDprInput implements OnInit {
             dprProjectDetailsId: this.selectedDprProj.dprProjectDetailsId
           }
 
-          console.log(data);
-
           this.apiService.deleteDprProject(data).subscribe({
             next: val => {
-              console.log(val);
               this.messageService.add({ severity: 'success', summary: 'Success', detail: 'DPR Project Deleted Successfully' });
               this.fetchDprProjectDetails();
             },
@@ -491,7 +468,6 @@ export class SiteWiseDprInput implements OnInit {
 
   dprProjectMenu(event: Event, menu: any, project: any){
     this.selectedDprProj = project;
-    console.log(this.selectedDprProj);
     menu.toggle(event);
   }
 
@@ -502,7 +478,6 @@ export class SiteWiseDprInput implements OnInit {
       this.pageSize = event.rows;
 
       const filters = event.filters;
-      console.log(filters);
 
       this.filteredData = {
         offSet: this.offSet,
@@ -513,8 +488,6 @@ export class SiteWiseDprInput implements OnInit {
         clusterName: filters?.clusterName?.[0]?.value ?? null,
         zone: filters?.zone?.[0]?.value ?? null
       };
-      
-      console.log(this.filteredData);
 
       this.dprProjectDetailsApi(this.filteredData);
     } catch (error) {

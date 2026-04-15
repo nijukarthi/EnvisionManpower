@@ -56,7 +56,6 @@ export class InvoiceSubmission implements OnInit {
         try {
             this.apiService.fetchInvoiceSubmissionList(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.invoiceSubmissionList = val?.data?.data;
                     this.totalRecords = val?.data?.length ?? 0;
                 },
@@ -76,7 +75,6 @@ export class InvoiceSubmission implements OnInit {
                 pageSize: this.pageSize
             };
 
-            console.log(data);
             this.invoiceSubmissionApi(data);
         } catch (error) {
             console.log(error);
@@ -158,7 +156,6 @@ export class InvoiceSubmission implements OnInit {
             this.pageSize = event.rows;
 
             const filters = event.filters;
-            console.log(filters);
 
             const formatDate = (d: any) => {
                 if (!d) return null;
@@ -180,7 +177,7 @@ export class InvoiceSubmission implements OnInit {
                 invoiceDateFrom: Array.isArray(dateValue) ? formatDate(dateValue[0]) : null,
                 invoiceDateTo: Array.isArray(dateValue) ? formatDate(dateValue[1]) : null
             };
-            console.log(payload);
+
             this.invoiceSubmissionApi(payload);
         } catch (error) {
             console.log(error);

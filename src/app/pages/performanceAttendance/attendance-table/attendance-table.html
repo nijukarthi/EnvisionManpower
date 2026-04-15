@@ -58,6 +58,12 @@
                             <p-columnFilter type="text" field="consultancyName" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
+                    <th style="min-width:250px">
+                        <div class="flex items-center justify-between">
+                            <span>Category Name</span>
+                            <p-columnFilter type="text" field="categoryName" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
                     <th style="min-width:150px">
                         <div class="flex items-center justify-between">
                             <span>Project Code</span>
@@ -148,7 +154,7 @@
                     <th style="min-width:120px">Week Off</th>
                     <th style="min-width:120px">Paid Leave</th>
                     <th style="min-width:120px">Unpaid Leave</th>
-                    @if (currentUser !== USERGROUPS.READONLYADMIN) {
+                    @if (currentUser !== USERGROUPS.READONLYADMIN && currentUser !== USERGROUPS.SERVICEMANAGER) {
                         <th style="min-width:80px" alignFrozen="right" pFrozenColumn>Actions</th>
                     }
                 </tr>
@@ -160,6 +166,7 @@
                     <td pFrozenColumn alignFrozen="left">{{ attendance.candidate?.candidateCode || '-' }}</td>
                     <td pFrozenColumn alignFrozen="left">{{ attendance.candidate?.candidateName || '-' }}</td>
                     <td>{{ attendance.candidate.consultancy.consultancyName || '-' }}</td>
+                    <td>{{ attendance.candidate.category.categoryName || '-' }}</td>
                     <td>{{ attendance.employmentDetails.project.projectCode || '-' }}</td>
                     <td>{{ attendance.employmentDetails.siteIncharge.userName || '-' }}</td>
                     <td>{{ attendance.employmentDetails.project.siteName || '-' }}</td>
@@ -215,7 +222,7 @@
                             <ng-template #output> {{ attendance.absentDays }} </ng-template>
                         </p-cellEditor>
                     </td>
-                    @if (currentUser !== USERGROUPS.READONLYADMIN) {
+                    @if (currentUser !== USERGROUPS.READONLYADMIN && currentUser !== USERGROUPS.SERVICEMANAGER) {
                         <td class="flex items-center justify-center gap-2" alignFrozen="right" pFrozenColumn>
                             @if (!editing) {
                             <button pButton pRipple type="button" icon="pi pi-pencil" 

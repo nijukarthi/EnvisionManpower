@@ -123,7 +123,6 @@ export class AppTopbar implements OnInit {
         try {
             this.apiService.fetchUserProfile('').subscribe({
                 next: val => {
-                    console.log(val);
                     this.userDetails = val.data;
                 },
                 error: err => {

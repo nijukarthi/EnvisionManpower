@@ -2,7 +2,11 @@
     <div class="flex items-baseline-last justify-between">
         <h5>Training</h5>
         <div class="flex gap-2">
-            <p-button icon="pi pi-external-link" label="Export to Excel" (click)="exportToExcel()" />
+            @if (currentUser === USERGROUPS.ADMIN || currentUser === USERGROUPS.RESOURCEMANAGER) {
+                <p-tieredmenu #menu [model]="menuItems" [popup]="true" appendTo="body" />
+                <p-button (onClick)="menu.toggle($event)" label="Actions" icon="pi pi-angle-down" iconPos="right" />
+                <input #excelInput type="file" accept=".xls,.xlsx" hidden (change)="excelSelected($event)" />
+            }
             <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
         </div>
     </div>
@@ -50,6 +54,12 @@
                     </th>
                     <th rowspan="2">
                         <div class="flex items-center justify-between">
+                            <span>Category Name</span>
+                            <p-columnFilter type="text" field="categoryName" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
+                    <th rowspan="2">
+                        <div class="flex items-center justify-between">
                             <span>Project Code</span>
                             <p-columnFilter type="text" field="projectCode" display="menu" [showAddButton]="false" />
                         </div>
@@ -88,12 +98,13 @@
                     </th>
                     <th rowspan="2">Current Experience</th>
                     <th rowspan="2">Total Experience</th>
-                    <th colspan="4" style="text-align: center">GWO</th>
-                    @if (currentUser !== USERGROUPS.READONLYADMIN){
+                    <th colspan="5" style="text-align: center">GWO</th>
+                    @if (currentUser !== USERGROUPS.READONLYADMIN && currentUser !== USERGROUPS.SERVICEMANAGER){
                         <th rowspan="2" style="text-align: center">Actions</th>
                     }
                 </tr>
                 <tr>
+                    <th>Maximo ID</th>
                     <th>
                         <div class="flex items-center justify-between">
                             <span>Training Status</span>
@@ -145,6 +156,7 @@
                     <td>{{ training.employeeCode || '-' }}</td>
                     <td>{{ training.candidateCode || '-' }}</td>
                     <td>{{ training.candidateName }}</td>
+                    <td>{{ training?.category?.categoryName || '-' }}</td>
                     <td>{{ training.employmentDetails.project.projectCode }}</td>
                     <td>{{ training.employmentDetails.project.siteName ?? '-' }}</td>
                     <td>{{ training.employmentDetails.cluster.clusterName }}</td>
@@ -153,6 +165,16 @@
                     <td>{{ training.employmentDetails.joiningDate || '-' }}</td>
                     <td>{{ training.employmentDetails.currentExperience || '-' }}</td>
                     <td>{{ training.employmentDetails.totalExperience || '-' }}</td>
+                    <td #pEditableColumn>
+                        <p-cellEditor>
+                            <ng-template #input>
+                                <input type="text" pInputText [(ngModel)]="training.maximoId" />
+                            </ng-template>
+                            <ng-template #output>
+                                {{ training?.maximoId || '-' }}
+                            </ng-template>
+                        </p-cellEditor>
+                    </td>
                     <td #pEditableColumn>
                         <p-cellEditor>
                             <ng-template #input>
@@ -185,7 +207,7 @@
                             <ng-template #output> {{ training?.gwoTraining?.validTill || '-' }} </ng-template>
                         </p-cellEditor>
                     </td>
-                    @if (currentUser !== USERGROUPS.READONLYADMIN){
+                    @if (currentUser !== USERGROUPS.READONLYADMIN && currentUser !== USERGROUPS.SERVICEMANAGER){
                         <td class="flex items-center justify-center gap-2">
                             @if (!editing) {
                             <button pButton pRipple type="button" icon="pi pi-pencil" pInitEditableRow rounded severity="secondary" (click)="editAttendanceRow(training)"></button>

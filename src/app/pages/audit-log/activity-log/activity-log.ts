@@ -28,7 +28,6 @@ export class ActivityLog implements OnInit {
         try {
             this.apiService.logsList(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.logsList = val?.data?.data;
                     this.totalRecords = val?.data?.length ?? 0;
                 },
@@ -53,7 +52,6 @@ export class ActivityLog implements OnInit {
                 pageSize: this.pageSize
             };
 
-            console.log(data);
             this.auditLogApi(data);
         } catch (error) {
             console.log(error);
@@ -88,7 +86,6 @@ export class ActivityLog implements OnInit {
             this.pageSize = event.rows;
 
             const filters = event.filters;
-            console.log(filters);
 
             const dateValue = filters?.date?.[0]?.value;
 
@@ -107,7 +104,6 @@ export class ActivityLog implements OnInit {
                 actions: this.getFilterValues(filters, 'actions')
             };
 
-            console.log(this.filteredData);
             this.auditLogApi(this.filteredData);
         } catch (error) {
             console.log(error);

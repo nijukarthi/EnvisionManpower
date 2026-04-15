@@ -64,7 +64,6 @@ export class AppComponent implements OnInit {
                     if(!val) return;
         
                     if (this.router.url === '/' || this.router.url === ''){
-                        console.log('checking app component if condition');
                         switch(val.data.userGroupId){
                             case UserGroups.CLUSTERHEAD:
                             case UserGroups.DEPARTMENTHEAD:
@@ -92,7 +91,6 @@ export class AppComponent implements OnInit {
                             case UserGroups.PROJECTMANAGER:
                             case UserGroups.RESOURCEMANAGER:
                             case UserGroups.ACCOUNTSRECEIVABLETEAM:
-                                console.log('consoling default switch case');
                                 this.router.navigate(['/home/manpower-request']);
                         }
                     }

@@ -28,7 +28,6 @@ export class SessionLog {
         try {
             this.apiService.sessionlogsList(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.SessionlogsList = val?.data?.data;
                     this.totalRecords = val?.data?.length ?? 0;
                 },
@@ -52,7 +51,7 @@ export class SessionLog {
                 offSet: this.offSet,
                 pageSize: this.pageSize
             };
-            console.log(data);
+
             this.sessionLogApi(data);
         } catch (error) {
             console.log(error);
@@ -87,7 +86,6 @@ export class SessionLog {
             this.pageSize = event.rows;
 
             const filters = event.filters;
-            console.log(filters);
 
             const dateValue = filters?.date?.[0]?.value;
 
@@ -105,7 +103,6 @@ export class SessionLog {
                 toDate: to ? this.formatDateForApi(to, true) : null
             };
 
-            console.log(this.filteredData);
             this.sessionLogApi(this.filteredData);
         } catch (error) {
             console.log(error);

@@ -48,14 +48,12 @@ export class CandidateFixedCost implements OnInit {
         try {
             this.apiService.fetchActiveFixedCostCandidates(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.fixedCostCandidateList = val?.data?.data;
                     this.totalRecords = val?.data.length ?? 0;
                 },
                 error: (err) => {
                     console.log(err);
-                },
-                complete: () => console.log('Complete signal')
+                }
             });
         } catch (error) {
             console.log(error);
@@ -67,8 +65,6 @@ export class CandidateFixedCost implements OnInit {
             offSet: this.offSet,
             pageSize: this.pageSize
         };
-
-        console.log(data);
 
         this.fixedCostCandidatesApi(data);
     }
@@ -96,7 +92,6 @@ export class CandidateFixedCost implements OnInit {
 
                     this.apiService.deleteCandidate(data).subscribe({
                         next: (val) => {
-                            console.log(val);
                             this.messageService.add({ severity: 'success', summary: 'Success', detail: `${candidate.candidateCode} Deleted Successfully` });
                             this.fetchActiveFixedCostCandidates();
                         },
@@ -122,7 +117,6 @@ export class CandidateFixedCost implements OnInit {
             this.pageSize = event.rows;
 
             const filters = event.filters;
-            console.log(filters);
 
             const payload = {
                 offSet: this.offSet,
@@ -132,8 +126,6 @@ export class CandidateFixedCost implements OnInit {
                 candidateName: filters?.candidateName?.[0]?.value ?? null,
                 phoneNumber: filters?.phoneNumber?.[0]?.value ?? null
             };
-
-            console.log(payload);
 
             this.fixedCostCandidatesApi(payload);
         } catch (error) {

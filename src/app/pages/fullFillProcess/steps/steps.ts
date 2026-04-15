@@ -266,13 +266,11 @@ export class Steps implements OnInit {
 
   ngOnInit(): void {
     this.demandDetails = history.state;
-    console.log('Received Requisition ID:', this.demandDetails);
 
     this.fetchViewRequisition();
     this.fetchInterviewerList();
 
-    if (this.demandDetails.fullfillmentStatus !== FullFillmentStatus.STEP1) {
-      console.log('testing');      
+    if (this.demandDetails.fullfillmentStatus !== FullFillmentStatus.STEP1) {     
       this.fetchViewFirstInterview();
     }
 
@@ -281,7 +279,6 @@ export class Steps implements OnInit {
     }
 
     this.stepService.activeStep$.subscribe(step => {
-      console.log(step);
       this.activeStep = step;
 
       if (this.activeStep === 2) {
@@ -304,7 +301,6 @@ export class Steps implements OnInit {
 
   stepChange(stepValue: any){
     this.activeStep = stepValue;
-    console.log('Active Step:', this.activeStep);
     this.fetchViewRequisition();
 
     if (this.activeStep === 2) {
@@ -341,14 +337,12 @@ export class Steps implements OnInit {
 
   fetchViewFirstInterview(){
     try {
-      console.log('testing method');
       const data = {
         demandId: this.demandDetails.demandId
       }
-      console.log(data);
+
       this.apiService.viewFirstInterview(data).subscribe({
         next: val => {
-          console.log(val);
           const consultancyIds = val.data.demandConsultancyMap.map((c: any) => c.consultancy.userId);
           this.consultancyArray = consultancyIds;
           this.demandConsultancyControl.patchValue(consultancyIds, { emitEvent: false });
@@ -377,8 +371,7 @@ export class Steps implements OnInit {
         },
         error: err => {
           console.log(err);
-        },
-        complete: () => console.log('complete api request')
+        }
       })
     } catch (error) {
       console.log(error);
@@ -393,7 +386,6 @@ export class Steps implements OnInit {
 
       this.apiService.fetchConsultancyByCategory(data).subscribe({
         next: val => {
-          console.log(val);
           this.consultancyList = val.data;
         },
         error: err => {
@@ -409,7 +401,6 @@ export class Steps implements OnInit {
     try {
       this.apiService.fetchInterviewerInfoList('').subscribe({
         next: val => {
-          console.log(val);
           this.interviewerList = val.data;
         },
         error: err => {
@@ -422,8 +413,6 @@ export class Steps implements OnInit {
   }
 
   selectedConsultancyId(userIds: any){
-    console.log(userIds);
-
     if (this.demandDetails.fullfillmentStatus !== FullFillmentStatus.STEP1) {
       const newIds = userIds.filter((id: number) => !this.consultancyArray.includes(id));
       const removedIds = this.consultancyArray.filter((id: number) => !userIds.includes(id));
@@ -438,10 +427,9 @@ export class Steps implements OnInit {
               userId: newIds[0]
             }
           }
-          console.log(data);
+
           this.apiService.assignNewConsultancy(data).subscribe({
             next: val => {
-              console.log(val);
               this.messageService.add({severity: 'success', summary: 'Success', detail: 'Consultancy Assigned Successfully'});
               this.fetchViewFirstInterview();
             },
@@ -459,11 +447,9 @@ export class Steps implements OnInit {
               userId: removedIds[0]
             }
           }
-          console.log(data);
 
           this.apiService.removeAssignedConsultancy(data).subscribe({
             next: val => {
-              console.log(val);
               this.messageService.add({severity: 'success', summary: 'Success', detail: 'Successfully Removed Assigned Consultancy'});
               this.fetchViewFirstInterview();
             },
@@ -487,12 +473,9 @@ export class Steps implements OnInit {
     
 
     this.demandHrControl.setValue(userIds);
-
-    console.log(this.firstInterviewScheduleForm.value);
   }
 
   formatDateAndTime(form: FormGroup): {formattedDate: string | null; formattedTime: string | null }{
-    console.log(form.get('interviewDate')?.value);
     const interviewDate = new Date(form.get('interviewDate')?.value ?? '');
     const interviewTime = new Date(form.get('interviewTime')?.value ?? '');
 
@@ -500,14 +483,11 @@ export class Steps implements OnInit {
       const formattedDate = this.datePipe.transform(interviewDate, 'yyyy-MM-dd');
       const formattedTime = this.datePipe.transform(interviewTime, 'HH:mm');
 
-      console.log('Formatted Date:', formattedDate);
-      console.log('Formatted Time:', formattedTime);
-
       form.patchValue({
         interviewDate: formattedDate,
         interviewTime: formattedTime
       });
-      console.log(form.value);
+
       return { formattedDate, formattedTime };
     }
     return { formattedDate: null, formattedTime: null };
@@ -523,16 +503,12 @@ export class Steps implements OnInit {
             demandId: this.demandDetails.demandId
           }
         })
-        console.log(this.firstInterviewScheduleForm.value);
+
         const data = this.firstInterviewScheduleForm.value;
   
         this.apiService.createFirstInterview(data).subscribe({
           next: val => {
-            console.log(val);
             this.messageService.add({severity: 'success', summary: 'Success', detail: 'Consultancy Assigned Successfully'});
-            // setTimeout(() => {
-            //   this.router.navigate(['/home/demand-fullfillment']);
-            // }, 2000);
           },
           error: err => {
             console.log(err);
@@ -545,16 +521,11 @@ export class Steps implements OnInit {
           ...rest,
           interviewId: this.firstInterviewId
         }
-        console.log(data);
 
         this.apiService.updateFirstInterviewDetails(data).subscribe({
           next: val => {
-            console.log(val);
             this.messageService.add({severity: 'success', summary: 'Success', detail: 'Interview Details Updated Successfully'});
             this.fetchViewFirstInterview();
-            // setTimeout(() => {
-            //   this.router.navigate(['/home/demand-fullfillment']);
-            // }, 2000);
           },
           error: err => {
             console.log(err);
@@ -568,16 +539,13 @@ export class Steps implements OnInit {
   }
 
   fetchCandidateByCategory(categoryId: number){
-    console.log(categoryId);
     try {
       const data = {
         categoryId: categoryId
       }
-      console.log(data);
 
       this.apiService.fetchCandidateInfoList(data).subscribe({
         next: val => {
-          console.log(val);
           this.candidateList = val.data;
         },
         error: err => {
@@ -590,21 +558,16 @@ export class Steps implements OnInit {
   }
 
   fetchViewAssignedCandidates(){
-    console.log('checking');
     try {
       if (!this.firstInterviewId || this.firstInterviewId === 0) {
-        console.log("Interview ID not ready. Skipping API call...");
         return;
       }
-      console.log('firstInterviewId:', this.firstInterviewId);
       const data = {
         interviewId: this.firstInterviewId
       }
-      console.log(data);
 
       this.apiService.viewAssignedCandidates(data).subscribe({
         next: val => {
-          console.log("SUCCESS", val);
           this.assignedCandidateList = val.data.candidateInterviewMappings;
           this.populateCandidateInterviewMappings();
 
@@ -637,8 +600,6 @@ export class Steps implements OnInit {
   }
 
   selectedCandidateIds(selectedIds: any){
-    console.log(selectedIds);
-
     try {  
       if (this.demandDetails.fullfillmentStatus !== FullFillmentStatus.STEP2) {
         const newIds = selectedIds.filter((id: number) => !this.candidateArray.includes(id));
@@ -652,11 +613,8 @@ export class Steps implements OnInit {
             }
           }
   
-          console.log(data);
-  
           this.apiService.assignMoreCandidates(data).subscribe({
             next: val => {
-              console.log(val);
               this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Candidates Assigned Successfully For First Interview' });
               this.fetchViewAssignedCandidates();
             },
@@ -679,11 +637,8 @@ export class Steps implements OnInit {
             }
           }
 
-          console.log(data);
-
           this.apiService.removeAssignedCandidates(data).subscribe({
             next: val => {
-              console.log(val);
               this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Successfully Removed Assigned Candidates' });
               this.fetchViewAssignedCandidates();
             },
@@ -712,7 +667,6 @@ export class Steps implements OnInit {
     this.candidateInterviewControl.setValue(selectedIds);
     this.candidateCodeControl.setValue(selectedIds);
     this.candidateDesignationControl.setValue(selectedIds);
-    console.log(this.assignCandidateFirstInterviewForm.value);
   }
 
   submitStep2Form(){
@@ -722,15 +676,9 @@ export class Steps implements OnInit {
         interviewId: this.firstInterviewId
       }
 
-      console.log(data);
-
       this.apiService.assignCandidatesFirstInterview(data).subscribe({
         next: val => {
-          console.log(val);
           this.messageService.add({severity: 'success', summary: 'Success', detail: 'Candidates Assigned Successfully For First Interview'});
-          // setTimeout(() => {
-          //   this.router.navigate(['/home/demand-fullfillment']);
-          // }, 2000);
         },
         error: err => {
           console.log(err);
@@ -747,27 +695,18 @@ export class Steps implements OnInit {
 
   submitStep3Form(){
     try {
-      console.log(this.firstInterviewRoundForm.value);
-
       const allCandidates = this.firstInterviewRoundForm.get('candidateInterviewMappings')?.value || [];
       const changedCandidates = allCandidates.filter((_: any, i: number) => this.candidateInterviewMappings.at(i).dirty);
-      console.log(changedCandidates);
       
       const data = {
         interviewId: this.firstInterviewId,
         candidateInterviewMappings: changedCandidates
       }
 
-      console.log(data);
-
       this.apiService.firstInterviewRoundStatus(data).subscribe({
         next: val => {
-          console.log(val);
           this.messageService.add({severity: 'success', summary: 'Success', detail: 'First Interview Conducted Successfully' });
           this.fetchViewAssignedCandidates();
-          // setTimeout(() => {
-          //   this.router.navigate(['/home/demand-fullfillment']);
-          // }, 2000);
         },
         error: err => {
           console.log(err);
@@ -787,19 +726,14 @@ export class Steps implements OnInit {
       const data = {
         demandId: this.demandDetails.demandId
       }
-      console.log(data);
 
       this.apiService.viewFinalInterviewDetails(data).subscribe({
         next: val => {
-          console.log(val);
           const data = val.data;
           this.assignedFinalInterviewCandidateList = data.candidateInterviewMappings;
           const finalList = this.assignedFinalInterviewCandidateList;
-          console.log(finalList);
           finalList.forEach((finalItem: any) => {
-            console.log(this.assignedCandidateList);
             const match = this.assignedCandidateList?.find((c: any) => c.candidate.candidateId === finalItem.candidate.candidateId)
-            console.log(match);
             if(match){
               finalItem.feedback = match.feedback;
             }
@@ -841,15 +775,10 @@ export class Steps implements OnInit {
         ...this.finalInterviewerAssignForm.value,
         interviewId: this.finalInterviewId,
       }
-      console.log(data);
 
       this.apiService.updateFirstInterviewDetails(data).subscribe({
         next: val => {
-          console.log(val);
           this.messageService.add({severity: 'success', summary: 'Success', detail: 'Successfully Scheduled For Final Interview'});
-          // setTimeout(() => {
-          //   this.router.navigate(['/home/demand-fullfillment']);
-          // }, 2000);
         },
         error: err => {
           console.log(err);
@@ -864,7 +793,6 @@ export class Steps implements OnInit {
     const formArray = this.candidateFinalInterviewMappings;
     formArray.clear();
 
-    console.log(this.assignedFinalInterviewCandidateList);
     this.assignedFinalInterviewCandidateList.forEach((candidate: any) => {
       formArray.push(this.takeFinalInterviewRound(candidate))
     })
@@ -872,26 +800,18 @@ export class Steps implements OnInit {
 
   submitStep5Form(){
     try {
-      console.log(this.finalInterviewRoundForm.value);
       const allCandidates = this.finalInterviewRoundForm.get('candidateFinalInterviewMappings')?.value || [];
       const changedCandidates = allCandidates.filter((_: any, i: number) => this.candidateFinalInterviewMappings.at(i).dirty);
-      console.log(changedCandidates);
 
       const data = {
         interviewId: this.finalInterviewId,
         candidateInterviewMappings: changedCandidates
       }
 
-      console.log(data);
-
       this.apiService.updateFinalInterviewRound(data).subscribe({
         next: val => {
-          console.log(val);
           this.messageService.add({severity: 'success', summary: 'Success', detail: 'Final Interview Conducted Successfully' });
           this.fetchFinalInterviewDetails();
-          // setTimeout(() => {
-          //   this.router.navigate(['/home/demand-fullfillment']);
-          // }, 2000);
         },
         error: err => {
           console.log(err);
@@ -912,11 +832,8 @@ export class Steps implements OnInit {
         demandId: this.demandDetails.demandId
       }
 
-      console.log(data);
-
       this.apiService.finalApprovalCandidateList(data).subscribe({
         next: val => {
-          console.log(val);
           this.finalApprovalCandidateList = val?.data;
           this.populateFinalApprovalCandidateMapping();
           this.finalApprovalCandidateForm.patchValue({
@@ -944,7 +861,6 @@ export class Steps implements OnInit {
 
   submitStep6Form(){
     try {
-      console.log(this.finalApprovalCandidateForm.value);
       const allCandidates = this.finalApprovalCandidateForm.get('approvalCandidates')?.value || [];
       const changedCandidates = allCandidates.filter((_: any, i: number) => this.approvalCandidates.at(i).dirty);
 
@@ -952,16 +868,11 @@ export class Steps implements OnInit {
         demandId: this.demandDetails.demandId,
         approvalCandidates: changedCandidates,
       }
-      console.log(data);
 
       this.apiService.finalApprovalRound(data).subscribe({
         next: val => {
-          console.log(val);
           this.messageService.add({severity: 'success', summary: 'Success', detail: 'Final Approval Done Successfully' });
           this.fetchFinalApprovalCandidateList();
-          // setTimeout(() => {
-          //   this.router.navigate(['/home/demand-fullfillment']);
-          // }, 2000);
         },
         error: err => {
           console.log(err);
@@ -978,11 +889,8 @@ export class Steps implements OnInit {
         demandId: this.demandDetails.demandId
       }
 
-      console.log(data);
-
       this.apiService.joiningProcessCandidateList(data).subscribe({
         next: val => {
-          console.log(val);
           this.joiningProcessCandidateList = val.data;
           this.populateJoiningProcessCandidates();
           const processedData = val.data.map((item: any) => ({
@@ -1017,7 +925,6 @@ export class Steps implements OnInit {
       const approvalCandidates = this.joiningProcessCandidates.controls
         .filter((control: any) => control.dirty)
         .map((control: any) => {
-        console.log(control);
         const candidate = { ...control.value };
 
         if (!candidate.candidateAcceptance) {
@@ -1032,17 +939,13 @@ export class Steps implements OnInit {
         return;
       }
 
-      console.log(approvalCandidates);
       const data = {
         demandId: this.demandDetails.demandId,
         approvalCandidates: approvalCandidates
       }
 
-      console.log(data);
-
       this.apiService.joiningProcessCandidatesForm(data).subscribe({
         next: val => {
-          console.log(val);
           this.messageService.add({severity: 'success', summary: 'Success', detail: 'Joining Process Done Successfully'});
           this.fetchJoiningProcessCandidateList();
         },

@@ -49,6 +49,8 @@ import { ViewWtgDetails } from '@/pages/dprInput/view-wtg-details/view-wtg-detai
 import { CustomerWiseDpr } from '@/pages/dprInput/summary/customer-wise-dpr/customer-wise-dpr';
 import { Customer } from '@/pages/dprInput/customer/customer';
 import { CreateDprProject } from '@/pages/dprInput/create-dpr-project/create-dpr-project';
+import { ManpowerDashboard } from '@/pages/manpower-dashboard/manpower-dashboard';
+import { ConsultancyRequestList } from '@/pages/consultancy-request-list/consultancy-request-list';
 
 export const appRoutes: Routes = [
     {
@@ -60,6 +62,10 @@ export const appRoutes: Routes = [
         path: 'home',
         component: AppLayout,
         children: [
+            {
+                path: 'dashboard',
+                component: ManpowerDashboard
+            },
             {
                 path: 'manpower-request',
                 component: Demand,
@@ -128,6 +134,7 @@ export const appRoutes: Routes = [
             { path: 'dpr-project-details/:id/wtg-details', component: ViewWtgDetails, canActivate: [authGuard] },
             { path: 'customer', component: Customer, canActivate: [authGuard] },
             { path: 'customer-wise-dpr', component: CustomerWiseDpr, canActivate: [authGuard] },
+            { path: 'consultancy-request', component: ConsultancyRequestList, canActivate: [authGuard] },
             { path: 'activity-logs', component: ActivityLog, canActivate: [authGuard] },
             { path: 'session-logs', component: SessionLog, canActivate: [authGuard] },
             { path: 'pages', canActivate: [authGuard], loadChildren: () => import('./app/pages/pages.routes') }

@@ -70,11 +70,9 @@ export class CreateDprProject implements OnInit {
 
   ngOnInit(): void {
     this.dprDetails = history.state;
-    console.log(this.dprDetails);
 
     this.route.paramMap.subscribe((param) => {
       const id = param.get('id');
-      console.log(id);
 
       if (id) {
         this.dprProjectId = Number(id);
@@ -95,7 +93,6 @@ export class CreateDprProject implements OnInit {
     try {
       this.apiService.getActiveClusters('').subscribe({
         next: val => {
-          console.log(val);
           this.clusterList = val.data;
         },
         error: err => {
@@ -115,7 +112,6 @@ export class CreateDprProject implements OnInit {
     try {
       this.apiService.fetchCustomerList().subscribe({
         next: val => {
-          console.log(val);
           this.customerList = val?.data;
         },
         error: err => {
@@ -131,7 +127,6 @@ export class CreateDprProject implements OnInit {
     try {
       this.apiService.fetchProjectCodes('').subscribe({
         next: val => {
-          console.log(val);
           this.projCodeList = val?.data;
         },
         error: err => {
@@ -149,11 +144,8 @@ export class CreateDprProject implements OnInit {
         userGroupId: UserGroups.PROJECTMANAGER
       }
 
-      console.log(data);
-
       this.apiService.findUserGroup(data).subscribe({
         next: val => {
-          console.log(val);
           this.projManagerList = val.data;
         },
         error: err => {
@@ -167,14 +159,11 @@ export class CreateDprProject implements OnInit {
 
   submitDprProject(){
     try {
-      if (!this.dprProjectId) {   
-        console.log(this.dprProjectForm.value);
-  
+      if (!this.dprProjectId) {     
         const data = this.dprProjectForm.value;
   
         this.apiService.addDPRProjectDetails(data).subscribe({
           next: val => {
-            console.log(val);
             this.dprProjectForm.reset();
             this.messageService.add({ severity: 'success', summary: 'Success', detail: 'DPR Project Details Created Successfully' });
             setTimeout(() => {
@@ -190,13 +179,10 @@ export class CreateDprProject implements OnInit {
           }
         })
       } else {
-        console.log(this.dprProjectForm.value);
-  
         const data = this.dprProjectForm.value;
 
         this.apiService.updateDprProject(data).subscribe({
           next: val => {
-            console.log(val);
             this.dprProjectForm.reset();
             this.messageService.add({ severity: 'success', summary: 'Success', detail: 'DPR Project Details Updated Successfully' });
             setTimeout(() => { 

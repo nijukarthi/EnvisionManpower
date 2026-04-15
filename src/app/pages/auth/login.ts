@@ -90,7 +90,6 @@ export class Login implements OnInit {
 
     otpTimer(expireByString: string){
         const expireBy = new Date(expireByString).getTime();
-        console.log("expireBy:", expireBy);
 
         const interval = setInterval(() => {
             const currentTime = Date.now();
@@ -135,7 +134,6 @@ export class Login implements OnInit {
                     this.apiService.sendOTP(data).subscribe({
                     next: val => {
                         if(val.status == 200){
-                            console.log(val);
                             this.loginUserResponse = val;
                             this.otpTimer(this.loginUserResponse.expireBy);
                             this.router.navigate(['/register'])
@@ -167,7 +165,6 @@ export class Login implements OnInit {
                     this.apiService.sendOTP(data).subscribe({
                     next: val => {
                         if(val.status == 200){
-                            console.log(val);
                             this.loginUserResponse = val;
                             this.otpTimer(this.loginUserResponse.expireBy);
                             this.router.navigate(['/register'])

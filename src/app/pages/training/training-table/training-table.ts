@@ -1,8 +1,8 @@
 import { UserGroups } from '@/models/usergroups/usergroups.enum';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MessageService } from 'primeng/api';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { MenuItem, MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 
 @Component({
@@ -13,6 +13,7 @@ import { Table } from 'primeng/table';
 })
 export class TrainingTable implements OnInit {
     @ViewChild('dt') dt!: Table;
+    @ViewChild('excelInput') excelInput!: ElementRef<HTMLInputElement>;
 
     offSet = 0;
     pageSize = 10;
@@ -22,6 +23,8 @@ export class TrainingTable implements OnInit {
     trainingList: any;
     editingRow: any | null = null;
     filteredData: any;
+
+    menuItems: MenuItem[] = [];
 
     currentUser = Number(sessionStorage.getItem('userGroupId'));
           
@@ -45,6 +48,8 @@ export class TrainingTable implements OnInit {
 
     ngOnInit(): void {
         this.fetchActiveTrainingList();
+
+        this.menuItems = this.getMenuItems();
     }
     trainingApi(data: any) {
         try {
@@ -91,27 +96,6 @@ export class TrainingTable implements OnInit {
         return status?.label || '-';
     }
 
-    exportToExcel() {
-        try {
-            const data = {
-                ...this.filteredData,
-                export: true
-            };
-
-            console.log(data);
-
-            this.apiService.fetchTrainingList(data).subscribe({
-                next: (val) => {
-                    console.log(val);
-                }
-            });
-
-            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Excel file successfully send to email' });
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
     submitTrainingForm(training: any) {
         try {
             console.log(training);
@@ -140,10 +124,102 @@ export class TrainingTable implements OnInit {
         }
     }
 
+    importTraining(file: File){
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            console.log(formData);
+
+            this.apiService.importTraining(formData).subscribe({
+                next: val => {
+                    console.log(val);
+                    this.fetchActiveTrainingList();
+                    this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Excel uploaded successfully' });
+                },
+                error: err => {
+                    console.log(err);
+
+                    if (err.status === 400) {
+                        this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
+                    }
+                }
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    exportTraining(){
+        try {
+            this.apiService.exportTraining().subscribe({
+                next: (val: Blob) => {
+                    console.log(val);
+                    const url = window.URL.createObjectURL(val);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `Training.xlsx`;
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Training excel template downloaded successfully.' });
+                },
+                error: async(err) => {
+                    console.log(err);
+
+                    if (err.error instanceof Blob) {
+                        const text = await err.error.text();
+                        const json = JSON.parse(text);
+                        this.messageService.add({severity: 'error', summary: 'Error', detail: json.detail || 'Something went wrong' });
+                    } else {
+                        this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail || 'Something went wrong' });
+                    }
+                }
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    excelSelected(event: Event){
+        const input = event.target as HTMLInputElement;
+        const file = input.files?.[0];
+
+        if(!file) return;
+
+        this.importTraining(file);
+
+        input.value = '';
+    }
+
+    openExcelPicker(){
+        this.excelInput.nativeElement.click();
+    }
+
     updateRange(selectedValue: any, value: any[], index: number, filter: any) {
         if (!value) value = [];
         value[index] = selectedValue;
         filter(value);
+    }
+
+    getMenuItems(){
+        return [
+            {
+                label: 'Template',
+                icon: 'pi pi-file',
+                items: [
+                    {
+                        label: 'Import',
+                        icon: 'pi pi-upload',
+                        command: () => this.openExcelPicker()
+                    },
+                    {
+                        label: 'Export',
+                        icon: 'pi pi-download',
+                        command: () => this.exportTraining()
+                    }
+                ]
+            }
+        ]
     }
 
     loadTraining(event: any) {
@@ -171,6 +247,7 @@ export class TrainingTable implements OnInit {
                 employeeCode: filters?.employeeCode?.[0]?.value ?? null,
                 candidateCode: filters.tempEMPCode?.[0]?.value ?? null,
                 projectCode: filters.projectCode?.[0]?.value ?? null,
+                categoryName: filters.categoryName?.[0]?.value ?? null,
                 clusterName: filters.clusterName?.[0]?.value ?? null,
                 envisionRoleName: filters.envisionRoleName?.[0]?.value ?? null,
                 trainingStatus: filters?.status?.[0]?.value ?? null,

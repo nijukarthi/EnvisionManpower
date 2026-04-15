@@ -1,24 +1,67 @@
 <div class="card">
-    <h5>Manpower FulFillment</h5>
+    <div class="flex items-baseline-last justify-between">
+        <h5>Manpower FulFillment</h5>
+        <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
+    </div>
     <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
-        <p-table [value]="demandFullfillmentList" [rowHover]="true" [paginator]="true" [lazy]="true" [first]="first"
-            [rows]="pageSize" [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true" (onPage)="pageChange($event)"
+        <p-table #dt [value]="demandFullfillmentList" [rowHover]="true" [paginator]="true" [lazy]="true" [first]="first"
+            [rows]="pageSize" [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true" [filters]="filters"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" stripedRows 
-            [paginatorDropdownAppendTo]="mydiv" [totalRecords]="totalRecords" [tableStyle]="{'min-width': '140rem'}">
+            [paginatorDropdownAppendTo]="mydiv" [totalRecords]="totalRecords" [tableStyle]="{'min-width': '140rem'}"
+            (onLazyLoad)="loadFulfillment($event)">
             <ng-template #header>
                 <tr>
                     <th>SI No</th>
                     <th>Steps</th>
-                    <th>Demand Code</th>
-                    <th>Status</th>
-                    <th>SPN Code</th>
-                    <th>SPN Description</th>
-                    <th>Experience</th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Demand Code</span>
+                            <p-columnFilter type="text" field="demandCode" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Status</span>
+                            <p-columnFilter field="status" matchMode="equals" display="menu" [showAddButton]="false">
+                                <ng-template #filter let-value let-filter="filterCallback">
+                                    <p-multiselect [options]="statuses" (onChange)="filter($event.value)"
+                                        [(ngModel)]="selectedStatuses" placeholder="Select Statuses" class="w-full">
+                                        <ng-template let-option #item>
+                                            <p-tag [value]="option.label" [severity]="getSeverity(option.value)" />
+                                        </ng-template>
+                                    </p-multiselect>
+                                </ng-template>
+                            </p-columnFilter>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>SPN Code</span>
+                            <p-columnFilter type="text" field="spnCode" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>SPN Description</span>
+                            <p-columnFilter type="text" field="spnDescription" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Experience</span>
+                            <p-columnFilter type="text" field="experience" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
                     <th>Quantity</th>
                     <th>FulFilled Quantity</th>
                     <th>Planned Deployment Date</th>
                     <th>Planned Release Date</th>
-                    <th>Role</th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Role</span>
+                            <p-columnFilter type="text" field="roleName" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
                     @if (currentUserRole !== UserGroups.CONSULTANCY) {
                         <th>Actions</th>
                     }

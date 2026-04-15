@@ -85,7 +85,6 @@ export class InvoiceReceipt implements OnInit {
         try {
             this.apiService.invoiceGRNList(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.invoiceGRNList = val?.data?.data;
                     this.totalRecords = val?.data?.length ?? 0;
                 },
@@ -104,8 +103,6 @@ export class InvoiceReceipt implements OnInit {
                 offSet: this.offSet,
                 pageSize: this.pageSize
             };
-
-            console.log(data);
 
             this.grnApi(data);
         } catch (error) {
@@ -163,11 +160,9 @@ export class InvoiceReceipt implements OnInit {
                 ...this.GRNProcessForm.value,
                 invoiceId: this.invoiceId
             };
-            console.log(data);
 
             this.apiService.startGRNProcess(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'GRN Process Started Successfully' });
                     this.openGRNModal = false;
                     this.fetchInvoiceGRNList();
@@ -192,11 +187,8 @@ export class InvoiceReceipt implements OnInit {
                 invoiceId: this.invoiceId
             };
 
-            console.log(data);
-
             this.apiService.completeGRNProcess(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'GRN Process Completed Successfully' });
                     this.openGRNModal = false;
                     this.fetchInvoiceGRNList();
@@ -221,11 +213,8 @@ export class InvoiceReceipt implements OnInit {
                 invoiceId: this.invoiceId
             };
 
-            console.log(data);
-
             this.apiService.makeGRNReverse(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'GRN Process Reversed Successfully' });
                     this.openGRNModal = false;
                     this.fetchInvoiceGRNList();
@@ -328,7 +317,6 @@ export class InvoiceReceipt implements OnInit {
             this.pageSize = event.rows;
 
             const filters = event.filters;
-            console.log(filters);
 
             const formatDate = (d: any) => {
                 if (!d) return null;
@@ -359,7 +347,6 @@ export class InvoiceReceipt implements OnInit {
                 minAmount: Array.isArray(grandTotal) ? grandTotal[0] : null,
                 maxAmount: Array.isArray(grandTotal) ? grandTotal[1] : null
             };
-            console.log(payload);
             this.grnApi(payload);
         } catch (error) {
             console.log(error);

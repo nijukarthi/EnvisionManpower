@@ -170,7 +170,6 @@ export class InvoiceDisbursement implements OnInit {
         try {
             this.apiService.fetchDisbursementList(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.invoiceDisbursementList = val?.data?.data;
                     this.totalRecords = val?.data?.length ?? 0;
                 },
@@ -190,7 +189,6 @@ export class InvoiceDisbursement implements OnInit {
                 pageSize: this.pageSize
             };
 
-            console.log(data);
             this.invoiceDisbursementApi(data);
         } catch (error) {
             console.log(error);
@@ -200,7 +198,6 @@ export class InvoiceDisbursement implements OnInit {
     selectedInvoice(invoice: any) {
         this.selectedInvoiceId = invoice.invoiceHeader.invoiceId;
         this.invoiceStatus = invoice.invoiceHeader.invoiceStatus;
-        console.log(this.selectedInvoiceId);
     }
 
     unSelectedInvoice() {
@@ -213,11 +210,8 @@ export class InvoiceDisbursement implements OnInit {
                 invoiceId: this.selectedInvoiceId
             };
 
-            console.log(data);
-
             this.apiService.startDisbursementProcess(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Disbursement Process Started Successfully' });
                     setTimeout(() => {
                         this.fetchDisbursementList();
@@ -271,18 +265,13 @@ export class InvoiceDisbursement implements OnInit {
 
     submitBookDisbursement(){
         try {
-            console.log(this.bookDisbursementForm.value);
-
             const data = {
                 ...this.bookDisbursementForm.value,
                 invoiceId: this.selectedInvoiceId
             }
 
-            console.log(data);
-
             this.apiService.bookDisbursement(data).subscribe({
                 next: val => {
-                    console.log(val);
                     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Invoice Under Disbursement Review' });
                     this.openDisbursementBooking = false;
                     this.bookDisbursementForm.reset();
@@ -302,8 +291,6 @@ export class InvoiceDisbursement implements OnInit {
 
     submitPaymentApprove(){
         try {
-            console.log(this.approvePaymentForm.value);
-
             const data = {
                 ...this.approvePaymentForm.value,
                 invoiceId: this.selectedInvoiceId
@@ -311,7 +298,6 @@ export class InvoiceDisbursement implements OnInit {
 
             this.apiService.approvePayment(data).subscribe({
                 next: val => {
-                    console.log(val);
                     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Payment Approved Successfully' });
                     this.openPaymentApproving = false;
                     this.approvePaymentForm.reset();
@@ -334,8 +320,6 @@ export class InvoiceDisbursement implements OnInit {
 
     submitReturnGRN(){
         try {
-            console.log(this.grnReturnForm.value);
-
             const data = {
                 ...this.grnReturnForm.value,
                 invoiceId: this.selectedInvoiceId
@@ -343,7 +327,6 @@ export class InvoiceDisbursement implements OnInit {
 
             this.apiService.returnGRN(data).subscribe({
                 next: val => {
-                    console.log(val);
                     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'GRN Returned Successfully' });
                     this.openGRNReturning = false;
                     this.grnReturnForm.reset();
@@ -366,8 +349,6 @@ export class InvoiceDisbursement implements OnInit {
 
     submitPaymentMarked(){
         try {
-            console.log(this.paymentMarkedForm.value);
-
             const data = {
                 ...this.paymentMarkedForm.value,
                 invoiceId: this.selectedInvoiceId
@@ -375,7 +356,6 @@ export class InvoiceDisbursement implements OnInit {
 
             this.apiService.paymentMarked(data).subscribe({
                 next: val => {
-                    console.log(val);
                     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Payment Marked Successfully' });
                     this.openPaidMarking = false;
                     this.paymentMarkedForm.reset();
@@ -445,7 +425,6 @@ export class InvoiceDisbursement implements OnInit {
             this.pageSize = event.rows;
 
             const filters = event.filters;
-            console.log(filters);
 
             const grandTotal = filters?.total?.[0]?.value;
 
@@ -458,7 +437,6 @@ export class InvoiceDisbursement implements OnInit {
                 minAmount: Array.isArray(grandTotal) ? grandTotal[0] : null,
                 maxAmount: Array.isArray(grandTotal) ? grandTotal[1] : null
             };
-            console.log(payload);
             this.invoiceDisbursementApi(payload);
         } catch (error) {
             console.log(error);

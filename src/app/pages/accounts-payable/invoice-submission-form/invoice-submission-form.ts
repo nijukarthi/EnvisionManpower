@@ -121,11 +121,9 @@ export class InvoiceSubmissionForm implements OnInit {
                 poStatus: PurchaseOrderStatus.ACTIVE
             };
 
-            console.log(data);
 
             this.apiService.fetchPOList(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.poList = val.data.data.map((po: any) => {
                         const start = new Date(po.validFrom);
                         const end = new Date(po.validTo);
@@ -153,11 +151,8 @@ export class InvoiceSubmissionForm implements OnInit {
                 invoiceId: this.invoiceId
             };
 
-            console.log(data);
-
             this.apiService.fetchViewInvoice(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     const invoiceData = val?.data?.header;
 
                     this.invoiceForm.patchValue({
@@ -170,7 +165,6 @@ export class InvoiceSubmissionForm implements OnInit {
                     });
                     this.poEmployeeList = val?.data?.items;
                     this.poDetails = this.poList.find((po: any) => po.poId === val?.data?.header?.poId);
-                    console.log(this.poDetails);
 
                     this.items.clear();
                     this.poEmployeeList.forEach((emp: any) => {
@@ -188,26 +182,21 @@ export class InvoiceSubmissionForm implements OnInit {
 
     convertMonthAndYear() {
         const selectedMonth = this.invoiceForm.get('month')?.value;
-        console.log(selectedMonth);
         if (!selectedMonth) {
             this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Month & Year not selected' });
             return;
         }
         const month = selectedMonth?.getMonth() + 1;
-        console.log(month);
 
         const year = selectedMonth.getFullYear();
-        console.log(year);
 
         return { month, year };
     }
 
     selectedPOId(poId: number) {
         try {
-            console.log(poId);
             this.currentPOId = poId;
             this.poDetails = this.poList.find((po: any) => po.poId === poId);
-            console.log(this.poDetails);
         } catch (error) {
             console.log(error);
         }
@@ -223,11 +212,8 @@ export class InvoiceSubmissionForm implements OnInit {
                 year: monthYear?.year
             };
 
-            console.log(data);
-
             this.apiService.fetchPODetails(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.poEmployeeList = val?.data;
                     this.items.clear();
                     this.poEmployeeList?.forEach((emp: any) => {
@@ -244,12 +230,9 @@ export class InvoiceSubmissionForm implements OnInit {
     }
 
     selectAll(selection: any){
-        console.log(selection);
         this.selectedEmployees = selection
         .filter((emp: any) => emp.eligible === true)
         .map((emp: any) => emp.employmentDetails?.employmentId);
-
-        console.log('Selected Employees:', this.selectedEmployees);
     }
 
     formatDate(date: Date | null | string | undefined): string | null {
@@ -263,13 +246,9 @@ export class InvoiceSubmissionForm implements OnInit {
 
     onSubmit() {
         try {
-            console.log(this.invoiceForm.value);
-
             const formValue = this.invoiceForm.value;
 
             const monthYear = this.convertMonthAndYear();
-
-            console.log(this.selectedEmployees);
 
             const filteredItems = formValue.items?.filter((item: any) => this.selectedEmployees.includes(item.employmentId));
 
@@ -283,11 +262,8 @@ export class InvoiceSubmissionForm implements OnInit {
                 items: filteredItems
             };
 
-            console.log(data);
-
             this.apiService.createInvoice(data).subscribe({
                 next: (val) => {
-                    console.log(val);
                     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Invoice Created Sucessfully' });
 
                     setTimeout(() => {

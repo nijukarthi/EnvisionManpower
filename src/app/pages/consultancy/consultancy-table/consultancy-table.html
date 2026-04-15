@@ -1,12 +1,17 @@
 <div class="card">
     <div class="flex items-baseline-last justify-between">
         <h5>Consultancies</h5>
-        @if (currentUser !== USERGROUPS.CONSULTANCY && currentUser !== USERGROUPS.READONLYADMIN) {
-            <p-button label="Add Consultancy" icon="pi pi-plus" routerLink="/home/consultancies/new" />
-        }
+        <div class="flex justify-end gap-2">
+            @if (currentUser !== USERGROUPS.CONSULTANCY && currentUser !== USERGROUPS.READONLYADMIN) {
+                <p-button label="Add Consultancy" icon="pi pi-plus" routerLink="/home/consultancies/new" />
+                <p-button icon="pi pi-external-link" label="Export to Excel" (click)="exportToExcel()" />
+            }
+            <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
+        </div>
     </div>
     <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
         <p-table
+            #dt
             [value]="consultancyList"
             [rowHover]="true"
             [lazy]="true"
@@ -17,13 +22,23 @@
             [showCurrentPageReport]="true"
             [paginatorDropdownAppendTo]="mydiv"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-            (onPage)="pageChange($event)"
+            (onLazyLoad)="loadConsultancy($event)"
         >
             <ng-template #header>
                 <tr>
                     <th>SI No</th>
-                    <th>Consultancy Code</th>
-                    <th>Consultancy Name</th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Consultancy Code</span>
+                            <p-columnFilter type="text" field="consultancyCode" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Consultancy Name</span>
+                            <p-columnFilter type="text" field="consultancyName" display="menu" [showAddButton]="false" />
+                        </div>
+                    </th>
                     <th>Hr Name</th>
                     <th>Phone</th>
                     <th>Email</th>

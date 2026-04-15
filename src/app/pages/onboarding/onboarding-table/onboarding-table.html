@@ -2,7 +2,7 @@
     <div class="flex items-baseline-last justify-between">
         <h5>Onboarding</h5>
         <div class="flex gap-2">
-            @if (currentUser !== USERGROUPS.READONLYADMIN) {
+            @if (currentUser !== USERGROUPS.READONLYADMIN && currentUser !== USERGROUPS.SERVICEMANAGER) {
                 <p-button label="Move to On-roll" (onClick)="moveCandidateToOnroll()" />
             }
             <p-button icon="pi pi-external-link" label="Export" (click)="exportToExcel()" />
@@ -136,7 +136,7 @@
                     <th>Emergency Contact Number</th>
                     <!-- <th>UAN</th> -->
                     <!-- <th>Aadhar Number</th> -->
-                    @if (currentUser !== USERGROUPS.READONLYADMIN) {
+                    @if (currentUser !== USERGROUPS.READONLYADMIN && currentUser !== USERGROUPS.SERVICEMANAGER) {
                         <th>PPE Details</th>
                         <th>Actions</th>
                     }
@@ -241,7 +241,7 @@
                             </ng-template>
                         </p-cellEditor>
                     </td> -->
-                    @if (currentUser !== USERGROUPS.READONLYADMIN){
+                    @if (currentUser !== USERGROUPS.READONLYADMIN && currentUser !== USERGROUPS.SERVICEMANAGER){
                         <td>
                             <p-button [label]="onboarding.ppeDetails.length > 0 ? 'Edit PPE' : 'Add PPE'" 
                                 [icon]="onboarding.ppeDetails.length > 0 ? 'pi pi-pencil' : 'pi pi-plus'"

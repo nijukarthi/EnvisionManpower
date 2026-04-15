@@ -88,7 +88,6 @@ export class OnboardingTable implements OnInit {
   }
 
   addPpeDetail(){
-    console.log('checking');
     const newPpeGroup = this.fb.group({
       ppeType: [''],
       size: ['']
@@ -99,7 +98,6 @@ export class OnboardingTable implements OnInit {
 
   ngOnInit(): void {
     this.fetchOnboardingCandidateList();
-    console.log(this.totalRecords);
 
     this.statuses = [
       { label: 'ACTIVE', value: 'ACTIVE' },
@@ -114,7 +112,6 @@ export class OnboardingTable implements OnInit {
 
       this.apiService.fetchOnboardingCandidateList(data).subscribe({
           next: (val) => {
-            console.log(val);
             this.onboardingList = val?.data?.data.map((onboarding: any) => ({
               ...onboarding,
               employmentDetails: {
@@ -157,7 +154,6 @@ export class OnboardingTable implements OnInit {
         offSet: this.offSet,
         pageSize: this.pageSize
       }
-      console.log("sending data to backend:", data);
 
       this.onboardingApi(data);
       
@@ -184,16 +180,13 @@ export class OnboardingTable implements OnInit {
 
   moveCandidateToOnroll(){
     const employmentIds = this.selectedCandidates.map((c: any) => c.employmentDetails.employmentId);
-    console.log(employmentIds);
 
     const data = {
       ids: employmentIds
     }
-    console.log(data);
 
     this.apiService.moveCandidatesToOnroll(data).subscribe({
       next: val => {
-        console.log(val);
         this.messageService.add({severity: 'success', summary: 'Success', detail: 'Successfully Moved Candidates to On-roll Employees'});
         this.selectedCandidates = [];
         setTimeout(() => {     
@@ -218,7 +211,6 @@ export class OnboardingTable implements OnInit {
 
       this.apiService.fetchPpeDetails(data).subscribe({
         next: val => {
-          console.log(val);
           this.ppeDetailsList = val.data;
           this.populatePpeDetails();
         },
@@ -261,18 +253,13 @@ export class OnboardingTable implements OnInit {
 
   submitPpeDetailsForm(){
     try {
-      console.log(this.ppeDetails.value);
-
       const data = {
         candidateId: this.candidateId,
         ppeDetails: this.ppeDetails.value
       };
 
-      console.log(data);
-
       this.apiService.updatePpeDetails(data).subscribe({
         next: val => {
-          console.log(val);
           this.messageService.add({severity: 'success', summary: 'Success', detail: 'Successfully Updated PPE Details'});
           this.openPpeModal = false;
           this.fetchOnboardingCandidateList();
@@ -287,8 +274,6 @@ export class OnboardingTable implements OnInit {
   }
 
   submitOnboardingForm(onboardingForm: any){
-    console.log(onboardingForm);
-    
     const data = {
       employmentDetails: {
         employmentId: onboardingForm.employmentDetails.employmentId,
@@ -299,11 +284,8 @@ export class OnboardingTable implements OnInit {
       alternativeNumber: onboardingForm.alternativeNumber
     };
 
-    console.log(data);
-
     this.apiService.updateOnboardCandidates(data).subscribe({
       next: val => {
-        console.log(val);
         this.messageService.add({severity: 'success', summary: 'Success', detail: 'Candidate Details Updated Successfully'});
         setTimeout(() => {       
           this.onboardingApi(this.filteredData);
@@ -350,7 +332,6 @@ export class OnboardingTable implements OnInit {
       this.pageSize = event.rows;
 
       const filters = event.filters;
-      console.log(filters);
 
       const formDate = (d: any) => {
         if(!d) return null;
@@ -379,7 +360,6 @@ export class OnboardingTable implements OnInit {
         joiningDateFrom: Array.isArray(dateValue) ? formDate(dateValue[0]) : null,
         joiningDateTo: Array.isArray(dateValue) ? formDate(dateValue[1]) : null
       }
-      console.log(this.filteredData);
 
       this.onboardingApi(this.filteredData);
     } catch (error) {

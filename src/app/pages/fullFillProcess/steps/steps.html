@@ -174,12 +174,14 @@
                                     [showClear]="true" appendTo="body" />
                             </div>
                         </div>
-                        <div class="flex justify-end mt-4">
-                            <button pButton pRipple type="submit">
-                                <span pButtonLabel>{{ demandDetails.fullfillmentStatus === fulFillmentStatus.STEP1
-                                ? 'Submit' : 'Update' }}</span>
-                            </button>
-                        </div>
+                        @if (currentUserRole !== USERGROUPS.SERVICEMANAGER) {
+                            <div class="flex justify-end mt-4">
+                                <button pButton pRipple type="submit">
+                                    <span pButtonLabel>{{ demandDetails.fullfillmentStatus === fulFillmentStatus.STEP1
+                                    ? 'Submit' : 'Update' }}</span>
+                                </button>
+                            </div>
+                        }
                     </form>
                 </ng-template>
             </p-step-panel>
@@ -260,12 +262,14 @@
                                 </ng-template>
                             </p-table>
                         </div>
-                        <div class="flex justify-end mt-4">
-                            <button pButton pRipple type="submit">
-                                <span pButtonLabel>{{ demandDetails.fullfillmentStatus <= fulFillmentStatus.STEP3 
-                                    ? 'Submit' : 'Update' }}</span>
-                            </button>
-                        </div>
+                        @if(currentUserRole !== USERGROUPS.SERVICEMANAGER){
+                            <div class="flex justify-end mt-4">
+                                <button pButton pRipple type="submit">
+                                    <span pButtonLabel>{{ demandDetails.fullfillmentStatus <= fulFillmentStatus.STEP3 
+                                        ? 'Submit' : 'Update' }}</span>
+                                </button>
+                            </div>
+                        }
                     </form>
 
                 </ng-template>
@@ -323,12 +327,14 @@
                                     placeholder="Select Interviewer" appendTo="body" />
                             </div>
                         </div>
-                        <div class="flex justify-end mt-4">
-                            <button pButton pRipple type="submit">
-                                <span pButtonLabel>{{ demandDetails.fullfillmentStatus <= fulFillmentStatus.STEP4
-                                ? 'Submit' : 'Update' }}</span>
-                            </button>
-                        </div>
+                        @if(currentUserRole !== USERGROUPS.SERVICEMANAGER){
+                            <div class="flex justify-end mt-4">
+                                <button pButton pRipple type="submit">
+                                    <span pButtonLabel>{{ demandDetails.fullfillmentStatus <= fulFillmentStatus.STEP4
+                                    ? 'Submit' : 'Update' }}</span>
+                                </button>
+                            </div>
+                        }
                     </form>
                 </ng-template>
             </p-step-panel>
@@ -371,12 +377,14 @@
                                 </ng-template>
                             </p-table>
                         </div>
-                        <div class="flex justify-end mt-4">
-                            <button pButton pRipple type="submit">
-                                <span pButtonLabel>{{ demandDetails.fullfillmentStatus <= fulFillmentStatus.STEP5
-                                ? 'Submit' : 'Update' }}</span>
-                            </button>
-                        </div>
+                        @if(currentUserRole !== USERGROUPS.SERVICEMANAGER){
+                            <div class="flex justify-end mt-4">
+                                <button pButton pRipple type="submit">
+                                    <span pButtonLabel>{{ demandDetails.fullfillmentStatus <= fulFillmentStatus.STEP5
+                                    ? 'Submit' : 'Update' }}</span>
+                                </button>
+                            </div>
+                        }
                     </form>
 
 
@@ -421,12 +429,14 @@
                                 </ng-template>
                             </p-table>
                         </div>
-                        <div class="flex justify-end mt-4">
-                            <button pButton pRipple type="submit">
-                                <span pButtonLabel>{{ demandDetails.fullfillmentStatus <= fulFillmentStatus.STEP6
-                                ? 'Submit' : 'Update' }}</span>
-                            </button>
-                        </div>
+                        @if(currentUserRole !== USERGROUPS.SERVICEMANAGER){
+                            <div class="flex justify-end mt-4">
+                                <button pButton pRipple type="submit">
+                                    <span pButtonLabel>{{ demandDetails.fullfillmentStatus <= fulFillmentStatus.STEP6
+                                    ? 'Submit' : 'Update' }}</span>
+                                </button>
+                            </div>
+                        }
                     </form>
                 </ng-template>
             </p-step-panel>
