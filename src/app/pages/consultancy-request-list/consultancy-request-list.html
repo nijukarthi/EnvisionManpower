@@ -36,7 +36,21 @@
                             <p-columnFilter type="text" field="consultancyName" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
-                    <th>Status</th>
+                    <th>
+                        <div class="flex items-center justify-between">
+                            <span>Status</span>
+                            <p-columnFilter field="status" matchMode="equals" display="menu" [showAddButton]="false">
+                                <ng-template #filter let-value let-filter="filterCallback">
+                                    <p-multiselect [options]="statuses" (onChange)="filter($event.value)" placeholder="Select Statuses" 
+                                        class="w-full">
+                                        <ng-template let-option #item>
+                                            <p-tag [value]="option.label" [severity]="getSeverity(option.value)" />
+                                        </ng-template>
+                                    </p-multiselect>
+                                </ng-template>
+                            </p-columnFilter>
+                        </div>
+                    </th>
                     <th>Created By</th>
                     <th>
                         <div class="flex items-center justify-between">
@@ -84,9 +98,9 @@
                             } @else if (consul.approvedBy.approvalStatus === APPROVALSTATUS.PENDING) { 
                                 <div class="flex items-center justify-center gap-2">
                                     <p-button icon="pi pi-check" rounded 
-                                        (onClick)="resourceManagerApproval(consul)" />
+                                        (onClick)="resourceManagerApproval(consul.requestId, 'Accepted')" />
                                     <p-button icon="pi pi-times" rounded severity="danger" 
-                                        (onClick)="resourceManagerApproval(consul)" />
+                                        (onClick)="resourceManagerApproval(consul.requestId, 'Rejected')" />
                                 </div>
                             }
                         </td>

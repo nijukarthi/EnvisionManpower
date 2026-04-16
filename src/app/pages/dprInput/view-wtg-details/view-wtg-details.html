@@ -21,18 +21,18 @@
         <p-table #dt dataKey="siNo" [value]="dprProjectWtgList" showGridlines [rowHover]="true" [paginator]="true" [lazy]="true"
             [paginatorDropdownAppendTo]="mydiv" [showCurrentPageReport]="true" [totalRecords]="totalRecords"
             [rowsPerPageOptions]="[10, 20, 30]" [rows]="pageSize" [first]="first" editMode="row"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [scrollable]="true" scrollHeight="500px"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
             [tableStyle]="{ 'min-width': 'max-content' }" (onLazyLoad)="loadWtgDetails($event)">
             <ng-template #header>
                 <tr>
-                    <th rowspan="2" pFrozenColumn alignFrozen="left">SL NO</th>
-                    <th rowspan="2" pFrozenColumn alignFrozen="left">
+                    <th rowspan="2">SL NO</th>
+                    <th rowspan="2">
                         <div class="flex items-center justify-between">
                             <span>WTG Number</span>
                             <p-columnFilter type="text" field="wtgNumber" display="menu" [showAddButton]="false" />
                         </div>   
                     </th>
-                    <th rowspan="2" pFrozenColumn alignFrozen="left">
+                    <th rowspan="2">
                         <div class="flex items-center justify-between">
                             <span>Location Number</span>
                             <p-columnFilter type="text" field="wtgLocation" display="menu" 
@@ -283,9 +283,9 @@
             </ng-template>
             <ng-template #body let-wtg let-editing="editing" let-i="rowIndex">
                 <tr [pEditableRow]="wtg">
-                    <td pFrozenColumn alignFrozen="left">{{ i + 1 }}</td>
-                    <td pFrozenColumn alignFrozen="left">{{ wtg?.wtgNumber || '-' }}</td>
-                    <td pFrozenColumn alignFrozen="left">{{ wtg?.wtgLocation || '-' }}</td>
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ wtg?.wtgNumber || '-' }}</td>
+                    <td>{{ wtg?.wtgLocation || '-' }}</td>
                     <td>{{ wtg?.maximoId || '-' }}</td>
                     <td>{{ wtg?.towerModel || '-' }}</td>
                     @if(showProductionComponent){

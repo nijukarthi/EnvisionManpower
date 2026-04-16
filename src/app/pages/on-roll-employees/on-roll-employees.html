@@ -29,7 +29,7 @@
             [paginatorDropdownAppendTo]="mydiv"
             [(selection)]="selectedOnroll"
             (onRowSelect)="selectedEmployee($event.data)"
-            (onRowUnselect)="unSelectedEmployee()"
+            (onRowUnselect)="unSelectedEmployee($event.data)"
             (onLazyLoad)="loadDemands($event)"
             [tableStyle]="{'min-width': '300rem'}"
         >
@@ -427,34 +427,43 @@
 
 <p-dialog header="Request to Change Consultancy" [(visible)]="showConsulRequestModal" [modal]="true" [style]="{ width: '50rem' }"
     [draggable]="false" (onHide)="onConsulDialogClose()">
-    <p-table [value]="consultancyRequestList" [rowHover]="true">
-        <ng-template #header>
-            <tr>
-                <th>SL No</th>
-                <th>Employee Code</th>
-                <th>Employee Name</th>
-                <th>Consultancy Name</th>
-            </tr>
-        </ng-template>
-        <ng-template #body let-consul let-i="rowIndex">
-            <tr>
-                <td>{{ i + 1 }}</td>
-                <td>{{ consul.employeeCode }}</td>
-                <td>{{ consul.candidateName }}</td>
-                <td>{{ consul.consultancy.consultancyName }}</td>
-            </tr>
-        </ng-template>
-        <ng-template #emptymessage>
-            <tr>
-                <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground)">No Records Found</td>
-            </tr>
-        </ng-template>
-    </p-table>
+    <p class="text-lg font-semibold text-center">
+        Selected Employees for Consultancy Change
+    </p>
+    <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden -mt-1.5">
+        <p-table [value]="consultancyRequestList" [rowHover]="true" [paginatorDropdownAppendTo]="mydiv">
+            <ng-template #header>
+                <tr>
+                    <th>SL No</th>
+                    <th>Employee Code</th>
+                    <th>Employee Name</th>
+                    <th>Consultancy Name</th>
+                    <th>Action</th>
+                </tr>
+            </ng-template>
+            <ng-template #body let-consul let-i="rowIndex">
+                <tr>
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ consul.employeeCode }}</td>
+                    <td>{{ consul.candidateName }}</td>
+                    <td>{{ consul.consultancy.consultancyName }}</td>
+                    <td>
+                        <p-button icon="pi pi-trash" rounded severity="danger" (onClick)="removeSelectedEmployee(consul)" />
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template #emptymessage>
+                <tr>
+                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground)">No Records Found</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
     <form [formGroup]="consultancyChangeForm" (ngSubmit)="confirmConsultancyChange()">
         <div class="grid grid-cols-2 gap-1 mt-4">
             <div class="grid col-span-1" formGroupName="consultancy">
                 <label for="consultancy-name">Consultancy</label>
-                <p-select [options]="consultancyList" formControlName="userId" optionLabel="consultancyName" optionValue="userId" 
+                <p-select [options]="filteredConsultancyList" formControlName="userId" optionLabel="consultancyName" optionValue="userId" 
                     appendTo="body" id="consultancy-name" placeholder="Select Consultancy" [filter]="true" filterBy="consultancyName"  />
             </div>
         </div>

@@ -6,7 +6,7 @@ import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core'
 import { FormArray, FormBuilder } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
-import { forkJoin } from 'rxjs';
+import { catchError, concatMap, forkJoin, from, map, of, tap, throwError } from 'rxjs';
 
 @Component({
     selector: 'app-on-roll-employees',
@@ -663,15 +663,105 @@ export class OnRollEmployees implements OnInit {
         }
     }
 
+    get filteredConsultancyList() {
+        const selectedIds = this.consultancyRequestList?.map(
+            item => item.consultancy?.userId
+        ) || [];
+
+        return this.consultancyList.filter(
+            consul => !selectedIds.includes(consul.userId)
+        );
+    }
+
+    confirmConsultancyChange() {
+        try {
+            const selectedConsultancyId = this.consultancyChangeForm.get('consultancy.userId')?.value;
+
+            if (!selectedConsultancyId) {
+                console.log('Please select consultancy');
+                return;
+            }
+
+            from(this.consultancyRequestList).pipe(
+                concatMap(candidate => {
+                    const payload = {
+                        candidate: {
+                            candidateId: candidate.candidateId
+                        },
+                        consultancy: {
+                            userId: selectedConsultancyId
+                        }
+                    };
+
+                    return this.apiService.createChangeConsulRequest(payload).pipe(
+                        tap(() => {
+                            this.messageService.add({
+                                severity: 'success',
+                                summary: 'Success',
+                                detail: `Request created for ${candidate.employeeCode}`
+                            });
+
+                            this.consultancyRequestList = this.consultancyRequestList.filter(
+                                item => item.employmentDetails.employmentId !== candidate.employmentDetails.employmentId
+                            );
+                        }),
+                        catchError(error => {
+                            const errorMsg =
+                                error?.error?.detail ||
+                                'Something went wrong';
+
+                            this.messageService.add({
+                                severity: 'error',
+                                summary: 'Error',
+                                detail: `Failed for ${candidate.employeeCode} - ${errorMsg}`
+                            });
+
+                            return throwError(() => error);
+                        })
+                    );
+                })
+            ).subscribe({
+                complete: () => {
+                    this.consultancyChangeForm.reset();
+                    this.showConsulRequestModal = false;
+                },
+                error: () => {
+                    console.log('Execution stopped due to error');
+                }
+            })
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    removeSelectedEmployee(emp: any){
+        console.log(emp);
+        this.consultancyRequestList = this.consultancyRequestList.filter(
+            item => item.employmentDetails.employmentId !== emp.employmentDetails.employmentId
+        );
+        console.log(this.consultancyRequestList);
+    }
+
     selectedEmployee(onroll: any){
         console.log(onroll);
-        this.consultancyRequestList.push(onroll);
+        const exists = this.consultancyRequestList.some(
+            item => item.employmentDetails.employmentId === onroll.employmentDetails.employmentId
+        )
+
+        if(!exists){
+            this.consultancyRequestList.push(onroll);
+        }
+
         console.log(this.consultancyRequestList);
         this.menuItems = this.getMenuItems();
     }
 
-    unSelectedEmployee(){
-        this.consultancyRequestList = [];
+    unSelectedEmployee(onroll: any){
+        this.consultancyRequestList = this.consultancyRequestList.filter(
+            item => item.employmentDetails.employmentId !== onroll.employmentDetails.employmentId
+        );
+        console.log(this.consultancyRequestList);
         this.menuItems = this.getMenuItems();
     }
 
@@ -771,48 +861,4 @@ export class OnRollEmployees implements OnInit {
         this.selectedOnroll = [];
     }
 
-    confirmConsultancyChange(){
-        try {
-            console.log(this.consultancyChangeForm.value);
-
-            const selectedConsultancyId = this.consultancyChangeForm.get('consultancy.userId')?.value;
-
-            if (!selectedConsultancyId) {
-                console.log('Please select consultancy');
-                return;
-            }
-
-            const requests = this.consultancyRequestList.map(candidate => {
-                const payload = {
-                    candidate: {
-                        candidateId: candidate.candidateId
-                    },
-                    consultancy: {
-                        userId: selectedConsultancyId
-                    }
-                };
-
-                return this.apiService.createChangeConsulRequest(payload);
-            });
-
-            forkJoin(requests).subscribe({
-                next: res => {
-                    console.log('All requests success:', res);
-                    this.consultancyChangeForm.reset();
-                    this.showConsulRequestModal = false;
-                    this.messageService.add({ severity: 'success', summary: 'Success', 
-                        detail: 'Consultancy Change Request Created Successfully' });
-                },
-                error: err => {
-                    console.log('One of the requests failed:', err);
-
-                    if (err.status === 400) {
-                        this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
-                    }
-                }
-            });
-        } catch (error) {
-            console.log(error);
-        }
-    }
 }
