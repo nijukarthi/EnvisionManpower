@@ -20,6 +20,7 @@ export class ConsultancyRequestList implements OnInit {
   filteredData: any;
 
   consulRequestList: any[] = [];
+  statuses!: any[];
 
   UserGroups = UserGroups;
   
@@ -37,6 +38,12 @@ export class ConsultancyRequestList implements OnInit {
 
   ngOnInit(): void {
     this.fetchConsulRequestList();
+
+    this.statuses = [
+        { label: 'Processing', value: 102 },
+        { label: 'Completed', value: 200 },
+        { label: 'Rejected', value: 406 }
+    ];
   }
 
   consulReqApi(data: any){
@@ -45,7 +52,7 @@ export class ConsultancyRequestList implements OnInit {
         next: val => {
           console.log(val);
           this.consulRequestList = val?.data?.data;
-          this.totalRecords = val?.data?.length;
+          this.totalRecords = val?.data?.length ?? 0;
         },
         error: err => {
           console.log(err);
@@ -69,11 +76,11 @@ export class ConsultancyRequestList implements OnInit {
     }
   }
 
-  resourceManagerApproval(requestData: any){
+  resourceManagerApproval(requestId: number, type: 'Accepted' | 'Rejected'){
     try {
       const data = {
-        requestId: requestData.requestId,
-        approvalStatus: 200
+        requestId: requestId,
+        approvalStatus: type === 'Accepted' ? 200 : 406
       }
 
       console.log(data);
@@ -81,7 +88,8 @@ export class ConsultancyRequestList implements OnInit {
       this.apiService.approveConsulRequest(data).subscribe({
         next: val => {
           console.log(val);
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Approved Successfully' });
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: type === 'Accepted' 
+            ? 'Consultancy Request Approved Successfully' : 'Consultancy Request Rejected' });
           this.fetchConsulRequestList();
         },
         error: err => {
@@ -137,6 +145,7 @@ export class ConsultancyRequestList implements OnInit {
         candidateCode: filters?.candidateCode?.[0]?.value ?? null,
         candidateName: filters?.candidateName?.[0]?.value ?? null,
         consultancyName: filters?.consultancyName?.[0]?.value ?? null,
+        approvalStatus: filters?.status?.[0]?.value ?? null,
         createdOnFrom: from ? this.formatDateForApi(from, false) : null,
         createdOnTo: to ? this.formatDateForApi(to, true) : null,
       }
