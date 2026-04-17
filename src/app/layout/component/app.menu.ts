@@ -101,22 +101,14 @@ export class AppMenu {
                             label: 'Manpower Request',
                             icon: 'pi pi-calendar',
                             visible: !!this.adminUser || !!this.siteInchargeUser || this.serviceManagerTeam,
-                            command: () => {
-                                if (!this.siteInchargeUser) {
-                                    this.router.navigate(['/home/manpower-request']);
-                                }
-                            }
+                            command: () => this.router.navigate(['/home/manpower-request'])
                         },
                         {
                             label: 'Manpower Approval',
                             icon: 'pi pi-ticket',
                             visible: this.adminUser || this.departmentUser || this.clusterUser || this.siteInchargeUser
                                     || this.serviceManagerTeam,
-                            command: () => {
-                                if (!this.siteInchargeUser) {
-                                    this.router.navigate(['/home/manpower-approval']);
-                                }
-                            }
+                            command: () => this.router.navigate(['/home/manpower-approval'])
                         },
                         {
                             label: 'Manpower Management',
@@ -164,8 +156,7 @@ export class AppMenu {
                                     label: 'Change Consultancy Request',
                                     icon: 'pi pi-user',
                                     routerLink: ['/home/consultancy-request'],
-                                    visible: this.adminUser || this.resourceManagerUser || this.siteInchargeUser || 
-                                        this.clusterUser || this.departmentUser || this.readonlyAdmin || this.serviceManagerTeam
+                                    visible: this.adminUser || this.resourceManagerUser
                                 },
                                 {
                                     label: 'Training',
