@@ -22,8 +22,8 @@
             [paginatorDropdownAppendTo]="mydiv" [showCurrentPageReport]="true" [totalRecords]="totalRecords"
             [rowsPerPageOptions]="[10, 20, 30]" [rows]="pageSize" [first]="first" editMode="row"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-            [tableStyle]="{ 'min-width': 'max-content' }" (onLazyLoad)="loadWtgDetails($event)"
-            [scrollable]="true" scrollHeight="400px">
+             (onLazyLoad)="loadWtgDetails($event)"
+            [scrollable]="true" scrollHeight="400px" styleClass="wtg-table" [tableStyle]="getTableStyle()">
             <ng-template #header>
                 <tr>
                     <th rowspan="2" pFrozenColumn alignFrozen="left">SL NO</th>
