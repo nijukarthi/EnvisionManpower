@@ -619,7 +619,27 @@ export class ViewWtgDetails implements OnInit {
     this.showCommissioning = task === this.WTGACTIVITIES.COMMISSIONING;
 
     this.fetchDprProjWTGList();
+    setTimeout(() => {
+    window.dispatchEvent(new Event('resize'));
+  }, 10);
   }
+
+  getTableStyle() {
+  // If more columns → allow scroll
+  if (
+    this.showProductionComponent ||
+    this.showQualityComponent ||
+    this.showDispatchComponent ||
+    this.showReceivingComponent ||
+    this.showInstallation ||
+    this.showCommissioning
+  ) {
+    return { 'min-width': '1900px' }; // wide tasks
+  }
+
+  // For Foundation (few columns)
+  return { 'width': '1800' };
+}
 
   private convertDates(obj: any, dateField: string[]){
     if(!obj) return;
