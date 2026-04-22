@@ -4,7 +4,8 @@
         <div class="flex justify-end gap-1">
             @if (currentUser === USERGROUPS.ADMIN || currentUser === USERGROUPS.RESOURCEMANAGER) {
             <p-menu #menu [model]="menuItems" [popup]="true" />
-            <p-button (onClick)="menu.toggle($event)" label="Actions" icon="pi pi-angle-down" iconPos="right" [disabled]="!selectedResignationId" />
+            <p-button (onClick)="menu.toggle($event)" label="Actions" icon="pi pi-angle-down" iconPos="right" 
+                [disabled]="!selectedResignationId" />
             }
             <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
         </div>
@@ -116,7 +117,8 @@
                     <td>{{ resignation.lastWorkingDate }}</td>
                     <td>{{ resignation.replacementRequired ? 'Yes' : 'No' }}</td>
                     <td>
-                        <p-tag [value]="getStatusLabel(resignation.resignationStatus)" [severity]="getSeverity(resignation.resignationStatus)" />
+                        <p-tag [value]="getStatusLabel(resignation.resignationStatus)" 
+                            [severity]="getSeverity(resignation.resignationStatus)" />
                     </td>
                     <td>
                         <p-select
@@ -154,11 +156,11 @@
                             <p-button icon="pi pi-check" severity="primary" rounded 
                                 [disabled]="currentUser !== USERGROUPS.CLUSTERHEAD && 
                                     currentUser !== USERGROUPS.ADMIN && currentUser !== USERGROUPS.RESOURCEMANAGER"
-                                (onClick)="clusterHeadApproval(resignation.resignationId, 'Accepted')" />
+                                (onClick)="clusterHeadApproval(resignation, 'Accepted')" />
                             <p-button icon="pi pi-times" severity="danger" rounded 
                                 [disabled]="currentUser !== USERGROUPS.CLUSTERHEAD &&
                                     currentUser !== USERGROUPS.ADMIN && currentUser !== USERGROUPS.RESOURCEMANAGER"
-                                (onClick)="clusterHeadApproval(resignation.resignationId, 'Rejected')" />
+                                (onClick)="clusterHeadApproval(resignation, 'Rejected')" />
                             }
                         </div>
                     </td>
@@ -172,11 +174,11 @@
                             <p-button icon="pi pi-check" severity="primary" rounded 
                                 [disabled]="currentUser !== USERGROUPS.DEPARTMENTHEAD &&
                                     currentUser !== USERGROUPS.ADMIN && currentUser !== USERGROUPS.RESOURCEMANAGER"
-                                (onClick)="departmentHeadApproval(resignation.resignationId, 'Accepted')" />
+                                (onClick)="departmentHeadApproval(resignation, 'Accepted')" />
                             <p-button icon="pi pi-times" severity="danger" rounded
                                 [disabled]="currentUser !== USERGROUPS.DEPARTMENTHEAD &&
                                     currentUser !== USERGROUPS.ADMIN && currentUser !== USERGROUPS.RESOURCEMANAGER"
-                                (onClick)="departmentHeadApproval(resignation.resignationId, 'Rejected')" />
+                                (onClick)="departmentHeadApproval(resignation, 'Rejected')" />
                             }
                         </div>
                     </td>
@@ -198,7 +200,8 @@
             <div class="rounded-full bg-primary text-primary-contrast inline-flex justify-center items-center h-24 w-24 -mt-20">
                 <i class="pi pi-question !text-5xl"></i>
             </div>
-            <span class="font-bold text-2xl block mb-2 mt-4">{{ message.header }}</span>
+            <span class="font-bold text-2xl block mb-4 mt-4">{{ message.header }}</span>
+            <p class="text-center mb-0.5!">{{ message?.message }}</p>
             <p class="mb-0">Please Type <span class="font-bold">Confirm</span> to Proceed</p>
             <input type="text" pInputText class="w-full -mt-3" (input)="typedValue($event)" />
             <div class="flex items-center gap-2 mt-3">

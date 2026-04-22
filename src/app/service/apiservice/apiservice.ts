@@ -194,6 +194,10 @@ export class Apiservice {
         return this.postMethod('requesition/demand/assigned', params);
     }
 
+    updatePlannedDate(params: any){
+        return this.postMethod('requesition/edit/demand/planned-date', params);
+    }
+
     viewRequisition(params: any): Observable<any> {
         return this.postMethod('requesition/view', params);
     }
@@ -462,6 +466,14 @@ export class Apiservice {
         return this.postMethod('candidate/siteperfomance/resignation/approve/departmenthead', params);
     }
 
+    approveRevokeResignClusterHead(params: any){
+        return this.postMethod('candidate/siteperfomance/resignation/revoke/approve/statehead', params);
+    }
+
+    approveRevokeResignDeptHead(params: any){
+        return this.postMethod('candidate/siteperfomance/resignation/revoke/approve/departmenthead', params);
+    }
+
     fetchDemandDetails(params: any): Observable<any> {
         return this.postMethod('requesition/demand/byspn', params);
     }
@@ -552,6 +564,10 @@ export class Apiservice {
 
     forceResignation(params: any) {
         return this.postMethod('candidate/siteperfomance/resignation/force', params);
+    }
+
+    revokeResignation(params: any){
+        return this.postMethod('candidate/siteperfomance/resignation/revoke/request', params);
     }
 
     cancelTransfer(params: any) {

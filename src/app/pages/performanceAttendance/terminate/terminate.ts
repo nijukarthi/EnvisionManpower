@@ -23,11 +23,13 @@ export class Terminate implements OnInit {
 
     isEnabledBtn = false;
     resignationModal = false;
+    isRevokeResign = false;
 
     currentUser = Number(sessionStorage.getItem('userGroupId'));
 
     resignationList: any;
     selectedResignDetails: any;
+    filteredData: any;
 
     selectedResignation: any[] = [];
 
@@ -45,7 +47,9 @@ export class Terminate implements OnInit {
         108: { label: 'Scheduled', severity: 'primary' },
         200: { label: 'Completed', severity: 'success' },
         406: { label: 'Rejected', severity: 'danger' },
-        418: { label: 'Cancelled', severity: 'danger' }
+        418: { label: 'Cancelled', severity: 'danger' },
+        428: { label: 'Revoke Processing', severity: 'warn' },
+        430: { label: 'Revoked', severity: 'success' },
     };
 
     isReplacement = [
@@ -85,6 +89,7 @@ export class Terminate implements OnInit {
         try {
             this.apiService.fetchResignationList(data).subscribe({
                 next: (val) => {
+                    console.log(val);
                     this.resignationList = val?.data?.data;
                     this.totalRecords = val?.data?.length ?? 0;
                 },
@@ -153,63 +158,117 @@ export class Terminate implements OnInit {
         });
     }
 
-    clusterHeadApproval(resignationId: number, type: 'Accepted' | 'Rejected') {
-        try {
-            const data = {
-                resignationId: resignationId,
-                approvalStatus: type === 'Accepted' ? ApprovalStatus.ACCEPTED : ApprovalStatus.REJECTED
-            };
-
-            this.apiService.approveResignClusterHead(data).subscribe({
-                next: (val) => {
-                    if (type === 'Accepted') {
-                        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Resignation Request Accepted' });
-                    } else {
-                        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Resignation Request Rejected' });
-                    }
-                    this.fetchResignationList();
-                },
-                error: (err) => {
-                    console.log(err);
+    clusterHeadApproval(resignation: any, type: 'Accepted' | 'Rejected') {
+        if (resignation.resignationStatus === 428) {
+            try {
+                const data = {
+                    resignationId: resignation.resignationId,
+                    approvalStatus: type === 'Accepted' ? ApprovalStatus.ACCEPTED : ApprovalStatus.REJECTED
                 }
-            });
-        } catch (error) {
-            console.log(error);
+
+                console.log(data);
+
+                this.apiService.approveRevokeResignClusterHead(data).subscribe({
+                    next: val => {
+                        if (type === 'Accepted') {
+                            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Resignation Revoke Request Accepted' });
+                        } else {
+                            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Resignation Revoke Request Rejected' });
+                        }
+                       this.resignationApi(this.filteredData);
+                    }, 
+                    error: (err) => {
+                        console.log(err);
+                    }
+                })
+            } catch (error) {
+                console.log(error);
+            }
+        } else {
+            try {
+                const data = {
+                    resignationId: resignation.resignationId,
+                    approvalStatus: type === 'Accepted' ? ApprovalStatus.ACCEPTED : ApprovalStatus.REJECTED
+                };
+
+                console.log(data);
+    
+                this.apiService.approveResignClusterHead(data).subscribe({
+                    next: (val) => {
+                        console.log(val);
+                        if (type === 'Accepted') {
+                            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Resignation Request Accepted' });
+                        } else {
+                            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Resignation Request Rejected' });
+                        }
+                        this.fetchResignationList();
+                    },
+                    error: (err) => {
+                        console.log(err);
+                    }
+                });
+            } catch (error) {
+                console.log(error);
+            }
         }
     }
 
-    departmentHeadApproval(resignationId: number, type: 'Accepted' | 'Rejected') {
-        try {
-            const data = {
-                resignationId: resignationId,
-                approvalStatus: type === 'Accepted' ? ApprovalStatus.ACCEPTED : ApprovalStatus.REJECTED
-            };
+    departmentHeadApproval(resignation: any, type: 'Accepted' | 'Rejected') {
+        if (resignation.resignationStatus === 428) {
+            try {
+                const data = {
+                    resignationId: resignation.resignationId,
+                    approvalStatus: type === 'Accepted' ? ApprovalStatus.ACCEPTED : ApprovalStatus.REJECTED
+                };
 
-            this.apiService.approveResignDeptHead(data).subscribe({
-                next: (val) => {
-                    if (type === 'Accepted') {
-                        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Resignation Request Accepted' });
-                    } else {
-                        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Resignation Request Rejected' });
+                this.apiService.approveRevokeResignDeptHead(data).subscribe({
+                    next: (val) => {
+                        console.log(val);
+                        if (type === 'Accepted') {
+                            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Resignation Revoke Request Accepted' });
+                        } else {
+                            this.messageService.add({ severity: 'success', summary: 'success', detail: 'Resignation Revoke Request Rejected' });
+                        }
+                        this.resignationApi(this.filteredData);
+                    },
+                    error: (err) => {
+                        console.log(err);
                     }
-                    this.fetchResignationList();
-                },
-                error: (err) => {
-                    console.log(err);
-                }
-            });
-        } catch (error) {
-            console.log(error);
+                })
+            } catch (error) {
+                console.log(error);
+            }
+        } else {
+            try {
+                const data = {
+                    resignationId: resignation.resignationId,
+                    approvalStatus: type === 'Accepted' ? ApprovalStatus.ACCEPTED : ApprovalStatus.REJECTED
+                };
+    
+                this.apiService.approveResignDeptHead(data).subscribe({
+                    next: (val) => {
+                        if (type === 'Accepted') {
+                            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Resignation Request Accepted' });
+                        } else {
+                            this.messageService.add({ severity: 'success', summary: 'success', detail: 'Resignation Request Rejected' });
+                        }
+                        this.fetchResignationList();
+                    },
+                    error: (err) => {
+                        console.log(err);
+                    }
+                });
+            } catch (error) {
+                console.log(error);
+            }
         }
     }
 
     selectedEmployee(resignation: any) {
         this.selectedResignDetails = resignation;
-        if (resignation.resignationStatus === TransferStatus.SCHEDULED) {
-            this.selectedResignationId = resignation.resignationId;
-        } else {
-            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Scheduled Resignation request can only be processed as force & cancel resignation' });
-        }
+        this.selectedResignationId = resignation.resignationId;
+
+        this.menuItems = this.getMenuItems();
     }
 
     unSelectedEmployee() {
@@ -276,6 +335,7 @@ export class Terminate implements OnInit {
     forceResignationPopup() {
         this.confirmationService.confirm({
             header: 'Are you sure?',
+            message: 'Do you want to force the resignation?',
             accept: () => {
                 try {
                     const data = {
@@ -306,9 +366,44 @@ export class Terminate implements OnInit {
         });
     }
 
+    revokeResignationPopup(){
+        this.confirmationService.confirm({
+            header: 'Are you sure?',
+            message: 'Do you want to revoke the resignation?',
+            accept: () => {
+                try {
+                    const data = {
+                        id: this.selectedResignationId
+                    }
+
+                    this.apiService.revokeResignation(data).subscribe({
+                        next: (val) => {
+                            console.log(val);
+                            this.messageService.add({ severity: 'success', summary: 'Success', 
+                                detail: 'Employee resignation revoked successfully' });
+                            this.fetchResignationList();
+                            this.selectedResignation = [];
+                        },
+                        error: (err) => {
+                            console.log(err);
+
+                            if (err.status === 400) {
+                                this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
+                                this.selectedResignation = [];
+                            }
+                        }
+                    })
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+        })
+    }
+
     cancelResignationPopup() {
         this.confirmationService.confirm({
             header: 'Are you sure?',
+            message: 'Do you want to cancel the resignation?',
             accept: () => {
                 try {
                     const data = {
@@ -359,11 +454,19 @@ export class Terminate implements OnInit {
             {
                 label: 'Force Resignation',
                 icon: 'pi pi-bolt',
+                disabled: this.selectedResignDetails?.resignationStatus !== TransferStatus.SCHEDULED,
                 command: () => this.forceResignationPopup()
+            },
+            {
+                label: 'Revoke Resignation',
+                icon: 'pi pi-undo',
+                disabled: this.selectedResignDetails?.resignationStatus !== TransferStatus.COMPLETED,
+                command: () => this.revokeResignationPopup()
             },
             {
                 label: 'Cancel Resignation',
                 icon: 'pi pi-times',
+                disabled: this.selectedResignDetails?.resignationStatus !== TransferStatus.SCHEDULED,
                 command: () => this.cancelResignationPopup()
             }
         ];
@@ -400,7 +503,7 @@ export class Terminate implements OnInit {
 
             const dateValue = filters?.date?.[0]?.value;
 
-            const payload = {
+            this.filteredData = {
                 offSet: this.offSet,
                 pageSize: this.pageSize,
                 employeeCode: filters?.employeeCode?.[0]?.value ?? null,
@@ -413,7 +516,7 @@ export class Terminate implements OnInit {
                 lastWorkingTo: Array.isArray(dateValue) ? formatDate(dateValue[1]) : null
             };
 
-            this.resignationApi(payload);
+            this.resignationApi(this.filteredData);
         } catch (error) {
             console.log(error);
         }

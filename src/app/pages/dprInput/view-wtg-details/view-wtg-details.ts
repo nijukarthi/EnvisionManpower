@@ -132,6 +132,7 @@ export class ViewWtgDetails implements OnInit {
     try {
       this.apiService.fetchDprProjWTGList(data).subscribe({
         next: val => {
+          console.log(val);
           this.dprProjectWtgList = val?.data?.data.map((wtg: any) => {
 
             wtg.wtgFoundation ??= {};
@@ -628,13 +629,15 @@ export class ViewWtgDetails implements OnInit {
   // If more columns → allow scroll
   if (
     this.showProductionComponent ||
-    this.showQualityComponent ||
     this.showDispatchComponent ||
-    this.showReceivingComponent ||
     this.showInstallation ||
     this.showCommissioning
   ) {
     return { 'min-width': '1900px' }; // wide tasks
+  } else if(this.showQualityComponent ){
+    return { 'min-width': '4000px' };
+  } else if(this.showReceivingComponent){
+    return { 'min-width': '2500px' };
   }
 
   // For Foundation (few columns)
