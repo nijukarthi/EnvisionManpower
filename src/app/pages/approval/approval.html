@@ -95,8 +95,30 @@
                                 demand.departmentHeadApproval.approvalStatus === APPROVALSTATUS.ACCEPTED" />
                     </td>
                     <td>{{ demand.fulfilledQuantity }}</td>
-                    <td>{{ demand.plannedDeploymentDate || '-' }}</td>
-                    <td>{{ demand.plannedReleaseDate || '-' }}</td>
+                    <td>
+                        @if (demand.demandStatus === DEMANDSTATUS.PROCESSING && 
+                            (demand.stateHeadApproval?.approvalStatus !== APPROVALSTATUS.ACCEPTED &&
+                                demand.departmentHeadApproval?.approvalStatus !== APPROVALSTATUS.ACCEPTED
+                            )) {
+                            <p-datepicker [(ngModel)]="demand.plannedDeploymentDate" [showIcon]="true" [iconDisplay]="'input'" 
+                                appendTo="body" placeholder="Select Date" [minDate]="demand.deployMinDate"
+                                (onSelect)="selectedDeploymentDate(demand, $event)" />
+                        } @else {
+                            <span>{{ demand.plannedDeploymentDate | date: 'dd-MM-yyyy' }}</span>
+                        }
+                    </td>
+                    <td>
+                        @if (demand.demandStatus === DEMANDSTATUS.PROCESSING &&
+                            (demand.stateHeadApproval?.approvalStatus !== APPROVALSTATUS.ACCEPTED &&
+                                demand.departmentHeadApproval?.approvalStatus !== APPROVALSTATUS.ACCEPTED
+                            )) {
+                            <p-datepicker [(ngModel)]="demand.plannedReleaseDate" [showIcon]="true" [iconDisplay]="'input'" 
+                                appendTo="body" placeholder="Select Date" [minDate]="demand.releaseMinDate"
+                                (onSelect)="selectedReleaseDate(demand.demandId)" />
+                        } @else {
+                            <span>{{ demand.plannedReleaseDate | date: 'dd-MM-yyyy' }}</span>
+                        }
+                    </td>
                     <td>
                         <p-tag [value]="getStatusLabel(demand.demandStatus)" 
                             [severity]="getSeverity(demand.demandStatus)" />
