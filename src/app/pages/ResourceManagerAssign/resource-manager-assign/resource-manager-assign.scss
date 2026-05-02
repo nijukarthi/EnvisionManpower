@@ -3,3 +3,7 @@ tr th {
     color: #fff;
     font-weight: bold;
 }
+
+::ng-deep .p-button.cursor-default {
+  cursor: default !important;
+}

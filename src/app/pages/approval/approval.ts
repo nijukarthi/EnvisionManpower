@@ -54,7 +54,7 @@ export class Approval implements OnInit {
   }
 
   filters = {
-    status: [{ value: [102], matchMode: 'equals' }]
+    status: [{ value: [102], matchMode: 'in' }]
   };
 
   selectedStatuses: number[] = [102];
@@ -185,7 +185,7 @@ export class Approval implements OnInit {
         next: val => {
           this.messageService.add({severity: 'success', summary: 'Success', 
             detail: type === 'Accepted' ? 'Manpower Successfully Accepted' : 'Manpower Rejected' });
-          this.fetchDemandRequest();
+          this.manpowerApprovalApi(this.filteredData);
         },
         error: err => {
           console.log(err);
@@ -207,7 +207,7 @@ export class Approval implements OnInit {
         next: val => {
           this.messageService.add({severity: 'success', summary: 'Success', detail: type === 'Accepted' ? 
             'Manpower Successfully Accepted' : 'Manpower Rejected'});
-          this.fetchDemandRequest();
+          this.manpowerApprovalApi(this.filteredData);
         },
         error: err => {
           console.log(err);
@@ -329,6 +329,8 @@ export class Approval implements OnInit {
         envisionRoleName: filters?.role?.[0].value ?? ''
       };
 
+      console.log(this.filteredData);
+
       this.manpowerApprovalApi(this.filteredData);
     } catch (error) {
       console.log(error);
@@ -368,5 +370,27 @@ export class Approval implements OnInit {
     const day = String(date.getDate()).padStart(2, '0');
 
     return `${year}-${month}-${day}`;
+  }
+
+  removeStatus(status: number, event?: Event) {
+    event?.stopPropagation();
+
+    this.selectedStatuses = this.selectedStatuses.filter(s => s !== status);
+
+    if (!this.selectedStatuses.length) {
+      this.selectedStatuses = [102];
+    }
+
+    this.dt.filters['status'] = [{
+      value: this.selectedStatuses,
+      matchMode: 'in'
+    }];
+
+    this.dt._filter();
+  }
+
+  clearStatusFilters() {
+    this.selectedStatuses = [102];
+    this.dt.clear();
   }
 }

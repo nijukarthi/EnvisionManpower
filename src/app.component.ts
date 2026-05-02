@@ -87,6 +87,9 @@ export class AppComponent implements OnInit {
                                 break;
                 
                             case UserGroups.ADMIN:
+                                // this.router.navigate(['/home/dashboard']);
+                                // break;
+
                             case UserGroups.SITEINCHARGE:
                             case UserGroups.PROJECTMANAGER:
                             case UserGroups.RESOURCEMANAGER:

@@ -143,7 +143,7 @@ export class Interviewer implements OnInit {
                         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Interviewer Updated Successfully' });
                         this.interviewerForm.reset();
                         this.openInterviewer = false;
-                        this.fetchActiveInterviewers();
+                        this.interviewerApi(this.filteredData);
                     },
                     error: (err) => {
                         console.log(err);

@@ -283,7 +283,7 @@ export class CompanyUsers implements OnInit {
                         this.openCompanyUser = false;
                         this.companyUserForm.reset();
                         this.departmentsControl.reset();
-                        this.fetchActiveCompanyUsers();
+                        this.companyUsersApi(this.filteredData);
                     },
                     error: (err) => {
                         console.log(err);

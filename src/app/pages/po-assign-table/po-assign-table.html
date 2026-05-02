@@ -13,6 +13,55 @@
             <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
         </div>
     </div>
+
+    <div class="mb-2 flex items-center gap-2 flex-wrap border-2 border-blue-500 bg-blue-50
+        px-4 py-2 rounded-4xl">
+
+        <!-- Label -->
+        <div class="flex items-center gap-2">
+            <i class="pi pi-filter text-blue-600 text-sm"></i>
+            <span class="text-sm font-semibold text-gray-700">
+                Invoice Status
+            </span>
+        </div>
+
+        <!-- Tags -->
+        <div class="flex items-center gap-2 flex-wrap">
+            @for (status of visibleStatuses; track $index) {
+                <p-tag 
+                [severity]="getSeverity(status)"
+                [rounded]="true"
+                class="px-3 py-1 text-xs flex items-center gap-2">
+
+                <span>{{ formatStatus(status) }}</span>
+
+                <i 
+                    class="pi pi-times cursor-pointer text-xs"
+                    (click)="removeStatus(status, $event)">
+                </i>
+                </p-tag>
+            }
+
+            <!-- + More -->
+            @if (!expanded && remainingCount > 0) {
+                <span 
+                    class="text-blue-600 text-sm font-medium cursor-pointer"
+                    (click)="toggleStatuses()">
+
+                    +{{ remainingCount }} more
+                </span>
+            }
+
+            @if (expanded && selectedStatuses.length > 2) {
+                <span 
+                    class="text-blue-600 text-sm font-medium cursor-pointer"
+                    (click)="toggleStatuses()">
+
+                    Show less
+                </span>
+            }
+        </div>
+    </div>
     <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
         <p-table #dt [value]="poList" stripedRows [rowHover]="true" [paginator]="true" [rows]="pageSize" [first]="first"
             [rowsPerPageOptions]="[10, 20, 30]" [lazy]="true" [totalRecords]="totalRecords" selectionMode="single"

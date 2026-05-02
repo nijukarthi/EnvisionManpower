@@ -180,7 +180,7 @@ export class Envisionroles {
                             });
                             this.openNewRoleyPopup = false;
                             this.roleForm.reset();
-                            this.fetchActiveEnvRole();
+                            this.envisionrolesApi(this.filteredData);
                         },
                         error: (err) => {
                             console.log(err);

@@ -4,7 +4,7 @@ import { UserGroups } from '@/models/usergroups/usergroups.enum';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
 import { DatePipe } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
 
@@ -15,6 +15,8 @@ import { ConfirmationService, MessageService } from 'primeng/api';
     styleUrl: './terminate.scss'
 })
 export class Terminate implements OnInit {
+    @ViewChild('dt') dt: any;
+    
     offSet = 0;
     pageSize = 10;
     first = 0;
@@ -41,6 +43,12 @@ export class Terminate implements OnInit {
 
     APPROVALSTATUS = ApprovalStatus;
     USERGROUPS = UserGroups;
+
+    filters = {
+        status: [{ value: [102], matchMode: 'in' }]
+    };
+
+    selectedStatuses: number[] = [102];
 
     statusMap: Record<number, { label: string; severity: string }> = {
         102: { label: 'Processing', severity: 'warn' },
@@ -520,6 +528,28 @@ export class Terminate implements OnInit {
         } catch (error) {
             console.log(error);
         }
+    }
+
+    removeStatus(status: number, event?: Event) {
+        event?.stopPropagation();
+
+        this.selectedStatuses = this.selectedStatuses.filter(s => s !== status);
+
+        if (!this.selectedStatuses.length) {
+            this.selectedStatuses = [102];
+        }
+
+        this.dt.filters['status'] = [{
+            value: this.selectedStatuses,
+            matchMode: 'in'
+        }];
+
+        this.dt._filter();
+    }
+
+    clearStatusFilters() {
+        this.selectedStatuses = [102];
+        this.dt.clear();
     }
 
     onDialogClose() {

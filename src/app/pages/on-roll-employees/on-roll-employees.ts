@@ -53,6 +53,12 @@ export class OnRollEmployees implements OnInit {
 
     currentUserEmail = sessionStorage.getItem('userEmail');
 
+    filters = {
+        status: [{ value: ['ACTIVE'], matchMode: 'equals' }]
+    };
+
+    selectedStatuses: string[] = ['ACTIVE'];
+
     private fb = inject(FormBuilder);
 
     ppeDetailsForm = this.fb.group({
@@ -331,7 +337,7 @@ export class OnRollEmployees implements OnInit {
                 next: (val) => {
                     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Successfully Updated PPE Details' });
                     this.openPpeDetails = false;
-                    this.fetchActiveOnrollEmployees();
+                    this.onrollEmployeeApi(this.filteredData);
                 },
                 error: (err) => {
                     console.log(err);
@@ -532,7 +538,7 @@ export class OnRollEmployees implements OnInit {
                         summary: 'Success', 
                         detail: 'Employment Details Updated Successfully' });
                     this.spnDetailsModal = false;
-                    this.fetchActiveOnrollEmployees();
+                    this.onrollEmployeeApi(this.filteredData);
                 },
                 error: err => {
                     console.log(err);
@@ -861,4 +867,25 @@ export class OnRollEmployees implements OnInit {
         this.selectedOnroll = [];
     }
 
+    removeStatus(status: string, event?: Event) {
+        event?.stopPropagation();
+
+        this.selectedStatuses = this.selectedStatuses.filter(s => s !== status);
+
+        if (!this.selectedStatuses.length) {
+            this.selectedStatuses = ['ACTIVE'];
+        }
+
+        this.table.filters['status'] = [{
+            value: this.selectedStatuses,
+            matchMode: 'in'
+        }];
+
+        this.table._filter();
+    }
+
+    clearStatusFilters() {
+        this.selectedStatuses = ['ACTIVE'];
+        this.table.clear();
+    }
 }

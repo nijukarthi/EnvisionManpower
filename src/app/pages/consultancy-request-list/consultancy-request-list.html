@@ -1,10 +1,44 @@
 <div class="card">
-    <div class="flex items-baseline-last justify-between">
-        <h5>Change Consultancy Requests</h5>
-        <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
+    <div class="flex items-center justify-between">
+        <div class="flex items-center justify-start gap-3">
+            <h5 class="m-0">Change Consultancy Requests</h5>
+
+            @if (selectedStatuses.length) {
+                <div class="flex items-center gap-2 px-4 py-2 rounded-4xl
+                            border-2 border-blue-500 bg-blue-50 -mt-2">
+
+                    <i class="pi pi-filter text-blue-600"></i>
+
+                    <span class="text-sm font-semibold text-blue-800">
+                        Demand Status
+                    </span>
+
+                    <div class="flex flex-wrap gap-2">
+                        @for (status of selectedStatuses; track $index) {
+                            <p-tag 
+                                [severity]="statusMap[status]?.severity"
+                                [rounded]="true"
+                                class="cursor-default flex items-center gap-2 px-3 py-1">
+
+                                <!-- Label -->
+                                <span>{{ statusMap[status]?.label }}</span>
+
+                                <!-- Close Icon -->
+                                <i 
+                                    class="pi pi-times text-base cursor-pointer"
+                                    (click)="removeStatus(status, $event)">
+                                </i>
+
+                            </p-tag>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+        <p-button label="Clear" icon="pi pi-filter-slash" (click)="clearStatusFilters()" />
     </div>
     <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
-        <p-table #dt [value]="consulRequestList" [rowHover]="true" [paginator]="true"
+        <p-table #dt [value]="consulRequestList" [rowHover]="true" [paginator]="true" [filters]="filters"
             [rows]="pageSize" [lazy]="true" [rowsPerPageOptions]="[10, 20, 30, 40, 50]"
             [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
             [totalRecords]="totalRecords" (onLazyLoad)="loadConsulRequest($event)"
@@ -42,7 +76,7 @@
                             <p-columnFilter field="status" matchMode="equals" display="menu" [showAddButton]="false">
                                 <ng-template #filter let-value let-filter="filterCallback">
                                     <p-multiselect [options]="statuses" (onChange)="filter($event.value)" placeholder="Select Statuses" 
-                                        class="w-full">
+                                        class="w-full" [(ngModel)]="selectedStatuses">
                                         <ng-template let-option #item>
                                             <p-tag [value]="option.label" [severity]="getSeverity(option.value)" />
                                         </ng-template>

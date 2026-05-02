@@ -192,7 +192,7 @@ export class SpnTable implements OnInit {
                             this.messageService.add({ severity: 'success', summary: 'Success', detail: 'SPN Updated Successfully' });
                             this.openSpn = false;
                             this.spnForm.reset();
-                            this.fetchActiveSpn();
+                            this.spnApi(this.filteredData);
                         },
                         error: (err) => {
                             console.log(err);

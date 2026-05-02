@@ -92,11 +92,11 @@ export class AppMenu {
                     icon: 'pi pi-fw pi-briefcase',
                     routerLink: ['/pages'],
                     items: [
-                        // {
-                        //     label: 'Dashboard',
-                        //     icon: 'pi pi-objects-column',
-                        //     routerLink: ['/home/dashboard']
-                        // },
+                        {
+                            label: 'Dashboard',
+                            icon: 'pi pi-objects-column',
+                            routerLink: ['/home/dashboard']
+                        },
                         {
                             label: 'Manpower Request',
                             icon: 'pi pi-calendar',

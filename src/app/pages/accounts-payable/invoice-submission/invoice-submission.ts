@@ -15,6 +15,7 @@ export class InvoiceSubmission implements OnInit {
     pageSize = 10;
     first = 0;
     totalRecords = 0;
+    visibleCount = 4;
 
     statuses!: any[];
     invoiceSubmissionList: any;
@@ -24,7 +25,15 @@ export class InvoiceSubmission implements OnInit {
 
     USERGROUPS = UserGroups;
 
+    expanded = false;
+
     currentUserRole = Number(sessionStorage.getItem('userGroupId'));
+
+    selectedStatuses: string[] = ['SUBMITTED', 'GRN_IN_PROCESS', 'GRN_COMPLETED', 
+        'GRN_REVERSED', 'UNDER_DISBURSEMENT_REVIEW', 'DISBURSEMENT_IN_PROGRESS', 'RETURNED_TO_GRN',
+        'REJECTED', 'PAYMENT_APPROVED', 'PAID'
+    ];
+
 
     constructor(
         private apiService: Apiservice,
@@ -183,4 +192,25 @@ export class InvoiceSubmission implements OnInit {
             console.log(error);
         }
     }
+
+    get remainingCount() {
+        return this.selectedStatuses.length - this.visibleCount;
+    }
+
+    get visibleStatuses() {
+        return this.expanded
+            ? this.selectedStatuses
+            : this.selectedStatuses.slice(0, 4);
+    }
+
+    toggleStatuses() {
+        this.expanded = !this.expanded;
+    }
+
+    formatStatus(status: string) {
+        return status.replace(/_/g, ' ').toLowerCase()
+            .replace(/\b\w/g, c => c.toUpperCase());
+    }
+
+    removeStatus(status: string, event?: Event) {}
 }
