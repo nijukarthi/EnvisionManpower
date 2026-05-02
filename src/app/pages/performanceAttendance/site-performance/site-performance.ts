@@ -53,6 +53,8 @@ export class SitePerformance implements OnInit {
 
     USERGROUPS = UserGroups;
 
+    selectedStatuses: string[] = ['ACTIVE', 'TRANSFERRED', 'RESIGNED'];
+
     private fb = inject(FormBuilder);
     private router = inject(Router);
 
@@ -550,6 +552,26 @@ export class SitePerformance implements OnInit {
         value[index] = selectedValue;
 
         filter(value);
+    }
+
+    removeStatus(status: string, event?: Event) {
+        event?.stopPropagation();
+
+        this.selectedStatuses = this.selectedStatuses.filter(s => s !== status);
+
+        const value = this.selectedStatuses.length ? this.selectedStatuses : ['ACTIVE', 'TRANSFERRED', 'RESIGNED'];
+
+        this.dt.filters['status'] = [{
+            value: value,
+            matchMode: 'in'
+        }];
+
+        this.dt._filter();
+    }
+
+    clearStatusFilters() {
+        this.selectedStatuses = ['ACTIVE', 'TRANSFERRED', 'RESIGNED'];
+        this.dt.clear();
     }
 
     onDialogClose() {

@@ -18,6 +18,7 @@ export class InvoiceReceipt implements OnInit {
     first = 0;
     totalRecords = 0;
     invoiceId = 0;
+    visibleCount = 4;
 
     statuses!: any[];
     grnStatuses!: any[];
@@ -25,6 +26,7 @@ export class InvoiceReceipt implements OnInit {
     activeTab = '0';
 
     openGRNModal = false;
+    expanded = false;
 
     invoiceGRNList: any;
 
@@ -34,6 +36,15 @@ export class InvoiceReceipt implements OnInit {
     currentUser = Number(sessionStorage.getItem('userGroupId'));
 
     USERGROUPS = UserGroups;
+
+    filters = {
+        status: [{ value: [102], matchMode: 'in' }]
+    };
+
+    selectedStatuses: string[] = ['SUBMITTED', 'GRN_IN_PROCESS', 'GRN_COMPLETED', 
+        'GRN_REVERSED', 'UNDER_DISBURSEMENT_REVIEW', 'DISBURSEMENT_IN_PROGRESS', 'RETURNED_TO_GRN',
+        'REJECTED', 'PAYMENT_APPROVED', 'PAID'
+    ];
 
     private fb = inject(FormBuilder);
 
@@ -351,5 +362,72 @@ export class InvoiceReceipt implements OnInit {
         } catch (error) {
             console.log(error);
         }
+    }
+
+    removeStatus(status: string, event?: Event) {
+        // event?.stopPropagation();
+
+        // this.selectedStatuses = this.selectedStatuses.filter(s => s !== status);
+
+        // if (!this.selectedStatuses.length) {
+        //     this.selectedStatuses = [102];
+        // }
+
+        // this.dt.filters['status'] = [{
+        //     value: this.selectedStatuses,
+        //     matchMode: 'in'
+        // }];
+
+        // this.dt._filter();
+    }
+
+    clearStatusFilters() {
+        // this.selectedStatuses = [102];
+        // this.dt.clear();
+    }
+
+    formatStatus(status: string) {
+        return status.replace(/_/g, ' ').toLowerCase()
+            .replace(/\b\w/g, c => c.toUpperCase());
+    }
+
+    statusGroups = [
+        {
+            label: 'GRN',
+            items: ['GRN_IN_PROCESS', 'GRN_COMPLETED', 'GRN_REVERSED', 'RETURNED_TO_GRN']
+        },
+        {
+            label: 'Disbursement',
+            items: ['UNDER_DISBURSEMENT_REVIEW', 'DISBURSEMENT_IN_PROGRESS']
+        },
+        {
+            label: 'Payment',
+            items: ['PAYMENT_APPROVED', 'PAID']
+        },
+        {
+            label: 'General',
+            items: ['SUBMITTED', 'REJECTED']
+        }
+    ];
+
+    hasSelectedStatus(group: any): boolean {
+        return group.items.some((status: string) =>
+            this.selectedStatuses.includes(status)
+        );
+    }
+
+    get remainingCount() {
+        return this.selectedStatuses.length - this.visibleCount;
+    }
+
+
+    get visibleStatuses() {
+        return this.expanded
+            ? this.selectedStatuses
+            : this.selectedStatuses.slice(0, 4);
+    }
+
+    toggleStatuses() {
+        this.expanded = !this.expanded;
     }
 }

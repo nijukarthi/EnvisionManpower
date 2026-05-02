@@ -2,7 +2,7 @@ import { ApprovalStatus } from '@/models/approval-status/approval-status.enum';
 import { UserGroups } from '@/models/usergroups/usergroups.enum';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MessageService } from 'primeng/api';
 
 @Component({
@@ -12,6 +12,8 @@ import { MessageService } from 'primeng/api';
   styleUrl: './consultancy-request-list.scss'
 })
 export class ConsultancyRequestList implements OnInit {
+  @ViewChild('dt') dt: any;
+  
   offSet = 0;
   pageSize = 10;
   first = 0;
@@ -33,6 +35,12 @@ export class ConsultancyRequestList implements OnInit {
     200: { label: 'Completed', severity: 'success' },
     406: { label: 'Rejected', severity: 'danger' }
   }
+
+  filters = {
+    status: [{ value: [102, 200, 406], matchMode: 'in' }]
+  };
+
+  selectedStatuses: number[] = [102, 200, 406];
 
   constructor(private apiService: Apiservice, private messageService: MessageService){}
 
@@ -162,5 +170,27 @@ export class ConsultancyRequestList implements OnInit {
 
   getSeverity(status: number): string{
     return this.statusMap[status]?.severity ?? 'primary';
+  }
+
+  removeStatus(status: number, event?: Event) {
+    event?.stopPropagation();
+
+    this.selectedStatuses = this.selectedStatuses.filter(s => s !== status);
+
+    if (!this.selectedStatuses.length) {
+      this.selectedStatuses = [102, 200, 406];
+    }
+
+    this.dt.filters['status'] = [{
+      value: this.selectedStatuses,
+      matchMode: 'in'
+    }];
+
+    this.dt._filter();
+  }
+
+  clearStatusFilters() {
+    this.selectedStatuses = [102, 200, 406];
+    this.dt.clear();
   }
 }

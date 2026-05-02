@@ -24,12 +24,18 @@ export class PoAssignTable implements OnInit {
   first = 0;
   totalRecords = 0;
   selectedPOId = 0;
+  visibleCount = 4;
 
   poStatus = '';
 
   currentUser = Number(sessionStorage.getItem('userGroupId'));
 
   USERGROUPS = UserGroups;
+
+  expanded = false;
+
+  selectedStatuses: string[] = ['DRAFT', 'ACTIVE', 'SUSPENDED', 
+    'UTILIZED', 'EXPIRED', 'CANCELLED'];
 
   items = [
     {
@@ -241,4 +247,25 @@ export class PoAssignTable implements OnInit {
 
     filter(value);
   }
+
+  get remainingCount() {
+    return this.selectedStatuses.length - this.visibleCount;
+  }
+
+  toggleStatuses() {
+    this.expanded = !this.expanded;
+  }
+
+  get visibleStatuses() {
+    return this.expanded
+        ? this.selectedStatuses
+        : this.selectedStatuses.slice(0, 4);
+  }
+
+  formatStatus(status: string) {
+    return status.replace(/_/g, ' ').toLowerCase()
+        .replace(/\b\w/g, c => c.toUpperCase());
+  }
+
+  removeStatus(status: string, event?: Event) {}
 }

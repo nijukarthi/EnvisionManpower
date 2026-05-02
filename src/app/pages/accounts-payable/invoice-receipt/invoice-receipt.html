@@ -1,8 +1,64 @@
 <div class="card">
-    <div class="flex items-baseline-last justify-between">
-        <h5>Invoice Receipt</h5>
-        <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
+    <!-- 🔷 Top Row -->
+  <div class="flex items-baseline-last justify-between">
+    <h5 class="m-0">Invoice Receipt</h5>
+
+    <p-button 
+      label="Clear" 
+      icon="pi pi-filter-slash" 
+      (onClick)="dt.clear()" />
+  </div>
+
+  <!-- 🔷 Invoice Status (Below Heading) -->
+  <div class="mb-2 flex items-center gap-2 flex-wrap border-2 border-blue-500 bg-blue-50
+    px-4 py-2 rounded-4xl">
+
+    <!-- Label -->
+    <div class="flex items-center gap-2">
+      <i class="pi pi-filter text-blue-600 text-sm"></i>
+      <span class="text-sm font-semibold text-gray-700">
+        Invoice Status
+      </span>
     </div>
+
+    <!-- Tags -->
+    <div class="flex items-center gap-2 flex-wrap">
+      @for (status of visibleStatuses; track $index) {
+        <p-tag 
+          [severity]="getSeverity(status)"
+          [rounded]="true"
+          class="px-3 py-1 text-xs flex items-center gap-2">
+
+          <span>{{ formatStatus(status) }}</span>
+
+          <i 
+            class="pi pi-times cursor-pointer text-xs"
+            (click)="removeStatus(status, $event)">
+          </i>
+        </p-tag>
+      }
+
+      <!-- + More -->
+      @if (!expanded && remainingCount > 0) {
+  <span 
+    class="text-blue-600 text-sm font-medium cursor-pointer"
+    (click)="toggleStatuses()">
+
+    +{{ remainingCount }} more
+  </span>
+}
+
+@if (expanded && selectedStatuses.length > 2) {
+  <span 
+    class="text-blue-600 text-sm font-medium cursor-pointer"
+    (click)="toggleStatuses()">
+
+    Show less
+  </span>
+}
+    </div>
+
+  </div>
     <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
         <p-table
             #dt
@@ -50,7 +106,8 @@
                             <span>Invoice Status</span>
                             <p-columnFilter field="status" matchMode="equals" display="menu" [showAddButton]="false">
                                 <ng-template #filter let-value let-filter="filterCallback">
-                                    <p-multiselect [options]="statuses" (onChange)="filter($event.value)" placeholder="Select Statuses" class="w-full">
+                                    <p-multiselect [options]="statuses" (onChange)="filter($event.value)" placeholder="Select Statuses" 
+                                        class="w-full" [(ngModel)]="selectedStatuses">
                                         <ng-template let-option #item>
                                             <p-tag [value]="option.value" [severity]="getSeverity(option.value)" />
                                         </ng-template>

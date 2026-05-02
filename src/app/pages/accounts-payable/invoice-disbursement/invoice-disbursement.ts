@@ -16,11 +16,13 @@ export class InvoiceDisbursement implements OnInit {
     pageSize = 10;
     first = 0;
     selectedInvoiceId = 0;
+     visibleCount = 4;
 
     openDisbursementBooking = false;
     openPaymentApproving = false;
     openPaidMarking = false;
     openGRNReturning = false;
+    expanded = false;
 
     invoiceStatus = '';
 
@@ -62,6 +64,11 @@ export class InvoiceDisbursement implements OnInit {
         paymentDate: [''],
         paymentReferenceNo: ['']
     })
+
+    selectedStatuses: string[] = ['SUBMITTED', 'GRN_IN_PROCESS', 'GRN_COMPLETED', 
+        'GRN_REVERSED', 'UNDER_DISBURSEMENT_REVIEW', 'DISBURSEMENT_IN_PROGRESS', 'RETURNED_TO_GRN',
+        'REJECTED', 'PAYMENT_APPROVED', 'PAID'
+    ];
 
     constructor(
         private apiService: Apiservice,
@@ -441,5 +448,67 @@ export class InvoiceDisbursement implements OnInit {
         } catch (error) {
             console.log(error);
         }
+    }
+
+    formatStatus(status: string) {
+        return status.replace(/_/g, ' ').toLowerCase()
+            .replace(/\b\w/g, c => c.toUpperCase());
+    }
+
+    statusGroups = [
+        {
+            label: 'GRN',
+            items: ['GRN_IN_PROCESS', 'GRN_COMPLETED', 'GRN_REVERSED', 'RETURNED_TO_GRN']
+        },
+        {
+            label: 'Disbursement',
+            items: ['UNDER_DISBURSEMENT_REVIEW', 'DISBURSEMENT_IN_PROGRESS']
+        },
+        {
+            label: 'Payment',
+            items: ['PAYMENT_APPROVED', 'PAID']
+        },
+        {
+            label: 'General',
+            items: ['SUBMITTED', 'REJECTED']
+        }
+    ];
+
+    hasSelectedStatus(group: any): boolean {
+        return group.items.some((status: string) =>
+            this.selectedStatuses.includes(status)
+        );
+    }
+
+    get remainingCount() {
+        return this.selectedStatuses.length - this.visibleCount;
+    }
+
+
+    get visibleStatuses() {
+        return this.expanded
+            ? this.selectedStatuses
+            : this.selectedStatuses.slice(0, 4);
+    }
+
+    toggleStatuses() {
+        this.expanded = !this.expanded;
+    }
+
+    removeStatus(status: string, event?: Event) {
+        // event?.stopPropagation();
+
+        // this.selectedStatuses = this.selectedStatuses.filter(s => s !== status);
+
+        // if (!this.selectedStatuses.length) {
+        //     this.selectedStatuses = [102];
+        // }
+
+        // this.dt.filters['status'] = [{
+        //     value: this.selectedStatuses,
+        //     matchMode: 'in'
+        // }];
+
+        // this.dt._filter();
     }
 }

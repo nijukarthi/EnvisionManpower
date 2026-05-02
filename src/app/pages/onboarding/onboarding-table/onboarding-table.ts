@@ -40,6 +40,8 @@ export class OnboardingTable implements OnInit {
   
   USERGROUPS = UserGroups;
 
+  selectedStatuses: string[] = ['ACTIVE', 'TRANSFERRED', 'RESIGNED'];
+
   private fb = inject(FormBuilder);
 
   constructor(private apiService: Apiservice, private messageService: MessageService){}
@@ -262,7 +264,7 @@ export class OnboardingTable implements OnInit {
         next: val => {
           this.messageService.add({severity: 'success', summary: 'Success', detail: 'Successfully Updated PPE Details'});
           this.openPpeModal = false;
-          this.fetchOnboardingCandidateList();
+          this.onboardingApi(this.filteredData);
         },
         error: err => {
           console.log(err);
@@ -361,6 +363,8 @@ export class OnboardingTable implements OnInit {
         joiningDateTo: Array.isArray(dateValue) ? formDate(dateValue[1]) : null
       }
 
+      console.log(this.filteredData);
+
       this.onboardingApi(this.filteredData);
     } catch (error) {
       console.log(error);
@@ -397,4 +401,31 @@ export class OnboardingTable implements OnInit {
     this.ppeDetails.clear();
     this.ppeDetailsList = [];
   }  
+
+  removeStatus(status: string, event?: Event) {
+    event?.stopPropagation();
+
+    this.selectedStatuses = this.selectedStatuses.filter(s => s !== status);
+
+    const value = this.selectedStatuses.length ? this.selectedStatuses : ['ACTIVE', 'TRANSFERRED', 'RESIGNED'];
+
+    this.table.filters['status'] = [{
+      value: value,
+      matchMode: 'in'
+    }];
+
+    this.table._filter();
+  }
+
+  clearStatusFilters() {
+    this.selectedStatuses = ['ACTIVE', 'TRANSFERRED', 'RESIGNED'];
+
+    this.table.filters['status'] = [{
+      value: null,
+      matchMode: 'in'
+    }];
+
+    this.table._filter();
+    this.table.clear();
+  }
 }

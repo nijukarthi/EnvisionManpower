@@ -5,7 +5,7 @@ import { UserGroups } from '@/models/usergroups/usergroups.enum';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
 import { StepStateService } from '@/service/step-service/step-state.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 
@@ -16,6 +16,8 @@ import { MessageService } from 'primeng/api';
   styleUrl: './demand-fullfillment.scss'
 })
 export class DemandFullfillment implements OnInit {
+  @ViewChild('dt') dt: any;
+  
   offSet = 0;
   pageSize = 10;
   first = 0;
@@ -211,5 +213,27 @@ export class DemandFullfillment implements OnInit {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  removeStatus(status: number, event?: Event) {
+    event?.stopPropagation();
+
+    this.selectedStatuses = this.selectedStatuses.filter(s => s !== status);
+
+    if (!this.selectedStatuses.length) {
+      this.selectedStatuses = [102];
+    }
+
+    this.dt.filters['status'] = [{
+      value: this.selectedStatuses,
+      matchMode: 'in'
+    }];
+
+    this.dt._filter();
+  }
+
+  clearStatusFilters() {
+    this.selectedStatuses = [102];
+    this.dt.clear();
   }
 }

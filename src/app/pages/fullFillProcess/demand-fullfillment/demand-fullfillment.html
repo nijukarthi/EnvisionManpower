@@ -1,7 +1,39 @@
 <div class="card">
-    <div class="flex items-baseline-last justify-between">
-        <h5>Manpower FulFillment</h5>
-        <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
+    <div class="flex items-center justify-between">
+        <div class="flex items-center justify-start gap-3">
+            <h5 class="m-0">Manpower FulFillment</h5>
+
+            @if (selectedStatuses.length) {
+                <div class="flex items-center gap-2 px-4 py-2 rounded-4xl
+                    border-2 border-blue-500 bg-blue-50 -mt-2">
+                    <i class="pi pi-filter text-blue-600"></i>
+                    <span class="text-sm font-semibold text-blue-800">
+                        Demand Status
+                    </span>
+
+                    <div class="flex flex-wrap gap-2">
+                        @for (status of selectedStatuses; track $index) {
+                            <p-tag 
+                                [severity]="statusMap[status]?.severity"
+                                [rounded]="true"
+                                class="cursor-default flex items-center gap-2 px-3 py-1">
+
+                                <!-- Label -->
+                                <span>{{ statusMap[status]?.label }}</span>
+
+                                <!-- Close Icon -->
+                                <i 
+                                    class="pi pi-times text-base cursor-pointer"
+                                    (click)="removeStatus(status, $event)">
+                                </i>
+
+                            </p-tag>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+        <p-button label="Clear" icon="pi pi-filter-slash" (click)="clearStatusFilters()" />
     </div>
     <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
         <p-table #dt [value]="demandFullfillmentList" [rowHover]="true" [paginator]="true" [lazy]="true" [first]="first"

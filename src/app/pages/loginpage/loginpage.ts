@@ -235,6 +235,9 @@ export class Loginpage {
                                         break;
                         
                                     case UserGroups.ADMIN:
+                                        // this.route.navigate(['/home/dashboard']);
+                                        // break;
+
                                     case UserGroups.SITEINCHARGE:
                                     case UserGroups.PROJECTMANAGER:
                                     case UserGroups.RESOURCEMANAGER:

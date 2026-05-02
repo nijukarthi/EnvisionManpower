@@ -39,6 +39,8 @@ export class AttendanceTable implements OnInit {
 
     USERGROUPS = UserGroups;
 
+    selectedStatuses: string[] = ['ACTIVE', 'TRANSFERRED', 'RESIGNED'];
+
     currentUser = Number(sessionStorage.getItem('userGroupId'));
     currentUserEmail = sessionStorage.getItem('userEmail');
 
@@ -407,5 +409,25 @@ export class AttendanceTable implements OnInit {
         value[index] = selectedValue;
 
         filter(value);
+    }
+
+    removeStatus(status: string, event?: Event) {
+        event?.stopPropagation();
+
+        this.selectedStatuses = this.selectedStatuses.filter(s => s !== status);
+
+        const value = this.selectedStatuses.length ? this.selectedStatuses : ['ACTIVE', 'TRANSFERRED', 'RESIGNED'];
+
+        this.filteredData.filters['status'] = [{
+            value: value,
+            matchMode: 'in'
+        }];
+
+        this.dt._filter();
+    }
+
+    clearStatusFilters() {
+        this.selectedStatuses = ['ACTIVE', 'TRANSFERRED', 'RESIGNED'];
+        this.dt.clear();
     }
 }

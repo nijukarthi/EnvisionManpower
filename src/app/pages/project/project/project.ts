@@ -366,7 +366,7 @@ export class Project implements OnInit {
                             this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Project Updated Successfully' });
                             this.openProject = false;
                             this.projectForm.reset();
-                            this.fetchActiveProjects();
+                            this.projectApi(this.filteredData);
                         },
                         error: (err) => {
                             console.log(err);

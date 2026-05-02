@@ -21,9 +21,15 @@ import { Auth } from '@/service/auth/auth';
             <button class="layout-menu-button layout-topbar-action" (click)="layoutService.onMenuToggle()">
                 <i class="pi pi-bars"></i>
             </button>
-            <a class="layout-topbar-logo" routerLink="/">
-                <img src="assets/images/envision-group-vector-logo.png" alt="Logo" height="20" width="150">       
-            </a>
+            @if (layoutService.isDarkTheme()) {
+                <a class="layout-topbar-logo" routerLink="/" class="w-auto h-9">
+                    <img src="assets/images/envision-logo-dark-mode.png" alt="Logo" class="w-full h-full" />       
+                </a>
+            } @else {
+                <a class="layout-topbar-logo" routerLink="/" class="w-auto h-9">
+                    <img src="assets/images/envision_logo_light_mode.png" alt="Logo" class="w-full h-full" />       
+                </a>
+            }
         </div>
 
         <div class="layout-topbar-actions">
@@ -109,6 +115,14 @@ export class AppTopbar implements OnInit {
 
     ngOnInit(): void {
         this.fetchUserProfile();
+
+        // Preload both logos so they're cached before user toggles
+        const darkLogo = new Image();
+        darkLogo.src = 'assets/images/envision-logo-dark-mode.png';
+
+        const lightLogo = new Image();
+        lightLogo.src = 'assets/images/envision_logo_light_mode.png';
+
     }
 
     openProfile(){
