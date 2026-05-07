@@ -536,7 +536,7 @@ export class Terminate implements OnInit {
         this.selectedStatuses = this.selectedStatuses.filter(s => s !== status);
 
         if (!this.selectedStatuses.length) {
-            this.selectedStatuses = [102];
+            this.selectedStatuses = [];
         }
 
         this.dt.filters['status'] = [{

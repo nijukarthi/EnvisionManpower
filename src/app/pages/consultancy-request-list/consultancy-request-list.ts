@@ -141,6 +141,14 @@ export class ConsultancyRequestList implements OnInit {
 
       const filters = event.filters;
 
+      const statusFilter = event.filters?.status?.[0]?.value;
+
+      if (!statusFilter || statusFilter.length === 0) {
+        this.selectedStatuses = [102, 200, 406];
+      } else {
+        this.selectedStatuses = statusFilter;
+      }
+
       const dateValue = filters?.date?.[0]?.value;
 
       const from = Array.isArray(dateValue) ? dateValue[0] : null;
@@ -153,7 +161,7 @@ export class ConsultancyRequestList implements OnInit {
         candidateCode: filters?.candidateCode?.[0]?.value ?? null,
         candidateName: filters?.candidateName?.[0]?.value ?? null,
         consultancyName: filters?.consultancyName?.[0]?.value ?? null,
-        approvalStatus: filters?.status?.[0]?.value ?? null,
+        approvalStatus: this.selectedStatuses ?? null,
         createdOnFrom: from ? this.formatDateForApi(from, false) : null,
         createdOnTo: to ? this.formatDateForApi(to, true) : null,
       }

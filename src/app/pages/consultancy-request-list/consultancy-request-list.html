@@ -73,10 +73,10 @@
                     <th>
                         <div class="flex items-center justify-between">
                             <span>Status</span>
-                            <p-columnFilter field="status" matchMode="equals" display="menu" [showAddButton]="false">
+                            <p-columnFilter field="status" matchMode="in" display="menu" [showAddButton]="false">
                                 <ng-template #filter let-value let-filter="filterCallback">
-                                    <p-multiselect [options]="statuses" (onChange)="filter($event.value)" placeholder="Select Statuses" 
-                                        class="w-full" [(ngModel)]="selectedStatuses">
+                                    <p-multiselect [options]="statuses" (onChange)="filter($event.value)" 
+                                        placeholder="Select Statuses" class="w-full" [(ngModel)]="selectedStatuses">
                                         <ng-template let-option #item>
                                             <p-tag [value]="option.label" [severity]="getSeverity(option.value)" />
                                         </ng-template>
@@ -146,7 +146,9 @@
             </ng-template>
             <ng-template #emptymessage>
                 <tr>
-                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground)">No Records Found</td>
+                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground)">
+                        No Records Found
+                    </td>
                 </tr>
             </ng-template>
         </p-table>

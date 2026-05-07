@@ -416,9 +416,9 @@ export class AttendanceTable implements OnInit {
 
         this.selectedStatuses = this.selectedStatuses.filter(s => s !== status);
 
-        const value = this.selectedStatuses.length ? this.selectedStatuses : ['ACTIVE', 'TRANSFERRED', 'RESIGNED'];
+        const value = this.selectedStatuses.length ? this.selectedStatuses : [];
 
-        this.filteredData.filters['status'] = [{
+        this.dt.filters['status'] = [{
             value: value,
             matchMode: 'in'
         }];

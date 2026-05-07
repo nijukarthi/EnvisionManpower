@@ -559,10 +559,12 @@ export class SitePerformance implements OnInit {
 
         this.selectedStatuses = this.selectedStatuses.filter(s => s !== status);
 
-        const value = this.selectedStatuses.length ? this.selectedStatuses : ['ACTIVE', 'TRANSFERRED', 'RESIGNED'];
+        if (!this.selectedStatuses.length) {
+            this.selectedStatuses = ['ACTIVE', 'TRANSFERRED', 'RESIGNED'];
+        }
 
         this.dt.filters['status'] = [{
-            value: value,
+            value: this.selectedStatuses,
             matchMode: 'in'
         }];
 

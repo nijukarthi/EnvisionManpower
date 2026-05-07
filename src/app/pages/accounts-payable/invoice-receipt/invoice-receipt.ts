@@ -1,7 +1,7 @@
 import { UserGroups } from '@/models/usergroups/usergroups.enum';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
@@ -13,6 +13,8 @@ import { MessageService } from 'primeng/api';
     styleUrl: './invoice-receipt.scss'
 })
 export class InvoiceReceipt implements OnInit {
+    @ViewChild('dt') dt: any;
+    
     offSet = 0;
     pageSize = 10;
     first = 0;
@@ -42,8 +44,7 @@ export class InvoiceReceipt implements OnInit {
     };
 
     selectedStatuses: string[] = ['SUBMITTED', 'GRN_IN_PROCESS', 'GRN_COMPLETED', 
-        'GRN_REVERSED', 'UNDER_DISBURSEMENT_REVIEW', 'DISBURSEMENT_IN_PROGRESS', 'RETURNED_TO_GRN',
-        'REJECTED', 'PAYMENT_APPROVED', 'PAID'
+        'GRN_REVERSED', 'RETURNED_TO_GRN'
     ];
 
     private fb = inject(FormBuilder);
@@ -78,12 +79,7 @@ export class InvoiceReceipt implements OnInit {
             { label: 'GRN_IN_PROCESS', value: 'GRN_IN_PROCESS' },
             { label: 'GRN_COMPLETED', value: 'GRN_COMPLETED' },
             { label: 'GRN_REVERSED', value: 'GRN_REVERSED' },
-            { label: 'UNDER_DISBURSEMENT_REVIEW', value: 'UNDER_DISBURSEMENT_REVIEW' },
-            { label: 'DISBURSEMENT_IN_PROGRESS', value: 'DISBURSEMENT_IN_PROGRESS' },
-            { label: 'RETURNED_TO_GRN', value: 'RETURNED_TO_GRN' },
-            { label: 'REJECTED', value: 'REJECTED' },
-            { label: 'PAYMENT_APPROVED', value: 'PAYMENT_APPROVED' },
-            { label: 'PAID', value: 'PAID' }
+            { label: 'RETURNED_TO_GRN', value: 'RETURNED_TO_GRN' }
         ];
         this.grnStatuses = [
             { label: 'PENDING', value: 'PENDING' },
@@ -365,25 +361,28 @@ export class InvoiceReceipt implements OnInit {
     }
 
     removeStatus(status: string, event?: Event) {
-        // event?.stopPropagation();
+        event?.stopPropagation();
 
-        // this.selectedStatuses = this.selectedStatuses.filter(s => s !== status);
+        this.selectedStatuses = this.selectedStatuses.filter(s => s !== status);
 
-        // if (!this.selectedStatuses.length) {
-        //     this.selectedStatuses = [102];
-        // }
+        if (!this.selectedStatuses.length) {
+            this.selectedStatuses = ['SUBMITTED', 'GRN_IN_PROCESS', 'GRN_COMPLETED', 
+                'GRN_REVERSED', 'RETURNED_TO_GRN'
+            ];
+        }
 
-        // this.dt.filters['status'] = [{
-        //     value: this.selectedStatuses,
-        //     matchMode: 'in'
-        // }];
+        this.dt.filters['status'] = [{
+            value: this.selectedStatuses,
+            matchMode: 'in'
+        }];
 
-        // this.dt._filter();
+        this.dt._filter();
     }
 
     clearStatusFilters() {
-        // this.selectedStatuses = [102];
-        // this.dt.clear();
+        this.selectedStatuses = ['SUBMITTED', 'GRN_IN_PROCESS', 'GRN_COMPLETED', 
+            'GRN_REVERSED', 'RETURNED_TO_GRN'];
+        this.dt.clear();
     }
 
     formatStatus(status: string) {
@@ -416,18 +415,46 @@ export class InvoiceReceipt implements OnInit {
         );
     }
 
-    get remainingCount() {
-        return this.selectedStatuses.length - this.visibleCount;
+    get visibleStatuses(): string[] {
+        const list = this.displayStatuses;
+        return this.expanded ? list : list.slice(0, 4);
     }
 
-
-    get visibleStatuses() {
-        return this.expanded
-            ? this.selectedStatuses
-            : this.selectedStatuses.slice(0, 4);
+    get remainingCount(): number {
+        return this.displayStatuses.length - this.visibleStatuses.length;
     }
 
     toggleStatuses() {
         this.expanded = !this.expanded;
+    }
+
+    get showAllStatuses(): boolean {
+        return !this.selectedStatuses || this.selectedStatuses.length === 0;
+    }
+
+    get displayStatuses(): string[] {
+        return (this.selectedStatuses && this.selectedStatuses.length)
+            ? this.selectedStatuses
+            : this.statuses.map(s => s.value);
+    }
+
+    onStatusChange(values: string[], filterCallback: any) {
+
+        if (!values || values.length === 0) {
+
+            const all = this.statuses.map(s => s.value);
+
+            // Step 1: let table behave like ALL
+            filterCallback(null);
+
+            // Step 2: sync UI + multiselect AFTER change detection
+            setTimeout(() => {
+                this.selectedStatuses = [...all];
+            });
+
+        } else {
+            this.selectedStatuses = values;
+            filterCallback(values);
+        }
     }
 }

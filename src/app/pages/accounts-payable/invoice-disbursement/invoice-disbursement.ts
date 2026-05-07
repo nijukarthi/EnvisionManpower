@@ -1,7 +1,7 @@
 import { UserGroups } from '@/models/usergroups/usergroups.enum';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 
@@ -12,6 +12,8 @@ import { MessageService } from 'primeng/api';
     styleUrl: './invoice-disbursement.scss'
 })
 export class InvoiceDisbursement implements OnInit {
+    @ViewChild('dt') dt: any;
+    
     offSet = 0;
     pageSize = 10;
     first = 0;
@@ -65,8 +67,8 @@ export class InvoiceDisbursement implements OnInit {
         paymentReferenceNo: ['']
     })
 
-    selectedStatuses: string[] = ['SUBMITTED', 'GRN_IN_PROCESS', 'GRN_COMPLETED', 
-        'GRN_REVERSED', 'UNDER_DISBURSEMENT_REVIEW', 'DISBURSEMENT_IN_PROGRESS', 'RETURNED_TO_GRN',
+    selectedStatuses: string[] = [
+        'UNDER_DISBURSEMENT_REVIEW', 'DISBURSEMENT_IN_PROGRESS',
         'REJECTED', 'PAYMENT_APPROVED', 'PAID'
     ];
 
@@ -80,13 +82,8 @@ export class InvoiceDisbursement implements OnInit {
         this.menuItems = this.getMenuItems();
 
         this.statuses = [
-            { label: 'SUBMITTED', value: 'SUBMITTED' },
-            { label: 'GRN_IN_PROCESS', value: 'GRN_IN_PROCESS' },
-            { label: 'GRN_COMPLETED', value: 'GRN_COMPLETED' },
-            { label: 'GRN_REVERSED', value: 'GRN_REVERSED' },
             { label: 'UNDER_DISBURSEMENT_REVIEW', value: 'UNDER_DISBURSEMENT_REVIEW' },
             { label: 'DISBURSEMENT_IN_PROGRESS', value: 'DISBURSEMENT_IN_PROGRESS' },
-            { label: 'RETURNED_TO_GRN', value: 'RETURNED_TO_GRN' },
             { label: 'REJECTED', value: 'REJECTED' },
             { label: 'PAYMENT_APPROVED', value: 'PAYMENT_APPROVED' },
             { label: 'PAID', value: 'PAID' }
@@ -496,19 +493,31 @@ export class InvoiceDisbursement implements OnInit {
     }
 
     removeStatus(status: string, event?: Event) {
-        // event?.stopPropagation();
+        event?.stopPropagation();
 
-        // this.selectedStatuses = this.selectedStatuses.filter(s => s !== status);
+        this.selectedStatuses = this.selectedStatuses.filter(s => s !== status);
 
-        // if (!this.selectedStatuses.length) {
-        //     this.selectedStatuses = [102];
-        // }
+        if (!this.selectedStatuses.length) {
+            this.selectedStatuses = [
+                'UNDER_DISBURSEMENT_REVIEW', 'DISBURSEMENT_IN_PROGRESS',
+                'REJECTED', 'PAYMENT_APPROVED', 'PAID'
+            ];
+        }
 
-        // this.dt.filters['status'] = [{
-        //     value: this.selectedStatuses,
-        //     matchMode: 'in'
-        // }];
+        this.dt.filters['status'] = [{
+            value: this.selectedStatuses,
+            matchMode: 'in'
+        }];
 
-        // this.dt._filter();
+        this.dt._filter();
+    }
+
+    clearStatusFilters(){
+        this.selectedStatuses = [
+            'UNDER_DISBURSEMENT_REVIEW', 'DISBURSEMENT_IN_PROGRESS',
+            'REJECTED', 'PAYMENT_APPROVED', 'PAID'
+        ];
+
+        this.dt.clear();
     }
 }

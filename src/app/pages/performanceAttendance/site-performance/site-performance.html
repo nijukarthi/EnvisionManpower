@@ -153,7 +153,8 @@
                             <span>Status</span>
                             <p-columnFilter field="status" matchMode="equals" display="menu" [showAddButton]="false">
                                 <ng-template #filter let-value let-filter="filterCallback">
-                                    <p-multiselect [options]="statuses" (onChange)="filter($event.value)" placeholder="Select Statuses" class="w-full">
+                                    <p-multiselect [options]="statuses" (onChange)="filter($event.value)" 
+                                        placeholder="Select Statuses" class="w-full" [(ngModel)]="selectedStatuses">
                                         <ng-template #item let-option>
                                             <p-tag [value]="option.value" [severity]="getSeverity(option.value)" />
                                         </ng-template>
