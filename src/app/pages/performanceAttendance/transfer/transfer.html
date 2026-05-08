@@ -16,11 +16,11 @@
                     <div class="flex flex-wrap gap-2">
                         @for (status of selectedStatuses; track $index) {
                             <p-tag 
-                                [severity]="statusMap[status]?.severity"
+                                [severity]="statusMap[status].severity"
                                 [rounded]="true"
                                 class="cursor-default flex items-center gap-2 px-3 py-1">
 
-                                <span>{{ statusMap[status]?.label }}</span>
+                                <span>{{ statusMap[status].label }}</span>
 
                                 <i 
                                     class="pi pi-times text-base cursor-pointer"

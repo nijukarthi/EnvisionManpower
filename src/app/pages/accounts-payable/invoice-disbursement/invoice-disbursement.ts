@@ -430,13 +430,24 @@ export class InvoiceDisbursement implements OnInit {
 
             const filters = event.filters;
 
+            const statusFilter = event.filters?.status?.[0]?.value;
+
+            if (!statusFilter || statusFilter.length === 0) {
+                this.selectedStatuses = [
+                    'UNDER_DISBURSEMENT_REVIEW', 'DISBURSEMENT_IN_PROGRESS',
+                    'REJECTED', 'PAYMENT_APPROVED', 'PAID'
+                ];
+            } else {
+                this.selectedStatuses = statusFilter;
+            }
+
             const grandTotal = filters?.total?.[0]?.value;
 
             const payload = {
                 offSet: this.offSet,
                 pageSize: this.pageSize,
                 invoiceNumber: filters?.invoiceNumber?.[0]?.value ?? null,
-                invoiceStatuses: filters?.status?.[0]?.value ?? null,
+                invoiceStatuses: this.selectedStatuses ?? null,
                 poNumber: filters?.poNumber?.[0]?.value ?? null,
                 minAmount: Array.isArray(grandTotal) ? grandTotal[0] : null,
                 maxAmount: Array.isArray(grandTotal) ? grandTotal[1] : null

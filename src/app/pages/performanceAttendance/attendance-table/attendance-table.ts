@@ -97,6 +97,7 @@ export class AttendanceTable implements OnInit {
             this.totalDays = this.getDaysInMonth(this.month, this.year);
 
             const data = {
+                ...this.filteredData,
                 offSet: this.offSet,
                 pageSize: this.pageSize,
                 month: this.month,
