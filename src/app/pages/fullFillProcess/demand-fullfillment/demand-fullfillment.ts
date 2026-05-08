@@ -197,12 +197,20 @@ export class DemandFullfillment implements OnInit {
       this.pageSize = event.rows;
   
       const filters = event.filters;
+
+      const statusFilter = event.filters?.status?.[0]?.value;
+
+      if (!statusFilter || statusFilter.length === 0) {
+        this.selectedStatuses = [102];
+      } else {
+        this.selectedStatuses = statusFilter;
+      }
   
       this.filteredData = {
         offSet: this.offSet,
         pageSize: this.pageSize,
         demandCode: filters?.demandCode?.[0]?.value ?? '',
-        demandStatus: filters?.status?.[0]?.value ?? [102],
+        demandStatus: this.selectedStatuses,
         spnCode: filters?.spnCode?.[0]?.value ?? '',
         spnDescription: filters?.spnDescription?.[0].value ?? '',
         experience: filters?.experience?.[0].value ?? '',

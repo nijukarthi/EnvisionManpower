@@ -2,7 +2,7 @@ import { PurchaseOrderStatus } from '@/models/purchase-order-status/purchase-ord
 import { UserGroups } from '@/models/usergroups/usergroups.enum';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 
@@ -13,6 +13,8 @@ import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
   styleUrl: './po-assign-table.scss'
 })
 export class PoAssignTable implements OnInit {
+  @ViewChild('dt') dt: any;
+  
   poList: any; 
   selectedPO: any;
   filteredData: any;
@@ -258,14 +260,36 @@ export class PoAssignTable implements OnInit {
 
   get visibleStatuses() {
     return this.expanded
-        ? this.selectedStatuses
-        : this.selectedStatuses.slice(0, 4);
+      ? this.selectedStatuses
+      : this.selectedStatuses.slice(0, 4);
   }
 
   formatStatus(status: string) {
     return status.replace(/_/g, ' ').toLowerCase()
-        .replace(/\b\w/g, c => c.toUpperCase());
+      .replace(/\b\w/g, c => c.toUpperCase());
   }
 
-  removeStatus(status: string, event?: Event) {}
+  removeStatus(status: string, event?: Event) {
+    event?.stopPropagation();
+
+    this.selectedStatuses = this.selectedStatuses.filter(s => s !== status);
+
+    if (!this.selectedStatuses.length) {
+      this.selectedStatuses = ['DRAFT', 'ACTIVE', 'SUSPENDED', 
+        'UTILIZED', 'EXPIRED', 'CANCELLED'];
+    }
+
+    this.dt.filters['status'] = [{
+      value: this.selectedStatuses,
+      matchMode: 'in'
+    }];
+
+    this.dt._filter();
+  }
+
+  clearStatusFilters() {
+    this.selectedStatuses = ['DRAFT', 'ACTIVE', 'SUSPENDED', 
+      'UTILIZED', 'EXPIRED', 'CANCELLED'];
+    this.dt.clear();
+  }
 }

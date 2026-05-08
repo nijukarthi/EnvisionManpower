@@ -1,7 +1,7 @@
 import { UserGroups } from '@/models/usergroups/usergroups.enum';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -11,6 +11,8 @@ import { Router } from '@angular/router';
     styleUrl: './invoice-submission.scss'
 })
 export class InvoiceSubmission implements OnInit {
+    @ViewChild('dt') dt: any;
+    
     offSet = 0;
     pageSize = 10;
     first = 0;
@@ -212,5 +214,32 @@ export class InvoiceSubmission implements OnInit {
             .replace(/\b\w/g, c => c.toUpperCase());
     }
 
-    removeStatus(status: string, event?: Event) {}
+    removeStatus(status: string, event?: Event) {
+        event?.stopPropagation();
+
+        this.selectedStatuses = this.selectedStatuses.filter(s => s !== status);
+
+        if (!this.selectedStatuses.length) {
+            this.selectedStatuses = ['SUBMITTED', 'GRN_IN_PROCESS', 'GRN_COMPLETED', 
+                'GRN_REVERSED', 'UNDER_DISBURSEMENT_REVIEW', 'DISBURSEMENT_IN_PROGRESS', 'RETURNED_TO_GRN',
+                'REJECTED', 'PAYMENT_APPROVED', 'PAID'
+            ];
+        }
+
+        this.dt.filters['status'] = [{
+            value: this.selectedStatuses,
+            matchMode: 'in'
+        }];
+
+        this.dt._filter();
+    }
+
+    clearStatusFilters(){
+        this.selectedStatuses = ['SUBMITTED', 'GRN_IN_PROCESS', 'GRN_COMPLETED', 
+            'GRN_REVERSED', 'UNDER_DISBURSEMENT_REVIEW', 'DISBURSEMENT_IN_PROGRESS', 'RETURNED_TO_GRN',
+            'REJECTED', 'PAYMENT_APPROVED', 'PAID'
+        ];
+
+        this.dt.clear();
+    }
 }
