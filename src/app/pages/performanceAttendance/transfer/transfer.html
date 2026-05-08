@@ -191,11 +191,11 @@
                         <p-button icon="pi pi-check" severity="primary" rounded 
                             [disabled]="currentUserRole !== USERGROUPS.CLUSTERHEAD &&
                                 currentUserRole !== USERGROUPS.ADMIN && currentUserRole !== USERGROUPS.RESOURCEMANAGER" 
-                            (onClick)="clusterHeadApproval(transfer.transferId, 'Accepted')" />
+                                (onClick)="clusterHeadApproval(transfer.transferId, 'Accepted')" />
                         <p-button icon="pi pi-times" severity="danger" rounded 
                             [disabled]="currentUserRole !== USERGROUPS.CLUSTERHEAD && 
                                 currentUserRole !== USERGROUPS.ADMIN && currentUserRole !== USERGROUPS.RESOURCEMANAGER" 
-                            (onClick)="clusterHeadApproval(transfer.transferId, 'Rejected')" />
+                                (onClick)="clusterHeadApproval(transfer.transferId, 'Rejected')" />
                         }
                     </td>
                     <td>
@@ -206,12 +206,15 @@
                             <p-button icon="pi pi-times" severity="danger" rounded [disabled]="true" />
                             } @if (transfer.departmentHeadApproval.approvalStatus === APPROVALSTATUS.PENDING) {
                             <p-button icon="pi pi-check" severity="primary" rounded 
-                                [disabled]="currentUserRole !== USERGROUPS.DEPARTMENTHEAD &&
-                                    currentUserRole !== USERGROUPS.ADMIN && currentUserRole !== USERGROUPS.RESOURCEMANAGER" 
+                                [disabled]="(currentUserRole !== USERGROUPS.DEPARTMENTHEAD &&
+                                    currentUserRole !== USERGROUPS.ADMIN && currentUserRole !== USERGROUPS.RESOURCEMANAGER) ||
+                                    transfer.stateHeadApproval.approvalStatus !== APPROVALSTATUS.ACCEPTED
+                                    " 
                                 (onClick)="departmentHeadApproval(transfer.transferId, 'Accepted')" />
                             <p-button icon="pi pi-times" severity="danger" rounded 
-                                [disabled]="currentUserRole !== USERGROUPS.DEPARTMENTHEAD &&
-                                    currentUserRole !== USERGROUPS.ADMIN && currentUserRole !== USERGROUPS.RESOURCEMANAGER" 
+                                [disabled]="(currentUserRole !== USERGROUPS.DEPARTMENTHEAD &&
+                                    currentUserRole !== USERGROUPS.ADMIN && currentUserRole !== USERGROUPS.RESOURCEMANAGER) ||
+                                    transfer.stateHeadApproval.approvalStatus !== APPROVALSTATUS.ACCEPTED" 
                                 (onClick)="departmentHeadApproval(transfer.transferId, 'Rejected')" />
                             }
                         </div>
@@ -220,7 +223,9 @@
             </ng-template>
             <ng-template #emptymessage>
                 <tr>
-                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground)">No Records Found</td>
+                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground)">
+                        No Records Found
+                    </td>
                 </tr>
             </ng-template>
         </p-table>

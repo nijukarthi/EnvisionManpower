@@ -3,9 +3,9 @@
         <h5 class="m-0">Resignation</h5>
         <div class="flex justify-end gap-1">
             @if (currentUser === USERGROUPS.ADMIN || currentUser === USERGROUPS.RESOURCEMANAGER) {
-            <p-menu #menu [model]="menuItems" [popup]="true" />
-            <p-button (onClick)="menu.toggle($event)" label="Actions" icon="pi pi-angle-down" iconPos="right" 
-                [disabled]="!selectedResignationId" />
+                <p-menu #menu [model]="menuItems" [popup]="true" />
+                <p-button (onClick)="menu.toggle($event)" label="Actions" icon="pi pi-angle-down" iconPos="right" 
+                    [disabled]="!selectedResignationId" />
             }
             <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
         </div>
@@ -184,36 +184,38 @@
                     <td>
                         <div class="flex items-center justify-center gap-2">
                             @if (resignation.stateHeadApproval.approvalStatus === APPROVALSTATUS.ACCEPTED) {
-                            <p-button icon="pi pi-check" severity="primary" rounded [disabled]="true" />
+                                <p-button icon="pi pi-check" severity="primary" rounded [disabled]="true" />
                             } @else if (resignation.stateHeadApproval.approvalStatus === APPROVALSTATUS.REJECTED) {
-                            <p-button icon="pi pi-times" severity="danger" rounded [disabled]="true" />
+                                <p-button icon="pi pi-times" severity="danger" rounded [disabled]="true" />
                             } @if (resignation.stateHeadApproval.approvalStatus === APPROVALSTATUS.PENDING) {
-                            <p-button icon="pi pi-check" severity="primary" rounded 
-                                [disabled]="currentUser !== USERGROUPS.CLUSTERHEAD && 
-                                    currentUser !== USERGROUPS.ADMIN && currentUser !== USERGROUPS.RESOURCEMANAGER"
-                                (onClick)="clusterHeadApproval(resignation, 'Accepted')" />
-                            <p-button icon="pi pi-times" severity="danger" rounded 
-                                [disabled]="currentUser !== USERGROUPS.CLUSTERHEAD &&
-                                    currentUser !== USERGROUPS.ADMIN && currentUser !== USERGROUPS.RESOURCEMANAGER"
-                                (onClick)="clusterHeadApproval(resignation, 'Rejected')" />
+                                <p-button icon="pi pi-check" severity="primary" rounded 
+                                    [disabled]="currentUser !== USERGROUPS.CLUSTERHEAD && 
+                                        currentUser !== USERGROUPS.ADMIN && currentUser !== USERGROUPS.RESOURCEMANAGER"
+                                    (onClick)="clusterHeadApproval(resignation, 'Accepted')" />
+                                <p-button icon="pi pi-times" severity="danger" rounded 
+                                    [disabled]="currentUser !== USERGROUPS.CLUSTERHEAD &&
+                                        currentUser !== USERGROUPS.ADMIN && currentUser !== USERGROUPS.RESOURCEMANAGER"
+                                    (onClick)="clusterHeadApproval(resignation, 'Rejected')" />
                             }
                         </div>
                     </td>
                     <td>
                         <div class="flex items-center justify-center gap-2">
                             @if (resignation.departmentHeadApproval.approvalStatus === APPROVALSTATUS.ACCEPTED) {
-                            <p-button icon="pi pi-check" severity="primary" rounded [disabled]="true" />
+                                <p-button icon="pi pi-check" severity="primary" rounded [disabled]="true" />
                             } @else if (resignation.departmentHeadApproval.approvalStatus === APPROVALSTATUS.REJECTED) {
-                            <p-button icon="pi pi-times" severity="danger" rounded [disabled]="true" />
+                                <p-button icon="pi pi-times" severity="danger" rounded [disabled]="true" />
                             } @if (resignation.departmentHeadApproval.approvalStatus === APPROVALSTATUS.PENDING) {
-                            <p-button icon="pi pi-check" severity="primary" rounded 
-                                [disabled]="currentUser !== USERGROUPS.DEPARTMENTHEAD &&
-                                    currentUser !== USERGROUPS.ADMIN && currentUser !== USERGROUPS.RESOURCEMANAGER"
-                                (onClick)="departmentHeadApproval(resignation, 'Accepted')" />
-                            <p-button icon="pi pi-times" severity="danger" rounded
-                                [disabled]="currentUser !== USERGROUPS.DEPARTMENTHEAD &&
-                                    currentUser !== USERGROUPS.ADMIN && currentUser !== USERGROUPS.RESOURCEMANAGER"
-                                (onClick)="departmentHeadApproval(resignation, 'Rejected')" />
+                                <p-button icon="pi pi-check" severity="primary" rounded 
+                                    [disabled]="(currentUser !== USERGROUPS.DEPARTMENTHEAD &&
+                                        currentUser !== USERGROUPS.ADMIN && currentUser !== USERGROUPS.RESOURCEMANAGER) ||
+                                        resignation.stateHeadApproval.approvalStatus !== APPROVALSTATUS.ACCEPTED"
+                                        (onClick)="departmentHeadApproval(resignation, 'Accepted')" />
+                                <p-button icon="pi pi-times" severity="danger" rounded
+                                    [disabled]="(currentUser !== USERGROUPS.DEPARTMENTHEAD &&
+                                        currentUser !== USERGROUPS.ADMIN && currentUser !== USERGROUPS.RESOURCEMANAGER) ||
+                                        resignation.stateHeadApproval.approvalStatus !== APPROVALSTATUS.ACCEPTED"
+                                        (onClick)="departmentHeadApproval(resignation, 'Rejected')" />
                             }
                         </div>
                     </td>
@@ -221,7 +223,9 @@
             </ng-template>
             <ng-template #emptymessage>
                 <tr>
-                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground)">No Records Found</td>
+                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground)">
+                        No Records Found
+                    </td>
                 </tr>
             </ng-template>
         </p-table>

@@ -93,6 +93,7 @@ export class Transfer implements OnInit {
         try {
             this.apiService.fetchTransferredEmployeeList(data).subscribe({
                 next: (val) => {
+                    console.log(val);
                     this.transferredEmployeeList = val?.data?.data;
                     this.totalRecords = val?.data?.length ?? 0;
                 },
