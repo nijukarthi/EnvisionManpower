@@ -194,7 +194,7 @@ export class Apiservice {
         return this.postMethod('requesition/demand/assigned', params);
     }
 
-    updatePlannedDate(params: any){
+    updatePlannedDate(params: any) {
         return this.postMethod('requesition/edit/demand/planned-date', params);
     }
 
@@ -466,11 +466,11 @@ export class Apiservice {
         return this.postMethod('candidate/siteperfomance/resignation/approve/departmenthead', params);
     }
 
-    approveRevokeResignClusterHead(params: any){
+    approveRevokeResignClusterHead(params: any) {
         return this.postMethod('candidate/siteperfomance/resignation/revoke/approve/statehead', params);
     }
 
-    approveRevokeResignDeptHead(params: any){
+    approveRevokeResignDeptHead(params: any) {
         return this.postMethod('candidate/siteperfomance/resignation/revoke/approve/departmenthead', params);
     }
 
@@ -490,6 +490,14 @@ export class Apiservice {
         return this.postMethod('candidate/siteperfomance/update', params);
     }
 
+    fetchResignationReasons(params: any = {}) {
+        return this.postMethod('master/resignation-reason', params);
+    }
+    exportResignation(data: any) {
+        return this.http.post(environment.baseUrl + 'candidate/siteperfomance/resignation/export', data, {
+            responseType: 'blob'
+        });
+    }
     fetchConsultancyInfoList(params: any): Observable<any> {
         return this.postMethod('user/active/consultancy-info', params);
     }
@@ -566,7 +574,7 @@ export class Apiservice {
         return this.postMethod('candidate/siteperfomance/resignation/force', params);
     }
 
-    revokeResignation(params: any){
+    revokeResignation(params: any) {
         return this.postMethod('candidate/siteperfomance/resignation/revoke/request', params);
     }
 
@@ -638,144 +646,137 @@ export class Apiservice {
         return this.postMethod('auth/session-logs', params);
     }
 
-    updateEmploymentDetails(params: any){
+    updateEmploymentDetails(params: any) {
         return this.postMethod('candidate/employmentdetail/update', params);
     }
 
-
     // DPR Service
 
-    addDPRProjectDetails(params: any){
+    addDPRProjectDetails(params: any) {
         return this.postMethod('wtg-dpr/project/create', params);
     }
 
-    exportProdQualExcel(pCode: string){
-        return this.http.get(`${this.baseUrl}wtg-dpr/production-quality/template/export?projectCode=${pCode}`,
-            { responseType: 'blob' }
-        );
+    exportProdQualExcel(pCode: string) {
+        return this.http.get(`${this.baseUrl}wtg-dpr/production-quality/template/export?projectCode=${pCode}`, { responseType: 'blob' });
     }
 
-    exportDispRecvExcel(pCode: string){
-        return this.http.get(`${this.baseUrl}wtg-dpr/disptach-receiving/template/export?projectCode=${pCode}`, 
-            { responseType: 'blob' }
-        );
+    exportDispRecvExcel(pCode: string) {
+        return this.http.get(`${this.baseUrl}wtg-dpr/disptach-receiving/template/export?projectCode=${pCode}`, { responseType: 'blob' });
     }
 
-    exportFndICExcel(pCode: string){
-        return this.http.get(`${this.baseUrl}wtg-dpr/foundation-installation-comm/template/export?projectCode=${pCode}`, 
-            { responseType: 'blob' }
-        );
+    exportFndICExcel(pCode: string) {
+        return this.http.get(`${this.baseUrl}wtg-dpr/foundation-installation-comm/template/export?projectCode=${pCode}`, { responseType: 'blob' });
     }
 
-    fetchDprProjectList(params: any): Observable<any>{
+    fetchDprProjectList(params: any): Observable<any> {
         return this.postMethod(`wtg-dpr/projects`, params);
     }
 
-    fetchDprProjWTGList(params: any): Observable<any>{
+    fetchDprProjWTGList(params: any): Observable<any> {
         return this.postMethod(`wtg-dpr/project/wtgs`, params);
     }
 
-    importProdQualExcel(params: any){
+    importProdQualExcel(params: any) {
         return this.postMethod('wtg-dpr/project/import/production-quality', params);
     }
 
-    importDispRecvExcel(params: any){
+    importDispRecvExcel(params: any) {
         return this.postMethod('wtg-dpr/project/import/dispatch_receiving', params);
     }
 
-    importFndICExcel(params: any){
+    importFndICExcel(params: any) {
         return this.postMethod('wtg-dpr/project/import/foundation-installation-comm', params);
     }
 
-    updateWtgDetails(params: any){
+    updateWtgDetails(params: any) {
         return this.postMethod('wtg-dpr/project/wtgs/update', params);
     }
 
-    updateProdActivity(params: any){
+    updateProdActivity(params: any) {
         return this.postMethod('wtg-dpr/project/wtgs/update/production-activity', params);
     }
 
-    updateQualActivity(params: any){
+    updateQualActivity(params: any) {
         return this.postMethod('wtg-dpr/project/wtgs/update/quality-activity', params);
     }
 
-    updateDispatchActivity(params: any){
+    updateDispatchActivity(params: any) {
         return this.postMethod('wtg-dpr/project/wtgs/update/dispatch-activity', params);
     }
 
-    updateReceivingActivity(params: any){
+    updateReceivingActivity(params: any) {
         return this.postMethod('wtg-dpr/project/wtgs/update/receiving-activity', params);
     }
 
-    updateFoundationActivity(params: any){
+    updateFoundationActivity(params: any) {
         return this.postMethod('wtg-dpr/project/wtgs/update/foundation', params);
     }
 
-    updateInstallationActivity(params: any){
+    updateInstallationActivity(params: any) {
         return this.postMethod('wtg-dpr/project/wtgs/update/installation', params);
     }
 
-    updateCommissioningActivity(params: any){
+    updateCommissioningActivity(params: any) {
         return this.postMethod('wtg-dpr/project/wtgs/update/commissioning', params);
     }
 
-    customerWiseDprList(params: any): Observable<any>{
+    customerWiseDprList(params: any): Observable<any> {
         return this.postMethod('wtg-dpr/project/summary/customer', params);
     }
 
-    fetchCustomerList(): Observable<any>{
+    fetchCustomerList(): Observable<any> {
         return this.http.get(`${this.baseUrl}wtg-dpr/customers`);
     }
 
-    createCustomer(params: any){
+    createCustomer(params: any) {
         return this.postMethod('wtg-dpr/customer/create', params);
     }
 
-    updateCustomer(params: any){
+    updateCustomer(params: any) {
         return this.postMethod('wtg-dpr/customer/update', params);
     }
 
-    updateDprProject(params: any){
+    updateDprProject(params: any) {
         return this.postMethod('wtg-dpr/project/update', params);
     }
 
-    deleteDprProject(params: any){
+    deleteDprProject(params: any) {
         return this.postMethod('wtg-dpr/project/delete', params);
     }
 
-    importFixedCostCandidates(params: any){
+    importFixedCostCandidates(params: any) {
         return this.postMethod('candidate/fixedcost/template/import', params);
-    } 
+    }
 
-    importCostPlusCandidates(params: any){
+    importCostPlusCandidates(params: any) {
         return this.postMethod('candidate/costplus/template/import', params);
     }
 
-    exportFixedCostCandidates(){
+    exportFixedCostCandidates() {
         return this.http.get(`${this.baseUrl}candidate/fixedcost/template/export`, { responseType: 'blob' });
     }
 
-    exportCostPlusCandidates(){
+    exportCostPlusCandidates() {
         return this.http.get(`${this.baseUrl}candidate/costplus/template/export`, { responseType: 'blob' });
     }
 
-    importTraining(params: any){
+    importTraining(params: any) {
         return this.postMethod('candidate/training/template/import', params);
     }
 
-    exportTraining(){
+    exportTraining() {
         return this.http.get(`${this.baseUrl}candidate/training/template/export`, { responseType: 'blob' });
     }
 
-    createChangeConsulRequest(params: any){
+    createChangeConsulRequest(params: any) {
         return this.postMethod('candidate/change-consultancy/request/create', params);
     }
 
-    fetchConsulRequestList(params: any): Observable<any>{
+    fetchConsulRequestList(params: any): Observable<any> {
         return this.postMethod('candidate/change-consultancy/request', params);
     }
 
-    approveConsulRequest(params: any): Observable<any>{
+    approveConsulRequest(params: any): Observable<any> {
         return this.postMethod('candidate/change-consultancy/request/approve', params);
     }
 }

@@ -4,39 +4,27 @@
             <h5 class="m-0">Attendance</h5>
 
             @if (selectedStatuses.length) {
-                <div class="flex items-center gap-2 px-4 py-2 rounded-4xl
-                    border-2 border-blue-500 bg-blue-50 -mt-2">
-                    <i class="pi pi-filter text-blue-600"></i>
-                    <span class="text-sm font-semibold text-blue-800">
-                        Status
-                    </span>
+            <div class="flex items-center gap-2 px-4 py-2 rounded-4xl border-2 border-blue-500 bg-blue-50 -mt-2">
+                <i class="pi pi-filter text-blue-600"></i>
+                <span class="text-sm font-semibold text-blue-800"> Status </span>
 
-                    <div class="flex flex-wrap gap-2">
-                        @for (status of selectedStatuses; track $index) {
-                            <p-tag 
-                                [severity]="getSeverity(status)"
-                                [rounded]="true"
-                                class="cursor-default flex items-center gap-2 px-3 py-1">
+                <div class="flex flex-wrap gap-2">
+                    @for (status of selectedStatuses; track $index) {
+                    <p-tag [severity]="getSeverity(status)" [rounded]="true" class="cursor-default flex items-center gap-2 px-3 py-1">
+                        <!-- Label -->
+                        <span>{{ status }}</span>
 
-                                <!-- Label -->
-                                <span>{{ status }}</span>
-
-                                <!-- Close Icon -->
-                                <i 
-                                    class="pi pi-times text-base cursor-pointer"
-                                    (click)="removeStatus(status, $event)">
-                                </i>
-
-                            </p-tag>
-                        }
-                    </div>
+                        <!-- Close Icon -->
+                        <i class="pi pi-times text-base cursor-pointer" (click)="removeStatus(status, $event)"> </i>
+                    </p-tag>
+                    }
                 </div>
+            </div>
             }
         </div>
         <div class="flex gap-2">
             <label class="mt-1 text-lg">Month:</label>
-            <p-datepicker view="month" [(ngModel)]="date" dateFormat="mm/yy" [readonlyInput]="true" 
-                [minDate]="minDate" [maxDate]="maxDate" placeholder="Pick a month" (onSelect)="fetchAttendanceList()" />
+            <p-datepicker view="month" [(ngModel)]="date" dateFormat="mm/yy" [readonlyInput]="true" [minDate]="minDate" [maxDate]="maxDate" placeholder="Pick a month" (onSelect)="fetchAttendanceList()" />
             <p-menu #menu [model]="menuItems" [popup]="true" />
             <p-button (onClick)="menu.toggle($event)" label="Actions" icon="pi pi-angle-down" iconPos="right" />
             <input #excelInput type="file" accept=".xls,.xlsx" hidden (change)="excelSelected($event)" />
@@ -65,111 +53,107 @@
         >
             <ng-template #header>
                 <tr>
-                    <th pFrozenColumn alignFrozen="left" style="min-width:80px">SL NO</th>
-                    <th pFrozenColumn alignFrozen="left" style="min-width:200px">
+                    <th pFrozenColumn alignFrozen="left" style="min-width: 80px">SL NO</th>
+                    <th pFrozenColumn alignFrozen="left" style="min-width: 200px">
                         <div class="flex items-center justify-between">
                             <span>Employee Code</span>
                             <p-columnFilter type="text" field="employeeCode" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
-                    <th pFrozenColumn alignFrozen="left" style="min-width:200px">
+                    <th pFrozenColumn alignFrozen="left" style="min-width: 200px">
                         <div class="flex items-center justify-between">
                             <span>Temp EMP Code</span>
                             <p-columnFilter type="text" field="candidateCode" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
-                    <th pFrozenColumn alignFrozen="left" style="min-width:200px">
+                    <th pFrozenColumn alignFrozen="left" style="min-width: 200px">
                         <div class="flex items-center justify-between">
                             <span>Employee Name</span>
                             <p-columnFilter type="text" field="candidateName" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
-                    <th style="min-width:250px">
+                    <th style="min-width: 250px">
                         <div class="flex items-center justify-between">
                             <span>Consultancy Name</span>
                             <p-columnFilter type="text" field="consultancyName" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
-                    <th style="min-width:250px">
+                    <th style="min-width: 250px">
                         <div class="flex items-center justify-between">
                             <span>Category Name</span>
                             <p-columnFilter type="text" field="categoryName" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
-                    <th style="min-width:150px">
+                    <th style="min-width: 150px">
                         <div class="flex items-center justify-between">
                             <span>Project Code</span>
                             <p-columnFilter type="text" field="projectCode" display="menu" />
                         </div>
                     </th>
-                    <th style="min-width:150px">
+                    <th style="min-width: 150px">
                         <div class="flex items-center justify-between">
                             <span>Site Incharge</span>
                             <p-columnFilter type="text" field="siteInchargeName" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
-                    <th style="min-width:200px">Site Name</th>
-                    <th style="min-width:150px">
+                    <th style="min-width: 200px">Site Name</th>
+                    <th style="min-width: 150px">
                         <div class="flex items-center justify-between">
                             <span>Cluster Name</span>
                             <p-columnFilter type="text" field="clusterName" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
-                    <th style="min-width:200px">
+                    <th style="min-width: 200px">
                         <div class="flex items-center justify-between">
                             <span>SPN Code</span>
                             <p-columnFilter type="text" field="spnCode" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
-                    <th style="min-width:250px">
+                    <th style="min-width: 250px">
                         <div class="flex items-center justify-between">
                             <span>SPN Description</span>
                             <p-columnFilter type="text" field="spnDescription" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
-                    <th style="min-width:150px">
+                    <th style="min-width: 150px">
                         <div class="flex items-center justify-between">
                             <span>Experience</span>
                             <p-columnFilter type="text" field="experience" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
-                    <th style="min-width:200px">
+                    <th style="min-width: 200px">
                         <div class="flex items-center justify-between">
                             <span>Role</span>
                             <p-columnFilter type="text" field="roleName" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
-                    <th style="min-width:200px">
+                    <th style="min-width: 200px">
                         <div class="flex items-center justify-between">
                             <span>Contact Number</span>
                             <p-columnFilter type="text" field="phoneNumber" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
-                    <th style="min-width:200px">
+                    <th style="min-width: 200px">
                         <div class="flex items-center justify-between">
                             <span>Joining Date</span>
-                            <p-columnFilter type="date" field="date" display="menu" matchMode="between" [showOperator]="false" 
-                                [showAddButton]="false">
+                            <p-columnFilter type="date" field="date" display="menu" matchMode="between" [showOperator]="false" [showAddButton]="false">
                                 <ng-template #filter let-filter="filterCallback" let-value>
                                     <div class="flex flex-col gap-2">
-                                        <p-datepicker [ngModel]="value?.[0] || null" 
-                                            (ngModelChange)="updateRange($event, value, 0, filter)" placeholder="From Date" />
+                                        <p-datepicker [ngModel]="value?.[0] || null" (ngModelChange)="updateRange($event, value, 0, filter)" placeholder="From Date" />
 
-                                        <p-datepicker [ngModel]="value?.[1] || null" 
-                                            (ngModelChange)="updateRange($event, value, 1, filter)" placeholder="To Date" />
+                                        <p-datepicker [ngModel]="value?.[1] || null" (ngModelChange)="updateRange($event, value, 1, filter)" placeholder="To Date" />
                                     </div>
                                 </ng-template>
                             </p-columnFilter>
                         </div>
                     </th>
-                    <th style="min-width:200px">Last Working Date</th>
-                    <th style="min-width:150px">
+                    <th style="min-width: 200px">Last Working Date</th>
+                    <th style="min-width: 150px">
                         <div class="flex items-center justify-between">
                             <span>Status</span>
                             <p-columnFilter field="status" matchMode="equals" display="menu" [showAddButton]="false">
                                 <ng-template #filter let-value let-filter="filterCallback">
-                                    <p-multiselect [options]="statuses" (onChange)="filter($event.value)" 
-                                        placeholder="Select Statuses" class="w-full" [(ngModel)]="selectedStatuses">
+                                    <p-multiselect [options]="statuses" (onChange)="filter($event.value)" placeholder="Select Statuses" class="w-full" [(ngModel)]="selectedStatuses">
                                         <ng-template let-option #item>
                                             <p-tag [value]="option.value" [severity]="getSeverity(option.value)" />
                                         </ng-template>
@@ -178,16 +162,16 @@
                             </p-columnFilter>
                         </div>
                     </th>
-                    <th style="min-width:150px">Updated By</th>
-                    <th style="min-width:150px">Updated On</th>
-                    <th style="min-width:150px">Total No. of Days</th>
-                    <th style="min-width:200px">Effective Working Days</th>
-                    <th style="min-width:120px">Present Days</th>
-                    <th style="min-width:120px">Week Off</th>
-                    <th style="min-width:120px">Paid Leave</th>
-                    <th style="min-width:120px">Unpaid Leave</th>
+                    <th style="min-width: 150px">Updated By</th>
+                    <th style="min-width: 150px">Updated On</th>
+                    <th style="min-width: 150px">Total No. of Days</th>
+                    <th style="min-width: 200px">Effective Working Days</th>
+                    <th style="min-width: 120px">Present Days</th>
+                    <th style="min-width: 120px">Week Off</th>
+                    <th style="min-width: 150px">Paid Leave/Holiday</th>
+                    <th style="min-width: 120px">Unpaid Leave</th>
                     @if (currentUser !== USERGROUPS.READONLYADMIN && currentUser !== USERGROUPS.SERVICEMANAGER) {
-                        <th style="min-width:80px" alignFrozen="right" pFrozenColumn>Actions</th>
+                    <th style="min-width: 80px" alignFrozen="right" pFrozenColumn>Actions</th>
                     }
                 </tr>
             </ng-template>
@@ -211,8 +195,7 @@
                     <td>{{ attendance.employmentDetails.joiningDate || '-' }}</td>
                     <td>{{ attendance.employmentDetails.lastWorkingDate || '-' }}</td>
                     <td>
-                        <p-tag [value]="attendance.employmentDetails.employmentStatus" 
-                            [severity]="getSeverity(attendance.employmentDetails.employmentStatus)" />
+                        <p-tag [value]="attendance.employmentDetails.employmentStatus" [severity]="getSeverity(attendance.employmentDetails.employmentStatus)" />
                     </td>
                     <td>{{ attendance?.updatedBy?.userName || '-' }}</td>
                     <td>{{ attendance?.updatedOn ? (attendance?.updatedOn | date: 'MMM d, y, h:mm a') : '-' }}</td>
@@ -221,8 +204,7 @@
                     <td #pEditableColumn>
                         <p-cellEditor>
                             <ng-template #input>
-                                <p-inputnumber #presentDaysInput [(ngModel)]="attendance.presentDays" [useGrouping]="false"
-                                    (onInput)="attendanceChange(attendance, 'presentDays', $event.value)" />
+                                <p-inputnumber #presentDaysInput [(ngModel)]="attendance.presentDays" [useGrouping]="false" (onInput)="attendanceChange(attendance, 'presentDays', $event.value)" />
                             </ng-template>
                             <ng-template #output> {{ attendance.presentDays }} </ng-template>
                         </p-cellEditor>
@@ -230,8 +212,7 @@
                     <td #pEditableColumn>
                         <p-cellEditor>
                             <ng-template #input>
-                                <p-inputnumber #weekOffInput [(ngModel)]="attendance.weekOff" [useGrouping]="false"
-                                    (onInput)="attendanceChange(attendance, 'weekOff', $event.value)" />
+                                <p-inputnumber #weekOffInput [(ngModel)]="attendance.weekOff" [useGrouping]="false" (onInput)="attendanceChange(attendance, 'weekOff', $event.value)" />
                             </ng-template>
                             <ng-template #output> {{ attendance.weekOff }} </ng-template>
                         </p-cellEditor>
@@ -239,8 +220,7 @@
                     <td #pEditableColumn>
                         <p-cellEditor>
                             <ng-template #input>
-                                <p-inputnumber #paidLeavesInput [(ngModel)]="attendance.paidLeaves" [useGrouping]="false"
-                                    (onInput)="attendanceChange(attendance, 'paidLeaves', $event.value)" />
+                                <p-inputnumber #paidLeavesInput [(ngModel)]="attendance.paidLeaves" [useGrouping]="false" (onInput)="attendanceChange(attendance, 'paidLeaveHoliday', $event.value)"> </p-inputnumber>
                             </ng-template>
                             <ng-template #output> {{ attendance.paidLeaves }} </ng-template>
                         </p-cellEditor>
@@ -248,32 +228,26 @@
                     <td #pEditableColumn>
                         <p-cellEditor>
                             <ng-template #input>
-                                <p-inputnumber #absentDaysInput [(ngModel)]="attendance.absentDays" [useGrouping]="false"
-                                    (onInput)="attendanceChange(attendance, 'absentDays', $event.value)" />
+                                <p-inputnumber #absentDaysInput [(ngModel)]="attendance.absentDays" [useGrouping]="false" (onInput)="attendanceChange(attendance, 'absentDays', $event.value)" />
                             </ng-template>
                             <ng-template #output> {{ attendance.absentDays }} </ng-template>
                         </p-cellEditor>
                     </td>
                     @if (currentUser !== USERGROUPS.READONLYADMIN && currentUser !== USERGROUPS.SERVICEMANAGER) {
-                        <td class="flex items-center justify-center gap-2" alignFrozen="right" pFrozenColumn>
-                            @if (!editing) {
-                            <button pButton pRipple type="button" icon="pi pi-pencil" 
-                                pInitEditableRow rounded severity="secondary" (click)="editAttendanceRow(attendance)"></button>
-                            } @else {
-                            <button pButton pRipple type="submit" icon="pi pi-check" 
-                                pSaveEditableRow rounded severity="primary" (click)="submitAttendanceForm(attendance)"></button>
-                            <button pButton pRipple type="button" icon="pi pi-times" 
-                                pCancelEditableRow rounded severity="danger" (click)="cancelEdit(attendance)"></button>
-                            }
-                        </td>
+                    <td class="flex items-center justify-center gap-2" alignFrozen="right" pFrozenColumn>
+                        @if (!editing) {
+                        <button pButton pRipple type="button" icon="pi pi-pencil" pInitEditableRow rounded severity="secondary" (click)="editAttendanceRow(attendance)"></button>
+                        } @else {
+                        <button pButton pRipple type="submit" icon="pi pi-check" pSaveEditableRow rounded severity="primary" (click)="submitAttendanceForm(attendance)"></button>
+                        <button pButton pRipple type="button" icon="pi pi-times" pCancelEditableRow rounded severity="danger" (click)="cancelEdit(attendance)"></button>
+                        }
+                    </td>
                     }
                 </tr>
             </ng-template>
             <ng-template #emptymessage>
                 <tr>
-                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground)">
-                        No Records Found
-                    </td>
+                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground)">No Records Found</td>
                 </tr>
             </ng-template>
         </p-table>
