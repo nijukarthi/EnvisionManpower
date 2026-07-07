@@ -114,6 +114,7 @@ export class AttendanceTable implements OnInit {
         try {
             this.apiService.fetchAttendanceList(data).subscribe({
                 next: (val) => {
+                    console.log(val);
                     this.attendanceList = val?.data?.data;
                     this.totalRecords = val?.data?.length ?? 0;
 
@@ -207,11 +208,10 @@ export class AttendanceTable implements OnInit {
         });
     }
 
-    attendanceChange(attendance: any, field: string, value: any){
+    attendanceChange(attendance: any, field: string, value: any) {
         attendance[field] = value ?? 0;
 
-        const total = (attendance.presentDays || 0) + (attendance.weekOff || 0) + 
-            (attendance.paidLeaves || 0) + (attendance.absentDays || 0);
+        const total = (attendance.presentDays || 0) + (attendance.weekOff || 0) + (attendance.paidLeaves || 0) + (attendance.absentDays || 0);
 
         if (total > attendance.effectiveEmploymentDays) {
             this.messageService.add({ severity: 'warn', summary: 'Invalid Entry', detail: `Total days cannot exceed ${attendance.effectiveEmploymentDays}` });
@@ -237,7 +237,7 @@ export class AttendanceTable implements OnInit {
                 totalWorkingDays: attendance.totalWorkingDays,
                 presentDays: attendance.presentDays,
                 absentDays: attendance.absentDays,
-                paidLeaves: attendance.paidLeaves,
+                paidLeaveHoliday: attendance.paidLeaveHoliday,
                 weekOff: attendance.weekOff
             };
 
@@ -391,7 +391,6 @@ export class AttendanceTable implements OnInit {
                         export: true
                     };
 
-
                     this.apiService.fetchAttendanceList(data).subscribe({
                         next: (val) => {
                             this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Excel file successfully send to email' });
@@ -415,14 +414,16 @@ export class AttendanceTable implements OnInit {
     removeStatus(status: string, event?: Event) {
         event?.stopPropagation();
 
-        this.selectedStatuses = this.selectedStatuses.filter(s => s !== status);
+        this.selectedStatuses = this.selectedStatuses.filter((s) => s !== status);
 
         const value = this.selectedStatuses.length ? this.selectedStatuses : [];
 
-        this.dt.filters['status'] = [{
-            value: value,
-            matchMode: 'in'
-        }];
+        this.dt.filters['status'] = [
+            {
+                value: value,
+                matchMode: 'in'
+            }
+        ];
 
         this.dt._filter();
     }

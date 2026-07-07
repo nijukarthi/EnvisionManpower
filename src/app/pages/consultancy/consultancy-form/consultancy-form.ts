@@ -134,30 +134,40 @@ export class ConsultancyForm implements OnInit {
     }
 
     fetchViewConsultancy(userId: number) {
-        try {
-            const data = {
-                userId: userId
-            };
-            this.apiService.fetchViewConsultancy(data).subscribe({
-                next: (val) => {
-                    const categoryIds = val.data.consultancyCategory.map((c: any) => c.categoryId);
-                    this.consultancyCategoryControl.patchValue(categoryIds);
+        const data = {
+            userId: userId
+        };
 
-                    this.consultancyForm.patchValue(val.data);
+        this.apiService.fetchViewConsultancy(data).subscribe({
+            next: (val) => {
+                const categoryIds = val.data.consultancyCategory.map((c: any) => c.categoryId);
+                this.consultancyCategoryControl.setValue(categoryIds);
 
-                    if (val.data.consultancyCode) {
-                        this.consultancyForm.get('consultancyCode')?.disable();
-                    } else {
-                        this.consultancyForm.get('consultancyCode')?.enable();
-                    }
-                },
-                error: (err) => {
-                    console.log(err);
+                this.consultancyForm.patchValue({
+                    ...val.data,
+                    panNumber: (val.data.panNumber || '').toUpperCase(),
+                    tanNumber: (val.data.tanNumber || '').toUpperCase(),
+                    gstNumber: (val.data.gstNumber || '').toUpperCase()
+                });
+
+                // Hide validation messages until user edits the form
+                this.consultancyForm.markAsPristine();
+                this.consultancyForm.markAsUntouched();
+
+                Object.keys(this.consultancyForm.controls).forEach((key) => {
+                    this.consultancyForm.get(key)?.markAsPristine();
+                    this.consultancyForm.get(key)?.markAsUntouched();
+                    this.consultancyForm.get(key)?.updateValueAndValidity({ emitEvent: false });
+                });
+
+                if (val.data.consultancyCode) {
+                    this.consultancyForm.get('consultancyCode')?.disable();
                 }
-            });
-        } catch (error) {
-            console.log(error);
-        }
+            },
+            error: (err) => {
+                console.log(err);
+            }
+        });
     }
 
     fetchActiveCategory() {
@@ -201,16 +211,31 @@ export class ConsultancyForm implements OnInit {
                     }
                 });
             } else {
-                const data = this.consultancyForm.value;
+                const data: any = this.consultancyForm.getRawValue();
 
-                if (!data.consultancyCategory?.length) {
-                    const existingCategory = this.consultancyCategoryControl.value?.map((id: number) => ({ categoryId: id }));
+                data.userId = this.userId;
+
+                if (!data.consultancyCategory || data.consultancyCategory.length === 0) {
+                    const existingCategory = ((this.consultancyCategoryControl.value as number[]) || []).map((id) => ({
+                        categoryId: id
+                    }));
+
                     data.consultancyCategory = existingCategory;
                 }
 
+                // Convert to uppercase
+                data.panNumber = data.panNumber?.toUpperCase();
+                data.tanNumber = data.tanNumber?.toUpperCase();
+                data.gstNumber = data.gstNumber?.toUpperCase();
+
                 this.apiService.updateConsultancy(data).subscribe({
                     next: (val) => {
-                        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Consultancy Updated Successfully' });
+                        this.messageService.add({
+                            severity: 'success',
+                            summary: 'Success',
+                            detail: 'Consultancy Updated Successfully'
+                        });
+
                         setTimeout(() => {
                             this.router.navigate(['/home/consultancies']);
                         }, 2000);
@@ -219,7 +244,11 @@ export class ConsultancyForm implements OnInit {
                         console.log(err);
 
                         if (err.status === 400) {
-                            this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
+                            this.messageService.add({
+                                severity: 'error',
+                                summary: 'Error',
+                                detail: err.error.detail
+                            });
                         }
                     }
                 });

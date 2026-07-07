@@ -16,7 +16,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 })
 export class Terminate implements OnInit {
     @ViewChild('dt') dt: any;
-    
+
     offSet = 0;
     pageSize = 10;
     first = 0;
@@ -57,7 +57,7 @@ export class Terminate implements OnInit {
         406: { label: 'Rejected', severity: 'danger' },
         418: { label: 'Cancelled', severity: 'danger' },
         428: { label: 'Revoke Processing', severity: 'warn' },
-        430: { label: 'Revoked', severity: 'success' },
+        430: { label: 'Revoked', severity: 'success' }
     };
 
     isReplacement = [
@@ -172,23 +172,23 @@ export class Terminate implements OnInit {
                 const data = {
                     resignationId: resignation.resignationId,
                     approvalStatus: type === 'Accepted' ? ApprovalStatus.ACCEPTED : ApprovalStatus.REJECTED
-                }
+                };
 
                 console.log(data);
 
                 this.apiService.approveRevokeResignClusterHead(data).subscribe({
-                    next: val => {
+                    next: (val) => {
                         if (type === 'Accepted') {
                             this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Resignation Revoke Request Accepted' });
                         } else {
                             this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Resignation Revoke Request Rejected' });
                         }
-                       this.resignationApi(this.filteredData);
-                    }, 
+                        this.resignationApi(this.filteredData);
+                    },
                     error: (err) => {
                         console.log(err);
                     }
-                })
+                });
             } catch (error) {
                 console.log(error);
             }
@@ -200,7 +200,7 @@ export class Terminate implements OnInit {
                 };
 
                 console.log(data);
-    
+
                 this.apiService.approveResignClusterHead(data).subscribe({
                     next: (val) => {
                         console.log(val);
@@ -242,7 +242,7 @@ export class Terminate implements OnInit {
                     error: (err) => {
                         console.log(err);
                     }
-                })
+                });
             } catch (error) {
                 console.log(error);
             }
@@ -252,7 +252,7 @@ export class Terminate implements OnInit {
                     resignationId: resignation.resignationId,
                     approvalStatus: type === 'Accepted' ? ApprovalStatus.ACCEPTED : ApprovalStatus.REJECTED
                 };
-    
+
                 this.apiService.approveResignDeptHead(data).subscribe({
                     next: (val) => {
                         if (type === 'Accepted') {
@@ -302,6 +302,15 @@ export class Terminate implements OnInit {
         } catch (error) {
             console.log(error);
         }
+    }
+    scheduleResignation() {
+        this.messageService.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Schedule button clicked'
+        });
+
+        // Add your schedule logic here
     }
 
     onSubmit() {
@@ -374,7 +383,7 @@ export class Terminate implements OnInit {
         });
     }
 
-    revokeResignationPopup(){
+    revokeResignationPopup() {
         this.confirmationService.confirm({
             header: 'Are you sure?',
             message: 'Do you want to revoke the resignation?',
@@ -382,13 +391,12 @@ export class Terminate implements OnInit {
                 try {
                     const data = {
                         id: this.selectedResignationId
-                    }
+                    };
 
                     this.apiService.revokeResignation(data).subscribe({
                         next: (val) => {
                             console.log(val);
-                            this.messageService.add({ severity: 'success', summary: 'Success', 
-                                detail: 'Employee resignation revoked successfully' });
+                            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Employee resignation revoked successfully' });
                             this.fetchResignationList();
                             this.selectedResignation = [];
                         },
@@ -400,12 +408,12 @@ export class Terminate implements OnInit {
                                 this.selectedResignation = [];
                             }
                         }
-                    })
+                    });
                 } catch (error) {
                     console.log(error);
                 }
             }
-        })
+        });
     }
 
     cancelResignationPopup() {
@@ -454,6 +462,11 @@ export class Terminate implements OnInit {
 
     getMenuItems() {
         return [
+            // {
+            //     label: 'Export to Excel',
+            //     icon: 'pi pi-download',
+            //     command: () => this.exportToExcel()
+            // },
             {
                 label: 'Edit Resignation',
                 icon: 'pi pi-pencil',
@@ -529,20 +542,76 @@ export class Terminate implements OnInit {
             console.log(error);
         }
     }
+    exportToExcel() {
+        const data = {
+            offSet: this.offSet,
+            pageSize: this.pageSize,
+
+            resignationStatuses: this.filteredData?.resignationStatuses ?? null,
+            replacementRequired: this.filteredData?.replacementRequired ?? null,
+
+            candidateName: this.filteredData?.candidateName ?? null,
+            candidateCode: this.filteredData?.candidateCode ?? null,
+            employeeCode: this.filteredData?.employeeCode ?? null,
+            phoneNumber: this.filteredData?.phoneNumber ?? null,
+
+            projectCode: this.filteredData?.projectCode ?? null,
+            clusterName: this.filteredData?.clusterName ?? null,
+            departmentName: this.filteredData?.departmentName ?? null,
+
+            lastWorkingFrom: this.filteredData?.lastWorkingFrom ?? null,
+            lastWorkingTo: this.filteredData?.lastWorkingTo ?? null,
+
+            createdFrom: this.filteredData?.createdFrom ?? null,
+            createdTo: this.filteredData?.createdTo ?? null
+        };
+
+        this.apiService.exportResignation(data).subscribe({
+            next: (blob: Blob) => {
+                const url = window.URL.createObjectURL(blob);
+
+                const link = document.createElement('a');
+
+                link.href = url;
+                link.download = 'Resignation.xlsx';
+
+                link.click();
+
+                window.URL.revokeObjectURL(url);
+
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Success',
+                    detail: 'Excel exported successfully.'
+                });
+            },
+            error: (err) => {
+                console.log(err);
+
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: 'Export failed.'
+                });
+            }
+        });
+    }
 
     removeStatus(status: number, event?: Event) {
         event?.stopPropagation();
 
-        this.selectedStatuses = this.selectedStatuses.filter(s => s !== status);
+        this.selectedStatuses = this.selectedStatuses.filter((s) => s !== status);
 
         if (!this.selectedStatuses.length) {
             this.selectedStatuses = [];
         }
 
-        this.dt.filters['status'] = [{
-            value: this.selectedStatuses,
-            matchMode: 'in'
-        }];
+        this.dt.filters['status'] = [
+            {
+                value: this.selectedStatuses,
+                matchMode: 'in'
+            }
+        ];
 
         this.dt._filter();
     }

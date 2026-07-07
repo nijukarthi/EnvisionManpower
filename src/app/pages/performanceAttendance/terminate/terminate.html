@@ -1,47 +1,39 @@
 <div class="card">
     <div class="flex items-baseline-last justify-between">
         <h5 class="m-0">Resignation</h5>
-        <div class="flex justify-end gap-1">
+        <div class="flex justify-end gap-2">
+            <p-button label="Export to Excel" icon="pi pi-external-link" (onClick)="exportToExcel()" />
+
             @if (currentUser === USERGROUPS.ADMIN || currentUser === USERGROUPS.RESOURCEMANAGER) {
-                <p-menu #menu [model]="menuItems" [popup]="true" />
-                <p-button (onClick)="menu.toggle($event)" label="Actions" icon="pi pi-angle-down" iconPos="right" 
-                    [disabled]="!selectedResignationId" />
+
+            <p-menu #menu [model]="menuItems" [popup]="true" />
+
+            <p-button (onClick)="menu.toggle($event)" label="Actions" icon="pi pi-angle-down" iconPos="right" [disabled]="!selectedResignationId" />
             }
+
             <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
         </div>
     </div>
 
-    <div class="flex items-center justify-start gap-3">      
+    <div class="flex items-center justify-start gap-3">
         @if (selectedStatuses.length) {
-            <div class="mb-2 flex items-center gap-2 px-4 py-2 rounded-4xl
-                        border-2 border-blue-500 bg-blue-50">
+        <div class="mb-2 flex items-center gap-2 px-4 py-2 rounded-4xl border-2 border-blue-500 bg-blue-50">
+            <i class="pi pi-filter text-blue-600"></i>
 
-                <i class="pi pi-filter text-blue-600"></i>
+            <span class="text-sm font-semibold text-blue-800"> Resignation Status </span>
 
-                <span class="text-sm font-semibold text-blue-800">
-                    Resignation Status
-                </span>
+            <div class="flex flex-wrap gap-2">
+                @for (status of selectedStatuses; track $index) {
+                <p-tag [severity]="statusMap[status].severity" [rounded]="true" class="cursor-default flex items-center gap-2 px-3 py-1">
+                    <!-- Label -->
+                    <span>{{ statusMap[status].label }}</span>
 
-                <div class="flex flex-wrap gap-2">
-                    @for (status of selectedStatuses; track $index) {
-                        <p-tag 
-                            [severity]="statusMap[status].severity"
-                            [rounded]="true"
-                            class="cursor-default flex items-center gap-2 px-3 py-1">
-
-                            <!-- Label -->
-                            <span>{{ statusMap[status].label }}</span>
-
-                            <!-- Close Icon -->
-                            <i 
-                                class="pi pi-times text-base cursor-pointer"
-                                (click)="removeStatus(status, $event)">
-                            </i>
-
-                        </p-tag>
-                    }
-                </div>
+                    <!-- Close Icon -->
+                    <i class="pi pi-times text-base cursor-pointer" (click)="removeStatus(status, $event)"> </i>
+                </p-tag>
+                }
             </div>
+        </div>
         }
     </div>
     <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
@@ -119,13 +111,13 @@
                             </p-columnFilter>
                         </div>
                     </th>
+                    <th>Reason</th>
                     <th>
                         <div class="flex items-center justify-between">
                             <span>Status</span>
                             <p-columnFilter field="status" matchMode="equals" display="menu" [showAddButton]="false">
                                 <ng-template #filter let-value let-filter="filterCallback">
-                                    <p-multiselect [options]="statuses" (onChange)="filter($event.value)" placeholder="Select Statuses" 
-                                        class="w-full" [(ngModel)]="selectedStatuses">
+                                    <p-multiselect [options]="statuses" (onChange)="filter($event.value)" placeholder="Select Statuses" class="w-full" [(ngModel)]="selectedStatuses">
                                         <ng-template let-option #item>
                                             <p-tag [value]="option.label" [severity]="getSeverity(option.value)" />
                                         </ng-template>
@@ -151,9 +143,9 @@
                     <td>{{ resignation.employmentDetails.envisionRole.roleName }}</td>
                     <td>{{ resignation.lastWorkingDate }}</td>
                     <td>{{ resignation.replacementRequired ? 'Yes' : 'No' }}</td>
+                    <td>{{resignation.reason || "-"}}</td>
                     <td>
-                        <p-tag [value]="getStatusLabel(resignation.resignationStatus)" 
-                            [severity]="getSeverity(resignation.resignationStatus)" />
+                        <p-tag [value]="getStatusLabel(resignation.resignationStatus)" [severity]="getSeverity(resignation.resignationStatus)" />
                     </td>
                     <td>
                         <p-select
@@ -184,38 +176,54 @@
                     <td>
                         <div class="flex items-center justify-center gap-2">
                             @if (resignation.stateHeadApproval.approvalStatus === APPROVALSTATUS.ACCEPTED) {
-                                <p-button icon="pi pi-check" severity="primary" rounded [disabled]="true" />
+                            <p-button icon="pi pi-check" severity="primary" rounded [disabled]="true" />
                             } @else if (resignation.stateHeadApproval.approvalStatus === APPROVALSTATUS.REJECTED) {
-                                <p-button icon="pi pi-times" severity="danger" rounded [disabled]="true" />
+                            <p-button icon="pi pi-times" severity="danger" rounded [disabled]="true" />
                             } @if (resignation.stateHeadApproval.approvalStatus === APPROVALSTATUS.PENDING) {
-                                <p-button icon="pi pi-check" severity="primary" rounded 
-                                    [disabled]="currentUser !== USERGROUPS.CLUSTERHEAD && 
+                            <p-button
+                                icon="pi pi-check"
+                                severity="primary"
+                                rounded
+                                [disabled]="currentUser !== USERGROUPS.CLUSTERHEAD && 
                                         currentUser !== USERGROUPS.ADMIN && currentUser !== USERGROUPS.RESOURCEMANAGER"
-                                    (onClick)="clusterHeadApproval(resignation, 'Accepted')" />
-                                <p-button icon="pi pi-times" severity="danger" rounded 
-                                    [disabled]="currentUser !== USERGROUPS.CLUSTERHEAD &&
+                                (onClick)="clusterHeadApproval(resignation, 'Accepted')"
+                            />
+                            <p-button
+                                icon="pi pi-times"
+                                severity="danger"
+                                rounded
+                                [disabled]="currentUser !== USERGROUPS.CLUSTERHEAD &&
                                         currentUser !== USERGROUPS.ADMIN && currentUser !== USERGROUPS.RESOURCEMANAGER"
-                                    (onClick)="clusterHeadApproval(resignation, 'Rejected')" />
+                                (onClick)="clusterHeadApproval(resignation, 'Rejected')"
+                            />
                             }
                         </div>
                     </td>
                     <td>
                         <div class="flex items-center justify-center gap-2">
                             @if (resignation.departmentHeadApproval.approvalStatus === APPROVALSTATUS.ACCEPTED) {
-                                <p-button icon="pi pi-check" severity="primary" rounded [disabled]="true" />
+                            <p-button icon="pi pi-check" severity="primary" rounded [disabled]="true" />
                             } @else if (resignation.departmentHeadApproval.approvalStatus === APPROVALSTATUS.REJECTED) {
-                                <p-button icon="pi pi-times" severity="danger" rounded [disabled]="true" />
+                            <p-button icon="pi pi-times" severity="danger" rounded [disabled]="true" />
                             } @if (resignation.departmentHeadApproval.approvalStatus === APPROVALSTATUS.PENDING) {
-                                <p-button icon="pi pi-check" severity="primary" rounded 
-                                    [disabled]="(currentUser !== USERGROUPS.DEPARTMENTHEAD &&
+                            <p-button
+                                icon="pi pi-check"
+                                severity="primary"
+                                rounded
+                                [disabled]="(currentUser !== USERGROUPS.DEPARTMENTHEAD &&
                                         currentUser !== USERGROUPS.ADMIN && currentUser !== USERGROUPS.RESOURCEMANAGER) ||
                                         resignation.stateHeadApproval.approvalStatus !== APPROVALSTATUS.ACCEPTED"
-                                        (onClick)="departmentHeadApproval(resignation, 'Accepted')" />
-                                <p-button icon="pi pi-times" severity="danger" rounded
-                                    [disabled]="(currentUser !== USERGROUPS.DEPARTMENTHEAD &&
+                                (onClick)="departmentHeadApproval(resignation, 'Accepted')"
+                            />
+                            <p-button
+                                icon="pi pi-times"
+                                severity="danger"
+                                rounded
+                                [disabled]="(currentUser !== USERGROUPS.DEPARTMENTHEAD &&
                                         currentUser !== USERGROUPS.ADMIN && currentUser !== USERGROUPS.RESOURCEMANAGER) ||
                                         resignation.stateHeadApproval.approvalStatus !== APPROVALSTATUS.ACCEPTED"
-                                        (onClick)="departmentHeadApproval(resignation, 'Rejected')" />
+                                (onClick)="departmentHeadApproval(resignation, 'Rejected')"
+                            />
                             }
                         </div>
                     </td>
@@ -223,9 +231,7 @@
             </ng-template>
             <ng-template #emptymessage>
                 <tr>
-                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground)">
-                        No Records Found
-                    </td>
+                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground)">No Records Found</td>
                 </tr>
             </ng-template>
         </p-table>
@@ -256,8 +262,7 @@
         <div class="grid grid-cols-2 gap-2">
             <div class="grid col-span-1 gap-1">
                 <label for="last-working-date">Last Working Date</label>
-                <p-datepicker formControlName="newLastWorkingDate" [minDate]="minDate" [showIcon]="true" [iconDisplay]="'input'" 
-                    dateFormat="yy-mm-dd" placeholder="Select Date" inputId="last-working-date" appendTo="body" />
+                <p-datepicker formControlName="newLastWorkingDate" [minDate]="minDate" [showIcon]="true" [iconDisplay]="'input'" dateFormat="yy-mm-dd" placeholder="Select Date" inputId="last-working-date" appendTo="body" />
             </div>
             <div class="grid col-span-1 gap-1">
                 <label for="reason">Reason</label>

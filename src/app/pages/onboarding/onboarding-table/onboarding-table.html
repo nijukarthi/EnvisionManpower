@@ -4,50 +4,57 @@
             <h5 class="m-0">Onboarding</h5>
 
             @if (selectedStatuses.length) {
-                <div class="flex items-center gap-2 px-4 py-2 rounded-4xl
-                    border-2 border-blue-500 bg-blue-50 -mt-2">
-                    <i class="pi pi-filter text-blue-600"></i>
-                    <span class="text-sm font-semibold text-blue-800">
-                        Status
-                    </span>
+            <div class="flex items-center gap-2 px-4 py-2 rounded-4xl border-2 border-blue-500 bg-blue-50 -mt-2">
+                <i class="pi pi-filter text-blue-600"></i>
+                <span class="text-sm font-semibold text-blue-800"> Status </span>
 
-                    <div class="flex flex-wrap gap-2">
-                        @for (status of selectedStatuses; track $index) {
-                            <p-tag 
-                                [severity]="getSeverity(status)"
-                                [rounded]="true"
-                                class="cursor-default flex items-center gap-2 px-3 py-1">
+                <div class="flex flex-wrap gap-2">
+                    @for (status of selectedStatuses; track $index) {
+                    <p-tag [severity]="getSeverity(status)" [rounded]="true" class="cursor-default flex items-center gap-2 px-3 py-1">
+                        <!-- Label -->
+                        <span>{{ status }}</span>
 
-                                <!-- Label -->
-                                <span>{{ status }}</span>
-
-                                <!-- Close Icon -->
-                                <i 
-                                    class="pi pi-times text-base cursor-pointer"
-                                    (click)="removeStatus(status, $event)">
-                                </i>
-
-                            </p-tag>
-                        }
-                    </div>
+                        <!-- Close Icon -->
+                        <i class="pi pi-times text-base cursor-pointer" (click)="removeStatus(status, $event)"> </i>
+                    </p-tag>
+                    }
                 </div>
+            </div>
             }
         </div>
         <div class="flex gap-2">
             @if (currentUser !== USERGROUPS.READONLYADMIN && currentUser !== USERGROUPS.SERVICEMANAGER) {
-                <p-button label="Move to On-roll" (onClick)="moveCandidateToOnroll()" />
+            <p-button label="Move to On-roll" (onClick)="moveCandidateToOnroll()" />
             }
             <p-button icon="pi pi-external-link" label="Export" (click)="exportToExcel()" />
             <p-button label="Clear" icon="pi pi-filter-slash" (click)="clearStatusFilters()" />
         </div>
     </div>
     <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden">
-        <p-table #dt [columns]="cols" [value]="onboardingList" [exportHeader]="'customExportHeader'" [(selection)]="selectedCandidates" 
-            [rowHover]="true" [lazy]="true" stripedRows [loading]="loading" [paginator]="true" [rows]="pageSize" 
-            dataKey="employmentDetails.employmentId" selectionMode="multiple" [paginatorDropdownAppendTo]="mydiv"
-            [rowsPerPageOptions]="[10, 20, 30]" [showCurrentPageReport]="true" [totalRecords]="totalRecords" [first]="first"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" editMode="row"
-            [tableStyle]="{'min-width': '280rem'}" (onLazyLoad)="loadDemands($event)">
+        <p-table
+            #dt
+            [columns]="cols"
+            [value]="onboardingList"
+            [exportHeader]="'customExportHeader'"
+            [(selection)]="selectedCandidates"
+            [rowHover]="true"
+            [lazy]="true"
+            stripedRows
+            [loading]="loading"
+            [paginator]="true"
+            [rows]="pageSize"
+            dataKey="employmentDetails.employmentId"
+            selectionMode="multiple"
+            [paginatorDropdownAppendTo]="mydiv"
+            [rowsPerPageOptions]="[10, 20, 30]"
+            [showCurrentPageReport]="true"
+            [totalRecords]="totalRecords"
+            [first]="first"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            editMode="row"
+            [tableStyle]="{'min-width': '280rem'}"
+            (onLazyLoad)="loadDemands($event)"
+        >
             <ng-template #header let-columns>
                 <tr>
                     <th><p-tableHeaderCheckbox /></th>
@@ -103,7 +110,7 @@
                     </th>
                     <th>
                         <div class="flex items-center justify-between">
-                            <span>SPN Code</span> 
+                            <span>SPN Code</span>
                             <p-columnFilter type="text" field="spnCode" display="menu" [showAddButton]="false" />
                         </div>
                     </th>
@@ -132,8 +139,7 @@
                             <span>Status</span>
                             <p-columnFilter field="status" matchMode="equals" display="menu" [showAddButton]="false">
                                 <ng-template #filter let-value let-filter="filterCallback">
-                                    <p-multiselect [options]="statuses" (onChange)="filter($event.value)"
-                                        placeholder="Select Statuses" class="w-full" [(ngModel)]="selectedStatuses">
+                                    <p-multiselect [options]="statuses" (onChange)="filter($event.value)" placeholder="Select Statuses" class="w-full" [(ngModel)]="selectedStatuses">
                                         <ng-template let-option #item>
                                             <p-tag [value]="option.value" [severity]="getSeverity(option.value)" />
                                         </ng-template>
@@ -146,14 +152,11 @@
                     <th>
                         <div class="flex items-center justify-between">
                             <span>Actual DOJ</span>
-                            <p-columnFilter type="date" field="date" display="menu" matchMode="between"
-                                [showOperator]="false" [showAddButton]="false">
+                            <p-columnFilter type="date" field="date" display="menu" matchMode="between" [showOperator]="false" [showAddButton]="false">
                                 <ng-template #filter let-filter="filterCallback" let-value>
                                     <div class="flex flex-col gap-2">
-                                        <p-datepicker [ngModel]="value?.[0] || null" (ngModelChange)="updateRange($event, value, 0, filter)" 
-                                            placeholder="From Date" />
-                                        <p-datepicker [ngModel]="value?.[1] || null" (ngModelChange)="updateRange($event, value, 1, filter)" 
-                                            placeholder="To Date" />
+                                        <p-datepicker [ngModel]="value?.[0] || null" (ngModelChange)="updateRange($event, value, 0, filter)" placeholder="From Date" />
+                                        <p-datepicker [ngModel]="value?.[1] || null" (ngModelChange)="updateRange($event, value, 1, filter)" placeholder="To Date" />
                                     </div>
                                 </ng-template>
                             </p-columnFilter>
@@ -169,8 +172,8 @@
                     <!-- <th>UAN</th> -->
                     <!-- <th>Aadhar Number</th> -->
                     @if (currentUser !== USERGROUPS.READONLYADMIN && currentUser !== USERGROUPS.SERVICEMANAGER) {
-                        <th>PPE Details</th>
-                        <th>Actions</th>
+                    <th>PPE Details</th>
+                    <th>Actions</th>
                     }
                 </tr>
             </ng-template>
@@ -194,35 +197,22 @@
                     <td>{{ onboarding.employmentDetails.currentExperience || '-' }}</td>
                     <td>{{ onboarding.employmentDetails.totalExperience || '-' }}</td>
                     <td>
-                        <p-tag [value]="onboarding.employmentDetails.employmentStatus"
-                            [severity]="getSeverity(onboarding.employmentDetails.employmentStatus)" />
+                        <p-tag [value]="onboarding.employmentDetails.employmentStatus" [severity]="getSeverity(onboarding.employmentDetails.employmentStatus)" />
                     </td>
                     <td #pEditableColumn>
                         <p-cellEditor>
                             <ng-template #input>
-                                <p-datepicker [(ngModel)]="onboarding.employmentDetails.expectedJoiningDate" 
-                                    [iconDisplay]="'input'" [showIcon]="true" 
-                                    placeholder="Select Date" appendTo="body" fluid />
+                                <p-datepicker [(ngModel)]="onboarding.employmentDetails.expectedJoiningDate" [iconDisplay]="'input'" [showIcon]="true" placeholder="Select Date" appendTo="body" fluid />
                             </ng-template>
-                            <ng-template #output>
-                                {{ onboarding.employmentDetails.expectedJoiningDate 
-                                    ? (onboarding.employmentDetails.expectedJoiningDate | date:'dd/MM/yyyy') 
-                                    : '-' }}
-                            </ng-template>
+                            <ng-template #output> {{ onboarding.employmentDetails.expectedJoiningDate ? (onboarding.employmentDetails.expectedJoiningDate | date:'dd/MM/yyyy') : '-' }} </ng-template>
                         </p-cellEditor>
                     </td>
                     <td #pEditableColumn>
                         <p-cellEditor>
                             <ng-template #input>
-                                <p-datepicker [(ngModel)]="onboarding.employmentDetails.joiningDate" 
-                                    [iconDisplay]="'input'" [showIcon]="true" 
-                                    placeholder="Select Date" appendTo="body" fluid />
+                                <p-datepicker [(ngModel)]="onboarding.employmentDetails.joiningDate" [iconDisplay]="'input'" [showIcon]="true" placeholder="Select Date" appendTo="body" fluid />
                             </ng-template>
-                            <ng-template #output>
-                                {{ onboarding.employmentDetails.joiningDate 
-                                    ? (onboarding.employmentDetails.joiningDate | date: 'dd/MM/yyyy') 
-                                    : '-' }}
-                            </ng-template>
+                            <ng-template #output> {{ onboarding.employmentDetails.joiningDate ? (onboarding.employmentDetails.joiningDate | date: 'dd/MM/yyyy') : '-' }} </ng-template>
                         </p-cellEditor>
                     </td>
                     <td #pEditableColumn>
@@ -232,9 +222,7 @@
                                     <input type="text" pInputText maxlength="10" [(ngModel)]="onboarding.phoneNumber" />
                                 </span>
                             </ng-template>
-                            <ng-template #output>
-                                {{ onboarding.phoneNumber ?? '-' }}
-                            </ng-template>
+                            <ng-template #output> {{ onboarding.phoneNumber ?? '-' }} </ng-template>
                         </p-cellEditor>
                     </td>
                     <td #pEditableColumn>
@@ -244,9 +232,7 @@
                                     <input type="text" [(ngModel)]="onboarding.alternativeNumber" pInputText maxlength="10" />
                                 </span>
                             </ng-template>
-                            <ng-template #output>
-                                {{ onboarding.alternativeNumber ?? '-' }}
-                            </ng-template>
+                            <ng-template #output> {{ onboarding.alternativeNumber ?? '-' }} </ng-template>
                         </p-cellEditor>
                     </td>
                     <!-- <td #pEditableColumn>
@@ -274,44 +260,36 @@
                         </p-cellEditor>
                     </td> -->
                     @if (currentUser !== USERGROUPS.READONLYADMIN && currentUser !== USERGROUPS.SERVICEMANAGER){
-                        <td>
-                            <p-button [label]="onboarding.ppeDetails.length > 0 ? 'Edit PPE' : 'Add PPE'" 
-                                [icon]="onboarding.ppeDetails.length > 0 ? 'pi pi-pencil' : 'pi pi-plus'"
-                                [severity]="onboarding.ppeDetails.length > 0 ? 'contrast' : 'primary'" variant="text" 
-                                (onClick)="ppeDetailsModal(onboarding)"
-                            />
-                        </td>
-                        <td class="flex items-center justify-center gap-2">
-                            @if (!editing) {
-                                <button pButton pRipple type="button" pInitEditableRow
-                                    icon="pi pi-pencil" rounded severity="secondary" 
-                                    (click)="editOnboardingRow(onboarding)"></button>
-                            }
-                            @else {
-                                <button pButton pRipple type="button" pSaveEditableRow
-                                    icon="pi pi-check" rounded severity="success" 
-                                    (click)="submitOnboardingForm(onboarding)"></button>
-                                <button pButton pRipple type="button" pCancelEditableRow
-                                    icon="pi pi-times" rounded severity="danger"
-                                    (click)="cancelEdit(onboarding)"></button>
-                            }
-                        </td>
+                    <td>
+                        <p-button
+                            [label]="onboarding.ppeDetails.length > 0 ? 'Edit PPE' : 'Add PPE'"
+                            [icon]="onboarding.ppeDetails.length > 0 ? 'pi pi-pencil' : 'pi pi-plus'"
+                            [severity]="onboarding.ppeDetails.length > 0 ? 'contrast' : 'primary'"
+                            variant="text"
+                            (onClick)="ppeDetailsModal(onboarding)"
+                        />
+                    </td>
+                    <td class="flex items-center justify-center gap-2">
+                        @if (!editing) {
+                        <button pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil" rounded severity="secondary" (click)="editOnboardingRow(onboarding)"></button>
+                        } @else {
+                        <button pButton pRipple type="button" pSaveEditableRow icon="pi pi-check" rounded severity="success" (click)="submitOnboardingForm(onboarding)"></button>
+                        <button pButton pRipple type="button" pCancelEditableRow icon="pi pi-times" rounded severity="danger" (click)="cancelEdit(onboarding)"></button>
+                        }
+                    </td>
                     }
                 </tr>
             </ng-template>
             <ng-template #emptymessage>
                 <tr>
-                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground);">
-                        No Records Found
-                    </td>
+                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground)">No Records Found</td>
                 </tr>
             </ng-template>
         </p-table>
     </div>
 </div>
 
-<p-dialog header="Add/Edit PPE Details" [modal]="true" [(visible)]="openPpeModal"
-    [style]="{width: '50rem'}" [draggable]="false" (onHide)="onDialogClose()">
+<p-dialog header="Add/Edit PPE Details" [modal]="true" [(visible)]="openPpeModal" [style]="{width: '50rem'}" [draggable]="false" (onHide)="onDialogClose()">
     <form [formGroup]="ppeDetailsForm" (ngSubmit)="submitPpeDetailsForm()">
         <p-table [value]="ppeDetails.controls" showGridlines [rowHover]="true" formArrayName="ppeDetails">
             <ng-template #caption>
@@ -331,9 +309,7 @@
                 <tr [formGroupName]="i">
                     <td>{{ i + 1 }}</td>
                     <td>
-                        <p-select [options]="ppeTypeList" formControlName="ppeType" [editable]="true"
-                            optionLabel="label" optionValue="value" [filter]="true" filterBy="label"
-                            placeholder="Select or Enter the PPE Type" appendTo="body" />
+                        <p-select [options]="ppeTypeList" formControlName="ppeType" [editable]="true" optionLabel="label" optionValue="value" [filter]="true" filterBy="label" placeholder="Select or Enter the PPE Type" appendTo="body" />
                     </td>
                     <td>
                         <input type="text" pInputText formControlName="size" />
@@ -344,7 +320,7 @@
                 </tr>
             </ng-template>
         </p-table>
-    
+
         <div class="mt-4 flex justify-end">
             <button pButton pRipple type="submit">
                 <span pButtonLabel>Submit</span>

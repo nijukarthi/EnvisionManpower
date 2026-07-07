@@ -94,17 +94,15 @@
                 <label for="pincode">Pincode</label>
                 <input type="text" pInputText formControlName="pinCode" pKeyFilter="int" id="pincode" appFormFieldError class="block w-full" />
                 @if(pinCode?.invalid && (pinCode?.dirty || pinCode?.touched)){ @if (pinCode?.hasError('minlength')) {
-                    <p-message severity="error" variant="simple" size="small" styleClass="mt-1">Pincode must contain at least 6 characters</p-message>
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1">Pincode must contain at least 6 characters</p-message>
                 } @if (pinCode?.hasError('maxlength')) {
-                    <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Pincode cannot exceed 6 characters </p-message>
-                } 
-                }
+                <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> Pincode cannot exceed 6 characters </p-message>
+                } }
             </div>
             <div class="col-span-1">
                 <label for="pan-number">PAN Number</label>
                 <input type="text" pInputText formControlName="panNumber" maxlength="10" id="pan-number" appFormFieldError class="block w-full" />
-                @if(panNumber?.invalid && (panNumber?.dirty || panNumber?.touched)){
-                @if (panNumber?.hasError('minlength')) {
+                @if(panNumber?.invalid && (panNumber?.dirty || panNumber?.touched)){ @if (panNumber?.hasError('minlength')) {
                 <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> PAN Number must contain at least 10 characters </p-message>
                 } @if (panNumber?.hasError('maxlength')) {
                 <p-message severity="error" variant="simple" size="small" styleClass="mt-1"> PAN Number cannot exceed 10 characters </p-message>
