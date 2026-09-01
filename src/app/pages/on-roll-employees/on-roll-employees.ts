@@ -82,6 +82,7 @@ export class OnRollEmployees implements OnInit {
         projectId: [0],
         spnId: [0],
         envisionRoleId: [0],
+        previousExperience: [null],
         joiningDate: [''],
         lastWorkingDate: [null],
         employmentStatus: ['']
@@ -165,6 +166,10 @@ export class OnRollEmployees implements OnInit {
                         { field: 'employmentDetails.spn.spnDescription', header: 'SPN Description' },
                         { field: 'employmentDetails.spn.experience', header: 'Experience' },
                         { field: 'employmentDetails.envisionRole.roleName', header: 'Role' },
+                        { field: 'employmentDetails.currentExperience', header: 'Current Experience' },
+                        { field: 'employmentDetails.previousExperience', header: 'Previous Experience' },
+                        { field: 'employmentDetails.totalExperience', header: 'Total Experience' },
+
                         { field: 'employmentDetails.expectedJoiningDate', header: 'Expected DOJ' },
                         { field: 'employmentDetails.joiningDate', header: 'Actual DOJ' },
                         { field: 'phoneNumber', header: 'Contact Number' },
@@ -519,6 +524,7 @@ export class OnRollEmployees implements OnInit {
                 projectId: onroll?.employmentDetails?.project?.projectId,
                 spnId: onroll?.employmentDetails?.spn?.spnId,
                 envisionRoleId: onroll?.employmentDetails?.envisionRole?.id,
+                previousExperience: onroll?.employmentDetails?.previousExperience,
                 joiningDate: formatDate(onroll?.employmentDetails?.joiningDate),
                 lastWorkingDate: onroll?.employmentDetails?.lastWorkingDate,
                 employmentStatus: onroll?.employmentDetails?.employmentStatus

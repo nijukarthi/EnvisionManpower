@@ -35,10 +35,17 @@
                     }}
                 </div>
                 <div class="col-span-1">
-                    <label for="current-experience">Current Experience</label>
+                    <label for="currentExperience">Current Experience</label>
+
+                    <p-inputNumber formControlName="currentExperience" inputId="currentExperience" mode="decimal" [useGrouping]="false" [minFractionDigits]="1" [maxFractionDigits]="2" fluid class="block w-full"> </p-inputNumber>
+                </div>
+
+                <div class="col-span-1">
+                    <label for="previousExperience">Previous Experience</label>
+
                     <p-inputNumber
-                        formControlName="currentExperience"
-                        inputId="currentExperience"
+                        formControlName="previousExperience"
+                        inputId="previousExperience"
                         mode="decimal"
                         [useGrouping]="false"
                         [minFractionDigits]="1"
@@ -48,23 +55,13 @@
                         fluid
                         appFormFieldError
                         class="block w-full"
-                    />
+                    >
+                    </p-inputNumber>
                 </div>
                 <div class="col-span-1">
-                    <label for="total-experience">Total Experience</label>
-                    <p-inputNumber
-                        formControlName="totalExperience"
-                        inputId="totalExperience"
-                        mode="decimal"
-                        [useGrouping]="false"
-                        [minFractionDigits]="1"
-                        [maxFractionDigits]="2"
-                        [min]="0"
-                        [max]="99.99"
-                        fluid
-                        appFormFieldError
-                        class="block w-full"
-                    />
+                    <label for="totalExperience">Total Experience</label>
+
+                    <p-inputNumber formControlName="totalExperience" inputId="totalExperience" mode="decimal" [useGrouping]="false" [minFractionDigits]="1" [maxFractionDigits]="2" fluid class="block w-full"> </p-inputNumber>
                 </div>
                 <div class="col-span-1">
                     <label for="highest-qualification">Highest Qualification</label>
@@ -87,11 +84,9 @@
                 <div class="col-span-1">
                     <label for="notice-period">Notice Period (days)</label>
                     <p-inputNumber formControlName="noticePeriod" inputId="notice-period" [useGrouping]="false" appFormFieldError class="block w-full" />
-                    @if(noticePeriod?.invalid && (noticePeriod?.dirty || noticePeriod?.touched)){ 
-                        @if (noticePeriod?.hasError('pattern')) {
-                            <p-message severity="error" variant="simple" size="small" styleClass="mt-1">NoticePeriod must be 2 to 3 digits</p-message>
-                        } 
-                    }
+                    @if(noticePeriod?.invalid && (noticePeriod?.dirty || noticePeriod?.touched)){ @if (noticePeriod?.hasError('pattern')) {
+                    <p-message severity="error" variant="simple" size="small" styleClass="mt-1">NoticePeriod must be 2 to 3 digits</p-message>
+                    } }
                 </div>
             </div>
             @if (candidateId) {

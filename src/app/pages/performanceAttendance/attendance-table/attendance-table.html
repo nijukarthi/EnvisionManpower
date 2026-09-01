@@ -212,15 +212,16 @@
                     <td #pEditableColumn>
                         <p-cellEditor>
                             <ng-template #input>
-                                <p-inputnumber #weekOffInput [(ngModel)]="attendance.weekOff" [useGrouping]="false" (onInput)="attendanceChange(attendance, 'weekOff', $event.value)" />
+                                <p-inputnumber #weekOffInput [(ngModel)]="attendance.weekOff" [useGrouping]="false" [disabled]="isWeekOffReadOnly()" (onInput)="attendanceChange(attendance, 'weekOff', $event.value)"> </p-inputnumber>
                             </ng-template>
+
                             <ng-template #output> {{ attendance.weekOff }} </ng-template>
                         </p-cellEditor>
                     </td>
                     <td #pEditableColumn>
                         <p-cellEditor>
                             <ng-template #input>
-                                <p-inputnumber #paidLeavesInput [(ngModel)]="attendance.paidLeaves" [useGrouping]="false" (onInput)="attendanceChange(attendance, 'paidLeaveHoliday', $event.value)"> </p-inputnumber>
+                                <p-inputnumber #paidLeavesInput [(ngModel)]="attendance.paidLeaves" [useGrouping]="false" (onInput)="attendanceChange(attendance, 'paidLeaves', $event.value)"> </p-inputnumber>
                             </ng-template>
                             <ng-template #output> {{ attendance.paidLeaves }} </ng-template>
                         </p-cellEditor>

@@ -37,6 +37,8 @@ export class Terminate implements OnInit {
 
     menuItems: any[] = [];
 
+    currentUserEmail = sessionStorage.getItem('userEmail');
+
     minDate: Date | undefined;
 
     private fb = inject(FormBuilder);
@@ -351,6 +353,7 @@ export class Terminate implements OnInit {
 
     forceResignationPopup() {
         this.confirmationService.confirm({
+            key: 'custom',
             header: 'Are you sure?',
             message: 'Do you want to force the resignation?',
             accept: () => {
@@ -385,6 +388,7 @@ export class Terminate implements OnInit {
 
     revokeResignationPopup() {
         this.confirmationService.confirm({
+            key: 'custom',
             header: 'Are you sure?',
             message: 'Do you want to revoke the resignation?',
             accept: () => {
@@ -418,6 +422,7 @@ export class Terminate implements OnInit {
 
     cancelResignationPopup() {
         this.confirmationService.confirm({
+            key: 'custom',
             header: 'Are you sure?',
             message: 'Do you want to cancel the resignation?',
             accept: () => {
@@ -543,58 +548,92 @@ export class Terminate implements OnInit {
         }
     }
     exportToExcel() {
-        const data = {
-            offSet: this.offSet,
-            pageSize: this.pageSize,
+        const emailText = this.currentUserEmail ?? 'your email address';
 
-            resignationStatuses: this.filteredData?.resignationStatuses ?? null,
-            replacementRequired: this.filteredData?.replacementRequired ?? null,
+        this.confirmationService.confirm({
+            key: 'default',
 
-            candidateName: this.filteredData?.candidateName ?? null,
-            candidateCode: this.filteredData?.candidateCode ?? null,
-            employeeCode: this.filteredData?.employeeCode ?? null,
-            phoneNumber: this.filteredData?.phoneNumber ?? null,
-
-            projectCode: this.filteredData?.projectCode ?? null,
-            clusterName: this.filteredData?.clusterName ?? null,
-            departmentName: this.filteredData?.departmentName ?? null,
-
-            lastWorkingFrom: this.filteredData?.lastWorkingFrom ?? null,
-            lastWorkingTo: this.filteredData?.lastWorkingTo ?? null,
-
-            createdFrom: this.filteredData?.createdFrom ?? null,
-            createdTo: this.filteredData?.createdTo ?? null
-        };
-
-        this.apiService.exportResignation(data).subscribe({
-            next: (blob: Blob) => {
-                const url = window.URL.createObjectURL(blob);
-
-                const link = document.createElement('a');
-
-                link.href = url;
-                link.download = 'Resignation.xlsx';
-
-                link.click();
-
-                window.URL.revokeObjectURL(url);
-
-                this.messageService.add({
-                    severity: 'success',
-                    summary: 'Success',
-                    detail: 'Excel exported successfully.'
-                });
+            message: `The Excel file will be sent to ${emailText}. Do you want to proceed?`,
+            header: 'Confirmation',
+            closable: true,
+            closeOnEscape: true,
+            icon: 'pi pi-exclamation-triangle',
+            rejectButtonProps: {
+                label: 'Cancel',
+                severity: 'secondary',
+                outlined: true
             },
-            error: (err) => {
-                console.log(err);
+            acceptButtonProps: {
+                label: 'OK'
+            },
+            accept: () => {
+                try {
+                    const data = {
+                        ...this.filteredData,
+                        export: true
+                    };
 
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: 'Export failed.'
-                });
+                    this.apiService.exportResignation(data).subscribe({
+                        next: (val) => {
+                            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Excel file successfully send to email' });
+                        },
+                        error: (err) => {
+                            console.log(err);
+
+                            this.messageService.add({
+                                severity: 'error',
+                                summary: 'Error',
+                                detail: err.error?.detail || 'Export failed.'
+                            });
+                        }
+                    });
+                } catch (error) {
+                    console.log(error);
+                }
             }
         });
+
+        // const data = {
+        //     offSet: this.offSet,
+        //     pageSize: this.pageSize,
+
+        //     resignationStatuses: this.filteredData?.resignationStatuses ?? null,
+        //     replacementRequired: this.filteredData?.replacementRequired ?? null,
+
+        //     candidateName: this.filteredData?.candidateName ?? null,
+        //     candidateCode: this.filteredData?.candidateCode ?? null,
+        //     employeeCode: this.filteredData?.employeeCode ?? null,
+        //     phoneNumber: this.filteredData?.phoneNumber ?? null,
+
+        //     projectCode: this.filteredData?.projectCode ?? null,
+        //     clusterName: this.filteredData?.clusterName ?? null,
+        //     departmentName: this.filteredData?.departmentName ?? null,
+
+        //     lastWorkingFrom: this.filteredData?.lastWorkingFrom ?? null,
+        //     lastWorkingTo: this.filteredData?.lastWorkingTo ?? null,
+
+        //     createdFrom: this.filteredData?.createdFrom ?? null,
+        //     createdTo: this.filteredData?.createdTo ?? null
+        // };
+
+        // this.apiService.exportResignation(data).subscribe({
+        //     next: () => {
+        //         this.messageService.add({
+        //             severity: 'success',
+        //             summary: 'Success',
+        //             detail: 'The resignation report has been sent to your registered email address.'
+        //         });
+        //     },
+        //     error: (err) => {
+        //         console.log(err);
+
+        //         this.messageService.add({
+        //             severity: 'error',
+        //             summary: 'Error',
+        //             detail: err.error?.detail || 'Export failed.'
+        //         });
+        //     }
+        // });
     }
 
     removeStatus(status: number, event?: Event) {

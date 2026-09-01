@@ -2,9 +2,9 @@
     <div class="flex items-baseline-last justify-between">
         <h5 class="m-0">Resignation</h5>
         <div class="flex justify-end gap-2">
+            @if (currentUser === USERGROUPS.ADMIN) {
             <p-button label="Export to Excel" icon="pi pi-external-link" (onClick)="exportToExcel()" />
-
-            @if (currentUser === USERGROUPS.ADMIN || currentUser === USERGROUPS.RESOURCEMANAGER) {
+            } @if (currentUser === USERGROUPS.ADMIN || currentUser === USERGROUPS.RESOURCEMANAGER) {
 
             <p-menu #menu [model]="menuItems" [popup]="true" />
 
@@ -239,7 +239,8 @@
 </div>
 
 <p-toast />
-<p-confirmdialog>
+
+<p-confirmdialog key="custom" #cd>
     <ng-template #headless let-message let-onAccept="onAccept" let-onReject="onReject">
         <div class="grid place-items-center p-8 bg-surface-0 dark:bg-surface-900 rounded">
             <div class="rounded-full bg-primary text-primary-contrast inline-flex justify-center items-center h-24 w-24 -mt-20">
@@ -276,3 +277,4 @@
         </div>
     </form>
 </p-dialog>
+<p-confirmdialog key="default" />

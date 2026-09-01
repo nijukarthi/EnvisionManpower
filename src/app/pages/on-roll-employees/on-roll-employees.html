@@ -139,6 +139,7 @@
                         </div>
                     </th>
                     <th>Current Experience</th>
+                    <th>Previous Experience</th>
                     <th>Total Experience</th>
                     <th>
                         <div class="flex items-center justify-between">
@@ -210,8 +211,9 @@
                     <td>{{ onroll.employmentDetails.spn.spnDescription || '-' }}</td>
                     <td>{{ onroll.employmentDetails.spn.experience || '-' }}</td>
                     <td>{{ onroll.employmentDetails.envisionRole.roleName || '-' }}</td>
-                    <td>{{ onroll.employmentDetails.currentExperience || '-' }}</td>
-                    <td>{{ onroll.employmentDetails.totalExperience || '-' }}</td>
+                    <td>{{ onroll.employmentDetails.currentExperience != null ? onroll.employmentDetails.currentExperience : '-' }}</td>
+                    <td>{{ onroll.employmentDetails.previousExperience != null ? onroll.employmentDetails.previousExperience : '-' }}</td>
+                    <td>{{ onroll.employmentDetails.totalExperience != null ? onroll.employmentDetails.totalExperience : '-' }}</td>
                     <td>
                         <p-tag [value]="onroll.employmentDetails.employmentStatus" [severity]="getSeverity(onroll.employmentDetails.employmentStatus)" />
                     </td>
@@ -384,6 +386,11 @@
             <div class="grid col-span-1 gap-1">
                 <label for="current-experience">Current Experience</label>
                 <input type="text" pInputText [value]="onrollEmployeeDetails?.employmentDetails?.currentExperience" id="current-experience" [disabled]="true" />
+            </div>
+
+            <div class="grid col-span-1 gap-1">
+                <label for="previous-experience">Previous Experience</label>
+                <input type="text" pInputText formControlName="previousExperience" id="previous-experience" />
             </div>
             <div class="grid col-span-1 gap-1">
                 <label for="total-experience">Total Experience</label>

@@ -3,9 +3,9 @@
         <h5>Training</h5>
         <div class="flex gap-2">
             @if (currentUser === USERGROUPS.ADMIN || currentUser === USERGROUPS.RESOURCEMANAGER) {
-                <p-tieredmenu #menu [model]="menuItems" [popup]="true" appendTo="body" />
-                <p-button (onClick)="menu.toggle($event)" label="Actions" icon="pi pi-angle-down" iconPos="right" />
-                <input #excelInput type="file" accept=".xls,.xlsx" hidden (change)="excelSelected($event)" />
+            <p-tieredmenu #menu [model]="menuItems" [popup]="true" appendTo="body" />
+            <p-button (onClick)="menu.toggle($event)" label="Actions" icon="pi pi-angle-down" iconPos="right" />
+            <input #excelInput type="file" accept=".xls,.xlsx" hidden (change)="excelSelected($event)" />
             }
             <p-button label="Clear" icon="pi pi-filter-slash" (onClick)="dt.clear()" />
         </div>
@@ -100,7 +100,7 @@
                     <th rowspan="2">Total Experience</th>
                     <th colspan="5" style="text-align: center">GWO</th>
                     @if (currentUser !== USERGROUPS.READONLYADMIN && currentUser !== USERGROUPS.SERVICEMANAGER){
-                        <th rowspan="2" style="text-align: center">Actions</th>
+                    <th rowspan="2" style="text-align: center">Actions</th>
                     }
                 </tr>
                 <tr>
@@ -110,8 +110,7 @@
                             <span>Training Status</span>
                             <p-columnFilter field="status" matchMode="equals" display="menu" [showAddButton]="false">
                                 <ng-template #filter let-value let-filter="filterCallback">
-                                    <p-select [options]="trainingStatusList" optionLabel="label" optionValue="value" 
-                                    (onChange)="filter($event.value)" placeholder="Select Status" class="w-full"></p-select>
+                                    <p-select [options]="trainingStatusList" optionLabel="label" optionValue="value" (onChange)="filter($event.value)" placeholder="Select Status" class="w-full"></p-select>
                                 </ng-template>
                             </p-columnFilter>
                         </div>
@@ -163,16 +162,14 @@
                     <td>{{ training.employmentDetails.envisionRole.roleName || '-' }}</td>
                     <td>{{ training.phoneNumber || '-' }}</td>
                     <td>{{ training.employmentDetails.joiningDate || '-' }}</td>
-                    <td>{{ training.employmentDetails.currentExperience || '-' }}</td>
-                    <td>{{ training.employmentDetails.totalExperience || '-' }}</td>
+                    <td>{{ training.employmentDetails.currentExperience != null ? training.employmentDetails.currentExperience : '-' }}</td>
+                    <td>{{ training.employmentDetails.totalExperience != null ? training.employmentDetails.totalExperience : '-' }}</td>
                     <td #pEditableColumn>
                         <p-cellEditor>
                             <ng-template #input>
                                 <input type="text" pInputText [(ngModel)]="training.maximoId" />
                             </ng-template>
-                            <ng-template #output>
-                                {{ training?.maximoId || '-' }}
-                            </ng-template>
+                            <ng-template #output> {{ training?.maximoId || '-' }} </ng-template>
                         </p-cellEditor>
                     </td>
                     <td #pEditableColumn>
@@ -208,15 +205,15 @@
                         </p-cellEditor>
                     </td>
                     @if (currentUser !== USERGROUPS.READONLYADMIN && currentUser !== USERGROUPS.SERVICEMANAGER){
-                        <td class="flex items-center justify-center gap-2">
-                            @if (!editing) {
-                            <button pButton pRipple type="button" icon="pi pi-pencil" pInitEditableRow rounded severity="secondary" (click)="editAttendanceRow(training)"></button>
-    
-                            } @else {
-                            <button pButton pRipple type="submit" icon="pi pi-check" pSaveEditableRow rounded severity="primary" (click)="submitTrainingForm(training)"></button>
-                            <button pButton pRipple type="button" icon="pi pi-times" pCancelEditableRow rounded severity="danger" (click)="cancelEdit(training)"></button>
-                            }
-                        </td>
+                    <td class="flex items-center justify-center gap-2">
+                        @if (!editing) {
+                        <button pButton pRipple type="button" icon="pi pi-pencil" pInitEditableRow rounded severity="secondary" (click)="editAttendanceRow(training)"></button>
+
+                        } @else {
+                        <button pButton pRipple type="submit" icon="pi pi-check" pSaveEditableRow rounded severity="primary" (click)="submitTrainingForm(training)"></button>
+                        <button pButton pRipple type="button" icon="pi pi-times" pCancelEditableRow rounded severity="danger" (click)="cancelEdit(training)"></button>
+                        }
+                    </td>
                     }
                 </tr>
             </ng-template>

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
@@ -494,9 +494,7 @@ export class Apiservice {
         return this.postMethod('master/resignation-reason', params);
     }
     exportResignation(data: any) {
-        return this.http.post(environment.baseUrl + 'candidate/siteperfomance/resignation/export', data, {
-            responseType: 'blob'
-        });
+        return this.http.post(environment.baseUrl + 'candidate/siteperfomance/resignation/export', data, {});
     }
     fetchConsultancyInfoList(params: any): Observable<any> {
         return this.postMethod('user/active/consultancy-info', params);
@@ -778,5 +776,24 @@ export class Apiservice {
 
     approveConsulRequest(params: any): Observable<any> {
         return this.postMethod('candidate/change-consultancy/request/approve', params);
+    }
+
+    getDashboardSummary(request: { year: number; month: number | null; state: string | null; spn: string | null; periodType: 'MONTH' | 'QUARTER' | 'HALF_YEAR' | 'YEAR'; quarter: number | null; half: number | null }): Observable<any> {
+        return this.http.post(`${this.baseUrl}dashboard/summary`, request);
+    }
+
+    // =========================================================
+    // AVAILABLE YEARS
+    // =========================================================
+
+    getAvailableYears(request: any = {}): Observable<any> {
+        return this.http.post<any>(`${this.baseUrl}dashboard/available-years`, request);
+    }
+    // =========================================================
+    // SPN OPTIONS
+    // =========================================================
+
+    getSpnOptionsForState(request: { state: string | null }): Observable<any> {
+        return this.http.post<any>(`${this.baseUrl}dashboard/spn-options`, request);
     }
 }
