@@ -35,11 +35,28 @@ export class FixedCostCandidateForm implements OnInit {
         candidateName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
         phoneNumber: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
         positionApplied: ['', [Validators.minLength(3), Validators.maxLength(100)]],
-        currentExperience: [null],
-        totalExperience: [null],
+        currentExperience: [{ value: null, disabled: true }],
+
+        previousExperience: [null],
+        totalExperience: [{ value: null, disabled: true }],
         highestQualification: ['', [Validators.minLength(3), Validators.maxLength(80)]],
         qualification: ['', [Validators.minLength(3), Validators.maxLength(80)]],
-        noticePeriod: [null, Validators.pattern(/^\d{2,3}$/)]
+        noticePeriod: [null, Validators.pattern(/^\d{2,3}$/)],
+
+        employmentDetails: this.fb.group({
+            project: this.fb.group({
+                projectId: [0]
+            }),
+            spn: this.fb.group({
+                spnId: [0]
+            }),
+            envisionRole: this.fb.group({
+                id: [0]
+            }),
+            joiningDate: [''],
+            offerReleaseDate: [''],
+            employmentStatus: ['ACTIVE']
+        })
     });
 
     get candidateName() {
@@ -54,13 +71,13 @@ export class FixedCostCandidateForm implements OnInit {
         return this.fixedCostCandidateForm.get('positionApplied');
     }
 
-    get currentExperience() {
-        return this.fixedCostCandidateForm.get('currentExperience');
-    }
+    // get currentExperience() {
+    //     return this.fixedCostCandidateForm.get('currentExperience');
+    // }
 
-    get totalExperience() {
-        return this.fixedCostCandidateForm.get('totalExperience');
-    }
+    // get totalExperience() {
+    //     return this.fixedCostCandidateForm.get('totalExperience');
+    // }
 
     get highestQualification() {
         return this.fixedCostCandidateForm.get('highestQualification');
@@ -127,7 +144,7 @@ export class FixedCostCandidateForm implements OnInit {
                         console.log(err);
 
                         if (err.status === 400) {
-                           this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail }); 
+                            this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
                         }
                     }
                 });
@@ -143,7 +160,7 @@ export class FixedCostCandidateForm implements OnInit {
                         console.log(err);
 
                         if (err.status === 400) {
-                           this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail }); 
+                            this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
                         }
                     }
                 });
@@ -154,7 +171,7 @@ export class FixedCostCandidateForm implements OnInit {
     }
 
     onSubmit() {
-        let data = this.fixedCostCandidateForm.value;
+        let data = this.fixedCostCandidateForm.getRawValue();
 
         if (this.candidateId) {
             data = {
@@ -162,6 +179,7 @@ export class FixedCostCandidateForm implements OnInit {
                 candidateId: this.candidateId
             };
         }
+
         this.fixedCostCandidateApi(data);
     }
 
@@ -183,6 +201,7 @@ export class FixedCostCandidateForm implements OnInit {
                         }
                     };
                     this.fixedCostCandidateForm.patchValue(formattedData);
+
                     this.employmentId = candidateData?.employmentDetails?.employmentId;
 
                     if (candidateId && this.loggedUserGroupId === 360) {
@@ -192,7 +211,7 @@ export class FixedCostCandidateForm implements OnInit {
                         this.fixedCostCandidateForm.get('employmentDetails.joiningDate')?.disable();
                         this.fixedCostCandidateForm.get('employmentDetails.offerReleaseDate')?.disable();
                         this.fixedCostCandidateForm.get('employmentDetails.employmentStatus')?.disable();
-                    } else if (candidateId && (UserGroups.SITEINCHARGE === this.loggedUserGroupId || UserGroups.ADMIN === this.loggedUserGroupId)) {
+                    } else if (candidateId && (this.loggedUserGroupId === UserGroups.SITEINCHARGE || this.loggedUserGroupId === UserGroups.ADMIN)) {
                         this.fixedCostCandidateForm.get('employmentDetails.employmentStatus')?.enable();
                     } else {
                         this.fixedCostCandidateForm.get('employmentDetails.project.projectId')?.enable();
@@ -214,7 +233,7 @@ export class FixedCostCandidateForm implements OnInit {
                     console.log(err);
 
                     if (err.status === 400) {
-                        this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail }); 
+                        this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
                     }
                 }
             });

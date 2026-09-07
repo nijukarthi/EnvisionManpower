@@ -1,599 +1,1904 @@
-import { Shared } from '@/service/shared';
-import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+
+// =========================================================
+// PRIME NG
+// =========================================================
+import { AvatarModule } from 'primeng/avatar';
+import { BadgeModule } from 'primeng/badge';
+import { ButtonModule } from 'primeng/button';
+import { CardModule } from 'primeng/card';
+import { ChartModule } from 'primeng/chart';
+import { ChipModule } from 'primeng/chip';
+import { KnobModule } from 'primeng/knob';
+import { ProgressBarModule } from 'primeng/progressbar';
+import { SelectModule } from 'primeng/select';
+import { TableModule } from 'primeng/table';
+import { TagModule } from 'primeng/tag';
+import { TooltipModule } from 'primeng/tooltip';
+
+// =========================================================
+// SERVICE
+// =========================================================
+import { Apiservice } from '../../service/apiservice/apiservice';
+
+// =========================================================
+// INTERFACES
+// =========================================================
 
 export interface KpiCard {
-  label: string;
-  value: string | number;
-  icon: string;
-  color: string;
-  trend?: number;
-  subtitle?: string;
+    label: string;
+    value: string | number;
+    icon: string;
+    color: string;
+    trend?: number;
+    subtitle?: string;
+}
+
+export interface FilterOption {
+    label: string;
+    value: string | null;
+}
+
+export interface MonthOption {
+    label: string;
+    value: string;
+}
+
+export interface PeriodOption {
+    label: string;
+    value: 'MONTH' | 'QUARTER' | 'HALF_YEAR' | 'YEAR';
+}
+
+export interface QuarterOption {
+    label: string;
+    value: number;
+}
+
+export interface HalfOption {
+    label: string;
+    value: number;
 }
 
 export interface TopPerformer {
-  rank: number;
-  rankLabel: string;
-  name: string;
-  project: string;
-  cluster: string;
-  score: number;
-  rating: string;
+    rank: number;
+    rankLabel: string;
+    name: string;
+    project: string;
+    cluster: string;
+    score: number;
+    rating: string;
 }
 
 export interface RatingItem {
-  grade: string;
-  count: number;
-  percent: number;
+    grade: string;
+    count: number;
+    percent: number;
 }
 
+// =========================================================
+// COMPONENT
+// =========================================================
+
 @Component({
-  selector: 'app-main-dashboard',
-  imports: [Shared],
-  templateUrl: './main-dashboard.html',
-  styleUrl: './main-dashboard.scss'
+    selector: 'app-main-dashboard',
+    standalone: true,
+
+    imports: [CommonModule, FormsModule, ButtonModule, SelectModule, TagModule, BadgeModule, ChartModule, TableModule, ProgressBarModule, AvatarModule, ChipModule, TooltipModule, KnobModule, CardModule],
+
+    templateUrl: './main-dashboard.html',
+    styleUrl: './main-dashboard.scss'
 })
-export class MainDashboard {
-  activeTab = 'overview';
+export class MainDashboard implements OnInit {
+    // =========================================================
+    // CONSTRUCTOR
+    // =========================================================
 
-  workforceTrendData: any;
-  workforceTrendOptions: any;
+    constructor(private apiService: Apiservice) {}
 
-  attritionTrendData: any;
-  attritionTrendOptions: any;
+    // =========================================================
+    // LOADING
+    // =========================================================
 
-  // ── Filters ───────────────────────────────────────
-  selectedState: any = null;
-  selectedSPN: any = null;
-  selectedMonth: any = { label: 'April 2026', value: 'apr2026' };
+    isLoading = false;
 
-  stateOptions = [
-    { label: 'All States', value: null },
-    { label: 'Karnataka', value: 'KA' },
-    { label: 'Andhra Pradesh', value: 'AP' },
-    { label: 'Gujarat', value: 'GJ' },
-    { label: 'Maharashtra', value: 'MH' },
-  ];
+    dashboardData: any = {};
 
-  spnOptions = [
-    { label: 'All SPN', value: null },
-    { label: 'P-1704', value: 'P-1704' },
-    { label: 'P-1615', value: 'P-1615' },
-    { label: 'P-1511', value: 'P-1511' },
-  ];
+    // =========================================================
+    // ACTIVE TAB
+    // =========================================================
 
-  monthOptions = [
-    { label: 'January 2026', value: 'jan2026' },
-    { label: 'February 2026', value: 'feb2026' },
-    { label: 'March 2026', value: 'mar2026' },
-    { label: 'April 2026', value: 'apr2026' },
-  ];
+    activeTab: 'overview' | 'performance' | 'trends' = 'overview';
 
-  // ── Pipeline KPI (5 cards) ────────────────────────
-  pipelineCards: KpiCard[] = [
-    { label: 'Total Demand', value: '--', icon: 'pi pi-users', color: '#3B82F6', subtitle: 'Open positions' },
-    { label: 'Approval', value: '--', icon: 'pi pi-check-circle', color: '#10B981', subtitle: 'Pending approval' },
-    { label: 'Hiring', value: '--', icon: 'pi pi-briefcase', color: '#F59E0B', subtitle: 'In hiring stage' },
-    { label: 'Onboarding', value: '--', icon: 'pi pi-id-card', color: '#8B5CF6', subtitle: 'Being onboarded' },
-    { label: 'GWO Status', value: 747, icon: 'pi pi-shield', color: '#06B6D4', subtitle: 'GWO cleared' },
-  ];
+    // =========================================================
+    // FILTERS
+    // =========================================================
 
-  // ── Headcount KPI (4 cards) ───────────────────────
-  headcountCards: KpiCard[] = [
-    { label: 'Active Employees', value: '--', icon: 'pi pi-user-plus', color: '#10B981', trend: 3.2 },
-    { label: 'Overall Headcount', value: 847, icon: 'pi pi-sitemap', color: '#3B82F6', trend: 1.8 },
-    { label: 'Resigned Count', value: 181, icon: 'pi pi-user-minus', color: '#EF4444', trend: -2.1 },
-    { label: 'Attrition Rate', value: '--%', icon: 'pi pi-chart-line', color: '#F59E0B', trend: -0.5 },
-  ];
+    selectedState: FilterOption | null = null;
 
-  // ── Demand Breakdown ──────────────────────────────
-  demandBreakdown = {
-    totalApproved: 100,
-    totalPending: 50,
-    existingTransfer: 25,
-    trainedRatio: 68,
-    turnoverRate: 21,
-  };
+    selectedSPN: FilterOption | null = null;
 
-  // ── Performance KPIs ──────────────────────────────
-  perfKpis = [
-    { label: 'Evaluations Completed', value: 702, icon: 'pi pi-check-square', color: '#10B981' },
-    { label: 'Evaluations Pending', value: 62, icon: 'pi pi-clock', color: '#F59E0B' },
-    { label: 'Completion Rate', value: '91.9%', icon: 'pi pi-percentage', color: '#3B82F6' },
-    { label: 'Avg Performance Score', value: 76.3, icon: 'pi pi-star', color: '#8B5CF6' },
-  ];
+    selectedMonth: MonthOption | null = null;
 
-  // ── Attendance KPIs ───────────────────────────────
-  attendanceKpis = [
-    { label: 'Total Effective Man Days', value: '22,742', icon: 'pi pi-calendar-times', color: '#06B6D4' },
-    { label: 'Total Present Days', value: '16,568', icon: 'pi pi-calendar-plus', color: '#10B981' },
-    { label: 'Total Absent Days', value: 539, icon: 'pi pi-calendar-minus', color: '#EF4444' },
-    { label: 'Paid Leaves Taken', value: 308, icon: 'pi pi-sun', color: '#F59E0B' },
-  ];
+    // =========================================================
+    // PERIOD
+    // =========================================================
 
-  // ── Rating Distribution ───────────────────────────
-  ratingData: RatingItem[] = [
-    { grade: 'A', count: 35, percent: 5 },
-    { grade: 'B+', count: 143, percent: 20.4 },
-    { grade: 'B', count: 356, percent: 50.7 },
-    { grade: 'C', count: 135, percent: 19.2 },
-    { grade: 'D', count: 33, percent: 4.7 },
-  ];
+    periodType: 'MONTH' | 'QUARTER' | 'HALF_YEAR' | 'YEAR' = 'MONTH';
 
-  // ── Top Performers ────────────────────────────────
-  topPerformers: TopPerformer[] = [
-    { rank: 1, rankLabel: '1st', name: 'Waseem Baig', project: 'P-1704', cluster: 'Karnataka', score: 100, rating: 'A' },
-    { rank: 2, rankLabel: '2nd', name: 'R. Siva Mohan Reddy', project: 'P-1615', cluster: 'Andhra Pradesh', score: 100, rating: 'A' },
-    { rank: 3, rankLabel: '3rd', name: 'Saleem D Doulattadar', project: 'P-1511', cluster: 'Karnataka', score: 97, rating: 'A' },
-    { rank: 4, rankLabel: '4th', name: 'Aakash Dhakad', project: 'P-1934', cluster: 'Gujarat', score: 97, rating: 'A' },
-    { rank: 5, rankLabel: '5th', name: 'Ashish Kumar Singh', project: 'P-1429', cluster: 'Maharashtra', score: 97, rating: 'A' },
-  ];
-
-  trendKpis: KpiCard[] = [
-    {
-      label: '3Y Total Hiring',
-      value: '2,847',
-      icon: 'pi pi-users',
-      color: '#3B82F6',
-      subtitle: 'Employees hired since 2025'
-    },
-    {
-      label: 'Avg Attrition Rate',
-      value: '11.8%',
-      icon: 'pi pi-arrow-down-right',
-      color: '#EF4444',
-      subtitle: 'Average yearly attrition'
-    },
-    {
-      label: 'Demand Fulfillment',
-      value: '89%',
-      icon: 'pi pi-check-circle',
-      color: '#10B981',
-      subtitle: 'Positions successfully closed'
-    },
-    {
-      label: 'Retention Rate',
-      value: '84%',
-      icon: 'pi pi-shield',
-      color: '#8B5CF6',
-      subtitle: 'Employees retained over 3 years'
-    }
-  ];
-
-  // ── Chart State ───────────────────────────────────
-  attendanceRate = 72.9;
-  completionRate = 92;
-
-  pipelineChartData: any;
-  pipelineChartOptions: any;
-  attendanceChartData: any;
-  attendanceChartOptions: any;
-
-  ngOnInit(): void {
-    this.initCharts();
-  }
-
-  initCharts(): void {
-    // ── Pipeline Funnel (horizontal bar) ─────────────
-    this.pipelineChartData = {
-      labels: ['Total Demand', 'Approved', 'In Hiring', 'Onboarding', 'GWO'],
-      datasets: [
+    periodTypeOptions: PeriodOption[] = [
         {
-          label: 'Count',
-          data: [150, 100, 75, 50, 30],
-          backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#8B5CF6', '#06B6D4'],
-          borderRadius: 5,
-          borderSkipped: false,
-        },
-      ],
-    };
-
-    this.pipelineChartOptions = {
-      indexAxis: 'y',
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-      },
-      scales: {
-        x: {
-          grid: { color: 'rgba(148,163,184,0.1)' },
-          ticks: { color: '#94A3B8', font: { size: 11 } },
-        },
-        y: {
-          grid: { display: false },
-          ticks: { color: '#475569', font: { size: 12, weight: '600' } },
-        },
-      },
-    };
-
-    // ── Attendance Trend (bar + line combo) ───────────
-    this.attendanceChartData = {
-      labels: ['Jan', 'Feb', 'Mar', 'Apr'],
-      datasets: [
-        {
-          type: 'bar',
-          label: 'Effective Man Days',
-          data: [19800, 20500, 21200, 22742],
-          backgroundColor: 'rgba(59,130,246,0.75)',
-          borderRadius: 5,
-          yAxisID: 'y',
+            label: 'Month',
+            value: 'MONTH'
         },
         {
-          type: 'line',
-          label: 'Attendance Rate %',
-          data: [68, 70.5, 71.2, 72.9],
-          borderColor: '#10B981',
-          backgroundColor: 'rgba(16,185,129,0.08)',
-          borderWidth: 2.5,
-          tension: 0.4,
-          fill: true,
-          pointRadius: 5,
-          pointBackgroundColor: '#10B981',
-          yAxisID: 'y1',
+            label: 'Quarter',
+            value: 'QUARTER'
         },
-      ],
+        {
+            label: 'Half-Year',
+            value: 'HALF_YEAR'
+        },
+        {
+            label: 'Year',
+            value: 'YEAR'
+        }
+    ];
+
+    selectedYear: number = new Date().getFullYear();
+
+    yearOptions: number[] = [];
+
+    // =========================================================
+    // QUARTER
+    // =========================================================
+
+    selectedQuarter: QuarterOption = {
+        label: 'Q1 (Jan-Mar)',
+        value: 1
     };
 
-    this.attendanceChartOptions = {
-      responsive: true,
-      maintainAspectRatio: false,
-      interaction: { mode: 'index', intersect: false },
-      plugins: {
-        legend: {
-          labels: {
-            color: '#64748B',
-            font: { size: 11 },
-            usePointStyle: true,
-          },
+    quarterOptions: QuarterOption[] = [
+        {
+            label: 'Q1 (Jan-Mar)',
+            value: 1
         },
-      },
-      scales: {
-        x: {
-          grid: { display: false },
-          ticks: { color: '#94A3B8', font: { size: 11 } },
+        {
+            label: 'Q2 (Apr-Jun)',
+            value: 2
         },
-        y: {
-          type: 'linear',
-          position: 'left',
-          grid: { color: 'rgba(148,163,184,0.12)' },
-          ticks: {
-            color: '#94A3B8',
-            font: { size: 11 },
-            callback: (v: number) => `${(v / 1000).toFixed(0)}K`,
-          },
+        {
+            label: 'Q3 (Jul-Sep)',
+            value: 3
         },
-        y1: {
-          type: 'linear',
-          position: 'right',
-          grid: { drawOnChartArea: false },
-          ticks: {
+        {
+            label: 'Q4 (Oct-Dec)',
+            value: 4
+        }
+    ];
+
+    // =========================================================
+    // HALF YEAR
+    // =========================================================
+
+    selectedHalf: HalfOption = {
+        label: 'H1 (Jan-Jun)',
+        value: 1
+    };
+
+    halfOptions: HalfOption[] = [
+        {
+            label: 'H1 (Jan-Jun)',
+            value: 1
+        },
+        {
+            label: 'H2 (Jul-Dec)',
+            value: 2
+        }
+    ];
+
+    // =========================================================
+    // STATE OPTIONS
+    // =========================================================
+
+    stateOptions: FilterOption[] = [
+        {
+            label: 'All States',
+            value: null
+        }
+    ];
+
+    // =========================================================
+    // SPN OPTIONS
+    // =========================================================
+
+    spnOptions: FilterOption[] = [
+        {
+            label: 'All SPN',
+            value: null
+        }
+    ];
+
+    // =========================================================
+    // MONTH OPTIONS
+    // =========================================================
+
+    monthOptions: MonthOption[] = [];
+
+    // =========================================================
+    // PIPELINE KPI
+    // =========================================================
+
+    pipelineCards: KpiCard[] = [
+        {
+            label: 'Total Demand',
+            value: '--',
+            icon: 'pi pi-users',
+            color: '#3B82F6',
+            subtitle: 'Open positions'
+        },
+        {
+            label: 'Approval',
+            value: '--',
+            icon: 'pi pi-check-circle',
             color: '#10B981',
-            font: { size: 11 },
-            callback: (v: number) => `${v}%`,
-          },
-          min: 60,
-          max: 80,
+            subtitle: 'Approved demand'
         },
-      },
-    };
-
-    this.workforceTrendData = {
-      labels: [
-        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-      ],
-
-      datasets: [
-
-        /* 2025 EMPLOYEES */
-
         {
-          type: 'line',
-
-          label: '2025 Employees',
-
-          data: [420, 828, 435, 642, 450, 458, 570, 482, 495, 708, 520, 635],
-
-          borderColor: '#1D4ED8',
-          backgroundColor: 'rgba(29,78,216,0.10)',
-
-          fill: true,
-
-          tension: 0.45,
-
-          borderWidth: 2,
-
-          pointRadius: 2,
-          pointHoverRadius: 6,
-
-          pointHoverBackgroundColor: '#ffffff',
-          pointHoverBorderColor: '#1D4ED8',
-          pointHoverBorderWidth: 3
+            label: 'Hiring',
+            value: '--',
+            icon: 'pi pi-briefcase',
+            color: '#F59E0B',
+            subtitle: 'In hiring stage'
         },
-
-        /* 2026 EMPLOYEES */
-
         {
-          type: 'line',
-
-          label: '2026 Employees',
-
-          data: [548, 462, 578, 792, 608, 925, 740, 458, 675, 892, 510, 428],
-
-          borderColor: '#3B82F6',
-          backgroundColor: 'rgba(59,130,246,0.10)',
-
-          fill: true,
-
-          tension: 0.45,
-
-          borderWidth: 2,
-
-          pointRadius: 2,
-          pointHoverRadius: 6,
-
-          pointHoverBackgroundColor: '#ffffff',
-          pointHoverBorderColor: '#3B82F6',
-          pointHoverBorderWidth: 3
+            label: 'Onboarding',
+            value: '--',
+            icon: 'pi pi-id-card',
+            color: '#8B5CF6',
+            subtitle: 'Being onboarded'
         },
-
-        /* 2027 EMPLOYEES */
-
         {
-          type: 'line',
-
-          label: '2027 Employees',
-
-          data: [745, 962, 780, 998, 820, 842, 960, 882, 905, 1128, 945, 960],
-
-          borderColor: '#93C5FD',
-          backgroundColor: 'rgba(147,197,253,0.12)',
-
-          fill: true,
-
-          tension: 0.45,
-
-          borderWidth: 2,
-
-          pointRadius: 2,
-          pointHoverRadius: 6,
-
-          pointHoverBackgroundColor: '#ffffff',
-          pointHoverBorderColor: '#93C5FD',
-          pointHoverBorderWidth: 3
+            label: 'GWO Status',
+            value: '--',
+            icon: 'pi pi-shield',
+            color: '#06B6D4',
+            subtitle: 'GWO cleared'
         }
+    ];
 
-      ]
+    // =========================================================
+    // HEADCOUNT KPI
+    // =========================================================
+
+    headcountCards: KpiCard[] = [
+        {
+            label: 'Active Employees',
+            value: '--',
+            icon: 'pi pi-user-plus',
+            color: '#10B981'
+        },
+        {
+            label: 'Overall Headcount',
+            value: '--',
+            icon: 'pi pi-sitemap',
+            color: '#3B82F6'
+        },
+        {
+            label: 'Resigned Count',
+            value: '--',
+            icon: 'pi pi-user-minus',
+            color: '#EF4444'
+        },
+        {
+            label: 'Total Attrition Rate',
+            value: '--%',
+            icon: 'pi pi-chart-line',
+            color: '#F59E0B'
+        }
+    ];
+
+    // =========================================================
+    // DEMAND BREAKDOWN
+    // =========================================================
+
+    demandBreakdown = {
+        totalApproved: 0,
+        totalPending: 0,
+        existingTransfer: 0,
+        trainedRatio: 0,
+        turnoverRate: 0
     };
 
+    // =========================================================
+    // PERFORMANCE KPI
+    // =========================================================
 
-    this.workforceTrendOptions = {
+    perfKpis = [
+        {
+            label: 'Evaluations Completed',
+            value: 0,
+            icon: 'pi pi-check-square',
+            color: '#10B981'
+        },
+        {
+            label: 'Evaluations Pending',
+            value: 0,
+            icon: 'pi pi-clock',
+            color: '#F59E0B'
+        },
+        {
+            label: 'Completion Rate',
+            value: '0%',
+            icon: 'pi pi-percentage',
+            color: '#3B82F6'
+        },
+        {
+            label: 'Avg Performance Score',
+            value: 0,
+            icon: 'pi pi-star',
+            color: '#8B5CF6'
+        }
+    ];
 
-      responsive: true,
-      maintainAspectRatio: false,
+    // =========================================================
+    // ATTENDANCE KPI
+    // =========================================================
 
-      interaction: {
-        mode: 'index',
-        intersect: false
-      },
+    attendanceKpis = [
+        {
+            label: 'Total Effective Man Days',
+            value: '0',
+            icon: 'pi pi-calendar-times',
+            color: '#06B6D4'
+        },
+        {
+            label: 'Total Present Days',
+            value: '0',
+            icon: 'pi pi-calendar-plus',
+            color: '#10B981'
+        },
+        {
+            label: 'Total Absent Days',
+            value: 0,
+            icon: 'pi pi-calendar-minus',
+            color: '#EF4444'
+        },
+        {
+            label: 'Paid Leaves Taken',
+            value: 0,
+            icon: 'pi pi-sun',
+            color: '#F59E0B'
+        }
+    ];
 
-      animation: {
-        duration: 1200,
-        easing: 'easeOutQuart'
-      },
+    weekOffs = 0;
 
-      plugins: {
+    // =========================================================
+    // RATING
+    // =========================================================
 
-        legend: {
+    ratingData: any[] = [];
 
-          position: 'top',
-          align: 'start',
+    totalEvaluated = 0;
 
-          labels: {
+    // =========================================================
+    // TOP PERFORMERS
+    // =========================================================
 
-            color: '#64748B',
+    topPerformers: TopPerformer[] = [];
 
-            usePointStyle: true,
-            pointStyle: 'circle',
+    // =========================================================
+    // GENERAL VALUES
+    // =========================================================
 
-            boxWidth: 10,
-            boxHeight: 10,
+    attendanceRate = 0;
 
-            padding: 20,
+    completionRate = 0;
 
-            font: {
-              size: 11,
-              weight: '600'
+    totalHiring3Y = 0;
+
+    avgAttritionRate3Y = 0;
+
+    momAttritionRate = 0;
+
+    demandFulfillmentRate = 0;
+
+    retentionRate = 0;
+
+    // =========================================================
+    // CHART DATA
+    // =========================================================
+
+    pipelineChartData: any = null;
+
+    pipelineChartOptions: any = null;
+
+    attendanceChartData: any = null;
+
+    attendanceChartOptions: any = null;
+
+    workforceTrendData: any = null;
+
+    workforceTrendOptions: any = null;
+
+    momAttritionChartData: any = null;
+
+    momAttritionChartOptions: any = null;
+
+    // =========================================================
+    // WORKFORCE DATA LABEL PLUGIN
+    // =========================================================
+
+    workforceTrendPlugins: any[] = [];
+
+    private readonly dataLabelPlugin = {
+        id: 'dataLabelPlugin',
+
+        afterDatasetsDraw(chart: any) {
+            const ctx = chart.ctx;
+
+            chart.data.datasets.forEach((dataset: any, datasetIndex: number) => {
+                const meta = chart.getDatasetMeta(datasetIndex);
+
+                if (meta.hidden) {
+                    return;
+                }
+
+                meta.data.forEach((point: any, index: number) => {
+                    const value = dataset.data[index];
+
+                    if (value === null || value === undefined) {
+                        return;
+                    }
+
+                    ctx.save();
+
+                    ctx.font = '600 10px sans-serif';
+
+                    ctx.fillStyle = dataset.borderColor || '#64748B';
+
+                    ctx.textAlign = 'center';
+
+                    ctx.fillText(String(value), point.x, point.y - 10);
+
+                    ctx.restore();
+                });
+            });
+        }
+    };
+
+    // =========================================================
+    // INIT
+    // =========================================================
+
+    ngOnInit(): void {
+        this.workforceTrendPlugins = [this.dataLabelPlugin];
+
+        this.loadAvailableYears();
+
+        this.loadStates();
+    }
+
+    // =========================================================
+    // LOAD AVAILABLE YEARS
+    // =========================================================
+
+    private loadAvailableYears(): void {
+        this.apiService.getAvailableYears({}).subscribe({
+            next: (response: any) => {
+                console.log('Available Years API Response:', response);
+
+                const data = response?.data ?? response ?? [];
+
+                this.yearOptions = Array.isArray(data)
+                    ? data
+                          .map((year: any) => Number(year))
+                          .filter((year: number) => Number.isFinite(year))
+                          .sort((a: number, b: number) => a - b)
+                    : [];
+
+                if (this.yearOptions.length === 0) {
+                    this.yearOptions = [new Date().getFullYear()];
+                }
+
+                if (!this.yearOptions.includes(this.selectedYear)) {
+                    this.selectedYear = this.yearOptions[this.yearOptions.length - 1];
+                }
+
+                this.updateMonthOptions();
+
+                this.loadDashboard();
+            },
+
+            error: (error: any) => {
+                console.error('Available Years API Error:', error);
+
+                this.yearOptions = [new Date().getFullYear()];
+
+                this.updateMonthOptions();
+
+                this.loadDashboard();
             }
-          }
-        },
+        });
+    }
 
-        tooltip: {
+    // =========================================================
+    // LOAD STATES
+    // =========================================================
 
-          backgroundColor: 'rgba(15,23,42,0.96)',
+    private loadStates(): void {
+        this.apiService.getActiveClusters({}).subscribe({
+            next: (response: any) => {
+                console.log('Cluster API Response:', response);
 
-          titleColor: '#FFFFFF',
-          bodyColor: '#CBD5E1',
+                const data = response?.data ?? response ?? [];
 
-          borderColor: 'rgba(148,163,184,0.12)',
-          borderWidth: 1,
+                const clusters = Array.isArray(data) ? data : [];
 
-          cornerRadius: 16,
+                const options: FilterOption[] = clusters
+                    .map((cluster: any) => {
+                        const value = cluster?.clusterName ?? cluster?.name ?? cluster?.clusterCode ?? null;
 
-          padding: 14,
+                        return {
+                            label: String(value ?? '--'),
+                            value: value !== null ? String(value) : null
+                        };
+                    })
+                    .filter((item: FilterOption) => item.value !== null);
 
-          displayColors: true,
+                this.stateOptions = [
+                    {
+                        label: 'All States',
+                        value: null
+                    },
+                    ...options
+                ];
+            },
 
-          titleFont: {
-            size: 13,
-            weight: '600'
-          },
+            error: (error: any) => {
+                console.error('Cluster API Error:', error);
 
-          bodyFont: {
-            size: 12
-          }
-        }
-
-      },
-
-      layout: {
-        padding: {
-          top: 10,
-          left: 6,
-          right: 10,
-          bottom: 4
-        }
-      },
-
-      scales: {
-
-        /* ═══════════════════════════════════ */
-        /* X AXIS                             */
-        /* ═══════════════════════════════════ */
-
-        x: {
-
-          grid: {
-            display: false,
-            drawBorder: false
-          },
-
-          border: {
-            display: false
-          },
-
-          ticks: {
-
-            color: '#94A3B8',
-
-            padding: 10,
-
-            font: {
-              size: 11,
-              weight: '500'
+                this.stateOptions = [
+                    {
+                        label: 'All States',
+                        value: null
+                    }
+                ];
             }
-          }
-        },
+        });
+    }
 
-        /* ═══════════════════════════════════ */
-        /* Y AXIS                             */
-        /* ═══════════════════════════════════ */
+    // =========================================================
+    // LOAD SPN BASED ON STATE
+    // =========================================================
 
-        y: {
+    private loadSpnOptions(): void {
+        const state = this.selectedState?.value ?? null;
 
-          type: 'linear',
-          position: 'left',
+        const request = {
+            state
+        };
 
-          grid: {
-            color: 'rgba(148,163,184,0.07)',
-            drawBorder: false
-          },
+        console.log('SPN Request:', request);
 
-          border: {
-            display: false
-          },
+        this.apiService.getSpnOptionsForState(request).subscribe({
+            next: (response: any) => {
+                console.log('SPN API Response:', response);
 
-          ticks: {
+                const data = response?.data ?? response ?? [];
 
-            color: '#64748B',
+                const spns = Array.isArray(data) ? data : [];
 
-            padding: 12,
+                const options: FilterOption[] = spns
+                    .map((item: any) => {
+                        const value = item?.spnCode ?? item?.code ?? item?.spn ?? null;
 
-            font: {
-              size: 11
+                        return {
+                            label: String(value ?? '--'),
+                            value: value !== null ? String(value) : null
+                        };
+                    })
+                    .filter((item: FilterOption) => item.value !== null);
+
+                this.spnOptions = [
+                    {
+                        label: 'All SPN',
+                        value: null
+                    },
+                    ...options
+                ];
+
+                this.selectedSPN = this.spnOptions[0] ?? null;
+            },
+
+            error: (error: any) => {
+                console.error('SPN API Error:', error);
+
+                this.spnOptions = [
+                    {
+                        label: 'All SPN',
+                        value: null
+                    }
+                ];
+
+                this.selectedSPN = this.spnOptions[0];
             }
-          },
+        });
+    }
 
-          title: {
-            display: false
-          }
+    // =========================================================
+    // UPDATE MONTH OPTIONS
+    // =========================================================
+
+    private updateMonthOptions(): void {
+        if (this.periodType !== 'MONTH') {
+            return;
         }
 
-      }
-    };
+        this.monthOptions = this.buildMonthOptions(this.selectedYear);
 
+        if (this.monthOptions.length === 0) {
+            this.selectedMonth = null;
 
-    this.attritionTrendData = {
-      labels: ['2025', '2026', '2027'],
-      datasets: [
-        {
-          type: 'bar',
-          label: 'Hiring',
-          data: [820, 960, 1067],
-          backgroundColor: 'rgba(59,130,246,0.75)',
-          borderRadius: 6,
-          yAxisID: 'y'
-        },
-        {
-          type: 'line',
-          label: 'Attrition %',
-          data: [14, 12, 10],
-          borderColor: '#EF4444',
-          backgroundColor: 'rgba(239,68,68,0.1)',
-          borderWidth: 2.5,
-          tension: 0.4,
-          fill: true,
-          pointRadius: 4,
-          pointBackgroundColor: '#EF4444',
-          yAxisID: 'y1'
+            return;
         }
-      ]
-    };
 
-    this.attritionTrendOptions = {
-      responsive: true,
-      maintainAspectRatio: false,
-      interaction: {
-        mode: 'index',
-        intersect: false
-      },
-      plugins: {
-        legend: {
-          labels: {
-            color: '#64748B',
-            usePointStyle: true
-          }
-        }
-      },
-      scales: {
-        x: {
-          grid: {
-            display: false
-          },
-          ticks: {
-            color: '#94A3B8'
-          }
-        },
-        y: {
-          type: 'linear',
-          position: 'left',
-          grid: {
-            color: 'rgba(148,163,184,0.12)'
-          },
-          ticks: {
-            color: '#94A3B8'
-          }
-        },
-        y1: {
-          type: 'linear',
-          position: 'right',
-          grid: {
-            drawOnChartArea: false
-          },
-          ticks: {
-            color: '#EF4444',
-            callback: (value: number) => value + '%'
-          },
-          min: 0,
-          max: 20
-        }
-      }
-    };
-  }
+        const currentSelected = this.selectedMonth?.value;
 
-  getRankIcon(rank: number): string {
-    if (rank === 1) return 'pi pi-trophy';
-    if (rank === 2) return 'pi pi-star-fill';
-    return 'pi pi-star';
-  }
+        const selectedStillExists = this.monthOptions.some((month) => month.value === currentSelected);
+
+        if (!selectedStillExists) {
+            this.selectedMonth = this.monthOptions[this.monthOptions.length - 1];
+        }
+    }
+
+    // =========================================================
+    // BUILD MONTH OPTIONS
+    // =========================================================
+
+    private buildMonthOptions(year: number): MonthOption[] {
+        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+        const monthKeys = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+
+        const result: MonthOption[] = [];
+
+        const now = new Date();
+
+        const currentYear = now.getFullYear();
+
+        const currentMonth = now.getMonth();
+
+        for (let month = 0; month < 12; month++) {
+            if (year > currentYear || (year === currentYear && month > currentMonth)) {
+                break;
+            }
+
+            result.push({
+                label: `${monthNames[month]} ${year}`,
+
+                value: `${monthKeys[month]}${year}`
+            });
+        }
+
+        return result;
+    }
+
+    // =========================================================
+    // LOAD DASHBOARD
+    // =========================================================
+
+    private loadDashboard(): void {
+        const request = this.buildDashboardRequest();
+
+        console.log('Dashboard Request:', request);
+
+        this.isLoading = true;
+
+        this.apiService.getDashboardSummary(request).subscribe({
+            next: (response: any) => {
+                console.log('Dashboard API Response:', response);
+
+                this.dashboardData = response?.data ?? response ?? {};
+
+                this.applyDashboardData();
+
+                this.initCharts();
+
+                this.isLoading = false;
+            },
+
+            error: (error: any) => {
+                console.error('Dashboard API Error:', error);
+
+                this.dashboardData = {};
+
+                this.resetDashboard();
+
+                this.initCharts();
+
+                this.isLoading = false;
+            }
+        });
+    }
+
+    // =========================================================
+    // BUILD DASHBOARD REQUEST
+    // =========================================================
+
+    private buildDashboardRequest(): any {
+        let year = Number(this.selectedYear);
+
+        let month: number | null = null;
+
+        let quarter: number | null = null;
+
+        let half: number | null = null;
+
+        // -----------------------------------------------------
+        // MONTH
+        // -----------------------------------------------------
+
+        if (this.periodType === 'MONTH') {
+            if (this.selectedMonth?.value) {
+                const parsed = this.parseMonthValue(this.selectedMonth.value);
+                year = parsed.year;
+                month = parsed.month;
+            } else {
+                month = null;
+            }
+        }
+
+        // -----------------------------------------------------
+        // QUARTER
+        // -----------------------------------------------------
+
+        if (this.periodType === 'QUARTER') {
+            quarter = this.selectedQuarter?.value ?? null;
+        }
+
+        // -----------------------------------------------------
+        // HALF YEAR
+        // -----------------------------------------------------
+
+        if (this.periodType === 'HALF_YEAR') {
+            half = this.selectedHalf?.value ?? null;
+        }
+
+        // -----------------------------------------------------
+        // REQUEST
+        // -----------------------------------------------------
+
+        return {
+            year,
+            month,
+
+            state: this.selectedState?.value ?? null,
+
+            spn: this.selectedSPN?.value ?? null,
+
+            periodType: this.periodType,
+
+            quarter,
+
+            half
+        };
+    }
+
+    // =========================================================
+    // PARSE MONTH
+    // =========================================================
+
+    private parseMonthValue(value: string): {
+        year: number;
+        month: number | null;
+    } {
+        if (!value) {
+            const now = new Date();
+
+            return {
+                year: now.getFullYear(),
+                month: now.getMonth() + 1
+            };
+        }
+
+        const match = value.match(/^([a-z]{3})(\d{4})$/i);
+
+        if (!match) {
+            const now = new Date();
+
+            return {
+                year: now.getFullYear(),
+                month: now.getMonth() + 1
+            };
+        }
+
+        const monthKeys = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+
+        const monthIndex = monthKeys.indexOf(match[1].toLowerCase());
+
+        return {
+            year: Number(match[2]),
+
+            month: monthIndex >= 0 ? monthIndex + 1 : null
+        };
+    }
+
+    // =========================================================
+    // STATE CHANGE
+    // =========================================================
+
+    onStateChange(): void {
+        console.log('Selected State:', this.selectedState);
+
+        this.selectedSPN = null;
+
+        // -----------------------------------------------------
+        // SPECIFIC STATE
+        // -----------------------------------------------------
+
+        if (this.selectedState?.value) {
+            this.loadSpnOptions();
+
+            /*
+             * Do not immediately call loadDashboard()
+             * because loadSpnOptions() is asynchronous.
+             *
+             * Otherwise the dashboard can be called twice.
+             */
+
+            this.loadDashboard();
+
+            return;
+        }
+
+        // -----------------------------------------------------
+        // ALL STATES
+        // -----------------------------------------------------
+
+        this.spnOptions = [
+            {
+                label: 'All SPN',
+                value: null
+            }
+        ];
+
+        this.selectedSPN = this.spnOptions[0];
+
+        this.loadDashboard();
+    }
+
+    // =========================================================
+    // SPN CHANGE
+    // =========================================================
+
+    onSPNChange(): void {
+        console.log('Selected SPN:', this.selectedSPN);
+
+        this.loadDashboard();
+    }
+
+    // =========================================================
+    // MONTH CHANGE
+    // =========================================================
+
+    onMonthChange(): void {
+        console.log('Selected Month:', this.selectedMonth);
+
+        this.loadDashboard();
+    }
+
+    // =========================================================
+    // PERIOD TYPE CHANGE
+    // =========================================================
+
+    onPeriodTypeChange(): void {
+        console.log('Selected Period Type:', this.periodType);
+
+        if (this.periodType === 'MONTH') {
+            this.updateMonthOptions();
+        }
+
+        this.loadDashboard();
+    }
+
+    // =========================================================
+    // YEAR CHANGE
+    // =========================================================
+
+    onYearChange(): void {
+        console.log('Selected Year:', this.selectedYear);
+
+        if (this.periodType === 'MONTH') {
+            this.monthOptions = this.buildMonthOptions(this.selectedYear);
+
+            this.selectedMonth = this.monthOptions[this.monthOptions.length - 1] ?? null;
+        }
+
+        this.loadDashboard();
+    }
+
+    // =========================================================
+    // QUARTER CHANGE
+    // =========================================================
+
+    onQuarterChange(): void {
+        console.log('Selected Quarter:', this.selectedQuarter);
+
+        this.loadDashboard();
+    }
+
+    // =========================================================
+    // HALF YEAR CHANGE
+    // =========================================================
+
+    onHalfChange(): void {
+        console.log('Selected Half-Year:', this.selectedHalf);
+
+        this.loadDashboard();
+    }
+
+    // =========================================================
+    // COMMON FILTER CHANGE
+    // =========================================================
+
+    onFilterChange(): void {
+        console.log('Filter Changed:', {
+            periodType: this.periodType,
+
+            year: this.selectedYear,
+
+            quarter: this.selectedQuarter,
+
+            half: this.selectedHalf
+        });
+
+        this.loadDashboard();
+    }
+
+    // =========================================================
+    // SELECTED PERIOD LABEL
+    // =========================================================
+
+    getSelectedPeriodLabel(): string {
+        switch (this.periodType) {
+            case 'MONTH':
+                return this.selectedMonth?.label ?? `${this.selectedYear}`;
+
+            case 'QUARTER':
+                return `${this.selectedQuarter?.label ?? 'Quarter'} ` + `${this.selectedYear}`;
+
+            case 'HALF_YEAR':
+                return `${this.selectedHalf?.label ?? 'Half-Year'} ` + `${this.selectedYear}`;
+
+            case 'YEAR':
+                return `${this.selectedYear}`;
+
+            default:
+                return `${this.selectedYear}`;
+        }
+    }
+
+    // =========================================================
+    // APPLY DASHBOARD DATA
+    // =========================================================
+
+    private applyDashboardData(): void {
+        const d = this.dashboardData ?? {};
+
+        // =====================================================
+        // PIPELINE
+        // =====================================================
+
+        this.pipelineCards[0].value = d?.totalDemands ?? '--';
+
+        this.pipelineCards[1].value = Number(d?.approvedDemands ?? 0);
+
+        this.pipelineCards[2].value = this.extractDemandStatusCount(d?.demandStatus, 'Processing');
+
+        this.pipelineCards[3].value = d?.onboarding ?? '--';
+
+        this.pipelineCards[4].value = d?.gwoCleared ?? '--';
+
+        // =====================================================
+        // HEADCOUNT
+        // =====================================================
+
+        this.headcountCards[0].value = d?.totalEmployees ?? '--';
+
+        this.headcountCards[0].trend = this.toNullableNumber(d?.totalEmployeesTrend?.percentChange);
+
+        this.headcountCards[1].value = d?.overallHeadcount ?? '--';
+
+        this.headcountCards[2].value = d?.resignedCountTotal ?? '--';
+
+        this.headcountCards[3].value = d?.attritionRate != null ? `${d.attritionRate}%` : '--%';
+
+        this.headcountCards[3].trend = this.toNullableNumber(d?.attritionRateTrend);
+
+        // =====================================================
+        // DEMAND BREAKDOWN
+        // =====================================================
+
+        const totalEmployees = Number(d?.totalEmployees ?? 0);
+
+        const gwoCleared = Number(d?.gwoCleared ?? 0);
+
+        this.demandBreakdown = {
+            totalApproved: Number(d?.approvedDemands ?? 0),
+
+            totalPending: Number(d?.pendingApprovals ?? 0),
+
+            existingTransfer: Number(d?.existingTransfer ?? 0),
+
+            trainedRatio: totalEmployees > 0 ? Math.round((gwoCleared / totalEmployees) * 1000) / 10 : 0,
+
+            turnoverRate: Number(d?.turnoverRate ?? 0)
+        };
+
+        // =====================================================
+        // PERFORMANCE
+        // =====================================================
+
+        this.perfKpis[0].value = Number(d?.evaluationsCompleted ?? 0);
+
+        this.perfKpis[1].value = Number(d?.evaluationsPending ?? 0);
+
+        this.perfKpis[2].value = d?.completionRate != null ? `${d.completionRate}%` : '0%';
+
+        this.perfKpis[3].value = Number(d?.avgPerformanceScore ?? 0);
+
+        this.completionRate = Number(d?.completionRate ?? 0);
+
+        // =====================================================
+        // TOP PERFORMERS
+        // =====================================================
+
+        const performers = Array.isArray(d?.topPerformers) ? d.topPerformers : [];
+
+        this.topPerformers = performers.map((p: any, index: number) => {
+            const rank = index + 1;
+
+            return {
+                rank,
+
+                rankLabel: `${rank}${this.getRankSuffix(rank)}`,
+
+                name: p?.candidateName ?? p?.name ?? '--',
+
+                project: p?.projectCode ?? p?.project ?? '--',
+
+                cluster: p?.clusterName ?? p?.cluster ?? '--',
+
+                score: Number(p?.score ?? 0),
+
+                rating: p?.rating ?? '--'
+            };
+        });
+
+        // =====================================================
+        // RATING DISTRIBUTION
+        // =====================================================
+        const ratings = Array.isArray(d?.sitePerformanceRating) ? d.sitePerformanceRating : [];
+
+        this.totalEvaluated = ratings.reduce((sum: number, item: any) => sum + Number(item?.count ?? 0), 0);
+
+        this.ratingData = ratings.map((item: any) => ({
+            grade: item?.rating ?? '--',
+            count: Number(item?.count ?? 0),
+            percent: this.totalEvaluated > 0 ? Math.round((Number(item?.count ?? 0) / this.totalEvaluated) * 1000) / 10 : 0
+        }));
+
+        const gradeOrder = ['A', 'B+', 'B', 'C', 'D'];
+
+        this.ratingData.sort((a, b) => gradeOrder.indexOf(a.grade) - gradeOrder.indexOf(b.grade));
+        // =====================================================
+        // ATTENDANCE
+        // =====================================================
+
+        const attendance = d?.attendanceSummary ?? {};
+
+        this.attendanceKpis[0].value = attendance?.effectiveManDays != null ? Number(attendance.effectiveManDays).toLocaleString() : '0';
+
+        this.attendanceKpis[1].value = attendance?.presentDays != null ? Number(attendance.presentDays).toLocaleString() : '0';
+
+        this.attendanceKpis[2].value = Number(attendance?.absentDays ?? 0);
+
+        this.attendanceKpis[3].value = Number(attendance?.paidLeaves ?? 0);
+
+        this.weekOffs = Number(attendance?.weekOffs ?? 0);
+
+        this.attendanceRate = Number(attendance?.attendanceRatePercent ?? 0);
+
+        // =====================================================
+        // TRENDS
+        // =====================================================
+
+        this.totalHiring3Y = Number(d?.totalHiring3Y ?? 0);
+
+        this.avgAttritionRate3Y = Number(d?.avgAttritionRate3Y ?? 0);
+
+        this.momAttritionRate = Number(d?.momAttritionRate ?? 0);
+
+        this.demandFulfillmentRate = Number(d?.demandFulfillmentRate ?? 0);
+
+        this.retentionRate = Number(d?.retentionRate ?? 0);
+    }
+
+    // =========================================================
+    // DEMAND STATUS
+    // =========================================================
+
+    private extractDemandStatusCount(demandStatus: any, label: string): number {
+        if (!Array.isArray(demandStatus)) {
+            return 0;
+        }
+
+        const item = demandStatus.find((status: any) => String(status?.status ?? '').toLowerCase() === label.toLowerCase());
+
+        return Number(item?.count ?? 0);
+    }
+
+    // =========================================================
+    // NUMBER HELPER
+    // =========================================================
+
+    private toNullableNumber(value: any): number | undefined {
+        if (value === null || value === undefined || value === '') {
+            return undefined;
+        }
+
+        const numberValue = Number(value);
+
+        return Number.isFinite(numberValue) ? numberValue : undefined;
+    }
+
+    // =========================================================
+    // RANK SUFFIX
+    // =========================================================
+
+    private getRankSuffix(rank: number): string {
+        if (rank % 100 >= 11 && rank % 100 <= 13) {
+            return 'th';
+        }
+
+        switch (rank % 10) {
+            case 1:
+                return 'st';
+
+            case 2:
+                return 'nd';
+
+            case 3:
+                return 'rd';
+
+            default:
+                return 'th';
+        }
+    }
+
+    // =========================================================
+    // RESET DASHBOARD
+    // =========================================================
+
+    private resetDashboard(): void {
+        // -----------------------------------------------------
+        // Pipeline
+        // -----------------------------------------------------
+
+        this.pipelineCards.forEach((card) => {
+            card.value = '--';
+
+            card.trend = undefined;
+        });
+
+        // -----------------------------------------------------
+        // Headcount
+        // -----------------------------------------------------
+
+        this.headcountCards.forEach((card) => {
+            card.value = '--';
+
+            card.trend = undefined;
+        });
+
+        // -----------------------------------------------------
+        // Demand
+        // -----------------------------------------------------
+
+        this.demandBreakdown = {
+            totalApproved: 0,
+
+            totalPending: 0,
+
+            existingTransfer: 0,
+
+            trainedRatio: 0,
+
+            turnoverRate: 0
+        };
+
+        // -----------------------------------------------------
+        // Performance
+        // -----------------------------------------------------
+
+        this.perfKpis[0].value = 0;
+
+        this.perfKpis[1].value = 0;
+
+        this.perfKpis[2].value = '0%';
+
+        this.perfKpis[3].value = 0;
+
+        this.completionRate = 0;
+
+        // -----------------------------------------------------
+        // Attendance
+        // -----------------------------------------------------
+
+        this.attendanceKpis[0].value = '0';
+
+        this.attendanceKpis[1].value = '0';
+
+        this.attendanceKpis[2].value = 0;
+
+        this.attendanceKpis[3].value = 0;
+
+        this.weekOffs = 0;
+
+        this.attendanceRate = 0;
+
+        // -----------------------------------------------------
+        // Rating
+        // -----------------------------------------------------
+
+        this.ratingData = [];
+
+        this.totalEvaluated = 0;
+
+        // -----------------------------------------------------
+        // Performers
+        // -----------------------------------------------------
+
+        this.topPerformers = [];
+
+        // -----------------------------------------------------
+        // Trends
+        // -----------------------------------------------------
+
+        this.totalHiring3Y = 0;
+
+        this.avgAttritionRate3Y = 0;
+
+        this.momAttritionRate = 0;
+
+        this.demandFulfillmentRate = 0;
+
+        this.retentionRate = 0;
+
+        // -----------------------------------------------------
+        // Charts
+        // -----------------------------------------------------
+
+        this.pipelineChartData = null;
+
+        this.attendanceChartData = null;
+
+        this.workforceTrendData = null;
+
+        this.momAttritionChartData = null;
+
+        this.momAttritionChartOptions = null;
+    }
+
+    // =========================================================
+    // INITIALIZE CHARTS
+    // =========================================================
+
+    private initCharts(): void {
+        const d = this.dashboardData ?? {};
+
+        // =====================================================
+        // PIPELINE CHART
+        // =====================================================
+
+        const totalDemand = Number(d?.totalDemands ?? 0);
+
+        const approved = Number(d?.approvedDemands ?? 0);
+
+        const processing = this.extractDemandStatusCount(d?.demandStatus, 'Processing');
+
+        const onboarding = Number(d?.onboarding ?? 0);
+
+        const gwo = Number(d?.gwoCleared ?? 0);
+
+        this.pipelineChartData = {
+            labels: ['Total Demand', 'Approved', 'In Hiring', 'Onboarding', 'GWO'],
+
+            datasets: [
+                {
+                    label: 'Count',
+
+                    data: [totalDemand, approved, processing, onboarding, gwo],
+
+                    backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#8B5CF6', '#06B6D4'],
+
+                    borderRadius: 5,
+
+                    borderSkipped: false
+                }
+            ]
+        };
+
+        this.pipelineChartOptions = {
+            indexAxis: 'y',
+
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+
+            scales: {
+                x: {
+                    beginAtZero: true,
+
+                    grid: {
+                        color: 'rgba(148,163,184,0.1)'
+                    },
+
+                    ticks: {
+                        color: '#94A3B8',
+
+                        font: {
+                            size: 11
+                        }
+                    }
+                },
+
+                y: {
+                    grid: {
+                        display: false
+                    },
+
+                    ticks: {
+                        color: '#475569',
+
+                        font: {
+                            size: 12,
+                            weight: '600'
+                        }
+                    }
+                }
+            }
+        };
+
+        // =====================================================
+        // ATTENDANCE CHART
+        // =====================================================
+
+        const attendanceTrend = Array.isArray(d?.attendanceTrend) ? d.attendanceTrend : [];
+
+        this.attendanceChartData = {
+            labels: attendanceTrend.map((item: any) => item?.month ?? ''),
+
+            datasets: [
+                {
+                    type: 'bar',
+
+                    label: 'Effective Man Days',
+
+                    data: attendanceTrend.map((item: any) => (item?.effectiveManDays == null ? null : Number(item.effectiveManDays))),
+
+                    backgroundColor: 'rgba(59,130,246,0.75)',
+
+                    borderRadius: 5,
+
+                    yAxisID: 'y'
+                },
+
+                {
+                    type: 'line',
+
+                    label: 'Attendance Rate %',
+
+                    data: attendanceTrend.map((item: any) => (item?.attendanceRatePercent == null ? null : Number(item.attendanceRatePercent))),
+
+                    borderColor: '#10B981',
+
+                    backgroundColor: 'rgba(16,185,129,0.08)',
+
+                    borderWidth: 2.5,
+
+                    tension: 0.4,
+
+                    fill: true,
+
+                    pointRadius: 5,
+
+                    pointBackgroundColor: '#10B981',
+
+                    yAxisID: 'y1'
+                }
+            ]
+        };
+
+        this.attendanceChartOptions = {
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+            spanGaps: false,
+
+            interaction: {
+                mode: 'index',
+                intersect: false
+            },
+
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#64748B',
+
+                        font: {
+                            size: 11
+                        },
+
+                        usePointStyle: true
+                    }
+                }
+            },
+
+            scales: {
+                x: {
+                    grid: {
+                        display: false
+                    },
+
+                    ticks: {
+                        color: '#94A3B8'
+                    }
+                },
+
+                y: {
+                    type: 'linear',
+
+                    position: 'left',
+
+                    beginAtZero: true,
+
+                    grid: {
+                        color: 'rgba(148,163,184,0.12)'
+                    },
+
+                    ticks: {
+                        color: '#94A3B8',
+
+                        callback: (value: number) => `${(Number(value) / 1000).toFixed(0)}K`
+                    }
+                },
+
+                y1: {
+                    type: 'linear',
+
+                    position: 'right',
+
+                    beginAtZero: true,
+
+                    max: 100,
+
+                    grid: {
+                        drawOnChartArea: false
+                    },
+
+                    ticks: {
+                        color: '#10B981',
+
+                        callback: (value: number) => `${value}%`
+                    }
+                }
+            }
+        };
+
+        this.attendanceChartOptions = {
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+            interaction: {
+                mode: 'index',
+                intersect: false
+            },
+
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#64748B',
+
+                        font: {
+                            size: 11
+                        },
+
+                        usePointStyle: true
+                    }
+                }
+            },
+
+            scales: {
+                x: {
+                    grid: {
+                        display: false
+                    },
+
+                    ticks: {
+                        color: '#94A3B8'
+                    }
+                },
+
+                y: {
+                    type: 'linear',
+
+                    position: 'left',
+
+                    beginAtZero: true,
+
+                    grid: {
+                        color: 'rgba(148,163,184,0.12)'
+                    },
+
+                    ticks: {
+                        color: '#94A3B8',
+
+                        callback: (value: number) => `${(Number(value) / 1000).toFixed(0)}K`
+                    }
+                },
+
+                y1: {
+                    type: 'linear',
+
+                    position: 'right',
+
+                    beginAtZero: true,
+
+                    max: 100,
+
+                    grid: {
+                        drawOnChartArea: false
+                    },
+
+                    ticks: {
+                        color: '#10B981',
+
+                        callback: (value: number) => `${value}%`
+                    }
+                }
+            }
+        };
+
+        // =====================================================
+        // WORKFORCE TREND
+        // =====================================================
+
+        const workforceTrend = Array.isArray(d?.workforceTrend) ? d.workforceTrend : [];
+
+        this.workforceTrendData = {
+            labels: workforceTrend.map((item: any) => item?.month ?? ''),
+
+            datasets: [
+                {
+                    label: `${d?.workforceTrendYear1 ?? ''} Employees`,
+
+                    data: workforceTrend.map((item: any) => (item?.employeesYear1 == null ? null : Number(item.employeesYear1))),
+
+                    borderColor: '#2456C7',
+                    backgroundColor: 'rgba(36,86,199,0.12)',
+
+                    borderWidth: 2,
+                    tension: 0.4,
+
+                    fill: true,
+
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    pointBackgroundColor: '#2456C7'
+                },
+
+                {
+                    label: `${d?.workforceTrendYear2 ?? ''} Employees`,
+
+                    data: workforceTrend.map((item: any) => (item?.employeesYear2 == null ? null : Number(item.employeesYear2))),
+
+                    borderColor: '#4387E8',
+                    backgroundColor: 'rgba(67,135,232,0.08)',
+
+                    borderWidth: 2,
+                    tension: 0.4,
+
+                    fill: true,
+
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    pointBackgroundColor: '#4387E8'
+                },
+
+                {
+                    label: `${d?.workforceTrendYear3 ?? ''} Employees`,
+
+                    data: workforceTrend.map((item: any) => (item?.employeesYear3 == null ? null : Number(item.employeesYear3))),
+
+                    borderColor: '#8FC1F1',
+                    backgroundColor: 'rgba(143,193,241,0.10)',
+
+                    borderWidth: 2,
+                    tension: 0.4,
+
+                    fill: true,
+
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    pointBackgroundColor: '#8FC1F1'
+                }
+            ]
+        };
+
+        this.workforceTrendOptions = {
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+            spanGaps: false,
+
+            interaction: {
+                mode: 'index',
+
+                intersect: false
+            },
+
+            plugins: {
+                legend: {
+                    display: true,
+
+                    position: 'top',
+
+                    align: 'start',
+
+                    labels: {
+                        usePointStyle: true,
+
+                        pointStyle: 'circle',
+
+                        color: '#64748B',
+
+                        padding: 16,
+
+                        font: {
+                            size: 12,
+
+                            weight: '500'
+                        }
+                    }
+                },
+
+                tooltip: {
+                    enabled: true,
+
+                    mode: 'index',
+
+                    intersect: false
+                }
+            },
+
+            scales: {
+                x: {
+                    grid: {
+                        display: false
+                    },
+
+                    ticks: {
+                        color: '#94A3B8',
+
+                        font: {
+                            size: 11
+                        }
+                    }
+                },
+
+                y: {
+                    beginAtZero: true,
+
+                    grid: {
+                        color: 'rgba(148,163,184,0.12)',
+
+                        drawBorder: false
+                    },
+
+                    ticks: {
+                        color: '#64748B',
+
+                        font: {
+                            size: 11
+                        },
+
+                        callback: (value: number) => Number(value).toLocaleString()
+                    }
+                }
+            }
+        };
+
+        // =====================================================
+        // MOM ATTRITION
+        // =====================================================
+
+        const momTrend = Array.isArray(d?.momAttritionTrend) ? d.momAttritionTrend : [];
+
+        this.momAttritionChartData = {
+            labels: momTrend.map((item: any) => item?.month ?? ''),
+
+            datasets: [
+                {
+                    label: 'MoM Attrition Rate %',
+
+                    data: momTrend.map((item: any) => (item?.momAttritionRate == null ? null : Number(item.momAttritionRate))),
+
+                    borderColor: '#EF4444',
+
+                    backgroundColor: 'rgba(239,68,68,0.08)',
+
+                    borderWidth: 2,
+
+                    tension: 0.4,
+
+                    fill: true,
+
+                    pointRadius: 4,
+
+                    pointHoverRadius: 6,
+
+                    pointBackgroundColor: '#EF4444',
+
+                    spanGaps: false
+                }
+            ]
+        };
+
+        this.momAttritionChartOptions = {
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+            spanGaps: false,
+
+            interaction: {
+                mode: 'index',
+
+                intersect: false
+            },
+
+            plugins: {
+                legend: {
+                    display: true,
+
+                    position: 'top',
+
+                    align: 'start',
+
+                    labels: {
+                        usePointStyle: true,
+
+                        pointStyle: 'circle',
+
+                        color: '#64748B',
+
+                        padding: 16,
+
+                        font: {
+                            size: 12,
+
+                            weight: '500'
+                        }
+                    }
+                },
+
+                tooltip: {
+                    enabled: true,
+
+                    mode: 'index',
+
+                    intersect: false,
+
+                    callbacks: {
+                        label: (context: any) => {
+                            const value = context?.parsed?.y;
+
+                            return value == null ? 'MoM Attrition Rate: --' : `MoM Attrition Rate: ${value}%`;
+                        }
+                    }
+                }
+            },
+
+            scales: {
+                x: {
+                    grid: {
+                        display: false
+                    },
+
+                    ticks: {
+                        color: '#94A3B8',
+
+                        font: {
+                            size: 11
+                        }
+                    }
+                },
+
+                y: {
+                    beginAtZero: true,
+
+                    grid: {
+                        color: 'rgba(148,163,184,0.12)',
+
+                        drawBorder: false
+                    },
+
+                    ticks: {
+                        color: '#64748B',
+
+                        font: {
+                            size: 11
+                        },
+
+                        callback: (value: number) => `${value}%`
+                    }
+                }
+            }
+        };
+    }
+
+    // =========================================================
+    // RANK ICON
+    // =========================================================
+
+    getRankIcon(rank: number): string {
+        if (rank === 1) {
+            return 'pi pi-trophy';
+        }
+
+        if (rank === 2) {
+            return 'pi pi-star-fill';
+        }
+
+        return 'pi pi-star';
+    }
+
+    // =========================================================
+    // TAB CHANGE
+    // =========================================================
+
+    changeTab(tab: 'overview' | 'performance' | 'trends'): void {
+        this.activeTab = tab;
+    }
+
+    // =========================================================
+    // REFRESH
+    // =========================================================
+
+    refreshDashboard(): void {
+        this.loadDashboard();
+    }
+
+    // =========================================================
+    // EXPORT
+    // =========================================================
+
+    exportDashboard(): void {
+        console.log('Export dashboard');
+
+        // Add Excel/PDF export logic here.
+    }
 }

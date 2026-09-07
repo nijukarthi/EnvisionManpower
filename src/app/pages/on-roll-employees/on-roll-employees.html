@@ -4,33 +4,22 @@
             <h5 class="m-0">On-roll Employees</h5>
 
             @if (selectedStatuses.length) {
-                <div class="flex items-center gap-2 px-4 py-2 rounded-4xl
-                    border-2 border-blue-500 bg-blue-50 -mt-2">
-                    <i class="pi pi-filter text-blue-600"></i>
-                    <span class="text-sm font-semibold text-blue-800">
-                        Status
-                    </span>
+            <div class="flex items-center gap-2 px-4 py-2 rounded-4xl border-2 border-blue-500 bg-blue-50 -mt-2">
+                <i class="pi pi-filter text-blue-600"></i>
+                <span class="text-sm font-semibold text-blue-800"> Status </span>
 
-                    <div class="flex flex-wrap gap-2">
-                        @for (status of selectedStatuses; track $index) {
-                            <p-tag 
-                                [severity]="getSeverity(status)"
-                                [rounded]="true"
-                                class="cursor-default flex items-center gap-2 px-3 py-1">
+                <div class="flex flex-wrap gap-2">
+                    @for (status of selectedStatuses; track $index) {
+                    <p-tag [severity]="getSeverity(status)" [rounded]="true" class="cursor-default flex items-center gap-2 px-3 py-1">
+                        <!-- Label -->
+                        <span>{{ status }}</span>
 
-                                <!-- Label -->
-                                <span>{{ status }}</span>
-
-                                <!-- Close Icon -->
-                                <i 
-                                    class="pi pi-times text-base cursor-pointer"
-                                    (click)="removeStatus(status, $event)">
-                                </i>
-
-                            </p-tag>
-                        }
-                    </div>
+                        <!-- Close Icon -->
+                        <i class="pi pi-times text-base cursor-pointer" (click)="removeStatus(status, $event)"> </i>
+                    </p-tag>
+                    }
                 </div>
+            </div>
             }
         </div>
         <div class="flex gap-2">
@@ -150,14 +139,14 @@
                         </div>
                     </th>
                     <th>Current Experience</th>
+                    <th>Previous Experience</th>
                     <th>Total Experience</th>
                     <th>
                         <div class="flex items-center justify-between">
                             <span>Status</span>
                             <p-columnFilter field="status" matchMode="equals" display="menu" [showAddButton]="false">
                                 <ng-template #filter let-value let-filter="filterCallback">
-                                    <p-multiselect [options]="statuses" (onChange)="filter($event.value)" [(ngModel)]="selectedStatuses"
-                                        placeholder="Select Statuses" class="w-full">
+                                    <p-multiselect [options]="statuses" (onChange)="filter($event.value)" [(ngModel)]="selectedStatuses" placeholder="Select Statuses" class="w-full">
                                         <ng-template let-option #item>
                                             <p-tag [value]="option.value" [severity]="getSeverity(option.value)" />
                                         </ng-template>
@@ -193,14 +182,14 @@
                     <!-- <th>UAN</th> -->
                     <!-- <th>Aadhar Number</th> -->
                     @if (currentUser !== USERGROUPS.READONLYADMIN && currentUser !== USERGROUPS.SERVICEMANAGER){
-                        <th>PPE Details</th>
-                        <th>Actions</th>
-                        <th>
-                            <div class="flex items-center gap-2">
-                                <span>Edit Employment Details</span>
-                                <i class="pi pi-clock"></i>
-                            </div>
-                        </th>
+                    <th>PPE Details</th>
+                    <th>Actions</th>
+                    <th>
+                        <div class="flex items-center gap-2">
+                            <span>Edit Employment Details</span>
+                            <i class="pi pi-clock"></i>
+                        </div>
+                    </th>
                     }
                 </tr>
             </ng-template>
@@ -222,11 +211,11 @@
                     <td>{{ onroll.employmentDetails.spn.spnDescription || '-' }}</td>
                     <td>{{ onroll.employmentDetails.spn.experience || '-' }}</td>
                     <td>{{ onroll.employmentDetails.envisionRole.roleName || '-' }}</td>
-                    <td>{{ onroll.employmentDetails.currentExperience || '-' }}</td>
-                    <td>{{ onroll.employmentDetails.totalExperience || '-' }}</td>
+                    <td>{{ onroll.employmentDetails.currentExperience != null ? onroll.employmentDetails.currentExperience : '-' }}</td>
+                    <td>{{ onroll.employmentDetails.previousExperience != null ? onroll.employmentDetails.previousExperience : '-' }}</td>
+                    <td>{{ onroll.employmentDetails.totalExperience != null ? onroll.employmentDetails.totalExperience : '-' }}</td>
                     <td>
-                        <p-tag [value]="onroll.employmentDetails.employmentStatus" 
-                            [severity]="getSeverity(onroll.employmentDetails.employmentStatus)" />
+                        <p-tag [value]="onroll.employmentDetails.employmentStatus" [severity]="getSeverity(onroll.employmentDetails.employmentStatus)" />
                     </td>
                     <td>{{ onroll.maximoId || '-' }}</td>
                     <td #pEditableColumn>
@@ -293,40 +282,32 @@
                         </p-cellEditor>
                     </td> -->
                     @if (currentUser !== USERGROUPS.READONLYADMIN && currentUser !== USERGROUPS.SERVICEMANAGER){
-                        <td>
-                            <p-button
-                                [label]="onroll?.ppeDetails.length > 0 ? 'Edit PPE' : 'Add PPE'"
-                                [icon]="onroll?.ppeDetails.length > 0 ? 'pi pi-pencil' : 'pi pi-plus'"
-                                [severity]="onroll.ppeDetails.length > 0 ? 'contrast' : 'primary'"
-                                text
-                                (onClick)="ppeDetailsModal(onroll)"
-                            />
-                        </td>
-                        <td class="flex items-center justify-center gap-2">
-                            @if (!editing) {
-                                <button pButton pRipple type="button" 
-                                    pInitEditableRow icon="pi pi-pencil" rounded severity="secondary" 
-                                    (click)="editOnrollRow(onroll)"></button>
-                            }@else {
-                                <button pButton pRipple type="button" 
-                                    pSaveEditableRow icon="pi pi-check" rounded severity="primary" 
-                                    (click)="updateOnrollDetails(onroll)"></button>
-                                <button pButton pRipple type="button" 
-                                    pCancelEditableRow icon="pi pi-times" rounded severity="danger" 
-                                    (click)="cancelEdit(onroll)"></button>
-                            }
-                        </td>
-                        <td>
-                            <p-button label="Edit" icon="pi pi-pencil" (onClick)="editSpnDetails(onroll)" />
-                        </td>
+                    <td>
+                        <p-button
+                            [label]="onroll?.ppeDetails.length > 0 ? 'Edit PPE' : 'Add PPE'"
+                            [icon]="onroll?.ppeDetails.length > 0 ? 'pi pi-pencil' : 'pi pi-plus'"
+                            [severity]="onroll.ppeDetails.length > 0 ? 'contrast' : 'primary'"
+                            text
+                            (onClick)="ppeDetailsModal(onroll)"
+                        />
+                    </td>
+                    <td class="flex items-center justify-center gap-2">
+                        @if (!editing) {
+                        <button pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil" rounded severity="secondary" (click)="editOnrollRow(onroll)"></button>
+                        }@else {
+                        <button pButton pRipple type="button" pSaveEditableRow icon="pi pi-check" rounded severity="primary" (click)="updateOnrollDetails(onroll)"></button>
+                        <button pButton pRipple type="button" pCancelEditableRow icon="pi pi-times" rounded severity="danger" (click)="cancelEdit(onroll)"></button>
+                        }
+                    </td>
+                    <td>
+                        <p-button label="Edit" icon="pi pi-pencil" (onClick)="editSpnDetails(onroll)" />
+                    </td>
                     }
                 </tr>
             </ng-template>
             <ng-template #emptymessage>
                 <tr>
-                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground)">
-                        No Records Found
-                    </td>
+                    <td colspan="100%" style="text-align: center; padding: 1rem 0; background-color: var(--surface-ground)">No Records Found</td>
                 </tr>
             </ng-template>
         </p-table>
@@ -346,7 +327,7 @@
                     <tr>
                         <th>SL NO</th>
                         <th>PPE Type</th>
-                        <th>Size</th>
+                        <th>Size / Serial No</th>
                         <th>Actions</th>
                     </tr>
                 </ng-template>
@@ -354,10 +335,18 @@
                     <tr [formGroupName]="i">
                         <td>{{ i + 1 }}</td>
                         <td>
-                            <p-select [options]="ppeTypeList" formControlName="ppeType" optionLabel="label" optionValue="value" [filter]="true" filterBy="label" [editable]="true" placeholder="Select or Enter the PPE Type" appendTo="body" />
+                            <p-select [options]="ppeTypeList" formControlName="ppeType" optionLabel="label" optionValue="value" [filter]="true" filterBy="label" [editable]="true" placeholder="Select or Enter the PPE Type" appendTo="body"> </p-select>
+
+                            @if (ppe.get('ppeType')?.invalid && ppe.get('ppeType')?.touched) {
+                            <small class="text-red-500"> PPE Type is required </small>
+                            }
                         </td>
                         <td>
                             <input type="text" pInputText formControlName="size" />
+
+                            <!-- @if (ppe.get('size')?.invalid && ppe.get('size')?.touched) {
+                            <small class="text-red-500"> Size / Serial No is required </small>
+                            } -->
                         </td>
                         <td>
                             <p-button icon="pi pi-trash" severity="danger" rounded (onClick)="removePpeDetails(i)" />
@@ -379,76 +368,110 @@
     </form>
 </p-dialog>
 
-<p-dialog header="Edit Employment Details" [(visible)]="spnDetailsModal" [modal]="true" [style]="{ width: '50rem' }"
-    [draggable]="false">
+<p-dialog header="Edit Employment Details" [(visible)]="spnDetailsModal" [modal]="true" [style]="{ width: '50rem' }" [draggable]="false">
     <form [formGroup]="updateEmploymentForm" (ngSubmit)="updateEmploymentDetails()">
         <div class="grid grid-cols-2 gap-2">
             <div class="grid col-span-1 gap-1">
                 <label for="employee-code">Employee Code</label>
-                <input type="text" pInputText [value]="onrollEmployeeDetails?.employeeCode" id="employee-code"
-                    [disabled]="true" />
+                <input type="text" pInputText [value]="onrollEmployeeDetails?.employeeCode" id="employee-code" [disabled]="true" />
             </div>
             <div class="grid col-span-1 gap-1">
                 <label for="employee-name">Employee Name</label>
-                <input type="text" pInputText [value]="onrollEmployeeDetails?.candidateName" id="employee-name"
-                    [disabled]="true" />
+                <input type="text" pInputText [value]="onrollEmployeeDetails?.candidateName" id="employee-name" [disabled]="true" />
             </div>
             <div class="grid col-span-1 gap-1">
                 <label for="consultancy-name">Consultancy Name</label>
-                <input type="text" pInputText [value]="onrollEmployeeDetails?.consultancy?.consultancyName"
-                    id="consultancy-name" [disabled]="true" />
+                <input type="text" pInputText [value]="onrollEmployeeDetails?.consultancy?.consultancyName" id="consultancy-name" [disabled]="true" />
             </div>
             <div class="grid col-span-1 gap-1">
                 <label for="current-experience">Current Experience</label>
-                <input type="text" pInputText [value]="onrollEmployeeDetails?.employmentDetails?.currentExperience" 
-                    id="current-experience" [disabled]="true" />
+                <input type="text" pInputText [value]="onrollEmployeeDetails?.employmentDetails?.currentExperience" id="current-experience" [disabled]="true" />
+            </div>
+
+            <div class="grid col-span-1 gap-1">
+                <label for="previous-experience">Previous Experience</label>
+                <input type="text" pInputText formControlName="previousExperience" id="previous-experience" />
             </div>
             <div class="grid col-span-1 gap-1">
                 <label for="total-experience">Total Experience</label>
-                <input type="text" pInputText [value]="onrollEmployeeDetails?.employmentDetails?.totalExperience" 
-                    id="total-experience" [disabled]="true" />
+                <input type="text" pInputText [value]="onrollEmployeeDetails?.employmentDetails?.totalExperience" id="total-experience" [disabled]="true" />
             </div>
             <div class="grid col-span-1 gap-1">
                 <label for="joining-date">Joining Date</label>
-                <input type="text" pInputText [value]="onrollEmployeeDetails?.employmentDetails?.joiningDate | date: 'dd-MM-yyyy'"
-                    [disabled]="true" id="joining-date" />
+                <input type="text" pInputText [value]="onrollEmployeeDetails?.employmentDetails?.joiningDate | date: 'dd-MM-yyyy'" [disabled]="true" id="joining-date" />
             </div>
             <div class="grid col-span-1 gap-1">
                 <label for="employment-status">Employment Status</label>
-                <input type="text" pInputText [value]="onrollEmployeeDetails?.employmentDetails?.employmentStatus" 
-                    [disabled]="true" id="employment-status" />
+                <input type="text" pInputText [value]="onrollEmployeeDetails?.employmentDetails?.employmentStatus" [disabled]="true" id="employment-status" />
             </div>
             <div class="grid col-span-1 gap-1">
                 <label for="project-code">Project Code</label>
-                <p-select [options]="projectCodesList" formControlName="projectId" optionLabel="projectCode" optionValue="projectId" 
-                    [filter]="true" filterBy="projectCode" placeholder="Select Project Code" appendTo="body" 
-                    inputId="project-code" [showClear]="true" />
+                <p-select
+                    [options]="projectCodesList"
+                    formControlName="projectId"
+                    optionLabel="projectCode"
+                    optionValue="projectId"
+                    [filter]="true"
+                    filterBy="projectCode"
+                    placeholder="Select Project Code"
+                    appendTo="body"
+                    inputId="project-code"
+                    [showClear]="true"
+                />
             </div>
             <div class="grid col-span-1 gap-1">
                 <label for="spn-code">SPN Code</label>
-                <p-select [options]="spnInfoList" formControlName="spnId" optionLabel="spnCode" optionValue="spnId" 
-                    [filter]="true" filterBy="spnCode" placeholder="Select SPN Code" appendTo="body" inputId="spn-code" 
-                    [showClear]="true" (onChange)="selectedSpn($event.value)" />
+                <p-select
+                    [options]="spnInfoList"
+                    formControlName="spnId"
+                    optionLabel="spnCode"
+                    optionValue="spnId"
+                    [filter]="true"
+                    filterBy="spnCode"
+                    placeholder="Select SPN Code"
+                    appendTo="body"
+                    inputId="spn-code"
+                    [showClear]="true"
+                    (onChange)="selectedSpn($event.value)"
+                />
             </div>
             <div class="grid col-span-1 gap-1">
                 <label for="spn-description">SPN Description</label>
-                <p-select [options]="spnInfoList" formControlName="spnId" optionLabel="spnDescription" optionValue="spnId" 
-                    [filter]="true" filterBy="spnDescription" placeholder="Select SPN Description" appendTo="body" 
-                    inputId="spn-description" [showClear]="true" (onChange)="selectedSpn($event.value)">
+                <p-select
+                    [options]="spnInfoList"
+                    formControlName="spnId"
+                    optionLabel="spnDescription"
+                    optionValue="spnId"
+                    [filter]="true"
+                    filterBy="spnDescription"
+                    placeholder="Select SPN Description"
+                    appendTo="body"
+                    inputId="spn-description"
+                    [showClear]="true"
+                    (onChange)="selectedSpn($event.value)"
+                >
                     <ng-template #item let-item>{{ item.spnDescription }} - ({{ item.experience }})</ng-template>
                     <ng-template #selectedItem let-item>{{ item.spnDescription }} - ({{ item.experience }})</ng-template>
                 </p-select>
             </div>
             <div class="grid col-span-1 gap-1">
                 <label for="experience">Experience</label>
-                <input type="text" pInputText [value]="onrollEmployeeDetails?.employmentDetails?.spn?.experience" 
-                    [disabled]="true" id="experience" />
+                <input type="text" pInputText [value]="onrollEmployeeDetails?.employmentDetails?.spn?.experience" [disabled]="true" id="experience" />
             </div>
             <div class="grid col-span-1 gap-1">
                 <label for="role">Envision Role</label>
-                <p-select [options]="envisionRoleList" formControlName="envisionRoleId" optionLabel="roleName" optionValue="id" 
-                    [filter]="true" filterBy="roleName" placeholder="Select Envision Role" appendTo="body" inputId="role" 
-                    [showClear]="true" />
+                <p-select
+                    [options]="envisionRoleList"
+                    formControlName="envisionRoleId"
+                    optionLabel="roleName"
+                    optionValue="id"
+                    [filter]="true"
+                    filterBy="roleName"
+                    placeholder="Select Envision Role"
+                    appendTo="body"
+                    inputId="role"
+                    [showClear]="true"
+                />
             </div>
         </div>
         <div class="flex justify-end mt-4">
@@ -459,11 +482,8 @@
     </form>
 </p-dialog>
 
-<p-dialog header="Request to Change Consultancy" [(visible)]="showConsulRequestModal" [modal]="true" [style]="{ width: '50rem' }"
-    [draggable]="false" (onHide)="onConsulDialogClose()">
-    <p class="text-lg font-semibold text-center">
-        Selected Employees for Consultancy Change
-    </p>
+<p-dialog header="Request to Change Consultancy" [(visible)]="showConsulRequestModal" [modal]="true" [style]="{ width: '50rem' }" [draggable]="false" (onHide)="onConsulDialogClose()">
+    <p class="text-lg font-semibold text-center">Selected Employees for Consultancy Change</p>
     <div #mydiv class="border border-[var(--p-content-border-color)] rounded-lg overflow-hidden -mt-1.5">
         <p-table [value]="consultancyRequestList" [rowHover]="true" [paginatorDropdownAppendTo]="mydiv">
             <ng-template #header>
@@ -497,8 +517,17 @@
         <div class="grid grid-cols-2 gap-1 mt-4">
             <div class="grid col-span-1" formGroupName="consultancy">
                 <label for="consultancy-name">Consultancy</label>
-                <p-select [options]="filteredConsultancyList" formControlName="userId" optionLabel="consultancyName" optionValue="userId" 
-                    appendTo="body" id="consultancy-name" placeholder="Select Consultancy" [filter]="true" filterBy="consultancyName"  />
+                <p-select
+                    [options]="filteredConsultancyList"
+                    formControlName="userId"
+                    optionLabel="consultancyName"
+                    optionValue="userId"
+                    appendTo="body"
+                    id="consultancy-name"
+                    placeholder="Select Consultancy"
+                    [filter]="true"
+                    filterBy="consultancyName"
+                />
             </div>
         </div>
         <div class="flex justify-end">

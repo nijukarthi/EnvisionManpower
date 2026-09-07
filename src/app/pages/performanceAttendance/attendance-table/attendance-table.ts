@@ -116,6 +116,11 @@ export class AttendanceTable implements OnInit {
                 next: (val) => {
                     console.log(val);
                     this.attendanceList = val?.data?.data;
+                    this.attendanceList.forEach((attendance: any) => {
+                        console.log(attendance.employmentDetails.employeeCode, 'Paid Leaves:', attendance.paidLeaves);
+                    });
+
+                    // console.log('Attendance List:', this.attendanceList);
                     this.totalRecords = val?.data?.length ?? 0;
 
                     if (this.totalDays) {
@@ -186,6 +191,10 @@ export class AttendanceTable implements OnInit {
         return false;
     }
 
+    isWeekOffReadOnly(): boolean {
+        return this.month !== null && this.month >= 8;
+    }
+
     editAttendanceRow(attendance: any) {
         if (this.editingRow && this.editingRow !== attendance) {
             this.dt.cancelRowEdit(this.editingRow);
@@ -208,14 +217,32 @@ export class AttendanceTable implements OnInit {
         });
     }
 
-    attendanceChange(attendance: any, field: string, value: any){
+    attendanceChange(attendance: any, field: string, value: any) {
         attendance[field] = value ?? 0;
 
-        const total = (attendance.presentDays || 0) + (attendance.weekOff || 0) + 
-            (attendance.paidLeaves || 0) + (attendance.absentDays || 0);
+        const present = Number(attendance.presentDays) || 0;
+        const weekOff = Number(attendance.weekOff) || 0;
+        const paidLeaves = Number(attendance.paidLeaves) || 0;
+        const absentDays = Number(attendance.absentDays) || 0;
+        const effectiveDays = Number(attendance.effectiveEmploymentDays) || 0;
 
-        if (total > attendance.effectiveEmploymentDays) {
-            this.messageService.add({ severity: 'warn', summary: 'Invalid Entry', detail: `Total days cannot exceed ${attendance.effectiveEmploymentDays}` });
+        const total = present + weekOff + paidLeaves + absentDays;
+
+        console.log({
+            present,
+            weekOff,
+            paidLeaves,
+            absentDays,
+            effectiveDays,
+            total
+        });
+
+        if (total > effectiveDays) {
+            this.messageService.add({
+                severity: 'warn',
+                summary: 'Invalid Entry',
+                detail: `Total days cannot exceed ${effectiveDays}`
+            });
         }
     }
 
@@ -241,6 +268,8 @@ export class AttendanceTable implements OnInit {
                 paidLeaves: attendance.paidLeaves,
                 weekOff: attendance.weekOff
             };
+            console.log('Attendance Object:', attendance);
+            console.log('Payload:', data);
 
             this.apiService.updateAttendanceDetails(data).subscribe({
                 next: (val) => {
@@ -251,7 +280,17 @@ export class AttendanceTable implements OnInit {
                     console.log(err);
 
                     if (err.status === 400) {
-                        this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
+                        this.messageService.add({
+                            severity: 'error',
+                            summary: 'Error',
+                            detail: err.error.detail
+                        });
+
+                        // Reload data from backend
+                        this.attendanceApi(this.filteredData);
+
+                        // Close edit mode
+                        this.editingRow = null;
                     }
                 }
             });
@@ -392,7 +431,6 @@ export class AttendanceTable implements OnInit {
                         export: true
                     };
 
-
                     this.apiService.fetchAttendanceList(data).subscribe({
                         next: (val) => {
                             this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Excel file successfully send to email' });
@@ -416,14 +454,16 @@ export class AttendanceTable implements OnInit {
     removeStatus(status: string, event?: Event) {
         event?.stopPropagation();
 
-        this.selectedStatuses = this.selectedStatuses.filter(s => s !== status);
+        this.selectedStatuses = this.selectedStatuses.filter((s) => s !== status);
 
         const value = this.selectedStatuses.length ? this.selectedStatuses : [];
 
-        this.dt.filters['status'] = [{
-            value: value,
-            matchMode: 'in'
-        }];
+        this.dt.filters['status'] = [
+            {
+                value: value,
+                matchMode: 'in'
+            }
+        ];
 
         this.dt._filter();
     }

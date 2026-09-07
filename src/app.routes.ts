@@ -52,6 +52,7 @@ import { CreateDprProject } from '@/pages/dprInput/create-dpr-project/create-dpr
 import { ManpowerDashboard } from '@/pages/manpower-dashboard/manpower-dashboard';
 import { ConsultancyRequestList } from '@/pages/consultancy-request-list/consultancy-request-list';
 import { MainDashboard } from '@/pages/main-dashboard/main-dashboard';
+import { adminGuard } from '@/guards/admin-guard';
 
 export const appRoutes: Routes = [
     {
@@ -59,13 +60,19 @@ export const appRoutes: Routes = [
         component: Loginpage
         // component: UnderMaintenance
     },
+
     {
         path: 'home',
         component: AppLayout,
         children: [
+            // {
+            //     path: 'dashboard',
+            //     component: ManpowerDashboard
+            // },
             {
                 path: 'dashboard',
-                component: ManpowerDashboard
+                component: MainDashboard,
+                canActivate: [authGuard, adminGuard]
             },
             {
                 path: 'main-dashboard',
@@ -80,7 +87,7 @@ export const appRoutes: Routes = [
                 path: 'manpower-approval',
                 component: Approval,
                 canActivate: [authGuard]
-            },  
+            },
             {
                 path: 'assign-role',
                 component: Fullfillreq,

@@ -3,7 +3,7 @@ import { UserGroups } from '@/models/usergroups/usergroups.enum';
 import { Apiservice } from '@/service/apiservice/apiservice';
 import { Shared } from '@/service/shared';
 import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder } from '@angular/forms';
+import { FormArray, FormBuilder, Validators } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { catchError, concatMap, forkJoin, from, map, of, tap, throwError } from 'rxjs';
@@ -17,7 +17,7 @@ import { catchError, concatMap, forkJoin, from, map, of, tap, throwError } from 
 export class OnRollEmployees implements OnInit {
     @ViewChild('dt') table!: Table;
     @ViewChild('excelInput') excelInput!: ElementRef<HTMLInputElement>;
-    
+
     offSet = 0;
     pageSize = 10;
     first = 0;
@@ -25,7 +25,7 @@ export class OnRollEmployees implements OnInit {
     candidateId: number | null = null;
 
     currentUser = Number(sessionStorage.getItem('userGroupId'));
-      
+
     USERGROUPS = UserGroups;
 
     cols!: Column[];
@@ -35,7 +35,7 @@ export class OnRollEmployees implements OnInit {
     consultancyRequestList: any[] = [];
     selectedOnroll: any[] = [];
     consultancyList: any[] = [];
- 
+
     openPpeDetails = false;
     spnDetailsModal = false;
     showConsulRequestModal = false;
@@ -72,7 +72,7 @@ export class OnRollEmployees implements OnInit {
 
     updatePpeDetails(ppe: any) {
         return this.fb.group({
-            ppeType: [ppe.ppeType],
+            ppeType: [ppe.ppeType, Validators.required],
             size: [ppe.size]
         });
     }
@@ -82,10 +82,11 @@ export class OnRollEmployees implements OnInit {
         projectId: [0],
         spnId: [0],
         envisionRoleId: [0],
+        previousExperience: [null],
         joiningDate: [''],
         lastWorkingDate: [null],
         employmentStatus: ['']
-    })
+    });
 
     consultancyChangeForm = this.fb.group({
         candidate: this.fb.group({
@@ -94,7 +95,7 @@ export class OnRollEmployees implements OnInit {
         consultancy: this.fb.group({
             userId: [0]
         })
-    })
+    });
 
     constructor(
         private apiService: Apiservice,
@@ -165,6 +166,10 @@ export class OnRollEmployees implements OnInit {
                         { field: 'employmentDetails.spn.spnDescription', header: 'SPN Description' },
                         { field: 'employmentDetails.spn.experience', header: 'Experience' },
                         { field: 'employmentDetails.envisionRole.roleName', header: 'Role' },
+                        { field: 'employmentDetails.currentExperience', header: 'Current Experience' },
+                        { field: 'employmentDetails.previousExperience', header: 'Previous Experience' },
+                        { field: 'employmentDetails.totalExperience', header: 'Total Experience' },
+
                         { field: 'employmentDetails.expectedJoiningDate', header: 'Expected DOJ' },
                         { field: 'employmentDetails.joiningDate', header: 'Actual DOJ' },
                         { field: 'phoneNumber', header: 'Contact Number' },
@@ -307,7 +312,7 @@ export class OnRollEmployees implements OnInit {
             } else {
                 this.ppeDetails.push(
                     this.fb.group({
-                        ppeType: [''],
+                        ppeType: ['', Validators.required],
                         size: ['']
                     })
                 );
@@ -319,7 +324,7 @@ export class OnRollEmployees implements OnInit {
 
     addPpe() {
         const newPpeGroup = this.fb.group({
-            ppeType: [''],
+            ppeType: ['', Validators.required],
             size: ['']
         });
 
@@ -328,6 +333,18 @@ export class OnRollEmployees implements OnInit {
 
     submitPpeDetails() {
         try {
+            if (this.ppeDetails.invalid) {
+                this.ppeDetails.markAllAsTouched();
+
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Validation',
+                    detail: 'Please select PPE Type before submitting.'
+                });
+
+                return;
+            }
+
             const data = {
                 candidateId: this.candidateId,
                 ppeDetails: this.ppeDetails.value
@@ -335,7 +352,12 @@ export class OnRollEmployees implements OnInit {
 
             this.apiService.updatePpeDetails(data).subscribe({
                 next: (val) => {
-                    this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Successfully Updated PPE Details' });
+                    this.messageService.add({
+                        severity: 'success',
+                        summary: 'Success',
+                        detail: 'Successfully Updated PPE Details'
+                    });
+
                     this.openPpeDetails = false;
                     this.onrollEmployeeApi(this.filteredData);
                 },
@@ -347,7 +369,6 @@ export class OnRollEmployees implements OnInit {
             console.log(error);
         }
     }
-
     removePpeDetails(index: number) {
         this.ppeDetails.removeAt(index);
     }
@@ -440,52 +461,52 @@ export class OnRollEmployees implements OnInit {
         this.editingRow = null;
     }
 
-    fetchSpnInfo(){
+    fetchSpnInfo() {
         try {
             this.apiService.fetchSpnInfo('').subscribe({
-                next: val => {
+                next: (val) => {
                     this.spnInfoList = val?.data;
                 },
-                error: err => {
+                error: (err) => {
                     console.log(err);
                 }
-            })
+            });
         } catch (error) {
             console.log(error);
         }
     }
 
-    fetchRolesList(){
+    fetchRolesList() {
         try {
             this.apiService.fetchRoleInfoList('').subscribe({
-                next: val => {
+                next: (val) => {
                     this.envisionRoleList = val?.data;
                 },
-                error: err => {
+                error: (err) => {
                     console.log(err);
                 }
-            })
+            });
         } catch (error) {
             console.log(error);
         }
     }
 
-    fetchProjectCodes(){
+    fetchProjectCodes() {
         try {
             this.apiService.fetchProjectCodes('').subscribe({
-                next: val => {
+                next: (val) => {
                     this.projectCodesList = val?.data;
                 },
-                error: err => {
+                error: (err) => {
                     console.log(err);
                 }
-            })
+            });
         } catch (error) {
             console.log(error);
         }
     }
 
-    editSpnDetails(onroll: any){
+    editSpnDetails(onroll: any) {
         try {
             this.spnDetailsModal = true;
             this.onrollEmployeeDetails = onroll;
@@ -503,99 +524,99 @@ export class OnRollEmployees implements OnInit {
                 projectId: onroll?.employmentDetails?.project?.projectId,
                 spnId: onroll?.employmentDetails?.spn?.spnId,
                 envisionRoleId: onroll?.employmentDetails?.envisionRole?.id,
+                previousExperience: onroll?.employmentDetails?.previousExperience,
                 joiningDate: formatDate(onroll?.employmentDetails?.joiningDate),
                 lastWorkingDate: onroll?.employmentDetails?.lastWorkingDate,
                 employmentStatus: onroll?.employmentDetails?.employmentStatus
-            })
+            });
         } catch (error) {
             console.log(error);
         }
     }
 
-    selectedSpn(spnId: number){
+    selectedSpn(spnId: number) {
         this.updateEmploymentForm.patchValue({
             ...this.updateEmploymentForm.value,
             spnId: spnId
         });
 
-        const selectedSpn = this.spnInfoList.find(
-            (spn: any) => spn.spnId === spnId
-        );
+        const selectedSpn = this.spnInfoList.find((spn: any) => spn.spnId === spnId);
 
         if (selectedSpn && this.onrollEmployeeDetails?.employmentDetails) {
-            this.onrollEmployeeDetails.employmentDetails.spn = selectedSpn
+            this.onrollEmployeeDetails.employmentDetails.spn = selectedSpn;
         }
     }
 
-    updateEmploymentDetails(){
+    updateEmploymentDetails() {
         try {
             const data = this.updateEmploymentForm.value;
 
             this.apiService.updateEmploymentDetails(data).subscribe({
-                next: val => {
-                    this.messageService.add({ 
-                        severity: 'success', 
-                        summary: 'Success', 
-                        detail: 'Employment Details Updated Successfully' });
+                next: (val) => {
+                    this.messageService.add({
+                        severity: 'success',
+                        summary: 'Success',
+                        detail: 'Employment Details Updated Successfully'
+                    });
                     this.spnDetailsModal = false;
                     this.onrollEmployeeApi(this.filteredData);
                 },
-                error: err => {
+                error: (err) => {
                     console.log(err);
                 }
-            })
+            });
         } catch (error) {
             console.log(error);
         }
     }
 
-    importCostPlusCandidates(file: File){
+    importCostPlusCandidates(file: File) {
         try {
             const formData = new FormData();
             formData.append('file', file);
 
             this.apiService.importCostPlusCandidates(formData).subscribe({
-                next: val => {
+                next: (val) => {
                     this.fetchActiveOnrollEmployees();
                     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Excel uploaded successfully' });
                 },
-                error: err => {
+                error: (err) => {
                     console.log(err);
 
                     if (err.status === 400) {
                         this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
                     }
                 }
-            })
+            });
         } catch (error) {
             console.log(error);
         }
     }
 
-    importFixedCostCandidates(file: File){
+    importFixedCostCandidates(file: File) {
         try {
             const formData = new FormData();
             formData.append('file', file);
 
             this.apiService.importFixedCostCandidates(formData).subscribe({
-                next: val => {
+                next: (val) => {
                     this.fetchActiveOnrollEmployees();
                     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Excel uploaded successfully' });
                 },
-                error: err => {
+                error: (err) => {
                     console.log(err);
 
                     if (err.status === 400) {
                         this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
                     }
                 }
-            })
+            });
         } catch (error) {
             console.log(error);
         }
     }
 
-    exportFCCandidatesExcel(){
+    exportFCCandidatesExcel() {
         try {
             this.apiService.exportFixedCostCandidates().subscribe({
                 next: (val: Blob) => {
@@ -607,24 +628,24 @@ export class OnRollEmployees implements OnInit {
                     window.URL.revokeObjectURL(url);
                     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Fixed Cost Employees excel template downloaded successfully.' });
                 },
-                error: async(err) => {
+                error: async (err) => {
                     console.log(err);
 
-                    if(err.error instanceof Blob){
+                    if (err.error instanceof Blob) {
                         const text = await err.error.text();
                         const json = JSON.parse(text);
-                        this.messageService.add({severity: 'error', summary: 'Error', detail: json.detail || 'Something went wrong' });
+                        this.messageService.add({ severity: 'error', summary: 'Error', detail: json.detail || 'Something went wrong' });
                     } else {
                         this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail || 'Something went wrong' });
                     }
                 }
-            })
+            });
         } catch (error) {
             console.log(error);
         }
     }
 
-    exportCPCandidatesExcel(){
+    exportCPCandidatesExcel() {
         try {
             this.apiService.exportCostPlusCandidates().subscribe({
                 next: (val: Blob) => {
@@ -636,47 +657,43 @@ export class OnRollEmployees implements OnInit {
                     window.URL.revokeObjectURL(url);
                     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Cost Plus Employees excel template downloaded successfully.' });
                 },
-                error: async(err) => {
+                error: async (err) => {
                     console.log(err);
 
                     if (err.error instanceof Blob) {
                         const text = await err.error.text();
                         const json = JSON.parse(text);
-                        this.messageService.add({severity: 'error', summary: 'Error', detail: json.detail || 'Something went wrong' });
+                        this.messageService.add({ severity: 'error', summary: 'Error', detail: json.detail || 'Something went wrong' });
                     } else {
                         this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail || 'Something went wrong' });
                     }
                 }
-            })
+            });
         } catch (error) {
             console.log(error);
         }
     }
 
-    fetchConsultancyList(){
+    fetchConsultancyList() {
         try {
             this.apiService.fetchConsultancyInfoList('').subscribe({
-                next: val => {
+                next: (val) => {
                     console.log(val);
                     this.consultancyList = val.data;
                 },
-                error: err => {
+                error: (err) => {
                     console.log(err);
                 }
-            })
+            });
         } catch (error) {
             console.log(error);
         }
     }
 
     get filteredConsultancyList() {
-        const selectedIds = this.consultancyRequestList?.map(
-            item => item.consultancy?.userId
-        ) || [];
+        const selectedIds = this.consultancyRequestList?.map((item) => item.consultancy?.userId) || [];
 
-        return this.consultancyList.filter(
-            consul => !selectedIds.includes(consul.userId)
-        );
+        return this.consultancyList.filter((consul) => !selectedIds.includes(consul.userId));
     }
 
     confirmConsultancyChange() {
@@ -688,74 +705,67 @@ export class OnRollEmployees implements OnInit {
                 return;
             }
 
-            from(this.consultancyRequestList).pipe(
-                concatMap(candidate => {
-                    const payload = {
-                        candidate: {
-                            candidateId: candidate.candidateId
-                        },
-                        consultancy: {
-                            userId: selectedConsultancyId
-                        }
-                    };
+            from(this.consultancyRequestList)
+                .pipe(
+                    concatMap((candidate) => {
+                        const payload = {
+                            candidate: {
+                                candidateId: candidate.candidateId
+                            },
+                            consultancy: {
+                                userId: selectedConsultancyId
+                            }
+                        };
 
-                    return this.apiService.createChangeConsulRequest(payload).pipe(
-                        tap(() => {
-                            this.messageService.add({
-                                severity: 'success',
-                                summary: 'Success',
-                                detail: `Request created for ${candidate.employeeCode}`
-                            });
+                        return this.apiService.createChangeConsulRequest(payload).pipe(
+                            tap(() => {
+                                this.messageService.add({
+                                    severity: 'success',
+                                    summary: 'Success',
+                                    detail: `Request created for ${candidate.employeeCode}`
+                                });
 
-                            this.consultancyRequestList = this.consultancyRequestList.filter(
-                                item => item.employmentDetails.employmentId !== candidate.employmentDetails.employmentId
-                            );
-                        }),
-                        catchError(error => {
-                            const errorMsg =
-                                error?.error?.detail ||
-                                'Something went wrong';
+                                this.consultancyRequestList = this.consultancyRequestList.filter((item) => item.employmentDetails.employmentId !== candidate.employmentDetails.employmentId);
+                            }),
+                            catchError((error) => {
+                                const errorMsg = error?.error?.detail || 'Something went wrong';
 
-                            this.messageService.add({
-                                severity: 'error',
-                                summary: 'Error',
-                                detail: `Failed for ${candidate.employeeCode} - ${errorMsg}`
-                            });
+                                this.messageService.add({
+                                    severity: 'error',
+                                    summary: 'Error',
+                                    detail: `Failed for ${candidate.employeeCode} - ${errorMsg}`
+                                });
 
-                            return throwError(() => error);
-                        })
-                    );
-                })
-            ).subscribe({
-                complete: () => {
-                    this.consultancyChangeForm.reset();
-                    this.showConsulRequestModal = false;
-                },
-                error: () => {
-                    console.log('Execution stopped due to error');
-                }
-            })
-
+                                return throwError(() => error);
+                            })
+                        );
+                    })
+                )
+                .subscribe({
+                    complete: () => {
+                        this.consultancyChangeForm.reset();
+                        this.showConsulRequestModal = false;
+                    },
+                    error: () => {
+                        console.log('Execution stopped due to error');
+                    }
+                });
         } catch (error) {
             console.log(error);
         }
     }
 
-    removeSelectedEmployee(emp: any){
+    removeSelectedEmployee(emp: any) {
         console.log(emp);
-        this.consultancyRequestList = this.consultancyRequestList.filter(
-            item => item.employmentDetails.employmentId !== emp.employmentDetails.employmentId
-        );
+        this.consultancyRequestList = this.consultancyRequestList.filter((item) => item.employmentDetails.employmentId !== emp.employmentDetails.employmentId);
         console.log(this.consultancyRequestList);
     }
 
-    selectedEmployee(onroll: any){
+    selectedEmployee(onroll: any) {
         console.log(onroll);
-        const exists = this.consultancyRequestList.some(
-            item => item.employmentDetails.employmentId === onroll.employmentDetails.employmentId
-        )
+        const exists = this.consultancyRequestList.some((item) => item.employmentDetails.employmentId === onroll.employmentDetails.employmentId);
 
-        if(!exists){
+        if (!exists) {
             this.consultancyRequestList.push(onroll);
         }
 
@@ -763,24 +773,22 @@ export class OnRollEmployees implements OnInit {
         this.menuItems = this.getMenuItems();
     }
 
-    unSelectedEmployee(onroll: any){
-        this.consultancyRequestList = this.consultancyRequestList.filter(
-            item => item.employmentDetails.employmentId !== onroll.employmentDetails.employmentId
-        );
+    unSelectedEmployee(onroll: any) {
+        this.consultancyRequestList = this.consultancyRequestList.filter((item) => item.employmentDetails.employmentId !== onroll.employmentDetails.employmentId);
         console.log(this.consultancyRequestList);
         this.menuItems = this.getMenuItems();
     }
 
-    openExcelPicker(type: 'FC' | 'CP'){
+    openExcelPicker(type: 'FC' | 'CP') {
         this.selectedImportType = type;
         this.excelInput.nativeElement.click();
     }
 
-    excelSelected(event: Event){
+    excelSelected(event: Event) {
         const input = event.target as HTMLInputElement;
         const file = input.files?.[0];
 
-        if(!file) return;
+        if (!file) return;
 
         if (this.selectedImportType === 'FC') {
             this.importFixedCostCandidates(file);
@@ -791,7 +799,7 @@ export class OnRollEmployees implements OnInit {
         input.value = '';
     }
 
-    openConsultancyRequest(){
+    openConsultancyRequest() {
         try {
             this.showConsulRequestModal = true;
             this.fetchConsultancyList();
@@ -800,7 +808,7 @@ export class OnRollEmployees implements OnInit {
         }
     }
 
-    getMenuItems(){
+    getMenuItems() {
         return [
             {
                 label: 'Template',
@@ -852,7 +860,7 @@ export class OnRollEmployees implements OnInit {
                 disabled: this.consultancyRequestList.length === 0,
                 command: () => this.openConsultancyRequest()
             }
-        ]
+        ];
     }
 
     onDialogClose() {
@@ -862,7 +870,7 @@ export class OnRollEmployees implements OnInit {
         this.onrollPpeDetails = [];
     }
 
-    onConsulDialogClose(){
+    onConsulDialogClose() {
         this.consultancyRequestList = [];
         this.selectedOnroll = [];
     }
@@ -870,16 +878,18 @@ export class OnRollEmployees implements OnInit {
     removeStatus(status: string, event?: Event) {
         event?.stopPropagation();
 
-        this.selectedStatuses = this.selectedStatuses.filter(s => s !== status);
+        this.selectedStatuses = this.selectedStatuses.filter((s) => s !== status);
 
         if (!this.selectedStatuses.length) {
             this.selectedStatuses = ['ACTIVE'];
         }
 
-        this.table.filters['status'] = [{
-            value: this.selectedStatuses,
-            matchMode: 'in'
-        }];
+        this.table.filters['status'] = [
+            {
+                value: this.selectedStatuses,
+                matchMode: 'in'
+            }
+        ];
 
         this.table._filter();
     }

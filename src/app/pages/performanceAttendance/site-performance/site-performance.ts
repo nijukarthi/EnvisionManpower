@@ -41,6 +41,8 @@ export class SitePerformance implements OnInit {
     editingRow: any | null = null;
     filteredData: any;
 
+    resignationReasons: any[] = [];
+
     date: Date = new Date();
     minDate: Date | undefined;
     maxDate: Date | undefined;
@@ -65,8 +67,21 @@ export class SitePerformance implements OnInit {
     resignEmployee() {
         return this.fb.group({
             employmentId: [0],
-            lastWorkingDate: [false],
-            replacementRequired: [false]
+            lastWorkingDate: [null],
+            replacementRequired: [false],
+            ndcFromSiteHead: [false],
+            ndcFromConsultancy: [false],
+            reason: [null]
+        });
+    }
+    loadResignationReasons() {
+        this.apiService.fetchResignationReasons({}).subscribe({
+            next: (res: any) => {
+                this.resignationReasons = res.data;
+            },
+            error: (err) => {
+                console.log(err);
+            }
         });
     }
 
@@ -130,6 +145,7 @@ export class SitePerformance implements OnInit {
     ngOnInit(): void {
         this.fetchCandidateSitePerformance();
         this.menuItems = this.getMenuItems();
+        this.loadResignationReasons();
 
         this.statuses = [
             { label: 'ACTIVE', value: 'ACTIVE' },
@@ -180,13 +196,10 @@ export class SitePerformance implements OnInit {
         return new Date(year, month, 0).getDate();
     }
 
-    isCurrentMonth(date: Date): boolean{
+    isCurrentMonth(date: Date): boolean {
         const now = new Date();
 
-        return (
-            date.getMonth() === now.getMonth() &&
-            date.getFullYear() === now.getFullYear()
-        )
+        return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
     }
 
     fetchCandidateSitePerformance() {
@@ -412,16 +425,22 @@ export class SitePerformance implements OnInit {
             const formatDate = this.datePipe.transform(lastDate, 'yyyy-MM-dd');
 
             this.resignationDetails.at(0).patchValue({
-                ...this.resignationDetails.value,
-                lastWorkingDate: formatDate,  
-                employmentId: this.employmentId
+                employmentId: this.employmentId,
+                lastWorkingDate: formatDate
             });
 
             const data = this.resignationDetails.value;
 
+            console.log('Payload:', data);
+
             this.apiService.employeeResignation(data).subscribe({
                 next: (val) => {
-                    this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Resignation Request Created Successfully' });
+                    this.messageService.add({
+                        severity: 'success',
+                        summary: 'Success',
+                        detail: 'Resignation Request Created Successfully'
+                    });
+
                     this.openTerminateModal = false;
                     this.resignationRequestForm.reset();
                     this.selectedPerformances = [];
@@ -430,12 +449,11 @@ export class SitePerformance implements OnInit {
                 error: (err) => {
                     console.log(err);
 
-                    if (err.status === 400) {
-                        this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
-                        this.openTerminateModal = false;
-                        this.selectedPerformances = [];
-                        this.employeeDetails = null;
-                    }
+                    this.messageService.add({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: err.error.detail
+                    });
                 }
             });
         } catch (error) {
@@ -557,16 +575,18 @@ export class SitePerformance implements OnInit {
     removeStatus(status: string, event?: Event) {
         event?.stopPropagation();
 
-        this.selectedStatuses = this.selectedStatuses.filter(s => s !== status);
+        this.selectedStatuses = this.selectedStatuses.filter((s) => s !== status);
 
         if (!this.selectedStatuses.length) {
             this.selectedStatuses = ['ACTIVE', 'TRANSFERRED', 'RESIGNED'];
         }
 
-        this.dt.filters['status'] = [{
-            value: this.selectedStatuses,
-            matchMode: 'in'
-        }];
+        this.dt.filters['status'] = [
+            {
+                value: this.selectedStatuses,
+                matchMode: 'in'
+            }
+        ];
 
         this.dt._filter();
     }

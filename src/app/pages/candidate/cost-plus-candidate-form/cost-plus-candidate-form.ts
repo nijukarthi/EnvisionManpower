@@ -37,8 +37,10 @@ export class CostPlusCandidateForm implements OnInit {
         candidateName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
         phoneNumber: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
         positionApplied: ['', [Validators.minLength(3), Validators.maxLength(100)]],
-        currentExperience: [null],
-        totalExperience: [null],
+        currentExperience: [{ value: null, disabled: true }],
+
+        previousExperience: [null],
+        totalExperience: [{ value: null, disabled: true }],
         highestQualification: ['', [Validators.minLength(3), Validators.maxLength(80)]],
         qualification: ['', [Validators.minLength(3), Validators.maxLength(80)]],
         noticePeriod: [null, Validators.pattern(/^\d{2,3}$/)],
@@ -71,13 +73,13 @@ export class CostPlusCandidateForm implements OnInit {
         return this.costPlusCandidateForm.get('positionApplied');
     }
 
-    get currentExperience() {
-        return this.costPlusCandidateForm.get('currentExperience');
-    }
+    // get currentExperience() {
+    //     return this.costPlusCandidateForm.get('currentExperience');
+    // }
 
-    get totalExperience() {
-        return this.costPlusCandidateForm.get('totalExperience');
-    }
+    // get totalExperience() {
+    //     return this.costPlusCandidateForm.get('totalExperience');
+    // }
 
     get highestQualification() {
         return this.costPlusCandidateForm.get('highestQualification');
@@ -156,7 +158,7 @@ export class CostPlusCandidateForm implements OnInit {
                     console.log(err);
 
                     if (err.status === 400) {
-                        this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail }); 
+                        this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
                     }
                 }
             });
@@ -220,7 +222,7 @@ export class CostPlusCandidateForm implements OnInit {
 
     updatePersonalDetails() {
         try {
-            const { monthlyReimbursements, oneTimeReimbursements, ...data } = this.costPlusCandidateForm.value;
+            const { monthlyReimbursements, oneTimeReimbursements, ...data } = this.costPlusCandidateForm.getRawValue();
             this.apiService.updateCostPlusPersonalCandidate(data).subscribe({
                 next: (val) => {
                     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Candidate Personal Detials Updated Successfully' });
@@ -306,7 +308,7 @@ export class CostPlusCandidateForm implements OnInit {
                         console.log(err);
 
                         if (err.status === 400) {
-                           this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail }); 
+                            this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
                         }
                     }
                 });
@@ -322,7 +324,7 @@ export class CostPlusCandidateForm implements OnInit {
                         console.log(err);
 
                         if (err.status === 400) {
-                           this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail }); 
+                            this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
                         }
                     }
                 });
@@ -368,7 +370,7 @@ export class CostPlusCandidateForm implements OnInit {
                     console.log(err);
 
                     if (err.status === 400) {
-                        this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail }); 
+                        this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.detail });
                     }
                 }
             });
