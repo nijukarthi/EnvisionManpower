@@ -112,7 +112,7 @@ export class SitePerformance implements OnInit {
             {
                 label: 'Transfer',
                 icon: 'pi pi-file-export',
-                visible: this.currentUser !== UserGroups.READONLYADMIN,
+                visible: this.currentUser !== UserGroups.READONLYADMIN && this.currentUser !== UserGroups.CONSULTANCY,
                 disabled: !this.employeeDetails,
                 command: () =>
                     this.router.navigate(['/home/transfer/update'], {
@@ -124,7 +124,7 @@ export class SitePerformance implements OnInit {
             {
                 label: 'Resignation',
                 icon: 'pi pi-file-excel',
-                visible: this.currentUser !== UserGroups.READONLYADMIN,
+                visible: this.currentUser !== UserGroups.READONLYADMIN && this.currentUser !== UserGroups.CONSULTANCY,
                 disabled: !this.employeeDetails,
                 command: () => this.resignateEmployee()
             }

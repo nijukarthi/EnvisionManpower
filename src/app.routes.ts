@@ -75,6 +75,10 @@ export const appRoutes: Routes = [
                 canActivate: [authGuard, adminGuard]
             },
             {
+                path: 'main-dashboard',
+                component: MainDashboard
+            },
+            {
                 path: 'manpower-request',
                 component: Demand,
                 canActivate: [authGuard]

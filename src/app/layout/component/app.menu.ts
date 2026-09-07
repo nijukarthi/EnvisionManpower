@@ -134,7 +134,7 @@ export class AppMenu {
                         // ADMIN ONLY
 
                         {
-                            label: 'Dashboard',
+                            label: 'Main Dashboard',
                             icon: 'pi pi-objects-column',
                             routerLink: ['/home/dashboard'],
                             visible: this.adminUser
