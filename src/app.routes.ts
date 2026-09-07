@@ -51,6 +51,7 @@ import { Customer } from '@/pages/dprInput/customer/customer';
 import { CreateDprProject } from '@/pages/dprInput/create-dpr-project/create-dpr-project';
 import { ManpowerDashboard } from '@/pages/manpower-dashboard/manpower-dashboard';
 import { ConsultancyRequestList } from '@/pages/consultancy-request-list/consultancy-request-list';
+import { MainDashboard } from '@/pages/main-dashboard/main-dashboard';
 
 export const appRoutes: Routes = [
     {
@@ -65,6 +66,10 @@ export const appRoutes: Routes = [
             {
                 path: 'dashboard',
                 component: ManpowerDashboard
+            },
+            {
+                path: 'main-dashboard',
+                component: MainDashboard
             },
             {
                 path: 'manpower-request',

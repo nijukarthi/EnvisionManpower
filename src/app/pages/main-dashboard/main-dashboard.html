@@ -1,0 +1,439 @@
+<div class="mpd-wrapper">
+
+  <!-- ══════════ HEADER ══════════ -->
+  <div class="mpd-header">
+    <div class="mpd-header-left">
+      <div class="mpd-logo">
+        <i class="pi pi-chart-bar"></i>
+      </div>
+      <div>
+        <h1 class="mpd-title">Manpower Management</h1>
+        <span class="mpd-subtitle">Dashboard · Real-time Pipeline View</span>
+      </div>
+    </div>
+    <div class="mpd-header-right">
+      <p-select [options]="stateOptions" [(ngModel)]="selectedState" optionLabel="label"
+        placeholder="State" styleClass="mpd-drop" [showClear]="true">
+      </p-select>
+      <p-select [options]="spnOptions" [(ngModel)]="selectedSPN" optionLabel="label"
+        placeholder="SPN" styleClass="mpd-drop" [showClear]="true">
+      </p-select>
+      <p-select [options]="monthOptions" [(ngModel)]="selectedMonth" optionLabel="label"
+        styleClass="mpd-drop">
+      </p-select>
+      <p-button icon="pi pi-refresh" severity="secondary" [text]="true" [rounded]="true"
+        pTooltip="Refresh" tooltipPosition="bottom">
+      </p-button>
+      <p-button label="Export" icon="pi pi-download" styleClass="mpd-export-btn" size="small">
+      </p-button>
+    </div>
+  </div>
+
+  <!-- ══════════ TAB BAR ══════════ -->
+  <div class="mpd-tabs">
+    <button class="mpd-tab" [class.mpd-tab--active]="activeTab === 'overview'"
+      (click)="activeTab = 'overview'">
+      <i class="pi pi-th-large"></i> Overview
+    </button>
+    <button class="mpd-tab" [class.mpd-tab--active]="activeTab === 'performance'"
+      (click)="activeTab = 'performance'">
+      <i class="pi pi-chart-bar"></i> Performance
+    </button>
+    <button class="mpd-tab" [class.mpd-tab--active]="activeTab === 'analytics'"
+      (click)="activeTab = 'analytics'">
+      <i class="pi pi-chart-line"></i> Trends & Analytics
+    </button>
+  </div>
+
+  <div class="mpd-body">
+
+    <!-- ══════════════════════════════════════════ -->
+    <!--  OVERVIEW TAB                              -->
+    <!-- ══════════════════════════════════════════ -->
+    <ng-container *ngIf="activeTab === 'overview'">
+
+      <!-- Section: Hiring Pipeline -->
+      <div class="mpd-section-label">
+        <span class="mpd-dot" style="background:#3B82F6"></span>
+        <span>HIRING PIPELINE</span>
+      </div>
+
+      <!-- ── 5-column pipeline KPI row ── -->
+      <div class="mpd-row5 mb-16">
+        <div class="mpd-kpi-card" *ngFor="let card of pipelineCards">
+          <div class="mpd-kpi-top">
+            <span class="mpd-kpi-label">{{ card.label }}</span>
+            <div class="mpd-kpi-icon" [style.background]="card.color + '1A'">
+              <i [class]="card.icon" [style.color]="card.color"></i>
+            </div>
+          </div>
+          <div class="mpd-kpi-value">{{ card.value }}</div>
+          <div class="mpd-kpi-sub">{{ card.subtitle }}</div>
+        </div>
+      </div>
+
+      <!-- Section: Headcount Overview -->
+      <div class="mpd-section-label">
+        <span class="mpd-dot" style="background:#10B981"></span>
+        <span>HEADCOUNT OVERVIEW</span>
+      </div>
+
+      <!-- ── 4-column headcount KPI row ── -->
+      <div class="mpd-row4 mb-16">
+        <div class="mpd-kpi-card" *ngFor="let card of headcountCards">
+          <div class="mpd-kpi-top">
+            <span class="mpd-kpi-label">{{ card.label }}</span>
+            <div class="mpd-kpi-icon" [style.background]="card.color + '1A'">
+              <i [class]="card.icon" [style.color]="card.color"></i>
+            </div>
+          </div>
+          <div class="mpd-kpi-value">{{ card.value }}</div>
+          <div class="mpd-trend" *ngIf="card.trend !== undefined"
+            [class.mpd-trend--up]="card.trend! >= 0"
+            [class.mpd-trend--down]="card.trend! < 0">
+            <i [class]="card.trend! >= 0 ? 'pi pi-arrow-up' : 'pi pi-arrow-down'"></i>
+            {{ card.trend! >= 0 ? '+' : '' }}{{ card.trend }}% MoM
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Bottom row: Demand Breakdown + Funnel Chart ── -->
+      <div class="mpd-bottom-row">
+
+        <!-- Demand Breakdown Card -->
+        <div class="mpd-card mpd-demand-card">
+          <div class="mpd-card-header">
+            <span class="mpd-card-title">Manpower Demand Breakdown</span>
+            <p-tag value="Live" severity="success" icon="pi pi-circle-fill"
+              styleClass="mpd-live-tag">
+            </p-tag>
+          </div>
+
+          <!-- Approved + Pending blocks side by side -->
+          <div class="mpd-demand-blocks">
+            <div class="mpd-demand-block mpd-demand-block--green">
+              <div class="mpd-demand-num">{{ demandBreakdown.totalApproved }}</div>
+              <div class="mpd-demand-sub">New Demand</div>
+              <p-tag value="Approved" severity="success" styleClass="mpd-demand-tag"></p-tag>
+            </div>
+            <div class="mpd-demand-block mpd-demand-block--yellow">
+              <div class="mpd-demand-num" style="color:#92400E">{{ demandBreakdown.totalPending }}</div>
+              <div class="mpd-demand-sub" style="color:#B45309">New Demand</div>
+              <p-tag value="Pending" severity="warning" styleClass="mpd-demand-tag"></p-tag>
+            </div>
+          </div>
+
+          <!-- Metrics row -->
+          <div class="mpd-metrics-row">
+            <div class="mpd-metric-item">
+              <i class="pi pi-arrows-h" style="color:#3B82F6;font-size:0.8rem"></i>
+              <span class="mpd-metric-label">Existing Transfer (Experienced)</span>
+              <span class="mpd-metric-chip">{{ demandBreakdown.existingTransfer }}</span>
+            </div>
+            <div class="mpd-metric-item">
+              <i class="pi pi-graduation-cap" style="color:#8B5CF6;font-size:0.8rem"></i>
+              <span class="mpd-metric-label">Trained Ratio</span>
+              <div class="mpd-metric-bar-wrap">
+                <p-progressBar [value]="demandBreakdown.trainedRatio"
+                  [style]="{'height':'6px'}" styleClass="mpd-pb">
+                </p-progressBar>
+                <span class="mpd-metric-pct">{{ demandBreakdown.trainedRatio }}%</span>
+              </div>
+            </div>
+            <div class="mpd-metric-item">
+              <i class="pi pi-chart-line" style="color:#EF4444;font-size:0.8rem"></i>
+              <span class="mpd-metric-label">Total Turnover Rate</span>
+              <div class="mpd-metric-bar-wrap">
+                <p-progressBar [value]="demandBreakdown.turnoverRate"
+                  [style]="{'height':'6px'}" styleClass="mpd-pb mpd-pb--red">
+                </p-progressBar>
+                <span class="mpd-metric-pct">{{ demandBreakdown.turnoverRate }}%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hiring Funnel Chart -->
+        <div class="mpd-card mpd-funnel-card">
+          <div class="mpd-card-header">
+            <span class="mpd-card-title">Hiring Funnel — Pipeline View</span>
+            <p-tag value="April 2026" severity="info" icon="pi pi-calendar"></p-tag>
+          </div>
+          <div class="mpd-chart-wrap">
+            <p-chart type="bar" [data]="pipelineChartData" [options]="pipelineChartOptions">
+            </p-chart>
+          </div>
+        </div>
+
+      </div><!-- /bottom-row -->
+    </ng-container>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!--  PERFORMANCE TAB                           -->
+    <!-- ══════════════════════════════════════════ -->
+    <ng-container *ngIf="activeTab === 'performance'">
+
+      <!-- Section: Site Performance -->
+      <div class="mpd-section-label">
+        <span class="mpd-dot" style="background:#8B5CF6"></span>
+        <span>SITE PERFORMANCE — APRIL 2026</span>
+      </div>
+
+      <!-- 4-column perf KPI row -->
+      <div class="mpd-row4 mb-16">
+        <div class="mpd-kpi-card" *ngFor="let k of perfKpis">
+          <div class="mpd-kpi-top">
+            <span class="mpd-kpi-label">{{ k.label }}</span>
+            <div class="mpd-kpi-icon" [style.background]="k.color + '1A'">
+              <i [class]="k.icon" [style.color]="k.color"></i>
+            </div>
+          </div>
+          <div class="mpd-kpi-value">{{ k.value }}</div>
+        </div>
+      </div>
+
+      <!-- Rating + Top Performers row -->
+      <div class="mpd-perf-row mb-16">
+
+        <!-- Rating Distribution -->
+        <div class="mpd-card mpd-rating-card">
+          <div class="mpd-card-header">
+            <span class="mpd-card-title">Rating Distribution</span>
+            <span class="mpd-card-sub">702 evaluated</span>
+          </div>
+          <div class="mpd-knob-wrap">
+            <p-knob [ngModel]="completionRate" [readonly]="true" [valueTemplate]="completionRate + '%'"
+              [size]="110" valueColor="#10B981" rangeColor="#E2E8F0"
+              textColor="#1E293B" [strokeWidth]="10">
+            </p-knob>
+            <div class="mpd-knob-label">Completion Rate</div>
+          </div>
+          <div class="mpd-rating-bars">
+            <div class="mpd-rating-row" *ngFor="let r of ratingData">
+              <span class="mpd-rating-grade">{{ r.grade }}</span>
+              <p-progressBar [value]="r.percent" [style]="{'height':'8px'}" styleClass="mpd-pb mpd-pb--rating">
+              </p-progressBar>
+              <span class="mpd-rating-info">{{ r.count }} ({{ r.percent }}%)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Top Performers -->
+        <div class="mpd-card mpd-performers-card">
+          <div class="mpd-card-header">
+            <span class="mpd-card-title">
+              <i class="pi pi-trophy" style="color:#F59E0B;margin-right:6px"></i>
+              Top 5 Performers — April 2026
+            </span>
+            <p-tag value="A Grade" severity="success"></p-tag>
+          </div>
+          <p-table [value]="topPerformers" styleClass="p-datatable-sm mpd-table" [rowHover]="true">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Rank</th>
+                <th>Name</th>
+                <th>Project</th>
+                <th>Cluster</th>
+                <th>Score</th>
+                <th>Rating</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-p>
+              <tr>
+                <td>
+                  <span class="mpd-rank">
+                    <i [class]="getRankIcon(p.rank)"
+                       [style.color]="p.rank===1?'#F59E0B':p.rank===2?'#94A3B8':'#CD7F32'"></i>
+                    {{ p.rankLabel }}
+                  </span>
+                </td>
+                <td>
+                  <div class="mpd-performer-name">
+                    <p-avatar [label]="p.name.charAt(0)" shape="circle" size="normal"
+                      styleClass="mpd-avatar">
+                    </p-avatar>
+                    <span>{{ p.name }}</span>
+                  </div>
+                </td>
+                <td><p-chip [label]="p.project" styleClass="mpd-chip"></p-chip></td>
+                <td>{{ p.cluster }}</td>
+                <td>
+                  <div class="mpd-score-cell">
+                    <span class="mpd-score-num">{{ p.score }}</span>
+                    <p-progressBar [value]="p.score" [style]="{'height':'4px','width':'48px'}"
+                      styleClass="mpd-pb">
+                    </p-progressBar>
+                  </div>
+                </td>
+                <td><p-tag [value]="p.rating" severity="success"></p-tag></td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+
+      </div><!-- /perf row -->
+
+      <!-- Section: Attendance -->
+      <div class="mpd-section-label">
+        <span class="mpd-dot" style="background:#06B6D4"></span>
+        <span>ATTENDANCE — EFFECTIVE MAN DAYS</span>
+      </div>
+
+      <!-- 4-column attendance KPI row -->
+      <div class="mpd-row4 mb-16">
+        <div class="mpd-kpi-card" *ngFor="let k of attendanceKpis">
+          <div class="mpd-kpi-top">
+            <span class="mpd-kpi-label">{{ k.label }}</span>
+            <div class="mpd-kpi-icon" [style.background]="k.color + '1A'">
+              <i [class]="k.icon" [style.color]="k.color"></i>
+            </div>
+          </div>
+          <div class="mpd-kpi-value" style="font-size:1.6rem">{{ k.value }}</div>
+        </div>
+      </div>
+
+      <!-- Attendance chart + summary -->
+      <div class="mpd-att-row">
+        <div class="mpd-card mpd-att-chart-card">
+          <div class="mpd-card-header">
+            <span class="mpd-card-title">Month-on-Month Attendance Trend</span>
+            <div style="display:flex;gap:6px">
+              <p-tag value="Man Days" severity="info" icon="pi pi-chart-bar"></p-tag>
+              <p-tag value="Att. Rate %" severity="success" icon="pi pi-chart-line"></p-tag>
+            </div>
+          </div>
+          <div class="mpd-chart-wrap">
+            <p-chart type="bar" [data]="attendanceChartData" [options]="attendanceChartOptions">
+            </p-chart>
+          </div>
+        </div>
+        <div class="mpd-card mpd-att-summary-card">
+          <div class="mpd-card-header">
+            <span class="mpd-card-title">Attendance Summary</span>
+          </div>
+          <div class="mpd-knob-wrap">
+            <p-knob [ngModel]="attendanceRate" [readonly]="true" [valueTemplate]="attendanceRate + '%'"
+              [size]="110" valueColor="#06B6D4" rangeColor="#E2E8F0"
+              textColor="#1E293B" [strokeWidth]="10">
+            </p-knob>
+            <div class="mpd-knob-label">April 2026</div>
+          </div>
+          <div class="mpd-att-items">
+            <div class="mpd-att-item">
+              <div class="mpd-att-dot" style="background:#DCFCE7">
+                <i class="pi pi-check" style="color:#16A34A;font-size:0.7rem"></i>
+              </div>
+              <span class="mpd-att-key">Present</span>
+              <span class="mpd-att-val">16,568</span>
+            </div>
+            <div class="mpd-att-item">
+              <div class="mpd-att-dot" style="background:#FEE2E2">
+                <i class="pi pi-times" style="color:#DC2626;font-size:0.7rem"></i>
+              </div>
+              <span class="mpd-att-key">Absent</span>
+              <span class="mpd-att-val">539</span>
+            </div>
+            <div class="mpd-att-item">
+              <div class="mpd-att-dot" style="background:#FEF9C3">
+                <i class="pi pi-sun" style="color:#D97706;font-size:0.7rem"></i>
+              </div>
+              <span class="mpd-att-key">Paid Leaves</span>
+              <span class="mpd-att-val">308</span>
+            </div>
+            <div class="mpd-att-item">
+              <div class="mpd-att-dot" style="background:#EDE9FE">
+                <i class="pi pi-calendar" style="color:#7C3AED;font-size:0.7rem"></i>
+              </div>
+              <span class="mpd-att-key">Week-offs</span>
+              <span class="mpd-att-val">2,698</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </ng-container>
+
+    <ng-container *ngIf="activeTab === 'analytics'">
+        <div class="mpd-section-label">
+            <span class="mpd-dot" style="background:#06B6D4"></span>
+            <span>TRENDS & ANALYTICS — 3 YEAR INSIGHTS (2025–2027)</span>
+        </div>
+
+        <div class="mpd-row4 mb-16">
+            <div class="mpd-kpi-card" *ngFor="let k of trendKpis">
+                <div class="mpd-kpi-top">
+                    <span class="mpd-kpi-label">{{ k.label }}</span>
+                    <div class="mpd-kpi-icon" [style.background]="k.color + '1A'">
+                        <i [class]="k.icon" [style.color]="k.color"></i>
+                    </div>
+                </div>
+                <div class="mpd-kpi-value">{{ k.value }}</div>
+                <div class="mpd-kpi-sub">
+                    {{ k.subtitle }}
+                </div>
+            </div>
+        </div>
+
+        <!-- ══════════ Section 2 ══════════ -->
+
+        <div class="mpd-section-label">
+            <span class="mpd-dot" style="background:#0EA5E9"></span>
+            <span>WORKFORCE GROWTH & ATTRITION ANALYTICS</span>
+        </div>
+
+        <div class="mpd-analytics-row">
+
+            <!-- Workforce Growth Trend -->
+            <div class="mpd-card mpd-analytics-card">
+
+                <div class="mpd-card-header">
+                    <span class="mpd-card-title">
+                        Workforce & Hiring Trend
+                    </span>
+
+                    <p-tag
+                        value="2025–2027"
+                        severity="info"
+                        icon="pi pi-chart-line">
+                    </p-tag>
+                </div>
+
+                <div class="mpd-chart-wrap">
+                    <p-chart
+                        type="line"
+                        [data]="workforceTrendData"
+                        [options]="workforceTrendOptions">
+                    </p-chart>
+                </div>
+
+            </div>
+
+            <!-- Hiring vs Attrition -->
+            <div class="mpd-card mpd-analytics-card">
+    
+                <div class="mpd-card-header">
+                    <span class="mpd-card-title">
+                        Hiring vs Attrition Analysis
+                    </span>
+    
+                    <p-tag
+                        value="3 Year Comparison"
+                        severity="warning"
+                        icon="pi pi-sync">
+                    </p-tag>
+                </div>
+    
+                <div class="mpd-chart-wrap">
+                    <p-chart
+                        type="bar"
+                        [data]="attritionTrendData"
+                        [options]="attritionTrendOptions">
+                    </p-chart>
+                </div>
+            </div>
+        </div>
+
+    </ng-container>
+
+  </div><!-- /body -->
+</div>

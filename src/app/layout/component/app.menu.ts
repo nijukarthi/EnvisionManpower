@@ -47,6 +47,7 @@ export class AppMenu {
     fetchUserProfile() {
         this.apiService.fetchUserProfile('').subscribe({
             next: (val) => {
+                console.log("User Profile:", val);
                 this.loggedInUserDetails = val.data;
                 if (this.loggedInUserDetails) {
                     if (this.loggedInUserDetails.userGroupId === UserGroups.ADMIN && this.loggedInUserDetails.userGroupName == 'Admin') {
@@ -92,10 +93,15 @@ export class AppMenu {
                     icon: 'pi pi-fw pi-briefcase',
                     routerLink: ['/pages'],
                     items: [
+                        // {
+                        //     label: 'Dashboard',
+                        //     icon: 'pi pi-objects-column',
+                        //     routerLink: ['/home/dashboard']
+                        // },
                         {
-                            label: 'Dashboard',
+                            label: 'Main Dashboard',
                             icon: 'pi pi-objects-column',
-                            routerLink: ['/home/dashboard']
+                            routerLink: ['/home/main-dashboard']
                         },
                         {
                             label: 'Manpower Request',

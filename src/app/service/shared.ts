@@ -46,6 +46,12 @@ import { SplitButtonModule } from 'primeng/splitbutton';
 import { TabsModule } from 'primeng/tabs';
 import { MessageModule } from 'primeng/message';
 import { TieredMenuModule } from 'primeng/tieredmenu';
+import { ProgressBarModule } from 'primeng/progressbar';
+import { AvatarModule } from 'primeng/avatar';
+import { AvatarGroupModule } from 'primeng/avatargroup';
+import { ChipModule } from 'primeng/chip';
+import { KnobModule } from 'primeng/knob';
+
 @NgModule({
   declarations: [],
   imports: [
@@ -96,7 +102,12 @@ import { TieredMenuModule } from 'primeng/tieredmenu';
     SplitButtonModule,
     TabsModule,
     MessageModule,
-    TieredMenuModule
+    TieredMenuModule,
+    ProgressBarModule,
+    AvatarModule,
+    AvatarGroupModule,
+    ChipModule,
+    KnobModule
   ],
   providers:[
     MessageService,

@@ -1,0 +1,694 @@
+/* =====================================================
+   Manpower Dashboard — Component Styles
+   Uses explicit CSS Grid (NOT PrimeFlex) for all rows
+   so layout is guaranteed regardless of PrimeFlex setup
+   ===================================================== */
+
+// ── Wrapper ──────────────────────────────────────────
+.mpd-wrapper {
+  min-height: 100vh;
+  background: #F1F5F9;
+  font-family: 'DM Sans', 'Inter', system-ui, sans-serif;
+  font-size: 14px;
+  color: #1E293B;
+}
+
+// ── Header ────────────────────────────────────────────
+.mpd-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 14px 20px 12px;
+  background: #ffffff;
+  border-bottom: 1px solid #E2E8F0;
+}
+
+.mpd-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mpd-logo {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #3B82F6, #1D4ED8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
+
+  i {
+    color: #fff;
+    font-size: 1.2rem;
+  }
+}
+
+.mpd-title {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #0F172A;
+  line-height: 1.2;
+}
+
+.mpd-subtitle {
+  font-size: 0.75rem;
+  color: #94A3B8;
+  display: block;
+  margin-top: 2px;
+}
+
+.mpd-header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+:host ::ng-deep .mpd-drop .p-dropdown {
+  min-width: 120px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  border-color: #E2E8F0;
+}
+
+:host ::ng-deep .mpd-export-btn.p-button {
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+// ── Tabs ──────────────────────────────────────────────
+.mpd-tabs {
+  display: flex;
+  gap: 2px;
+  padding: 8px 20px;
+  background: #ffffff;
+  border-bottom: 1px solid #E2E8F0;
+}
+
+.mpd-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 18px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #64748B;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: inherit;
+
+  &:hover {
+    background: #F1F5F9;
+    color: #334155;
+  }
+
+  &.mpd-tab--active {
+    background: #3B82F6;
+    color: #ffffff;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.35);
+  }
+}
+
+// ── Body ──────────────────────────────────────────────
+.mpd-body {
+  padding: 16px 20px 24px;
+}
+
+.mb-16 {
+  margin-bottom: 16px;
+}
+
+// ── Section Label ─────────────────────────────────────
+.mpd-section-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #475569;
+
+  .mpd-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+}
+
+// ── KPI Rows ──────────────────────────────────────────
+// 5-column for pipeline
+.mpd-row5 {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (max-width: 640px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+// 4-column for headcount / attendance / perf
+.mpd-row4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// ── KPI Card ──────────────────────────────────────────
+.mpd-kpi-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 14px 16px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.mpd-kpi-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.mpd-kpi-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #64748B;
+  line-height: 1.3;
+}
+
+.mpd-kpi-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  i {
+    font-size: 1rem;
+  }
+}
+
+.mpd-kpi-value {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #0F172A;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.mpd-kpi-sub {
+  font-size: 0.7rem;
+  color: #94A3B8;
+}
+
+.mpd-trend {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  margin-top: 4px;
+
+  i { font-size: 0.65rem; }
+
+  &.mpd-trend--up { color: #16A34A; }
+  &.mpd-trend--down { color: #DC2626; }
+}
+
+// ── Bottom Row (demand + funnel) ──────────────────────
+.mpd-bottom-row {
+  display: grid;
+  grid-template-columns: 38% 1fr;
+  gap: 12px;
+  align-items: stretch;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// ── Performance Row ───────────────────────────────────
+.mpd-perf-row {
+  display: grid;
+  grid-template-columns: 36% 1fr;
+  gap: 12px;
+  align-items: stretch;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// ── Attendance Row ────────────────────────────────────
+.mpd-att-row {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 12px;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// ── Card Base ─────────────────────────────────────────
+.mpd-card {
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+.mpd-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px 10px;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.mpd-card-title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #1E293B;
+}
+
+.mpd-card-sub {
+  font-size: 0.72rem;
+  color: #94A3B8;
+}
+
+// ── Demand Breakdown ─────────────────────────────────
+.mpd-demand-card {
+  padding-bottom: 14px;
+}
+
+.mpd-demand-blocks {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 0 16px 12px;
+}
+
+.mpd-demand-block {
+  border-radius: 10px;
+  padding: 14px 12px;
+  text-align: center;
+  transition: transform 0.15s ease;
+
+  &:hover { transform: scale(1.02); }
+
+  &--green {
+    background: linear-gradient(135deg, #DCFCE7, #BBF7D0);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  &--yellow {
+    background: linear-gradient(135deg, #FEF9C3, #FDE68A);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+  }
+}
+
+.mpd-demand-num {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #166534;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.mpd-demand-sub {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #15803D;
+  margin-bottom: 8px;
+}
+
+:host ::ng-deep .mpd-demand-tag {
+  font-size: 0.7rem;
+}
+
+// ── Metrics Row ───────────────────────────────────────
+.mpd-metrics-row {
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mpd-metric-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: nowrap;
+}
+
+.mpd-metric-label {
+  font-size: 0.75rem;
+  color: #475569;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mpd-metric-chip {
+  background: #F1F5F9;
+  border: 1px solid #E2E8F0;
+  border-radius: 6px;
+  padding: 2px 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #1E293B;
+  flex-shrink: 0;
+}
+
+.mpd-metric-bar-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 140px;
+  flex-shrink: 0;
+}
+
+.mpd-metric-pct {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #1E293B;
+  width: 32px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+// ── Funnel / Chart wrap ───────────────────────────────
+.mpd-funnel-card {
+  .mpd-chart-wrap {
+    padding: 0 16px 14px;
+    height: 240px;
+  }
+}
+
+.mpd-chart-wrap {
+  padding: 0 16px 14px;
+  height: 240px;
+
+  p-chart { height: 100%; }
+
+  :host ::ng-deep canvas {
+    max-height: 100% !important;
+  }
+}
+
+// ── Progress Bars global ──────────────────────────────
+:host ::ng-deep .mpd-pb {
+  flex: 1;
+  border-radius: 99px !important;
+
+  .p-progressbar-value {
+    border-radius: 99px !important;
+  }
+}
+
+:host ::ng-deep .mpd-pb--red {
+  .p-progressbar-value {
+    background: #EF4444 !important;
+  }
+}
+
+:host ::ng-deep .mpd-pb--rating {
+  flex: 1;
+}
+
+// ── Rating Card ───────────────────────────────────────
+.mpd-rating-card {
+  padding-bottom: 14px;
+}
+
+.mpd-knob-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 0 6px;
+}
+
+.mpd-knob-label {
+  font-size: 0.72rem;
+  color: #64748B;
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+.mpd-rating-bars {
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mpd-rating-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mpd-rating-grade {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #334155;
+  width: 28px;
+  flex-shrink: 0;
+}
+
+.mpd-rating-info {
+  font-size: 0.7rem;
+  color: #64748B;
+  width: 80px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+// ── Performers Table ──────────────────────────────────
+.mpd-performers-card {
+  overflow: hidden;
+}
+
+:host ::ng-deep .mpd-table {
+  font-size: 0.82rem;
+
+  .p-datatable-thead > tr > th {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #64748B;
+    font-weight: 600;
+    padding: 8px 10px;
+    background: #F8FAFC;
+    border-bottom: 1px solid #E2E8F0;
+  }
+
+  .p-datatable-tbody > tr > td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #F1F5F9;
+    color: #334155;
+  }
+
+  .p-datatable-tbody > tr:hover > td {
+    background: #F8FAFC !important;
+  }
+}
+
+.mpd-rank {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: #334155;
+}
+
+.mpd-performer-name {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-weight: 600;
+}
+
+:host ::ng-deep .mpd-avatar {
+  width: 28px !important;
+  height: 28px !important;
+  font-size: 0.75rem !important;
+  background: #EEF2FF !important;
+  color: #4F46E5 !important;
+  font-weight: 700 !important;
+}
+
+:host ::ng-deep .mpd-chip {
+  font-size: 0.72rem !important;
+  border-radius: 6px !important;
+  padding: 2px 6px !important;
+  height: auto !important;
+}
+
+.mpd-score-cell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mpd-score-num {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #0F172A;
+  width: 24px;
+}
+
+// ── Attendance Summary ────────────────────────────────
+.mpd-att-chart-card {
+  .mpd-chart-wrap {
+    height: 220px;
+  }
+}
+
+.mpd-att-summary-card {
+  padding-bottom: 14px;
+}
+
+.mpd-att-items {
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mpd-att-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mpd-att-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mpd-att-key {
+  font-size: 0.8rem;
+  color: #475569;
+  flex: 1;
+}
+
+.mpd-att-val {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #0F172A;
+}
+
+// ── Live Tag ──────────────────────────────────────────
+:host ::ng-deep .mpd-live-tag {
+  font-size: 0.72rem;
+}
+
+/* ═══════════════════════════════════════
+   Analytics Section Layout
+═══════════════════════════════════════ */
+
+.mpd-analytics-row {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+  align-items: stretch;
+}
+
+/* ═══════════════════════════════════════
+   Analytics Cards
+═══════════════════════════════════════ */
+
+.mpd-analytics-card {
+  background: var(--surface-card, #ffffff);
+  border-radius: 1.25rem;
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  padding: 1rem 1.1rem;
+  box-shadow:
+    0 4px 14px rgba(15, 23, 42, 0.04),
+    0 1px 2px rgba(15, 23, 42, 0.03);
+
+  min-height: 420px;
+
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.mpd-analytics-card:hover {
+    box-shadow:
+        0 10px 24px rgba(15, 23, 42, 0.08),
+        0 2px 6px rgba(15, 23, 42, 0.05);
+
+    border-color: rgba(14, 165, 233, 0.2);
+}
+
+/* ═══════════════════════════════════════
+   Chart Area
+═══════════════════════════════════════ */
+
+.mpd-analytics-card .mpd-chart-wrap {
+  flex: 1;
+  position: relative;
+  min-height: 320px;
+  padding-top: 0.5rem;
+}
+
+/* ═══════════════════════════════════════
+   Responsive
+═══════════════════════════════════════ */
+
+@media (max-width: 1024px) {
+  .mpd-analytics-row {
+    grid-template-columns: 1fr;
+  }
+
+  .mpd-analytics-card {
+    min-height: 380px;
+  }
+}

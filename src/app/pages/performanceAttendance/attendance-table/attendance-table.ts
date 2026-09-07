@@ -114,6 +114,7 @@ export class AttendanceTable implements OnInit {
         try {
             this.apiService.fetchAttendanceList(data).subscribe({
                 next: (val) => {
+                    console.log(val);
                     this.attendanceList = val?.data?.data;
                     this.totalRecords = val?.data?.length ?? 0;
 
